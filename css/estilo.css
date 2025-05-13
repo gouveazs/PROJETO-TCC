@@ -40,7 +40,6 @@ body{
     font-size: 18px;
 }
 
-/* Empurra os itens seguintes para a direita */
 .menu ul .push-right {
     margin-left: auto;
 }
