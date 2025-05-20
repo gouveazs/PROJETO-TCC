@@ -9,6 +9,7 @@
     <header class="banner">📖 Entre Linhas</header>
     <main class="conteudo">
         <h1>Cadastro de usuário</h1>
+
         <form method="POST" action="insercao.php">
             <p>Nome de usuário:</p>
             <input type="text" name="nome">
@@ -19,6 +20,7 @@
             <br>
             <input type="submit" value="Cadastrar">
         </form>
+        
     </main>
 
     <footer class="rodape">
