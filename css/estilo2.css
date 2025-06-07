@@ -1,0 +1,313 @@
+/* Reset e Fontes */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Layout Principal */
+body {
+    display: flex;
+    min-height: 100vh;
+    background-color: #F4F1EE;
+}
+
+/* Cabeçalho */
+.banner {
+    background-color: #402718; /* Marrom escuro */
+    color: white;
+    padding: 20px;
+    font-size: 24px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Menu Superior */
+.menu {
+    background-color: #8C5B3F; /* Marrom médio */
+    padding: 10px 0;
+    position: fixed;
+    top: 64px; /* Altura do banner */
+    width: 100%;
+    z-index: 100;
+}
+
+.menu ul {
+    display: flex;
+    list-style: none;
+    padding: 0 20px;
+}
+
+.menu li {
+    margin-right: 20px;
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.menu a:hover {
+    opacity: 0.8;
+}
+
+.push-right {
+    margin-left: auto;
+}
+
+/* Menu Lateral - Estilos Aprimorados */
+#sidebar {
+    width: 250px;
+    height: calc(100vh - 104px);
+    background: #4A5A40; /* Verde principal */
+    position: fixed;
+    top: 104px;
+    left: 0;
+    transition: all 0.3s;
+    z-index: 99;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+#sidebar.collapsed {
+    width: 80px;
+}
+
+#sidebar_content {
+    padding: 20px 15px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* User Info */
+#user {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: rgba(255,255,255,0.1);
+}
+
+#user_avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+#user_infos {
+    color: white;
+    font-size: 14px;
+}
+
+#user_infos span:first-child {
+    font-weight: bold;
+    display: block;
+}
+
+#user_infos span:last-child {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* Itens do Menu */
+#side_items {
+    list-style: none;
+}
+
+/* Itens do Menu - Cores Corrigidas */
+.side-item {
+    color: #F4F1EE; /* Cor clara para contraste */
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s;
+    background-color: transparent; /* Remove fundo azul */
+}
+
+.custom-icon {
+    width: 18px !important;
+    height: 18px !important;
+    margin-right: 15px;
+    filter: brightness(0) invert(1); /* Deixa branco */
+    object-fit: contain;
+}
+
+.custom-icon.user {
+    filter: brightness(0) invert(1); /* Deixa branco */
+    object-fit: contain;
+}
+
+.side-item:hover {
+    background-color: #5a6b50; /* Tom mais claro do verde */
+    transform: translateX(5px);
+}
+
+.side-item.active {
+    background-color: #8C5B3F; /* Marrom médio para itens ativos */
+    color: white;
+    font-weight: bold;
+}
+
+.side-item i {
+    color: #F4F1EE;
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+    margin-right: 15px;
+}
+
+.side-item a {
+    color: #F4F1EE !important;
+    text-decoration: none !important;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.side-item a:hover {
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.side-item.active a {
+    color: white !important;
+    font-weight: bold;
+}
+
+.side-item a i {
+    color: inherit;
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+    margin-right: 15px;
+    transition: all 0.3s;
+}
+
+/* Correção para o modo collapsed */
+#sidebar.collapsed .side-item a {
+    justify-content: center;
+    padding: 12px 0;
+}
+
+#sidebar.collapsed .side-item a i {
+    margin-right: 0;
+    font-size: 20px;
+}
+
+.item-description {
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+/* Botão de Logout */
+#logout {
+    padding: 15px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+#logout_btn {
+    background: none;
+    border: none;
+    color: #F4F1EE;
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+#logout_btn:hover {
+    background-color: #5a6b50;
+}
+
+#logout_btn i {
+    color: #F4F1EE;
+    margin-right: 10px;
+}
+
+#sidebar.collapsed .item-description,
+#sidebar.collapsed #user_infos,
+#sidebar.collapsed #logout_btn span {
+    display: none;
+}
+
+#sidebar.collapsed #user {
+    justify-content: center;
+    padding: 10px 0;
+}
+
+#sidebar.collapsed .side-item {
+    justify-content: center;
+    padding: 12px 0;
+}
+
+#sidebar.collapsed .side-item i {
+    margin-right: 0;
+    font-size: 20px;
+}
+
+/* Conteúdo Principal */
+.conteudo {
+    margin-top: 104px; /* Banner + Menu */
+    margin-left: 250px;
+    padding: 30px;
+    flex: 1;
+    transition: all 0.3s;
+    min-height: calc(100vh - 104px);
+}
+
+.conteudo.expanded {
+    margin-left: 80px;
+}
+
+/* Rodapé */
+.rodape {
+    background-color: #402718; /* Verde */
+    color: white;
+    text-align: center;
+    padding: 15px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    transition: all 0.3s;
+    z-index: 98;
+}
+
+.conteudo.expanded + .rodape {
+    margin-left: 80px;
+}
+
+/* Botão de Toggle - Corrigido */
+.toggle-sidebar {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #F4F1EE;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.toggle-sidebar:hover {
+    background-color: rgba(255,255,255,0.2);
+}
