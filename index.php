@@ -25,9 +25,13 @@ $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
             <li><a href="login/login.php">Entrar na conta</a></li>
             <li><a href="php/cadastro/cadastroUsuario.php">Criar conta</a></li>
             <li><a href="php/cadastro/cadastroVendedor.php">Quero vender</a></li>
-            <li><a href="php/consulta/consulta.php">Consulta</a></li>
-            <li><a href="php/consultaFiltro/busca.php">Consulta por Nome</a></li>
-            <li><a href="php/cadastro/cadastroProduto.php">Cadastrar Produto</a></li>
+
+            <!-- Sessão de adms -->
+            <?php if ($nome === 'adm'): ?>
+                <li><a href="php/consulta/consulta.php">Consulta</a></li>
+                <li><a href="php/consultaFiltro/busca.php">Consulta por Nome</a></li>
+                <li><a href="php/cadastro/cadastroProduto.php">Cadastrar Produto</a></li>
+            <?php endif; ?>
         </ul>
     </nav>
 
@@ -56,7 +60,7 @@ $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
     
                 <li class="side-item">
                  <img src="imgs/comunidade.png" class="custom-icon">
-                     <span class="item-description">Comunidades</span>
+                     <span class="item-description"><a href="comunidades/listar_comunidades.php">Comunidades</a></span>
                     </a>
                 </li>
 
