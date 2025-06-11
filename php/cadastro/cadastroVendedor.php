@@ -4,54 +4,37 @@
   <meta charset="UTF-8">
   <title>Cadastro de Vendedor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
     }
 
-    html, body {
-      height: 100%;
+    body {
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Poppins', sans-serif;
       background-color: #F4F1EE;
       display: flex;
-      flex-direction: column;
-    }
-
-    .cabecalho {
-      background-color: #402718;
-      color: white;
-      padding: 15px 20px;
-      font-size: 24px;
-      font-weight: bold;
-      border-bottom: 2px solid #402718;
-    }
-
-    .conteudo {
-      flex: 1;
-      display: flex;
       justify-content: center;
-      align-items: flex-start;
-      padding: 40px 20px;
+      align-items: center;
+      min-height: 100vh;
     }
 
     .container {
       background-color: white;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 30px;
-      max-width: 800px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      max-width: 700px;
       width: 100%;
     }
 
     .form-header {
-      background-color: #5a6b50;
-      color: white;
-      padding: 15px;
-      font-weight: bold;
-      border-radius: 4px 4px 0 0;
-      margin: -30px -30px 30px -30px;
+      font-size: 22px;
+      font-weight: 600;
+      color: #5a6b50;
+      margin-bottom: 30px;
       text-align: center;
     }
 
@@ -62,115 +45,106 @@
       margin-bottom: 20px;
     }
 
-    .form-group label {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
     .form-control {
-      flex: 1 1 200px;
+      flex: 1 1 45%;
       display: flex;
       flex-direction: column;
     }
 
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
-      padding: 10px;
+    .form-control label {
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .form-control input {
+      padding: 12px;
       border: 1px solid #ccc;
-      border-radius: 4px;
+      border-radius: 8px;
       font-size: 14px;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-control input:focus {
+      border-color: #5a6b50;
+      outline: none;
     }
 
     .form-footer {
-      text-align: right;
+      text-align: center;
+      margin-top: 30px;
     }
 
     input[type="submit"] {
-      padding: 10px 20px;
       background-color: #5a6b50;
       color: white;
       border: none;
-      border-radius: 4px;
+      padding: 14px 28px;
+      border-radius: 20px;
+      font-weight: 600;
       cursor: pointer;
-      font-weight: bold;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
     }
 
     input[type="submit"]:hover {
-      background-color: #495b3e;
-    }
-
-    .rodape {
-      background-color: #402718;
-      color: white;
-      text-align: center;
-      padding: 15px;
-      font-weight: bold;
+      background-color: #4a5843;
     }
 
     @media (max-width: 600px) {
       .form-group {
         flex-direction: column;
       }
+
+      .form-control {
+        flex: 1 1 100%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Cabeçalho -->
-  <header class="cabecalho">
-    Cadastro de Vendedor
-  </header>
-
-  <!-- Conteúdo principal -->
-  <main class="conteudo">
-    <div class="container">
-      <div class="form-header">Preencha com suas informações</div>
-      <form method="POST" action="../insercao/insercaoVendedor.php">
-        <div class="form-group">
-          <div class="form-control">
-            <label for="nomeV">Nome completo</label>
-            <input type="text" id="nomeV" name="nomeV">
-          </div>
-          <div class="form-control">
-            <label for="idade">Idade</label>
-            <input type="text" id="idade" name="idade">
-          </div>
+  <div class="container">
+    <div class="form-header">Preencha com suas informações</div>
+    <form method="POST" action="../insercao/insercaoVendedor.php">
+      <div class="form-group">
+        <div class="form-control">
+          <label for="nomeV">Nome completo</label>
+          <input type="text" id="nomeV" name="nomeV" required>
         </div>
-
-        <div class="form-group">
-          <div class="form-control">
-            <label for="emailV">E-mail</label>
-            <input type="email" id="emailV" name="emailV">
-          </div>
-          <div class="form-control">
-            <label for="senhaV">Senha</label>
-            <input type="password" id="senhaV" name="senhaV">
-          </div>
+        <div class="form-control">
+          <label for="idade">Data de nascimento</label>
+          <input type="date" id="idade" name="idade" required>
         </div>
+      </div>
 
-        <div class="form-group">
-          <div class="form-control">
-            <label for="cpf">CPF</label>
-            <input type="text" id="cpf" name="cpf">
-          </div>
-          <div class="form-control">
-            <label for="cnpj">CNPJ</label>
-            <input type="text" id="cnpj" name="cnpj">
-          </div>
+      <div class="form-group">
+        <div class="form-control">
+          <label for="emailV">E-mail</label>
+          <input type="email" id="emailV" name="emailV" required>
         </div>
-
-        <div class="form-footer">
-          <input type="submit" value="Cadastrar">
+        <div class="form-control">
+          <label for="senhaV">Senha</label>
+          <input type="password" id="senhaV" name="senhaV" required>
         </div>
-      </form>
-    </div>
-  </main>
+      </div>
 
-  <!-- Rodapé -->
-  <footer class="rodape">
-    Todos os direitos reservados - 2025
-  </footer>
+      <div class="form-group">
+        <div class="form-control">
+          <label for="cpf">CPF</label>
+          <input type="text" id="cpf" name="cpf" required>
+        </div>
+        <div class="form-control">
+          <label for="cnpj">CNPJ</label>
+          <input type="text" id="cnpj" name="cnpj">
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <input type="submit" value="Cadastrar">
+      </div>
+    </form>
+  </div>
 
 </body>
 </html>
