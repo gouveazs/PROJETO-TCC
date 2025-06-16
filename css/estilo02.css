@@ -1,185 +1,199 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  body {
-    background-color: #F4F1EE;
-    display: flex;
-    min-height: 100vh;
-  }
-  
-  /* SIDEBAR */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #F4F1EE;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR FIXA */
 .sidebar {
-    width: 250px;
-    background-color: #5A6B50;
-    color: #fff;
-    padding: 30px 20px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .sidebar .profile {
-    display: flex;
-    align-items: center;
-    margin-bottom: 40px;
-  }
-  
-  .sidebar .profile img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: #fff;
-    margin-right: 15px;
-  }
-  
-  .sidebar .profile strong {
-    display: block;
-    font-size: 16px;
-    color: #fff;
-  }
-  
-  .sidebar .profile span {
-    font-size: 13px;
-    color: #ddd;
-  }
-  
-  .sidebar h2 {
-    font-size: 16px;
-    margin: 30px 0 15px;
-    color: #EDEBD7;
-    font-weight: 600;
-  }
-  
-  .sidebar ul {
-    list-style: none;
-    padding-left: 0;
-  }
-  
-  .sidebar ul li {
-    margin-bottom: 12px;
-  }
-  
-  .sidebar ul li a {
-    color: #fff;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: 0.3s;
-    font-size: 14px;
-  }
-  
-  .sidebar ul li a i {
-    margin-right: 12px;
-    font-size: 16px;
-  }
-  
-  .sidebar ul li a:hover,
-  .sidebar ul li a.active {
-    background-color: #4d5e45;
-    color: #fff;
-  }
-  
-  
-  /* MAIN CONTENT */
-  .main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .topbar {
-    background-color: #4E361E;
-    color: #333;
-    padding: 15px 30px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .topbar h2 {
-    font-size: 24px;
-    color: #fff;
-  }
-  
-  .search-box input {
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    outline: none;
-    width: 250px;
-  }
-  
-  /* CONTENT */
-  .content {
-    padding: 20px 30px;
-    flex: 1;
-    overflow-y: auto;
-  }
-  
-  .section {
-    margin-bottom: 40px;
-  }
-  
-  .section h3 {
-    font-size: 22px;
-    margin-bottom: 15px;
-    color: #4A5A40;
-  }
-  
-  .cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
-  .card {
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    overflow: hidden;
-    width: 180px;
-    transition: transform 0.2s;
-  }
-  
-  .card:hover {
-    transform: translateY(-5px);
-  }
-  
-  .card img {
-    width: 100%;
-    height: 240px;
-    object-fit: cover;
-  }
-  
-  .card-content {
-    padding: 10px;
-    text-align: center;
-  }
-  
-  .card-content h4 {
-    font-size: 16px;
-    margin-bottom: 5px;
-    color: #333;
-  }
-  
-  .card-content p {
-    font-size: 14px;
-    color: #888;
-  }
-  
-  /* FOOTER */
-  .footer {
-    background-color: #4E361E ;
-    color: #fff;
-    text-align: center;
-    padding: 10px 0;
-    font-size: 14px;
-  }
-  
+  width: 250px;
+  background-color: #5A6B50;
+  color: #fff;
+  padding: 30px 20px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+.sidebar .profile {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.sidebar .profile img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #fff;
+  margin-right: 15px;
+}
+
+.sidebar .profile strong {
+  display: block;
+  font-size: 16px;
+  color: #fff;
+}
+
+.sidebar .profile span {
+  font-size: 13px;
+  color: #ddd;
+}
+
+.sidebar h2 {
+  font-size: 16px;
+  margin: 30px 0 15px;
+  color: #EDEBD7;
+  font-weight: 600;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.sidebar ul li {
+  margin-bottom: 12px;
+}
+
+.sidebar ul li a {
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: 0.3s;
+  font-size: 14px;
+}
+
+.sidebar ul li a i {
+  margin-right: 12px;
+  font-size: 16px;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+  background-color: #4d5e45;
+  color: #fff;
+}
+
+/* MAIN CONTENT */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  margin-left: 250px; /* espaço para a sidebar fixa */
+}
+
+.topbar {
+  background-color: #4E361E;
+  color: #333;
+  padding: 15px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  position: fixed;
+  top: 0;
+  left: 250px; /* para não ficar por baixo da sidebar */
+  right: 0;
+  height: 60px;
+  z-index: 1000;
+}
+
+.topbar h2 {
+  font-size: 24px;
+  color: #fff;
+}
+
+.search-box input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  outline: none;
+  width: 250px;
+}
+
+/* CONTENT */
+.content {
+  padding: 90px 30px 20px 30px; /* top para a navbar fixa */
+  flex: 1;
+  overflow-y: auto;
+}
+
+.section {
+  margin-bottom: 40px;
+}
+
+.section h3 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #4A5A40;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+  width: 180px;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 10px;
+  text-align: center;
+}
+
+.card-content h4 {
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.card-content p {
+  font-size: 14px;
+  color: #888;
+}
+
+/* FOOTER */
+.footer {
+  background-color: #4E361E;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 14px;
+  margin-left: 250px; /* para alinhar com sidebar */
+}
