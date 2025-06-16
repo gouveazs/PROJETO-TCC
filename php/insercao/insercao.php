@@ -6,6 +6,19 @@ $nome = $_POST['nome'];
 $email = $_POST['email'];
 $senha = $_POST['senha'];
 
+// verifica se ja existe o nome ou email cadastrado
+$sqlCheck = "SELECT COUNT(*) FROM cadastro_usuario WHERE nome = :nome OR email = :email";
+$stmtCheck = $conn->prepare($sqlCheck);
+$stmtCheck->bindParam(':nome', $nome);
+$stmtCheck->bindParam(':email', $email);
+$stmtCheck->execute();
+$existe = $stmtCheck->fetchColumn();
+
+if ($existe > 0) {
+    header("Location: ../cadastro/cadastroUsuario.php?erro=nome_ou_email");
+    exit();
+}
+
 // foto de perfil
 $foto_de_perfil = null;
 if (isset($_FILES['foto_de_perfil']) && $_FILES['foto_de_perfil']['error'] == 0) {

@@ -101,6 +101,12 @@
       font-size: 16px;
       cursor: pointer;
     }
+
+    .erro {
+      color: red;
+      margin-top: 10px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -111,14 +117,21 @@
       <button onclick="window.location.href='../../login/login.php'">ENTRAR</button>
     </div>
     <div class="right-panel">
+
       <h2>Criar Conta</h2>
-      <form method="POST" action="../insercao/insercao.php">
+
+      <form method="POST" action="../insercao/insercao.php" enctype="multipart/form-data">
         <input type="text" name="nome" placeholder="Nome completo" required>
         <input type="email" name="email" placeholder="E-mail" required>
         <input type="password" name="senha" placeholder="Senha" required>
         <input type="file" name="foto_de_perfil">
         <input type="submit" value="Cadastrar">
       </form>
+
+      <?php if (isset($_GET['erro']) && $_GET['erro'] == 'nome_ou_email'): ?>
+        <div class="erro">Nome ou e-mail já cadastrados!</div>
+      <?php endif; ?>
+
     </div>
   </div>
 </body>
