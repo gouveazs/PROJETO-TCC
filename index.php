@@ -14,7 +14,26 @@ $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
   <link rel="stylesheet" href="css/estilo02.css"> <!-- CSS separado -->
 </head>
 <body>
+    <header class="banner">Entre Linhas
+    <img src="imgs/pilha-de-tres-livros.png" class="custom-icon">
+    </header>
+    
+    <nav class="menu">
+        <ul>
+            <!-- This li pushes the next items to the right -->
+            <li class="push-right"></li>
+            <li><a href="login/login.php">Entrar na conta</a></li>
+            <li><a href="php/cadastro/cadastroUsuario.php">Criar conta</a></li>
+            <li><a href="php/cadastro/cadastroVendedor.php">Quero vender</a></li>
 
+            <!-- Sessão de adms -->
+            <?php if ($nome === 'adm'): ?>
+                <li><a href="php/consulta/consulta.php">Consulta</a></li>
+                <li><a href="php/consultaFiltro/busca.php">Consulta por Nome</a></li>
+                <li><a href="php/cadastro/cadastroProduto.php">Cadastrar Produto</a></li>
+            <?php endif; ?>
+        </ul>
+    </nav>
   <div class="sidebar">
     <div class="profile">
       <img src="imgs/imagem-do-usuario-com-fundo-preto.png" alt="Avatar">
@@ -72,6 +91,7 @@ $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
         <div class="cards">
           <div class="card">
             <img src="imgs/capa.jpg" alt="Livro 1">
+            <img src="imgs/capa1.jpg" alt="Livro 1">
             <div class="card-content">
               <h4>O Nome do Vento</h4>
               <p>★★★★★</p>
@@ -79,11 +99,51 @@ $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
           </div>
           <div class="card">
             <img src="imgs/capa.jpg" alt="Livro 2">
+          </div>
+          <div class="card">
+            <img src="imgs/capa2.jpg" alt="Livro 2">
             <div class="card-content">
               <h4>A Menina que Roubava Livros</h4>
               <p>★★★★☆</p>
             </div>
-          </div>
+          </div>   
+            <ul id="side_items">
+                <li class="side-item active">
+                    <img src="imgs/botao-de-inicio.png" class="custom-icon">
+                        <span class="item-description">Início</span>
+                    </a>
+                </li>
+    
+                <li class="side-item">
+                 <img src="imgs/comunidade.png" class="custom-icon">
+                     <span class="item-description"><a href="comunidades/listar_comunidades.php">Comunidades</a></span>
+                    </a>
+                </li>
+
+                    <li class="side-item">
+                 <img src="imgs/carrinho-carrinho.png" class="custom-icon">
+                     <span class="item-description">Carrinho</span>
+                    </a>
+                </li>
+    
+                <li class="side-item">
+                 <img src="imgs/queimar.png" class="custom-icon">
+                     <span class="item-description">Destaque</span>
+                    </a>
+                </li>
+    
+                <li class="side-item">
+                 <img src="imgs/gostar.png" class="custom-icon">
+                     <span class="item-description">Favoritos</span>
+                    </a>
+                </li>
+    
+               <li class="side-item">
+                 <img src="imgs/info.png" class="custom-icon">
+                     <span class="item-description">Serviços</span>
+                    </a>
+                </li>
+            </ul>
         </div>
       </div>
 
