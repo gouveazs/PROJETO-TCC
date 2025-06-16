@@ -103,7 +103,7 @@ if (!$usuario) {
     // agr ta funfano
     if (!empty($usuario['foto_de_perfil'])) {
         $imgData = base64_encode($usuario['foto_de_perfil']);
-        echo '<img src="data:image/png;base64,' . $imgData . '" alt="Foto do usuário" class="perfil-foto" />';
+        echo '<img src="data:image/jpeg;base64,' . $imgData . '" alt="Foto do usuário" class="perfil-foto" />';
     } else {
         echo '<img src="../../imgs/imagem-do-usuario-com-fundo-preto.png" alt="Sem foto" class="perfil-foto" />';
     }

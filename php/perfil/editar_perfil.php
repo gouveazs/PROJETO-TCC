@@ -2,7 +2,8 @@
 session_start();
 include '../conexao.php'; 
 
-$nome_usuario = $_SESSION['nome_usuario'] ?? null;
+$nome_usuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
+
 
 if (!$nome_usuario) {
     header("Location: ../login/login.php");
@@ -12,7 +13,7 @@ if (!$nome_usuario) {
 $stmt = $conn->prepare("SELECT idusuario FROM cadastro_usuario WHERE nome = ?");
 $stmt->execute([$nome_usuario]);
 $dados_usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-$idusuario = $dados_usuario['idusuario'] ?? null;
+$idusuario = isset($dados_usuario['idusuario']) ? $dados_usuario['idusuario'] : null;
 
 if (!$idusuario) {
     echo "Usuário não encontrado.";
