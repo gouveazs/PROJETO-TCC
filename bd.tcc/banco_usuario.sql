@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `usuario`.`cadastro_usuario` (
   `nome` VARCHAR(45) NULL,
   `email` VARCHAR(45) NULL,
   `senha` VARCHAR(45) NULL,
+  `foto_de_perfil` LONGBLOB,
   `telefone` INT NULL,
   PRIMARY KEY (`idusuario`))
 ENGINE = InnoDB;
@@ -36,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `usuario`.`login_usuario` (
   `senha` VARCHAR(45) NULL,
   `idusuario` INT NOT NULL,
   PRIMARY KEY (`idlogin`, `idusuario`),
-  INDEX `fk_login_usuario_cadastro_usuario_idx` (`idusuario` ASC) VISIBLE,
+  INDEX `fk_login_usuario_cadastro_usuario_idx` (`idusuario` ASC),
   CONSTRAINT `fk_login_usuario_cadastro_usuario`
     FOREIGN KEY (`idusuario`)
     REFERENCES `usuario`.`cadastro_usuario` (`idusuario`)
@@ -61,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `usuario`.`usuario_compra` (
   `cpf` VARCHAR(8) NULL,
   `idusuario` INT NOT NULL,
   PRIMARY KEY (`idusuario_compra`, `idusuario`),
-  INDEX `fk_usuario_compra_cadastro_usuario1_idx` (`idusuario` ASC) VISIBLE,
+  INDEX `fk_usuario_compra_cadastro_usuario1_idx` (`idusuario` ASC),
   CONSTRAINT `fk_usuario_compra_cadastro_usuario1`
     FOREIGN KEY (`idusuario`)
     REFERENCES `usuario`.`cadastro_usuario` (`idusuario`)

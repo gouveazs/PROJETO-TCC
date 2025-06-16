@@ -116,6 +116,7 @@
         <input type="text" name="nome" placeholder="Nome completo" required>
         <input type="email" name="email" placeholder="E-mail" required>
         <input type="password" name="senha" placeholder="Senha" required>
+        <input type="file" name="foto_de_perfil">
         <input type="submit" value="Cadastrar">
       </form>
     </div>

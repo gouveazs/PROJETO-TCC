@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `vendedor`.`login_vendedor` (
   `senha` VARCHAR(45) NULL,
   `idvendedor` INT NOT NULL,
   PRIMARY KEY (`idlogin_vendedor`, `idvendedor`),
-  INDEX `fk_login_vendedor_cadastro_vendedor_idx` (`idvendedor` ASC) VISIBLE,
+  INDEX `fk_login_vendedor_cadastro_vendedor_idx` (`idvendedor` ASC),
   CONSTRAINT `fk_login_vendedor_cadastro_vendedor`
     FOREIGN KEY (`idvendedor`)
     REFERENCES `vendedor`.`cadastro_vendedor` (`idvendedor`)
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `vendedor`.`produto` (
   `idvendedor` INT NOT NULL,
   `imagem` BLOB NULL,
   PRIMARY KEY (`idproduto`, `idvendedor`),
-  INDEX `fk_produto_cadastro_vendedor1_idx` (`idvendedor` ASC) VISIBLE,
+  INDEX `fk_produto_cadastro_vendedor1_idx` (`idvendedor` ASC),
   CONSTRAINT `fk_produto_cadastro_vendedor1`
     FOREIGN KEY (`idvendedor`)
     REFERENCES `vendedor`.`cadastro_vendedor` (`idvendedor`)
