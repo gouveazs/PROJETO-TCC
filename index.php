@@ -91,14 +91,14 @@ $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
         <h3>Recomendações</h3>
         <div class="cards">
           <div class="card">
-            <img src="imgs/capa.jpg" alt="Livro 3">
+            <img src="imgs/capa3.jpg" alt="Livro 3">
             <div class="card-content">
               <h4>1984</h4>
               <p>★★★★★</p>
             </div>
           </div>
           <div class="card">
-            <img src="imgs/capa.jpg" alt="Livro 4">
+            <img src="imgs/capa4.jpg" alt="Livro 4">
             <div class="card-content">
               <h4>Orgulho e Preconceito</h4>
               <p>★★★★☆</p>
