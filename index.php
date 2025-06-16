@@ -80,7 +80,7 @@ $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
           <div class="card">
             <img src="imgs/capa.jpg" alt="Livro 2">
             <div class="card-content">
-              <h4>A Menina que Roubava Livros</h4>
+              <h4>A Marcela</h4>
               <p>★★★★☆</p>
             </div>
           </div>
