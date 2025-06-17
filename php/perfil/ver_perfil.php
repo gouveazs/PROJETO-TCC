@@ -1,24 +1,3 @@
-<?php
-session_start();
-
-if (!isset($_SESSION['nome_usuario'])) {
-    header('Location: ../../login/login.php');
-    exit;
-}
-
-include '../conexao.php';
-
-$nome = $_SESSION['nome_usuario'];
-
-$stmt = $conn->prepare("SELECT * FROM cadastro_usuario WHERE nome = ?");
-$stmt->execute([$nome]);
-$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$usuario) {
-    echo "Usuário não encontrado.";
-    exit;
-}
-?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -26,81 +5,145 @@ if (!$usuario) {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Perfil do Usuário</title>
   <style>
+    :root {
+      --primary-color: #4a6bff;
+      --danger-color: #ff4a4a;
+      --text-color: #333;
+      --text-light: #666;
+      --bg-color: #f5f7fa;
+      --card-bg: #ffffff;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f7fa;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: var(--bg-color);
       margin: 0;
-      padding: 20px;
+      padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
+      color: var(--text-color);
     }
+    
     .perfil-container {
-      background-color: white;
-      padding: 30px 40px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 350px;
+      background-color: var(--card-bg);
+      padding: 40px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      width: 100%;
+      max-width: 400px;
       text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+    
+    .perfil-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+    
     .perfil-foto {
       width: 120px;
       height: 120px;
       border-radius: 50%;
       object-fit: cover;
-      border: 3px solidrgb(0, 0, 0);
+      border: 3px solid var(--primary-color);
       margin-bottom: 20px;
+      box-shadow: 0 4px 10px rgba(74, 107, 255, 0.2);
     }
+    
     h1 {
       font-size: 24px;
-      margin-bottom: 8px;
-      color: #333;
+      margin: 0 0 10px 0;
+      color: var(--text-color);
+      font-weight: 600;
     }
-    p {
-      margin: 4px 0;
-      color: #555;
-      font-size: 16px;
+    
+    .user-info {
+      margin: 20px 0;
+      text-align: left;
+      padding: 0 10px;
     }
-    .btn-sair {
-      margin-top: 25px;
-      display: inline-block;
-      padding: 10px 25px;
-      font-size: 16px;
-      background-color: #dc3545;
-      color: white;
+    
+    .info-item {
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .info-label {
+      font-weight: 500;
+      color: var(--text-light);
+    }
+    
+    .info-value {
+      color: var(--text-color);
+    }
+    
+    hr {
       border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      text-decoration: none;
+      height: 1px;
+      background-color: #eee;
+      margin: 25px 0;
     }
-    .btn-sair:hover {
-      background-color: #b02a37;
-    }
-
-    .btn-normie {
-      margin-top: 25px;
+    
+    .btn {
       display: inline-block;
-      padding: 10px 25px;
+      padding: 12px 25px;
       font-size: 16px;
-      background-color: #3567dc;
-      color: white;
-      border: none;
-      border-radius: 6px;
+      font-weight: 500;
+      border-radius: var(--border-radius);
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
       text-decoration: none;
+      margin: 5px;
+      border: none;
     }
-    .btn-normie:hover {
-      background-color:rgb(33, 64, 138);
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #3a5aed;
+      transform: translateY(-2px);
+    }
+    
+    .btn-danger {
+      background-color: var(--danger-color);
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background-color: #e04040;
+      transform: translateY(-2px);
+    }
+    
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      margin-top: 20px;
+    }
+    
+    @media (max-width: 480px) {
+      .perfil-container {
+        padding: 30px 20px;
+        margin: 20px;
+      }
+      
+      .btn {
+        width: 100%;
+        margin: 5px 0;
+      }
     }
   </style>
 </head>
 <body>
   <div class="perfil-container">
     <?php
-    // agr ta funfano
     if (!empty($usuario['foto_de_perfil'])) {
         $imgData = base64_encode($usuario['foto_de_perfil']);
         echo '<img src="data:image/jpeg;base64,' . $imgData . '" alt="Foto do usuário" class="perfil-foto" />';
@@ -109,16 +152,24 @@ if (!$usuario) {
     }
     ?>
     <h1><?php echo htmlspecialchars($usuario['nome']); ?></h1>
-    <p><strong>Email:</strong> <?php echo htmlspecialchars($usuario['email']); ?></p>
-    <p><strong>Senha:</strong> <?php echo htmlspecialchars($usuario['senha']); ?></p>
+    
+    <div class="user-info">
+      <div class="info-item">
+        <span class="info-label">Email:</span>
+        <span class="info-value"><?php echo htmlspecialchars($usuario['email']); ?></span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Senha:</span>
+        <span class="info-value">••••••••</span>
+      </div>
+    </div>
     
     <hr>
-
-    <a href="editar_perfil.php" class="btn-normie">Editar Informações</a>
     
-    <br>
-    
-    <a href="deletar.php" onclick="return confirm('Tem certeza que deseja deletar sua conta? Isso não poderá ser desfeito!');" class="btn-sair">DELETAR CONTA ☠️</a>
+    <div class="btn-group">
+      <a href="editar_perfil.php" class="btn btn-primary">Editar Informações</a>
+      <a href="deletar.php" onclick="return confirm('Tem certeza que deseja deletar sua conta? Isso não poderá ser desfeito!');" class="btn btn-danger">DELETAR CONTA ☠️</a>
+    </div>
   </div>
 </body>
 </html>
