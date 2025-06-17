@@ -75,7 +75,7 @@ if (isset($_SESSION['nome_vendedor'])) {
     <h2><a href="login/logout.php" style="color: #ff7675;">Sair</a></h2>
   </div>
 
-  <div class="main">
+  <div class="main" >
     <div class="topbar">
       <h2>Entre Linhas - Livraria Moderna</h2>
       <div class="search-box">
@@ -84,24 +84,27 @@ if (isset($_SESSION['nome_vendedor'])) {
     </div>
 
     <div class="content">
+
       <div class="section">
         <h3>Novidades</h3>
-        <div class="cards">
-          <div class="card">
-            <img src="imgs/capa.jpg" alt="Livro 1">
-            <div class="card-content">
-              <h4>O Nome do Vento</h4>
-              <p>★★★★★</p>
+          <div class="cards">
+            <div class="card">
+              <img src="imgs/capa.jpg" alt="Livro 1">
+              <div class="card-content">
+                <h4>O Nome do Vento</h4>
+                <p>★★★★★</p>
+              </div>
             </div>
-          </div>
-          <div class="card">
-            <img src="imgs/capa.jpg" alt="Livro 2">
-            <div class="card-content">
-              <h4>A Marcela</h4>
-              <p>★★★★☆</p>
+
+            <div class="card">
+              <img src="imgs/capa.jpg" alt="Livro 2">
+              <div class="card-content">
+                <h4>A Marcela</h4>
+                <p>★★★★☆</p>
+              </div>
             </div>
+            
           </div>
-        </div>
       </div>
 
       <div class="section">

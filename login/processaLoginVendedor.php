@@ -12,7 +12,8 @@ try {
     $usuario_db = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($usuario_db) {
-        $_SESSION['usuario_logado'] = $usuario_db['id'];
+        // Guarde o ID e o nome do vendedor corretamente na sessão
+        $_SESSION['id_vendedor'] = $usuario_db['idvendedor']; // Supondo que o campo no banco é 'id'
         $_SESSION['nome_vendedor'] = $usuario_db['nome_completo'];
         header('Location: ../index.php');
         exit();

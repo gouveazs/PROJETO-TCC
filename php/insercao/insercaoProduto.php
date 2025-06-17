@@ -1,7 +1,8 @@
 <?php
-session_start(); // Importante para acessar variáveis de sessão!
+session_start();
 include '../conexaoVendedor.php';
 
+// Dados do formulário
 $nome = $_POST['nome'];
 $num_paginas = $_POST['numero_paginas'];
 $editora = $_POST['editora'];
@@ -12,8 +13,8 @@ $preco = $_POST['preco'];
 $quantidade = $_POST['quantidade'];
 $descricao = $_POST['descricao'];
 
-// Pegue o id do vendedor logado
-$idvendedor = isset($_SESSION['usuario_logado']) ? $_SESSION['usuario_logado'] : null;
+// Pegue o id do vendedor logado corretamente da sessão
+$idvendedor = isset($_SESSION['id_vendedor']) ? $_SESSION['id_vendedor'] : null;
 if (!$idvendedor) {
     die("Vendedor não está logado.");
 }
@@ -32,7 +33,6 @@ try {
         (:nome, :num_paginas, :editora, :autor, :classificacao, :data_publicacao, :preco, :quantidade, :descricao, :imagem, :idvendedor)";
     
     $stmt = $conn->prepare($sql);
-    
     $stmt->bindParam(':nome', $nome);
     $stmt->bindParam(':num_paginas', $num_paginas);
     $stmt->bindParam(':editora', $editora);

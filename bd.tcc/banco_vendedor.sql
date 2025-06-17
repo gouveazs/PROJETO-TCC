@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `vendedor`.`login_vendedor` (
   `senha` VARCHAR(45) NULL,
   `idvendedor` INT NOT NULL,
   PRIMARY KEY (`idlogin_vendedor`, `idvendedor`),
-  INDEX `fk_login_vendedor_cadastro_vendedor_idx` (`idvendedor` ASC),
+  INDEX `fk_login_vendedor_cadastro_vendedor_idx` (`idvendedor` ASC) VISIBLE,
   CONSTRAINT `fk_login_vendedor_cadastro_vendedor`
     FOREIGN KEY (`idvendedor`)
     REFERENCES `vendedor`.`cadastro_vendedor` (`idvendedor`)
@@ -61,14 +61,50 @@ CREATE TABLE IF NOT EXISTS `vendedor`.`produto` (
   `data_publicacao` DATE NULL,
   `preco` FLOAT NULL,
   `quantidade` INT NULL,
+  `imagem` BLOB NULL,
   `descricao` VARCHAR(445) NULL,
   `idvendedor` INT NOT NULL,
-  `imagem` BLOB NULL,
   PRIMARY KEY (`idproduto`, `idvendedor`),
-  INDEX `fk_produto_cadastro_vendedor1_idx` (`idvendedor` ASC),
+  INDEX `fk_produto_cadastro_vendedor1_idx` (`idvendedor` ASC) VISIBLE,
   CONSTRAINT `fk_produto_cadastro_vendedor1`
     FOREIGN KEY (`idvendedor`)
     REFERENCES `vendedor`.`cadastro_vendedor` (`idvendedor`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `vendedor`.`pedido`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `vendedor`.`pedido` (
+  `idpedido` INT NOT NULL,
+  `valor_total` FLOAT NULL,
+  `data_pedido` DATE NULL,
+  `idusuario` INT NULL,
+  PRIMARY KEY (`idpedido`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `vendedor`.`item_pedido`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `vendedor`.`item_pedido` (
+  `iditem_pedido` INT NOT NULL,
+  `quantidade` INT NULL,
+  `idproduto` INT NOT NULL,
+  `idpedido` INT NOT NULL,
+  PRIMARY KEY (`iditem_pedido`, `idproduto`, `idpedido`),
+  INDEX `fk_item_pedido_produto1_idx` (`idproduto` ASC) VISIBLE,
+  INDEX `fk_item_pedido_pedido1_idx` (`idpedido` ASC) VISIBLE,
+  CONSTRAINT `fk_item_pedido_produto1`
+    FOREIGN KEY (`idproduto`)
+    REFERENCES `vendedor`.`produto` (`idproduto`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_item_pedido_pedido1`
+    FOREIGN KEY (`idpedido`)
+    REFERENCES `vendedor`.`pedido` (`idpedido`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
