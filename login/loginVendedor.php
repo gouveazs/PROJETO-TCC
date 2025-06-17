@@ -114,12 +114,13 @@
         <div class="left-panel">
         <h2>Olá, novo vendedor!</h2>
          <p>Cadastre-se agora<br>para começar seus negócios!</p>
-        <button onclick="window.location.href='../php/cadastro/cadastoVendedor.php'">CADASTRAR</button>
+        <button onclick="window.location.href='../php/cadastro/cadastroVendedor.php'">CADASTRAR</button>
         </div>
     <div class="right-panel">
-      <h2>Entrar na Conta</h2>
-      <form action="processaLogin.php" method="post">
-        <input type="text" name="usuario" placeholder="Usuário" required>
+      <h2>Acessar painel do Livreiro</h2>
+      <form action="processaLoginVendedor.php" method="post">
+        <input type="text" name="nome_completo" placeholder="Nome completo" required>
+        <!-- <input type="password" name="cpf" placeholder="CPF" required> -->
         <input type="password" name="senha" placeholder="Senha" required>
         <input type="submit" value="Login">
       </form>

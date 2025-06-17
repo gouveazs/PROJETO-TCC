@@ -1,6 +1,17 @@
 <?php
 session_start();
-$nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
+
+$nome = null;
+$tipo = null;
+
+if (isset($_SESSION['nome_usuario'])) {
+    $nome = $_SESSION['nome_usuario'];
+    $tipo = "Usuário";
+}
+if (isset($_SESSION['nome_vendedor'])) {
+    $nome = $_SESSION['nome_vendedor'];
+    $tipo = "Vendedor";
+}
 ?>
 
 <!DOCTYPE html>
@@ -19,13 +30,14 @@ $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
     <div class="profile">
       <img src="imgs/imagem-do-usuario-com-fundo-preto.png" alt="Avatar">
       <div>
-          <?php if ($nome): ?>
+        <?php if ($nome): ?>
               <span class="item-description"><?php echo htmlspecialchars($nome); ?></span>
-              <span class="item-description">Usuário</span>
-          <?php else: ?>
-              <span class="item-description">Usuário</span>
-              <span class="item-description">Entre ou crie sua conta</span>
-          <?php endif; ?>
+            <?php if($tipo): ?>
+              <span class="item-description"><?php echo htmlspecialchars($tipo); ?></span>
+            <?php endif; ?>
+        <?php else: ?>
+            <span class="item-description">Entre ou crie sua conta</span>
+        <?php endif; ?>
       </div>
     </div>
 
@@ -51,6 +63,10 @@ $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
       <?php if ($nome === 'adm'): ?>
         <li><a href="php/consulta/consulta.php"><i class="fas fa-search"></i> Consulta</a></li>
         <li><a href="php/consultaFiltro/busca.php"><i class="fas fa-filter"></i> Consulta por Nome</a></li>
+        <li><a href="php/cadastro/cadastroProduto.php"><i class="fas fa-plus"></i> Cadastrar Produto</a></li>
+      <?php endif; ?>
+
+      <?php if ($tipo === 'Vendedor'): ?>
         <li><a href="php/cadastro/cadastroProduto.php"><i class="fas fa-plus"></i> Cadastrar Produto</a></li>
       <?php endif; ?>
   </ul>

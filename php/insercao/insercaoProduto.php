@@ -1,4 +1,5 @@
 <?php
+session_start(); // Importante para acessar variáveis de sessão!
 include '../conexaoVendedor.php';
 
 $nome = $_POST['nome'];
@@ -11,6 +12,12 @@ $preco = $_POST['preco'];
 $quantidade = $_POST['quantidade'];
 $descricao = $_POST['descricao'];
 
+// Pegue o id do vendedor logado
+$idvendedor = isset($_SESSION['usuario_logado']) ? $_SESSION['usuario_logado'] : null;
+if (!$idvendedor) {
+    die("Vendedor não está logado.");
+}
+
 // Verifica se a imagem foi enviada corretamente
 if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === 0) {
     $imagem = file_get_contents($_FILES['imagem']['tmp_name']);
@@ -22,7 +29,7 @@ try {
     $sql = "INSERT INTO produto 
         (nome, numero_paginas, editora, autor, classificacao_idade, data_publicacao, preco, quantidade, descricao, imagem, idvendedor) 
         VALUES 
-        (:nome, :num_paginas, :editora, :autor, :classificacao, :data_publicacao, :preco, :quantidade, :descricao, :imagem, 3)";
+        (:nome, :num_paginas, :editora, :autor, :classificacao, :data_publicacao, :preco, :quantidade, :descricao, :imagem, :idvendedor)";
     
     $stmt = $conn->prepare($sql);
     
@@ -36,6 +43,7 @@ try {
     $stmt->bindParam(':quantidade', $quantidade);
     $stmt->bindParam(':descricao', $descricao);
     $stmt->bindParam(':imagem', $imagem, PDO::PARAM_LOB);
+    $stmt->bindParam(':idvendedor', $idvendedor, PDO::PARAM_INT);
 
     $stmt->execute();
 
