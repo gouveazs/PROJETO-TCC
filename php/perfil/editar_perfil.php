@@ -50,30 +50,34 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #f5f5f5;
+            background-color: #F4F1EE;
             font-family: 'Inter', sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             color: #333;
             line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .profile-container {
-            max-width: 400px;
-            margin: 50px auto;
+            max-width: 450px;
+            width: 100%;
+            margin: 0 auto;
             background: white;
-            border-radius: 0;
+            border-radius: 16px;
             padding: 40px;
-            box-shadow: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
         h1 {
-            font-size: 22px;
+            font-size: 24px;
             margin-bottom: 30px;
             color: #333;
             font-weight: 600;
             text-align: left;
-            letter-spacing: -0.5px;
         }
 
         .profile-field {
@@ -84,47 +88,51 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: #333;
+            color: #555;
             font-size: 15px;
         }
 
         .profile-field input[type="text"],
         .profile-field input[type="email"] {
             width: 100%;
-            padding: 8px 0;
-            border: none;
-            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
             font-size: 16px;
-            background: transparent;
             outline: none;
         }
 
+        .profile-field input[type="text"]:focus,
+        .profile-field input[type="email"]:focus {
+            border-color: #5a6b50;
+        }
+
         .file-upload-container {
-            margin-top: 30px;
+            margin-top: 25px;
         }
 
         .file-upload-label {
             display: block;
             font-weight: 500;
-            color: #333;
+            color: #555;
             font-size: 15px;
             margin-bottom: 8px;
         }
 
         .file-upload-btn {
             display: inline-block;
-            padding: 8px 0;
+            padding: 10px 15px;
+            background-color: #f0f0f0;
             color: #333;
-            font-size: 15px;
-            font-weight: 500;
+            font-size: 14px;
+            border-radius: 25px;
             cursor: pointer;
-            border-bottom: 1px solid #ddd;
+            margin-right: 10px;
         }
 
         .no-file {
             font-size: 14px;
-            color: #999;
-            margin-left: 10px;
+            color: #777;
         }
 
         .save-btn {
@@ -134,16 +142,11 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
             background-color: #5a6b50;
             color: white;
             border: none;
-            border-radius: 4px;
-            font-size: 15px;
+            border-radius: 25px;
+            font-size: 16px;
             font-weight: 500;
             cursor: pointer;
-            margin-top: 40px;
-            transition: background-color 0.2s;
-        }
-
-        .save-btn:hover {
-            background-color: #4a5a40;
+            margin-top: 30px;
         }
 
         .profile-pic {
@@ -157,6 +160,12 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
         input[type="file"] {
             display: none;
+        }
+
+        @media (max-width: 480px) {
+            .profile-container {
+                padding: 30px 20px;
+            }
         }
     </style>
 </head>
@@ -182,9 +191,11 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
                 <img src="data:image/jpeg;base64,<?= base64_encode($usuario['foto_de_perfil']) ?>" class="profile-pic">
             <?php endif; ?>
             
-            <label class="file-upload-btn" for="foto-upload">Escolher arquivo</label>
+            <div style="display: flex; align-items: center;">
+                <label class="file-upload-btn" for="foto-upload">Escolher arquivo</label>
+                <span class="no-file">Nenhum arquivo escolhido</span>
+            </div>
             <input id="foto-upload" type="file" name="foto" accept="image/*">
-            <span class="no-file">Nenhum arquivo escolhido</span>
         </div>
 
         <button type="submit" class="save-btn">Salvar</button>
