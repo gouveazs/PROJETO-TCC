@@ -1,3 +1,24 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['nome_usuario'])) {
+    header('Location: ../../login/login.php');
+    exit;
+}
+
+include '../conexao.php';
+
+$nome = $_SESSION['nome_usuario'];
+
+$stmt = $conn->prepare("SELECT * FROM cadastro_usuario WHERE nome = ?");
+$stmt->execute([$nome]);
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$usuario) {
+    echo "Usuário não encontrado.";
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,140 +26,128 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Perfil do Usuário</title>
   <style>
-    :root {
-      --primary-color: #4a6bff;
-      --danger-color: #ff4a4a;
-      --text-color: #333;
-      --text-light: #666;
-      --bg-color: #f5f7fa;
-      --card-bg: #ffffff;
-      --border-radius: 8px;
-      --box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    }
-    
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background-color: var(--bg-color);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      color: var(--text-color);
-    }
-    
-    .perfil-container {
-      background-color: var(--card-bg);
-      padding: 40px;
-      border-radius: var(--border-radius);
-      box-shadow: var(--box-shadow);
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .perfil-container:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-    }
-    
-    .perfil-foto {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid var(--primary-color);
-      margin-bottom: 20px;
-      box-shadow: 0 4px 10px rgba(74, 107, 255, 0.2);
-    }
-    
-    h1 {
-      font-size: 24px;
-      margin: 0 0 10px 0;
-      color: var(--text-color);
-      font-weight: 600;
-    }
-    
-    .user-info {
-      margin: 20px 0;
-      text-align: left;
-      padding: 0 10px;
-    }
-    
-    .info-item {
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-    }
-    
-    .info-label {
-      font-weight: 500;
-      color: var(--text-light);
-    }
-    
-    .info-value {
-      color: var(--text-color);
-    }
-    
-    hr {
-      border: none;
-      height: 1px;
-      background-color: #eee;
-      margin: 25px 0;
-    }
-    
-    .btn {
-      display: inline-block;
-      padding: 12px 25px;
-      font-size: 16px;
-      font-weight: 500;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      margin: 5px;
-      border: none;
-    }
-    
-    .btn-primary {
-      background-color: var(--primary-color);
-      color: white;
-    }
-    
-    .btn-primary:hover {
-      background-color: #3a5aed;
-      transform: translateY(-2px);
-    }
-    
-    .btn-danger {
-      background-color: var(--danger-color);
-      color: white;
-    }
-    
-    .btn-danger:hover {
-      background-color: #e04040;
-      transform: translateY(-2px);
-    }
-    
-    .btn-group {
-      display: flex;
-      flex-direction: column;
-      margin-top: 20px;
-    }
-    
-    @media (max-width: 480px) {
-      .perfil-container {
-        padding: 30px 20px;
-        margin: 20px;
-      }
-      
-      .btn {
-        width: 100%;
-        margin: 5px 0;
-      }
-    }
+   * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  body {
+    background: #f4f1ee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .perfil-container {
+    background: #ffffff;
+    padding: 50px 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 400px;
+    transition: transform 0.3s;
+  }
+
+  .perfil-container:hover {
+    transform: translateY(-5px);
+  }
+
+  .perfil-foto {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #5a6b50;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 26px;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  p {
+    font-size: 16px;
+    color: #555;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  p strong {
+    color: #333;
+    margin-right: 5px;
+  }
+
+  p input {
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    color: #555;
+    outline: none;
+    width: auto;
+  }
+
+  p button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+  }
+
+  p button svg {
+    width: 20px;
+    height: 20px;
+    fill: #555;
+  }
+
+  hr {
+    margin: 30px 0;
+    border: none;
+    border-top: 1px solid #ddd;
+  }
+
+  .btn-normie,
+  .btn-sair {
+    display: inline-block;
+    margin: 10px 8px;
+    padding: 12px 35px;
+    font-size: 15px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .btn-normie {
+    background: #5a6b50;
+    color: #fff;
+  }
+
+  .btn-normie:hover {
+    background: #4a5842;
+    transform: translateY(-2px);
+  }
+
+  .btn-sair {
+    background: #dc3545;
+    color: #fff;
+  }
+
+  .btn-sair:hover {
+    background: #b02a37;
+    transform: translateY(-2px);
+  }
   </style>
 </head>
 <body>
@@ -152,24 +161,34 @@
     }
     ?>
     <h1><?php echo htmlspecialchars($usuario['nome']); ?></h1>
-    
-    <div class="user-info">
-      <div class="info-item">
-        <span class="info-label">Email:</span>
-        <span class="info-value"><?php echo htmlspecialchars($usuario['email']); ?></span>
-      </div>
-      <div class="info-item">
-        <span class="info-label">Senha:</span>
-        <span class="info-value">••••••••</span>
-      </div>
-    </div>
-    
+    <p><strong>Email:</strong> <?php echo htmlspecialchars($usuario['email']); ?></p>
+    <p>
+      <strong>Senha:</strong>
+      <input type="password" id="senhaInput" value="<?php echo htmlspecialchars($usuario['senha']); ?>" readonly>
+      <button onclick="toggleSenha()" aria-label="Mostrar/ocultar senha">
+        <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+          <path d="M572.52 241.4C518.59 135.45 407.5 64 288 64S57.41 135.45 3.48 241.4a48.13 48.13 0 0 0 0 29.2C57.41 376.55 168.5 448 288 448s230.59-71.45 284.52-177.4a48.13 48.13 0 0 0 0-29.2ZM288 400c-97.2 0-191.72-58.23-240-144 48.28-85.77 142.8-144 240-144s191.72 58.23 240 144c-48.28 85.77-142.8 144-240 144Zm0-272a128 128 0 1 0 128 128A128 128 0 0 0 288 128Zm0 208a80 80 0 1 1 80-80 80 80 0 0 1-80 80Z"/>
+        </svg>
+      </button>
+    </p>
+
     <hr>
-    
-    <div class="btn-group">
-      <a href="editar_perfil.php" class="btn btn-primary">Editar Informações</a>
-      <a href="deletar.php" onclick="return confirm('Tem certeza que deseja deletar sua conta? Isso não poderá ser desfeito!');" class="btn btn-danger">DELETAR CONTA ☠️</a>
-    </div>
+
+    <a href="editar_perfil.php" class="btn-normie">Editar Informações</a>
+    <br>
+    <a href="deletar.php" onclick="return confirm('Tem certeza que deseja deletar sua conta? Isso não poderá ser desfeito!');" class="btn-sair">DELETAR CONTA ☠️</a>
   </div>
+
+  <script>
+    function toggleSenha() {
+      var input = document.getElementById("senhaInput");
+      var icon = document.getElementById("eyeIcon");
+      if (input.type === "password") {
+        input.type = "text";
+      } else {
+        input.type = "password";
+      }
+    }
+  </script>
 </body>
 </html>

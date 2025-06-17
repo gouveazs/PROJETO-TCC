@@ -1,161 +1,38 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entre Linhas - Chats Online</title>
-    <style>
-        /* Estilos gerais */
-        body {
-            font-family: 'Georgia', serif;
-            background-color: #f5f5f0;
-            color: #333;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
-            background-attachment: fixed;
-        }
-
-        /* Container principal */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            margin-top: 30px;
-            margin-bottom: 30px;
-        }
-
-        /* Cabeçalho */
-        h1 {
-            color: #5a3921;
-            text-align: center;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: normal;
-            letter-spacing: 1px;
-            border-bottom: 1px solid #d4c9b8;
-            padding-bottom: 15px;
-        }
-
-        h2 {
-            color: #7a5c3c;
-            font-size: 1.5em;
-            margin-top: 30px;
-            font-weight: normal;
-            text-align: center;
-        }
-
-        /* Linha divisória */
-        hr {
-            border: 0;
-            height: 1px;
-            background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(90, 57, 33, 0.75), rgba(0, 0, 0, 0));
-            margin: 30px 0;
-        }
-
-        /* Descrições */
-        .description {
-            margin-bottom: 30px;
-            padding: 20px;
-            background-color: #fffdf8;
-            border-left: 4px solid #d4c9b8;
-            transition: all 0.3s ease;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .description:hover {
-            background-color: #f9f5eb;
-            border-left: 4px solid #b3a089;
-            transform: translateX(5px);
-        }
-
-        /* Rodapé */
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            color: #999;
-            font-size: 0.9em;
-            padding: 20px 0;
-            border-top: 1px solid #eee;
-        }
-
-        /* Botão de comunidade */
-        .community-btn {
-            display: block;
-            width: 60%;
-            margin: 20px auto;
-            padding: 12px;
-            background-color: #7a5c3c;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            font-weight: bold;
-        }
-
-        .community-btn:hover {
-            background-color: #5a3921;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                padding: 15px;
-            }
-            
-            h1 {
-                font-size: 2em;
-            }
-            
-            .community-btn {
-                width: 80%;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Entre Linhas - Chats Online</h1>
-            <h2>Bem vindo, conheça nossas comunidades!</h2>
-            <p style="text-align: center; font-style: italic;">Faça parte de bate-papos sobre seus livros preferidos</p>
-        </header>
-
-        <hr>
-
-        <a href="#" class="community-btn">Entrar na Comunidade de Ficção Científica</a>
-        <a href="#" class="community-btn">Entrar na Comunidade de Mistérios Históricos</a>
-        <a href="#" class="community-btn">Entrar na Comunidade de Romances Literários</a>
-
-        <div class="description">
-            <h3>Descrição</h3>
-            <p>Neste canto digital onde o tempo dobra e as realidades se entrelaçam, mentes inquietas se reúnem para tecer o futuro com palavras.</p>
-            <p>Entre mensagens que viajam mais rápido que a luz, exploramos juntos os enigmas dos multiversos, os segredos das civilizações estelares e os dilemas éticos das inteligências artificiais.</p>
-        </div>
-
-        <div class="description">
-            <h3>Descrição</h3>
-            <p>Num cantinho digital onde o Wi-Fi peça até nas perguntas sem resposta, reunimos os que preferem a verdade estranha às mentiras confortáveis.</p>
-            <p>Aqui, cada xícara de café virtual vem com um fato inusitado: conversamos sobre buracos negros como quem fala do tempo, discutimos arqueologia como quem comenta a novela das nove, e trocamos histórias de descobertas científicas como quem conta causos de taverna.</p>
-        </div>
-
-        <div class="description">
-            <h3>Descrição</h3>
-            <p>Entre as brumas deste recanto digital, as almas apaixonadas se encontram sob um céu de palavras suspensas. Aqui, cada mensagem é um bilhete deixado na janela, cada diálogo um lento toque de mãos através do tempo.</p>
-            <p>Nossos dedos desenham histórias que o vento leva: amores proibidos como pétalas caídas, paixões ardentes que desafiam eras.</p>
-        </div>
-
-        <footer>
-            <p>Todos os direitos reservados - 2025</p>
-        </footer>
+<div class="content">
+  <!-- Seção de Comunidades (igual à imagem) -->
+  <div class="comunidades-section">
+    <h1>Entre Linhas - Chats Online</h1>
+    
+    <h2>Bem vindo, conheça nossas comunidades!</h2>
+    <p class="subtitle">Faça parte de bate-papos sobre seus livros preferidos</p>
+     <link rel="stylesheet" href="css/comunidade.css">
+    
+    <hr class="divider">
+    
+    <div class="descricao-box">
+      <h3>Descrição</h3>
+      <p>Neste canto digital onde o tempo dobra e as realidades se entrelaçam, mentes inquietas se reúnem para tecer o futuro com palavras.</p>
+      <p>Entre mensagens que viajam mais rápido que a luz, exploramos juntos os enigmas dos multiversos, os segredos das civilizações estelares e os dilemas éticos das inteligências artificiais.</p>
     </div>
-</body>
-</html>
+    
+    <div class="descricao-box">
+      <h3>Descrição</h3>
+      <p>Num cantinho digital onde o Wi-Fi peça até nas perguntas sem resposta, reunimos os que preferem a verdade estranha às mentiras confortáveis.</p>
+      <p>Aqui, cada xícara de café virtual vem com um fato inusitado: conversamos sobre buracos negros como quem fala do tempo, discutimos arqueologia como quem comenta a novela das nove, e trocamos histórias de descobertas científicas como quem conta causos de taverna.</p>
+    </div>
+    
+    <div class="descricao-box">
+      <h3>Descrição</h3>
+      <p>Entre as brumas deste recanto digital, as almas apaixonadas se encontram sob um céu de palavras suspensas. Aqui, cada mensagem é um bilhete deixado na janela, cada diálogo um lento toque de mãos através do tempo.</p>
+      <p>Nossos dedos desenham histórias que o vento leva: amores proibidos como pétalas caídas, paixões ardentes que desafiam eras.</p>
+    </div>
+    
+    <div class="descricao-box">
+      <h3>Descrição</h3>
+    </div>
+    
+    <footer class="comunidades-footer">
+      <p>Todos os direitos reservados - 2025</p>
+    </footer>
+  </div>
+</div>
