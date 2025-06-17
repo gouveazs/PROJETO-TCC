@@ -26,129 +26,128 @@ if (!$usuario) {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Perfil do Usuário</title>
   <style>
-   * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-  }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
 
-  body {
-    background: #f4f1ee;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
+    body {
+      background: #f4f1ee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-  .perfil-container {
-    background: #ffffff;
-    padding: 50px 40px;
-    border-radius: 20px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 400px;
-    transition: transform 0.3s;
-  }
+    .perfil-container {
+      background: #ffffff;
+      padding: 50px 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 400px;
+      transition: transform 0.3s;
+    }
 
-  .perfil-container:hover {
-    transform: translateY(-5px);
-  }
+    .perfil-container:hover {
+      transform: translateY(-5px);
+    }
 
-  .perfil-foto {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #5a6b50;
-    margin-bottom: 20px;
-  }
+    .perfil-foto {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #5a6b50;
+      margin-bottom: 20px;
+    }
 
-  h1 {
-    font-size: 26px;
-    color: #333;
-    margin-bottom: 20px;
-    font-weight: 600;
-  }
+    h1 {
+      font-size: 26px;
+      color: #333;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
 
-  .info-linha {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin: 8px 0;
-  }
+    .info-linha {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      margin: 10px 0;
+    }
 
-  .info-linha strong {
-    color: #333;
-  }
+    .info-linha strong {
+      min-width: 70px;
+      text-align: right;
+      color: #333;
+    }
 
-  .info-linha span {
-    font-size: 16px;
-    color: #555;
-  }
+    .info-linha span,
+    .info-linha input {
+      flex: 1;
+      font-size: 16px;
+      color: #555;
+      border: none;
+      background: transparent;
+      outline: none;
+    }
 
-  .info-linha input {
-    border: none;
-    background: transparent;
-    font-size: 16px;
-    color: #555;
-    outline: none;
-  }
+    .info-linha button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0 5px;
+      display: flex;
+      align-items: center;
+    }
 
-  .info-linha button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0 5px;
-    display: flex;
-    align-items: center;
-  }
+    .info-linha button svg {
+      width: 20px;
+      height: 20px;
+      fill: #555;
+    }
 
-  .info-linha button svg {
-    width: 20px;
-    height: 20px;
-    fill: #555;
-  }
+    hr {
+      margin: 30px 0;
+      border: none;
+      border-top: 1px solid #ddd;
+    }
 
-  hr {
-    margin: 30px 0;
-    border: none;
-    border-top: 1px solid #ddd;
-  }
+    .btn-normie,
+    .btn-sair {
+      display: inline-block;
+      margin: 10px 8px;
+      padding: 12px 35px;
+      font-size: 15px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
 
-  .btn-normie,
-  .btn-sair {
-    display: inline-block;
-    margin: 10px 8px;
-    padding: 12px 35px;
-    font-size: 15px;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-  }
+    .btn-normie {
+      background: #5a6b50;
+      color: #fff;
+    }
 
-  .btn-normie {
-    background: #5a6b50;
-    color: #fff;
-  }
+    .btn-normie:hover {
+      background: #4a5842;
+      transform: translateY(-2px);
+    }
 
-  .btn-normie:hover {
-    background: #4a5842;
-    transform: translateY(-2px);
-  }
+    .btn-sair {
+      background: #dc3545;
+      color: #fff;
+    }
 
-  .btn-sair {
-    background: #dc3545;
-    color: #fff;
-  }
-
-  .btn-sair:hover {
-    background: #b02a37;
-    transform: translateY(-2px);
-  }
+    .btn-sair:hover {
+      background: #b02a37;
+      transform: translateY(-2px);
+    }
   </style>
 </head>
 <body>
