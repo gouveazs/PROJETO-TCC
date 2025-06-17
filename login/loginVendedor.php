@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastro</title>
+  <title>Login</title>
   <style>
     * {
       box-sizing: border-box;
@@ -111,27 +111,22 @@
 </head>
 <body>
   <div class="container">
-    <div class="left-panel">
-      <h2>Bem-vindo de volta!</h2>
-      <p>Para se manter conectado,<br>faça login com suas informações pessoais</p>
-      <button onclick="window.location.href='../../login/login.php'">ENTRAR</button>
-    </div>
+        <div class="left-panel">
+        <h2>Olá, novo vendedor!</h2>
+         <p>Cadastre-se agora<br>para começar seus negócios!</p>
+        <button onclick="window.location.href='../php/cadastro/cadastoVendedor.php'">CADASTRAR</button>
+        </div>
     <div class="right-panel">
-
-      <h2>Criar Conta</h2>
-
-      <form method="POST" action="../insercao/insercao.php" enctype="multipart/form-data">
-        <input type="text" name="nome" placeholder="Nome de usuário" required>
-        <input type="email" name="email" placeholder="E-mail" required>
+      <h2>Entrar na Conta</h2>
+      <form action="processaLogin.php" method="post">
+        <input type="text" name="usuario" placeholder="Usuário" required>
         <input type="password" name="senha" placeholder="Senha" required>
-        <input type="file" name="foto_de_perfil">
-        <input type="submit" value="Cadastrar">
+        <input type="submit" value="Login">
       </form>
 
-      <?php if (isset($_GET['erro']) && $_GET['erro'] == 'nome_ou_email'): ?>
-        <div class="erro">Nome ou e-mail já cadastrados!</div>
+      <?php if (isset($_GET['error'])): ?>
+        <p class="erro">Usuário ou senha incorretos</p>
       <?php endif; ?>
-
     </div>
   </div>
 </body>

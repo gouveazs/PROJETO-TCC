@@ -41,6 +41,7 @@ $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
     <ul>
       <?php if (!$nome): ?>
         <li><a href="login/login.php"><i class="fas fa-sign-in-alt"></i> Entrar na conta</a></li>
+        <li><a href="login/loginVendedor.php"><i class="fas fa-sign-in-alt"></i> Acessar painel do Livreiro</a></li>
         <li><a href="php/cadastro/cadastroUsuario.php"><i class="fas fa-user-plus"></i> Criar conta</a></li>
         <li><a href="php/cadastro/cadastroVendedor.php"><i class="fas fa-cogs"></i> Quero vender</a></li>
       <?php else: ?>
