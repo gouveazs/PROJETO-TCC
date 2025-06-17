@@ -1,0 +1,326 @@
+HTML:
+
+
+<?php
+session_start();
+
+$nome = null;
+$tipo = null;
+
+if (isset($_SESSION['nome_usuario'])) {
+    $nome = $_SESSION['nome_usuario'];
+    $tipo = "Usuário";
+}
+if (isset($_SESSION['nome_vendedor'])) {
+    $nome = $_SESSION['nome_vendedor'];
+    $tipo = "Vendedor";
+}
+?>
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Entre Linhas - Livraria Moderna</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link rel="stylesheet" href="css/estilo02.css"> <!-- CSS separado -->
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="profile">
+      <img src="imgs/imagem-do-usuario-com-fundo-preto.png" alt="Avatar">
+      <div>
+        <?php if ($nome): ?>
+              <span class="item-description"><?php echo htmlspecialchars($nome); ?></span>
+            <?php if($tipo): ?>
+              <span class="item-description"><?php echo htmlspecialchars($tipo); ?></span>
+            <?php endif; ?>
+        <?php else: ?>
+            <span class="item-description">Entre ou crie sua conta</span>
+        <?php endif; ?>
+      </div>
+    </div>
+
+    <ul>
+      <li><a href="#"><i class="fas fa-home"></i> Início</a></li>
+      <li><a href="#"><i class="fas fa-compass"></i> Explorar</a></li>
+      <li><a href="#"><i class="fas fa-book"></i> Minha Estante</a></li>
+      <li><a href="#"><i class="fas fa-heart"></i> Favoritos</a></li>
+      <li><a href="#"><i class="fas fa-history"></i> Histórico</a></li>
+    </ul>
+
+    <h2>Conta</h2>
+    <ul>
+      <?php if (!$nome): ?>
+        <li><a href="login/login.php"><i class="fas fa-sign-in-alt"></i> Entrar na conta</a></li>
+        <li><a href="login/loginVendedor.php"><i class="fas fa-sign-in-alt"></i> Acessar painel do Livreiro</a></li>
+        <li><a href="php/cadastro/cadastroUsuario.php"><i class="fas fa-user-plus"></i> Criar conta</a></li>
+        <li><a href="php/cadastro/cadastroVendedor.php"><i class="fas fa-cogs"></i> Quero vender</a></li>
+      <?php else: ?>
+                <li><a href="php/perfil/ver_perfil.php">Ver perfil</a></li>
+      <?php endif; ?>
+
+      <?php if ($nome === 'adm'): ?>
+        <li><a href="php/consulta/consulta.php"><i class="fas fa-search"></i> Consulta</a></li>
+        <li><a href="php/consultaFiltro/busca.php"><i class="fas fa-filter"></i> Consulta por Nome</a></li>
+        <li><a href="php/cadastro/cadastroProduto.php"><i class="fas fa-plus"></i> Cadastrar Produto</a></li>
+      <?php endif; ?>
+
+      <?php if ($tipo === 'Vendedor'): ?>
+        <li><a href="php/cadastro/cadastroProduto.php"><i class="fas fa-plus"></i> Cadastrar Produto</a></li>
+      <?php endif; ?>
+  </ul>
+
+
+    <h2><a href="login/logout.php" style="color: #ff7675;">Sair</a></h2>
+  </div>
+
+  <div class="main" >
+    <div class="topbar">
+      <h2>Entre Linhas - Livraria Moderna</h2>
+      <div class="search-box">
+        <input type="text" placeholder="Pesquisar livros, autores...">
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="section">
+        <h3>Novidades</h3>
+          <div class="cards">
+            <div class="card">
+              <img src="imgs/capa.jpg" alt="Livro 1">
+              <div class="card-content">
+                <h4>O Nome do Vento</h4>
+                <p>★★★★★</p>
+              </div>
+            </div>
+
+            <div class="card">
+              <img src="imgs/capa.jpg" alt="Livro 2">
+              <div class="card-content">
+                <h4>A Marcela</h4>
+                <p>★★★★☆</p>
+              </div>
+            </div>
+            
+          </div>
+      </div>
+
+      <div class="section">
+        <h3>Recomendações</h3>
+        <div class="cards">
+          <div class="card">
+            <img src="imgs/capa3.jpg" alt="Livro 3">
+            <div class="card-content">
+              <h4>1984</h4>
+              <p>★★★★★</p>
+            </div>
+          </div>
+          <div class="card">
+            <img src="imgs/capa4.jpg" alt="Livro 4">
+            <div class="card-content">
+              <h4>Orgulho e Preconceito</h4>
+              <p>★★★★☆</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Todos os direitos reservados - 2025
+    </div>
+  </div>
+
+</body>
+</html>
+
+CSS EXTERNO:
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #F4F1EE;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 250px;
+  background-color: #5A6B50;
+  color: #fff;
+  padding: 30px 20px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar .profile {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.sidebar .profile img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #fff;
+  margin-right: 15px;
+}
+
+.sidebar .profile strong {
+  display: block;
+  font-size: 16px;
+  color: #fff;
+}
+
+.sidebar .profile span {
+  font-size: 13px;
+  color: #ddd;
+}
+
+.sidebar h2 {
+  font-size: 16px;
+  margin: 30px 0 15px;
+  color: #EDEBD7;
+  font-weight: 600;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.sidebar ul li {
+  margin-bottom: 12px;
+}
+
+.sidebar ul li a {
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: 0.3s;
+  font-size: 14px;
+}
+
+.sidebar ul li a i {
+  margin-right: 12px;
+  font-size: 16px;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+  background-color: #4d5e45;
+  color: #fff;
+}
+
+
+/* MAIN CONTENT */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  background-color: #4E361E;
+  color: #333;
+  padding: 15px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topbar h2 {
+  font-size: 24px;
+  color: #fff;
+}
+
+.search-box input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  outline: none;
+  width: 250px;
+}
+
+/* CONTENT */
+.content {
+  padding: 20px 30px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.section {
+  margin-bottom: 40px;
+}
+
+.section h3 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #4A5A40;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+  width: 180px;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 10px;
+  text-align: center;
+}
+
+.card-content h4 {
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.card-content p {
+  font-size: 14px;
+  color: #888;
+}
+
+/* FOOTER */
+.footer {
+  background-color: #4E361E ;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 14px;
+}
