@@ -67,35 +67,36 @@ if (!$usuario) {
   h1 {
     font-size: 26px;
     color: #333;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     font-weight: 600;
   }
 
-  p {
-    font-size: 16px;
-    color: #555;
-    margin: 5px 0;
+  .info-linha {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 8px;
+    margin: 8px 0;
   }
 
-  p strong {
+  .info-linha strong {
     color: #333;
-    margin-right: 5px;
   }
 
-  p input {
+  .info-linha span {
+    font-size: 16px;
+    color: #555;
+  }
+
+  .info-linha input {
     border: none;
     background: transparent;
     font-size: 16px;
     color: #555;
     outline: none;
-    width: auto;
   }
 
-  p button {
+  .info-linha button {
     background: none;
     border: none;
     cursor: pointer;
@@ -104,7 +105,7 @@ if (!$usuario) {
     align-items: center;
   }
 
-  p button svg {
+  .info-linha button svg {
     width: 20px;
     height: 20px;
     fill: #555;
@@ -161,8 +162,13 @@ if (!$usuario) {
     }
     ?>
     <h1><?php echo htmlspecialchars($usuario['nome']); ?></h1>
-    <p><strong>Email:</strong> <?php echo htmlspecialchars($usuario['email']); ?></p>
-    <p>
+
+    <div class="info-linha">
+      <strong>Email:</strong>
+      <span><?php echo htmlspecialchars($usuario['email']); ?></span>
+    </div>
+
+    <div class="info-linha">
       <strong>Senha:</strong>
       <input type="password" id="senhaInput" value="<?php echo htmlspecialchars($usuario['senha']); ?>" readonly>
       <button onclick="toggleSenha()" aria-label="Mostrar/ocultar senha">
@@ -170,7 +176,7 @@ if (!$usuario) {
           <path d="M572.52 241.4C518.59 135.45 407.5 64 288 64S57.41 135.45 3.48 241.4a48.13 48.13 0 0 0 0 29.2C57.41 376.55 168.5 448 288 448s230.59-71.45 284.52-177.4a48.13 48.13 0 0 0 0-29.2ZM288 400c-97.2 0-191.72-58.23-240-144 48.28-85.77 142.8-144 240-144s191.72 58.23 240 144c-48.28 85.77-142.8 144-240 144Zm0-272a128 128 0 1 0 128 128A128 128 0 0 0 288 128Zm0 208a80 80 0 1 1 80-80 80 80 0 0 1-80 80Z"/>
         </svg>
       </button>
-    </p>
+    </div>
 
     <hr>
 
@@ -182,7 +188,6 @@ if (!$usuario) {
   <script>
     function toggleSenha() {
       var input = document.getElementById("senhaInput");
-      var icon = document.getElementById("eyeIcon");
       if (input.type === "password") {
         input.type = "text";
       } else {
