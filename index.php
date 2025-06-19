@@ -136,15 +136,40 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       min-height: 100vh;
     }
 
-    h2 {
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 20px;
+    }
+
+    .section-header h2 {
       color: var(--verde);
+    }
+
+    .section-header .ver-mais {
+      color: var(--marrom);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    .section-header .ver-mais:hover {
+      color: #000;
+      text-decoration: underline;
     }
 
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 20px;
+    }
+
+    .cards-novidades {
+      grid-template-columns: repeat(6, 1fr);
+    }
+
+    .cards-recomendacoes {
+      grid-template-columns: repeat(6, 1fr);
     }
 
     .card {
@@ -188,12 +213,24 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       padding: 15px;
     }
 
+    @media (max-width: 1200px) {
+      .cards-novidades {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
     @media (max-width: 768px) {
       .sidebar {
         width: 200px;
       }
       .topbar, .banner, .main, .footer {
         margin-left: 200px;
+      }
+      .cards-novidades {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .cards-recomendacoes {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
@@ -257,38 +294,164 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
   </div>
 
   <div class="main">
-    <h2>Novidades</h2>
-    <div class="cards">
-      <div class="card">
-        <img src="https://images-na.ssl-images-amazon.com/images/I/51sNWdKoMbL.jpg" alt="Livro 1">
-        <div class="info">
-          <h3>A Menina que Roubava Livros</h3>
-          <div class="stars">★★★★★</div>
-        </div>
-      </div>
-      <div class="card">
-        <img src="https://images-na.ssl-images-amazon.com/images/I/41aQPTCmeVL.jpg" alt="Livro 2">
-        <div class="info">
-          <h3>O Pequeno Príncipe</h3>
-          <div class="stars">★★★★★</div>
-        </div>
-      </div>
-      <div class="card">
-        <img src="https://images-na.ssl-images-amazon.com/images/I/51hYlyByEGL.jpg" alt="Livro 3">
-        <div class="info">
-          <h3>Dom Casmurro</h3>
-          <div class="stars">★★★★☆</div>
-        </div>
-      </div>
-      <div class="card">
-        <img src="https://images-na.ssl-images-amazon.com/images/I/51Mm1LJxeFL.jpg" alt="Livro 4">
-        <div class="info">
-          <h3>Harry Potter</h3>
-          <div class="stars">★★★★★</div>
-        </div>
-      </div>
+    <!-- Novidades -->
+    <div class="section-header">
+  <h2>Novidades</h2>
+  <a href="#" class="ver-mais">Ver mais</a>
+</div>
+<div class="cards cards-novidades">
+  <div class="card">
+    <img src="imgs/capa1.jpg" alt="Livro 1">
+    <div class="info">
+      <h3>Daisy Jone & The Six</h3>
+      <p class="price">R$ 44,90</p>
+      <div class="stars">★★★★☆</div>
     </div>
   </div>
+  <div class="card">
+    <img src="imgs/capa2.jpg" alt="Livro 2">
+    <div class="info">
+      <h3>A Menina que Roubava Livros</h3>
+      <p class="price">R$ 39,50</p>
+      <div class="stars">★★★★★</div>
+    </div>
+  </div>
+  <div class="card">
+    <img src="imgs/capa3.jpg" alt="Livro 3">
+    <div class="info">
+      <h3>Extraordinário</h3>
+      <p class="price">R$ 28,00</p>
+      <div class="stars">★★★★★</div>
+    </div>
+  </div>
+  <div class="card">
+    <img src="imgs/capa4.jpg" alt="Livro 4">
+    <div class="info">
+      <h3>Relatos de um Gato Viajante</h3>
+      <p class="price">R$ 33,90</p>
+      <div class="stars">★★★☆☆</div>
+    </div>
+  </div>
+  <div class="card">
+    <img src="imgs/capa5.jpg" alt="Livro 5">
+    <div class="info">
+      <h3>Harry Potter</h3>
+      <p class="price">R$ 55,00</p>
+      <div class="stars">★★★★★</div>
+    </div>
+  </div>
+  <div class="card">
+    <img src="imgs/capa6.jpg" alt="Livro 6">
+    <div class="info">
+      <h3>Dom Casmurro</h3>
+      <p class="price">R$ 22,00</p>
+      <div class="stars">★★★★☆</div>
+    </div>
+  </div>
+</div>
+
+    <!-- Recomendações -->
+   <div class="section-header" style="margin-top: 50px;">
+  <h2>Recomendações</h2>
+</div>
+<div class="cards cards-recomendacoes">
+  <div class="card">
+    <img src="imgs/capa7.jpg" alt="Livro 7">
+    <div class="info">
+      <h3>Orgulho e Preconceito</h3>
+      <p class="price">R$ 34,90</p>
+      <div class="stars">★★★★★</div>
+    </div>
+  </div>
+  <div class="card">
+    <img src="imgs/capa8.jpg" alt="Livro 8">
+    <div class="info">
+      <h3>1984</h3>
+      <p class="price">R$ 29,99</p>
+      <div class="stars">★★★★★</div>
+    </div>
+  </div>
+  <div class="card">
+    <img src="imgs/capa9.jpg" alt="Livro 9">
+    <div class="info">
+      <h3>O Pequeno Príncipe</h3>
+      <p class="price">R$ 19,90</p>
+      <div class="stars">★★★★★</div>
+    </div>
+  </div>
+  <div class="card">
+    <img src="imgs/capa10.jpg" alt="Livro 10">
+    <div class="info">
+      <h3>Romeu e Julieta</h3>
+      <p class="price">R$ 24,00</p>
+      <div class="stars">★★★☆☆</div>
+    </div>
+  </div>
+  <div class="card">
+    <img src="imgs/capa11.jpg" alt="Livro 11">
+    <div class="info">
+      <h3>Senhor dos Anéis</h3>
+      <p class="price">R$ 59,90</p>
+      <div class="stars">★★★★★</div>
+    </div>
+  </div>
+  <div class="card">
+    <img src="imgs/capa12.jpg" alt="Livro 12">
+    <div class="info">
+      <h3>A Culpa é das Estrelas</h3>
+      <p class="price">R$ 35,00</p>
+      <div class="stars">★★★★☆</div>
+    </div>
+  </div>
+  <div class="card">
+    <img src="imgs/capa13.jpg" alt="Livro 13">
+    <div class="info">
+      <h3>O Hobbit</h3>
+      <p class="price">R$ 39,90</p>
+      <div class="stars">★★★★★</div>
+    </div>
+  </div>
+  <div class="card">
+    <img src="imgs/capa14.jpg" alt="Livro 14">
+    <div class="info">
+      <h3>Cem Anos de Solidão</h3>
+      <p class="price">R$ 42,00</p>
+      <div class="stars">★★★★★</div>
+    </div>
+  </div>
+  <div class="card">
+    <img src="imgs/capa15.jpg" alt="Livro 15">
+    <div class="info">
+      <h3>A Revolução dos Bichos</h3>
+      <p class="price">R$ 27,50</p>
+      <div class="stars">★★★★☆</div>
+    </div>
+  </div>
+  <div class="card">
+    <img src="imgs/capa16.jpg" alt="Livro 16">
+    <div class="info">
+      <h3>O Conto da Aia</h3>
+      <p class="price">R$ 36,00</p>
+      <div class="stars">★★★★☆</div>
+    </div>
+  </div>
+  <div class="card">
+    <img src="imgs/capa17.jpg" alt="Livro 17">
+    <div class="info">
+      <h3>A Máquina do Tempo</h3>
+      <p class="price">R$ 22,90</p>
+      <div class="stars">★★★☆☆</div>
+    </div>
+  </div>
+  <div class="card">
+    <img src="imgs/capa18.jpg" alt="Livro 18">
+    <div class="info">
+      <h3>O Sol É Para Todos</h3>
+      <p class="price">R$ 38,00</p>
+      <div class="stars">★★★★★</div>
+    </div>
+  </div>
+</div>
 
   <div class="footer">
     &copy; 2025 Entre Linhas - Todos os direitos reservados.
