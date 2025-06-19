@@ -125,7 +125,6 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     .banner img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
     }
 
     .main {
@@ -184,10 +183,10 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       transform: translateY(-5px);
     }
 
-    .card img {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
+   .card img {
+       width: 100%;
+       height: 300px; /* Aumentado o comprimento */
+        object-fit: cover;
     }
 
     .card .info {
@@ -247,7 +246,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
 <body>
   <div class="sidebar">
     <div class="logo">
-      <img src="imgs/perfil.png" alt="Foto de Perfil">
+      <img src="imgs/usuario.png" alt="Foto de Perfil">
       <p><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>
     </div>
     <nav>
@@ -301,7 +300,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
 </div>
 <div class="cards cards-novidades">
   <div class="card">
-    <img src="imgs/capa1.jpg" alt="Livro 1">
+    <img src="imgs/Daisy Jone & The Six.jpg" alt="Livro 1">
     <div class="info">
       <h3>Daisy Jone & The Six</h3>
       <p class="price">R$ 44,90</p>
@@ -309,7 +308,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     </div>
   </div>
   <div class="card">
-    <img src="imgs/capa2.jpg" alt="Livro 2">
+    <img src="imgs/A Menina que Roubava Livros.jpg" alt="Livro 2">
     <div class="info">
       <h3>A Menina que Roubava Livros</h3>
       <p class="price">R$ 39,50</p>
@@ -317,7 +316,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     </div>
   </div>
   <div class="card">
-    <img src="imgs/capa3.jpg" alt="Livro 3">
+    <img src="imgs/Extraordinário.jpg" alt="Livro 3">
     <div class="info">
       <h3>Extraordinário</h3>
       <p class="price">R$ 28,00</p>
@@ -325,7 +324,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     </div>
   </div>
   <div class="card">
-    <img src="imgs/capa4.jpg" alt="Livro 4">
+    <img src="imgs/Relatos de um Gato Viajante.jpg" alt="Livro 4">
     <div class="info">
       <h3>Relatos de um Gato Viajante</h3>
       <p class="price">R$ 33,90</p>
@@ -333,15 +332,15 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     </div>
   </div>
   <div class="card">
-    <img src="imgs/capa5.jpg" alt="Livro 5">
+    <img src="imgs/Prisioneiro de Azkaban.jpg" alt="Livro 5">
     <div class="info">
-      <h3>Harry Potter</h3>
+      <h3>Prisioneiro de Azkaban</h3>
       <p class="price">R$ 55,00</p>
       <div class="stars">★★★★★</div>
     </div>
   </div>
   <div class="card">
-    <img src="imgs/capa6.jpg" alt="Livro 6">
+    <img src="imgs/Dom Casmurro.jpg" alt="Livro 6">
     <div class="info">
       <h3>Dom Casmurro</h3>
       <p class="price">R$ 22,00</p>
@@ -353,10 +352,11 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     <!-- Recomendações -->
    <div class="section-header" style="margin-top: 50px;">
   <h2>Recomendações</h2>
+    <a href="#" class="ver-mais">Ver mais</a>
 </div>
 <div class="cards cards-recomendacoes">
   <div class="card">
-    <img src="imgs/capa7.jpg" alt="Livro 7">
+    <img src="imgs/Orgulho e Preconceito.jpg" alt="Livro 7">
     <div class="info">
       <h3>Orgulho e Preconceito</h3>
       <p class="price">R$ 34,90</p>
@@ -364,7 +364,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     </div>
   </div>
   <div class="card">
-    <img src="imgs/capa8.jpg" alt="Livro 8">
+    <img src="imgs/1984.jpg" alt="Livro 8">
     <div class="info">
       <h3>1984</h3>
       <p class="price">R$ 29,99</p>
@@ -372,7 +372,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     </div>
   </div>
   <div class="card">
-    <img src="imgs/capa9.jpg" alt="Livro 9">
+    <img src="imgs/O Pequeno Príncipe.jpg" alt="Livro 9">
     <div class="info">
       <h3>O Pequeno Príncipe</h3>
       <p class="price">R$ 19,90</p>
@@ -380,7 +380,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     </div>
   </div>
   <div class="card">
-    <img src="imgs/capa10.jpg" alt="Livro 10">
+    <img src="imgs/Romeu e Julieta.jpg" alt="Livro 10">
     <div class="info">
       <h3>Romeu e Julieta</h3>
       <p class="price">R$ 24,00</p>
@@ -388,7 +388,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     </div>
   </div>
   <div class="card">
-    <img src="imgs/capa11.jpg" alt="Livro 11">
+    <img src="imgs/Senhor dos Anéis.jpg" alt="Livro 11">
     <div class="info">
       <h3>Senhor dos Anéis</h3>
       <p class="price">R$ 59,90</p>
@@ -396,7 +396,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     </div>
   </div>
   <div class="card">
-    <img src="imgs/capa12.jpg" alt="Livro 12">
+    <img src="imgs/A Culpa é das Estrelas.jpg" alt="Livro 12">
     <div class="info">
       <h3>A Culpa é das Estrelas</h3>
       <p class="price">R$ 35,00</p>
@@ -404,7 +404,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     </div>
   </div>
   <div class="card">
-    <img src="imgs/capa13.jpg" alt="Livro 13">
+    <img src="imgs/O Hobbit.jpg" alt="Livro 13">
     <div class="info">
       <h3>O Hobbit</h3>
       <p class="price">R$ 39,90</p>
@@ -412,7 +412,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     </div>
   </div>
   <div class="card">
-    <img src="imgs/capa14.jpg" alt="Livro 14">
+    <img src="imgs/Cem Anos de Solidão.jpg" alt="Livro 14">
     <div class="info">
       <h3>Cem Anos de Solidão</h3>
       <p class="price">R$ 42,00</p>
@@ -420,7 +420,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     </div>
   </div>
   <div class="card">
-    <img src="imgs/capa15.jpg" alt="Livro 15">
+    <img src="imgs/A Revolução dos Bichos.jpg" alt="Livro 15">
     <div class="info">
       <h3>A Revolução dos Bichos</h3>
       <p class="price">R$ 27,50</p>
@@ -428,7 +428,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     </div>
   </div>
   <div class="card">
-    <img src="imgs/capa16.jpg" alt="Livro 16">
+    <img src="imgs/O Conto da Aia.jpg" alt="Livro 16">
     <div class="info">
       <h3>O Conto da Aia</h3>
       <p class="price">R$ 36,00</p>
@@ -436,17 +436,17 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     </div>
   </div>
   <div class="card">
-    <img src="imgs/capa17.jpg" alt="Livro 17">
+    <img src="imgs/Amor e Azeitonas.jpg" alt="Livro 17">
     <div class="info">
-      <h3>A Máquina do Tempo</h3>
+      <h3>Amor e Azeitonas</h3>
       <p class="price">R$ 22,90</p>
       <div class="stars">★★★☆☆</div>
     </div>
   </div>
   <div class="card">
-    <img src="imgs/capa18.jpg" alt="Livro 18">
+    <img src="imgs/As vantagens de ser invisivel.jpg" alt="Livro 18">
     <div class="info">
-      <h3>O Sol É Para Todos</h3>
+      <h3>As Vantagens de Ser Invisivel</h3>
       <p class="price">R$ 38,00</p>
       <div class="stars">★★★★★</div>
     </div>
