@@ -10,9 +10,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Entre Linhas - Livraria Moderna</title>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <!-- Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
   <style>
@@ -23,8 +21,10 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     }
 
     * {
-      margin: 0; padding: 0; box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+      font-family: 'Playfair Display', serif;
     }
 
     body {
@@ -260,42 +260,43 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
 <body>
   <div class="sidebar">
     <div class="logo">
-      <img src="imgs/usuario.png" alt="Foto de Perfil">
+      <img src="imgs/usuario.jpg" alt="Foto de Perfil">
       <p><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>
     </div>
     <nav>
-      <ul class="menu">
-        <li><a href="#"><i class="fas fa-home"></i> Início</a></li>
-        <li><a href="#"><i class="fas fa-compass"></i> Explorar</a></li>
-        <li><a href="#"><i class="fas fa-users"></i> Comunidades</a></li>
-        <li><a href="#"><i class="fas fa-heart"></i> Favoritos</a></li>
-        <li><a href="#"><i class="fas fa-shopping-cart"></i> Carrinho</a></li>
-      </ul>
+    <ul class="menu">
+  <li><a href="#"><img src="imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
+  <li><a href="#"><img src="imgs/explorar.png" alt="Explorar" style="width:20px; margin-right:10px;"> Explorar</a></li>
+  <li><a href="#"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
+  <li><a href="#"><img src="imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
+  <li><a href="#"><img src="imgs/carrinho.png.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
+</ul>
 
-      <h3>Conta</h3>
-      <ul class="account">
-        <?php if (!$nome): ?>
-          <li><a href="login/login.php"><i class="fas fa-sign-in-alt"></i> Entrar na conta</a></li>
-          <li><a href="php/cadastro/cadastroUsuario.php"><i class="fas fa-user-plus"></i> Criar conta</a></li>
-          <li><a href="php/cadastro/cadastroVendedor.php"><i class="fas fa-store"></i> Quero vender</a></li>
-        <?php else: ?>
-          <li><a href="php/perfil/ver_perfil.php"><i class="fas fa-user"></i> Ver perfil</a></li>
-        <?php endif; ?>
+<h3>Conta</h3>
+<ul class="account">
+  <?php if (!$nome): ?>
+    <li><a href="login/login.php"><img src="imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
+    <li><a href="php/cadastro/cadastroUsuario.php"><img src="imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
+    <li><a href="php/cadastro/cadastroVendedor.php"><img src="imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
+  <?php else: ?>
+    <li><a href="php/perfil/ver_perfil.php"><img src="imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
+  <?php endif; ?>
 
-        <?php if ($nome === 'adm'): ?>
-          <li><a href="php/consulta/consulta.php"><i class="fas fa-search"></i> Consulta</a></li>
-          <li><a href="php/consultaFiltro/busca.php"><i class="fas fa-filter"></i> Consulta por Nome</a></li>
-          <li><a href="php/cadastro/cadastroProduto.php"><i class="fas fa-plus"></i> Cadastrar Produto</a></li>
-        <?php endif; ?>
+  <?php if ($nome === 'adm'): ?>
+    <li><a href="php/consulta/consulta.php"><img src="imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
+    <li><a href="php/consultaFiltro/busca.php"><img src="imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
+    <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/querovender.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
+  <?php endif; ?>
 
-        <?php if ($tipo === 'Vendedor'): ?>
-          <li><a href="php/cadastro/cadastroProduto.php"><i class="fas fa-plus"></i> Cadastrar Produto</a></li>
-        <?php endif; ?>
+  <?php if ($tipo === 'Vendedor'): ?>
+    <li><a href="php/cadastro/cadastroProduto.php"><img src="" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
+  <?php endif; ?>
 
-        <?php if ($nome): ?>
-          <li><a href="login/logout.php"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
-        <?php endif; ?>
-      </ul>
+  <?php if ($nome): ?>
+    <li><a href="login/logout.php"><img src="" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
+  <?php endif; ?>
+</ul>
+
     </nav>
   </div>
 
@@ -308,7 +309,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     <img src="img/Banner.png" alt="Banner da Livraria">
   </div>
 
- <div class="main">
+  <div class="main">
   <!-- Novidades -->
   <div class="section-header">
     <h2>Novidades</h2>
@@ -468,8 +469,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       </div>
     </div>
   </div>
-</div>
-
+</div> 
 
   <div class="footer">
     &copy; 2025 Entre Linhas - Todos os direitos reservados.
