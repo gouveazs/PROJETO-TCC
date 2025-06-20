@@ -129,23 +129,25 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     }
 
     .banner {
-      position: fixed;
-      top: 70px; left: 250px; right: 0;
-      height: 200px;
-      z-index: 1000;
+      position: relative; /* NÃO FIXO */
+      margin-left: 250px;
+      margin-top: 70px; /* abaixo da topbar */
+      overflow: hidden;
     }
 
     .banner img {
       width: 100%;
-      height: 100%;
+      height: 300px; /* altura ajustável */
+      object-fit: cover;
+      display: block;
+      margin-bottom: 20px; /* espaçamento entre imagens se tiver várias */
     }
 
     .main {
       flex: 1;
       margin-left: 250px;
-      padding-top: 290px;
-      padding-left: 30px;
-      padding-right: 30px;
+      padding: 30px;
+      margin-top: 20px; /* já compensado pelo banner */
     }
 
     .section-header {
@@ -223,11 +225,10 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       color: #fff;
       text-align: center;
       padding: 15px;
-      position: relative;
     }
 
     @media (max-width: 1200px) {
-      .cards-novidades {
+      .cards-novidades, .cards-recomendacoes {
         grid-template-columns: repeat(4, 1fr);
       }
     }
@@ -239,10 +240,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       .topbar, .banner, .main, .footer {
         margin-left: 200px;
       }
-      .cards-novidades {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .cards-recomendacoes {
+      .cards-novidades, .cards-recomendacoes {
         grid-template-columns: repeat(2, 1fr);
       }
     }
@@ -264,39 +262,38 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       <p><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>
     </div>
     <nav>
-    <ul class="menu">
-  <li><a href="#"><img src="imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-  <li><a href="#"><img src="imgs/explorar.png" alt="Explorar" style="width:20px; margin-right:10px;"> Explorar</a></li>
-  <li><a href="#"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
-  <li><a href="#"><img src="imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
-  <li><a href="#"><img src="imgs/carrinho.png.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
-</ul>
+      <ul class="menu">
+        <li><a href="#"><img src="imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
+        <li><a href="#"><img src="imgs/explorar.png" alt="Explorar" style="width:20px; margin-right:10px;"> Explorar</a></li>
+        <li><a href="#"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
+        <li><a href="#"><img src="imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
+        <li><a href="#"><img src="imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
+      </ul>
 
-<h3>Conta</h3>
-<ul class="account">
-  <?php if (!$nome): ?>
-    <li><a href="login/login.php"><img src="imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
-    <li><a href="php/cadastro/cadastroUsuario.php"><img src="imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
-    <li><a href="php/cadastro/cadastroVendedor.php"><img src="imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
-  <?php else: ?>
-    <li><a href="php/perfil/ver_perfil.php"><img src="imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
-  <?php endif; ?>
+      <h3>Conta</h3>
+      <ul class="account">
+        <?php if (!$nome): ?>
+          <li><a href="login/login.php"><img src="imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
+          <li><a href="php/cadastro/cadastroUsuario.php"><img src="imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
+          <li><a href="php/cadastro/cadastroVendedor.php"><img src="imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
+        <?php else: ?>
+          <li><a href="php/perfil/ver_perfil.php"><img src="imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
+        <?php endif; ?>
 
-  <?php if ($nome === 'adm'): ?>
-    <li><a href="php/consulta/consulta.php"><img src="imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
-    <li><a href="php/consultaFiltro/busca.php"><img src="imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
-    <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/querovender.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
-  <?php endif; ?>
+        <?php if ($nome === 'adm'): ?>
+          <li><a href="php/consulta/consulta.php"><img src="imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
+          <li><a href="php/consultaFiltro/busca.php"><img src="imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
+          <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/querovender.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
+        <?php endif; ?>
 
-  <?php if ($tipo === 'Vendedor'): ?>
-    <li><a href="php/cadastro/cadastroProduto.php"><img src="" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
-  <?php endif; ?>
+        <?php if ($tipo === 'Vendedor'): ?>
+          <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/querovender.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
+        <?php endif; ?>
 
-  <?php if ($nome): ?>
-    <li><a href="login/logout.php"><img src="" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
-  <?php endif; ?>
-</ul>
-
+        <?php if ($nome): ?>
+          <li><a href="login/logout.php"><img src="imgs/logout.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
+        <?php endif; ?>
+      </ul>
     </nav>
   </div>
 
@@ -306,7 +303,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
   </div>
 
   <div class="banner">
-    <img src="img/Banner.png" alt="Banner da Livraria">
+    <img src="imgs/Banner.png" alt="Banner 1">
   </div>
 
   <div class="main">
@@ -469,7 +466,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       </div>
     </div>
   </div>
-</div> 
+</div>  
 
   <div class="footer">
     &copy; 2025 Entre Linhas - Todos os direitos reservados.
