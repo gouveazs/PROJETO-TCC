@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <title>Cadastro de Vendedor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Playfair Display -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -13,7 +14,7 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Playfair Display', serif;
       background-color: #F4F1EE;
       display: flex;
       justify-content: center;
@@ -63,6 +64,7 @@
       border-radius: 8px;
       font-size: 14px;
       transition: border-color 0.3s ease;
+      font-family: 'Playfair Display', serif;
     }
 
     .form-control input:focus {
@@ -75,17 +77,20 @@
       margin-top: 30px;
     }
 
-    input[type="submit"] {
-      background-color: #5a6b50;
-      color: white;
-      border: none;
-      padding: 14px 28px;
-      border-radius: 20px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s ease;
+   input[type="submit"] {
+    background-color: #5a6b50;
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    font-family: 'Playfair Display', serif;
+    width: 100%; /* <-- Aqui faz o botão ocupar toda a largura */
     }
+
 
     input[type="submit"]:hover {
       background-color: #4a5843;

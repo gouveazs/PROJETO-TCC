@@ -103,7 +103,7 @@
     }
 
     form input[type="file"] {
-      font-family: inherit; /* Mantém fonte Playfair Display se o navegador permitir */
+      font-family: inherit; 
       font-size: 14px;
     }
 

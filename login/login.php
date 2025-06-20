@@ -4,12 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
+  <!-- Playfair Display -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Playfair Display', serif;
     }
 
     body {
@@ -60,6 +62,12 @@
       border-radius: 20px;
       font-size: 14px;
       cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .left-panel button:hover {
+      background-color: white;
+      color: #5a6b50;
     }
 
     .right-panel {
@@ -90,6 +98,7 @@
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 14px;
+      font-family: 'Playfair Display', serif;
     }
 
     form input[type="submit"] {
@@ -100,6 +109,11 @@
       border-radius: 20px;
       font-size: 16px;
       cursor: pointer;
+      transition: 0.3s;
+    }
+
+    form input[type="submit"]:hover {
+      background-color: #3f4e39;
     }
 
     .erro {
@@ -111,11 +125,11 @@
 </head>
 <body>
   <div class="container">
-        <div class="left-panel">
-        <h2>Olá, novo usuário!</h2>
-         <p>Cadastre-se agora<br>para aproveitar todos os recursos</p>
-        <button onclick="window.location.href='../php/cadastro/cadastroUsuario.php'">CADASTRAR</button>
-        </div>
+    <div class="left-panel">
+      <h2>Olá, novo usuário!</h2>
+      <p>Cadastre-se agora<br>para aproveitar todos os recursos</p>
+      <button onclick="window.location.href='../php/cadastro/cadastroUsuario.php'">CADASTRAR</button>
+    </div>
     <div class="right-panel">
       <h2>Entrar na Conta</h2>
       <form action="processaLogin.php" method="post">

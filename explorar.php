@@ -9,7 +9,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Entre Linhas - Livraria Moderna</title>
+  <title>Entre Linhas - Destaques </title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
@@ -264,7 +264,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     <nav>
       <ul class="menu">
         <li><a href="#"><img src="imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="explorar.php"><img src="imgs/explorar.png" alt="Explorar" style="width:20px; margin-right:10px;"> Explorar</a></li>
+        <li><a href="#"><img src="imgs/explorar.png" alt="Explorar" style="width:20px; margin-right:10px;"> Explorar</a></li>
         <li><a href="#"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
         <li><a href="#"><img src="imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
         <li><a href="#"><img src="imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
@@ -298,29 +298,27 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
   </div>
 
   <div class="topbar">
-    <h1>Entre Linhas - Livraria Moderna</h1>
+    <h1>Entre Linhas - Destaques</h1>
     <input type="text" placeholder="Pesquisar livros, autores...">
   </div>
 
   <div class="banner">
-    <img src="imgs/Banner.png" alt="Banner 1">
+    <img src="imgs/" alt="Banner 1">
   </div>
 
-  <div class="main">
-  <!-- Novidades -->
   <div class="section-header">
-    <h2>Novidades</h2>
-    <a href="#" class="ver-mais">Ver mais</a>
-  </div>
-  <div class="cards cards-novidades">
-    <div class="card">
-      <img src="imgs/Daisy Jone & The Six.jpg" alt="Livro 1">
-      <div class="info">
-        <h3>Daisy Jone & The Six</h3>
-        <p class="price">R$ 44,90</p>
-        <div class="stars">★★★★☆</div>
-      </div>
+  <h2>Romance</h2>
+  <a href="#" class="ver-mais">Ver mais</a>
+</div>
+<div class="cards cards-novidades">
+  <div class="card">
+    <img src="imgs/Como Eu Era Antes de Você.jpg" alt="Romance 1">
+    <div class="info">
+      <h3>Como Eu Era Antes de Você</h3>
+      <p class="price">R$ 34,90</p>
+      <div class="stars">★★★★☆</div>
     </div>
+  </div>
     <div class="card">
       <img src="imgs/A Menina que Roubava Livros.jpg" alt="Livro 2">
       <div class="info">
