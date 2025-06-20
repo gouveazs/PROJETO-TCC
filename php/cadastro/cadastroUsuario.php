@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cadastro</title>
+  <!-- Fonte Playfair Display -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Playfair Display', serif;
     }
 
     body {
@@ -60,6 +62,12 @@
       border-radius: 20px;
       font-size: 14px;
       cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .left-panel button:hover {
+      background-color: white;
+      color: #5a6b50;
     }
 
     .right-panel {
@@ -85,10 +93,17 @@
       gap: 15px;
     }
 
-    form input {
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="password"] {
       padding: 12px;
       border: 1px solid #ccc;
       border-radius: 8px;
+      font-size: 14px;
+    }
+
+    form input[type="file"] {
+      font-family: inherit; /* Mantém fonte Playfair Display se o navegador permitir */
       font-size: 14px;
     }
 
@@ -100,6 +115,11 @@
       border-radius: 20px;
       font-size: 16px;
       cursor: pointer;
+      transition: 0.3s;
+    }
+
+    form input[type="submit"]:hover {
+      background-color: #3f4e39;
     }
 
     .erro {
@@ -117,21 +137,18 @@
       <button onclick="window.location.href='../../login/login.php'">ENTRAR</button>
     </div>
     <div class="right-panel">
-
       <h2>Criar Conta</h2>
-
       <form method="POST" action="../insercao/insercao.php" enctype="multipart/form-data">
         <input type="text" name="nome" placeholder="Nome de usuário" required>
         <input type="email" name="email" placeholder="E-mail" required>
         <input type="password" name="senha" placeholder="Senha" required>
-        <input type="file" name="foto_de_perfil">
+        <!-- Botão de arquivo nativo, sem estilização extra -->
+        <input type="file" name="foto_de_perfil" required>
         <input type="submit" value="Cadastrar">
       </form>
-
       <?php if (isset($_GET['erro']) && $_GET['erro'] == 'nome_ou_email'): ?>
         <div class="erro">Nome ou e-mail já cadastrados!</div>
       <?php endif; ?>
-
     </div>
   </div>
 </body>
