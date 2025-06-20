@@ -29,6 +29,9 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
 
     body {
       background-color: var(--background);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     .sidebar {
@@ -39,13 +42,14 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       color: #fff;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
       padding-top: 20px;
     }
 
     .sidebar .logo {
-      margin-bottom: 20px;
+      width: 100%;
       text-align: center;
+      margin-bottom: 20px;
     }
 
     .sidebar .logo img {
@@ -58,9 +62,22 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       font-weight: bold;
     }
 
+    .sidebar nav {
+      width: 100%;
+      padding: 0 20px;
+    }
+
+    .sidebar nav h3 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: #ddd;
+    }
+
     .sidebar nav ul {
       list-style: none;
       padding: 0;
+      margin: 0 0 10px 0;
       width: 100%;
     }
 
@@ -72,8 +89,10 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     .sidebar nav ul li a {
       color: #fff;
       text-decoration: none;
-      display: block;
-      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-radius: 8px;
       transition: background 0.3s;
     }
 
@@ -83,12 +102,6 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
 
     .sidebar nav ul li a:hover {
       background-color: #6f8562;
-      border-radius: 8px;
-    }
-
-    .sidebar h2 a {
-      text-decoration: none;
-      color: #ff7675;
     }
 
     .topbar {
@@ -128,11 +141,11 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     }
 
     .main {
+      flex: 1;
       margin-left: 250px;
       padding-top: 290px;
       padding-left: 30px;
       padding-right: 30px;
-      min-height: 100vh;
     }
 
     .section-header {
@@ -183,10 +196,10 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       transform: translateY(-5px);
     }
 
-   .card img {
-       width: 100%;
-       height: 300px; /* Aumentado o comprimento */
-        object-fit: cover;
+    .card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
     }
 
     .card .info {
@@ -210,6 +223,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       color: #fff;
       text-align: center;
       padding: 15px;
+      position: relative;
     }
 
     @media (max-width: 1200px) {
@@ -250,18 +264,20 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       <p><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>
     </div>
     <nav>
-      <ul>
+      <ul class="menu">
         <li><a href="#"><i class="fas fa-home"></i> Início</a></li>
         <li><a href="#"><i class="fas fa-compass"></i> Explorar</a></li>
-        <li><a href="#"><i class="fas fa-book"></i> Minha Estante</a></li>
+        <li><a href="#"><i class="fas fa-users"></i> Comunidades</a></li>
         <li><a href="#"><i class="fas fa-heart"></i> Favoritos</a></li>
-        <li><a href="#"><i class="fas fa-history"></i> Histórico</a></li>
+        <li><a href="#"><i class="fas fa-shopping-cart"></i> Carrinho</a></li>
+      </ul>
 
+      <h3>Conta</h3>
+      <ul class="account">
         <?php if (!$nome): ?>
           <li><a href="login/login.php"><i class="fas fa-sign-in-alt"></i> Entrar na conta</a></li>
-          <li><a href="login/loginVendedor.php"><i class="fas fa-store"></i> Acessar painel do Livreiro</a></li>
           <li><a href="php/cadastro/cadastroUsuario.php"><i class="fas fa-user-plus"></i> Criar conta</a></li>
-          <li><a href="php/cadastro/cadastroVendedor.php"><i class="fas fa-cogs"></i> Quero vender</a></li>
+          <li><a href="php/cadastro/cadastroVendedor.php"><i class="fas fa-store"></i> Quero vender</a></li>
         <?php else: ?>
           <li><a href="php/perfil/ver_perfil.php"><i class="fas fa-user"></i> Ver perfil</a></li>
         <?php endif; ?>
@@ -275,11 +291,11 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
         <?php if ($tipo === 'Vendedor'): ?>
           <li><a href="php/cadastro/cadastroProduto.php"><i class="fas fa-plus"></i> Cadastrar Produto</a></li>
         <?php endif; ?>
-      </ul>
 
-      <?php if ($nome): ?>
-        <h2><a href="login/logout.php">Sair</a></h2>
-      <?php endif; ?>
+        <?php if ($nome): ?>
+          <li><a href="login/logout.php"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+        <?php endif; ?>
+      </ul>
     </nav>
   </div>
 
@@ -292,166 +308,168 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     <img src="img/Banner.png" alt="Banner da Livraria">
   </div>
 
-  <div class="main">
-    <!-- Novidades -->
-    <div class="section-header">
-  <h2>Novidades</h2>
-  <a href="#" class="ver-mais">Ver mais</a>
-</div>
-<div class="cards cards-novidades">
-  <div class="card">
-    <img src="imgs/Daisy Jone & The Six.jpg" alt="Livro 1">
-    <div class="info">
-      <h3>Daisy Jone & The Six</h3>
-      <p class="price">R$ 44,90</p>
-      <div class="stars">★★★★☆</div>
+ <div class="main">
+  <!-- Novidades -->
+  <div class="section-header">
+    <h2>Novidades</h2>
+    <a href="#" class="ver-mais">Ver mais</a>
+  </div>
+  <div class="cards cards-novidades">
+    <div class="card">
+      <img src="imgs/Daisy Jone & The Six.jpg" alt="Livro 1">
+      <div class="info">
+        <h3>Daisy Jone & The Six</h3>
+        <p class="price">R$ 44,90</p>
+        <div class="stars">★★★★☆</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="imgs/A Menina que Roubava Livros.jpg" alt="Livro 2">
+      <div class="info">
+        <h3>A Menina que Roubava Livros</h3>
+        <p class="price">R$ 39,50</p>
+        <div class="stars">★★★★★</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="imgs/Extraordinário.jpg" alt="Livro 3">
+      <div class="info">
+        <h3>Extraordinário</h3>
+        <p class="price">R$ 28,00</p>
+        <div class="stars">★★★★★</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="imgs/Relatos de um Gato Viajante.jpg" alt="Livro 4">
+      <div class="info">
+        <h3>Relatos de um Gato Viajante</h3>
+        <p class="price">R$ 33,90</p>
+        <div class="stars">★★★☆☆</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="imgs/Prisioneiro de Azkaban.jpg" alt="Livro 5">
+      <div class="info">
+        <h3>Prisioneiro de Azkaban</h3>
+        <p class="price">R$ 55,00</p>
+        <div class="stars">★★★★★</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="imgs/Dom Casmurro.jpg" alt="Livro 6">
+      <div class="info">
+        <h3>Dom Casmurro</h3>
+        <p class="price">R$ 22,00</p>
+        <div class="stars">★★★★☆</div>
+      </div>
     </div>
   </div>
-  <div class="card">
-    <img src="imgs/A Menina que Roubava Livros.jpg" alt="Livro 2">
-    <div class="info">
-      <h3>A Menina que Roubava Livros</h3>
-      <p class="price">R$ 39,50</p>
-      <div class="stars">★★★★★</div>
-    </div>
+
+  <!-- Recomendações -->
+  <div class="section-header" style="margin-top: 50px;">
+    <h2>Recomendações</h2>
+    <a href="#" class="ver-mais">Ver mais</a>
   </div>
-  <div class="card">
-    <img src="imgs/Extraordinário.jpg" alt="Livro 3">
-    <div class="info">
-      <h3>Extraordinário</h3>
-      <p class="price">R$ 28,00</p>
-      <div class="stars">★★★★★</div>
+  <div class="cards cards-recomendacoes">
+    <div class="card">
+      <img src="imgs/Orgulho e Preconceito.jpg" alt="Livro 7">
+      <div class="info">
+        <h3>Orgulho e Preconceito</h3>
+        <p class="price">R$ 34,90</p>
+        <div class="stars">★★★★★</div>
+      </div>
     </div>
-  </div>
-  <div class="card">
-    <img src="imgs/Relatos de um Gato Viajante.jpg" alt="Livro 4">
-    <div class="info">
-      <h3>Relatos de um Gato Viajante</h3>
-      <p class="price">R$ 33,90</p>
-      <div class="stars">★★★☆☆</div>
+    <div class="card">
+      <img src="imgs/1984.jpg" alt="Livro 8">
+      <div class="info">
+        <h3>1984</h3>
+        <p class="price">R$ 29,99</p>
+        <div class="stars">★★★★★</div>
+      </div>
     </div>
-  </div>
-  <div class="card">
-    <img src="imgs/Prisioneiro de Azkaban.jpg" alt="Livro 5">
-    <div class="info">
-      <h3>Prisioneiro de Azkaban</h3>
-      <p class="price">R$ 55,00</p>
-      <div class="stars">★★★★★</div>
+    <div class="card">
+      <img src="imgs/O Pequeno Príncipe.jpg" alt="Livro 9">
+      <div class="info">
+        <h3>O Pequeno Príncipe</h3>
+        <p class="price">R$ 19,90</p>
+        <div class="stars">★★★★★</div>
+      </div>
     </div>
-  </div>
-  <div class="card">
-    <img src="imgs/Dom Casmurro.jpg" alt="Livro 6">
-    <div class="info">
-      <h3>Dom Casmurro</h3>
-      <p class="price">R$ 22,00</p>
-      <div class="stars">★★★★☆</div>
+    <div class="card">
+      <img src="imgs/Romeu e Julieta.jpg" alt="Livro 10">
+      <div class="info">
+        <h3>Romeu e Julieta</h3>
+        <p class="price">R$ 24,00</p>
+        <div class="stars">★★★☆☆</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="imgs/Senhor dos Anéis.jpg" alt="Livro 11">
+      <div class="info">
+        <h3>Senhor dos Anéis</h3>
+        <p class="price">R$ 59,90</p>
+        <div class="stars">★★★★★</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="imgs/A Culpa é das Estrelas.jpg" alt="Livro 12">
+      <div class="info">
+        <h3>A Culpa é das Estrelas</h3>
+        <p class="price">R$ 35,00</p>
+        <div class="stars">★★★★☆</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="imgs/O Hobbit.jpg" alt="Livro 13">
+      <div class="info">
+        <h3>O Hobbit</h3>
+        <p class="price">R$ 39,90</p>
+        <div class="stars">★★★★★</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="imgs/Cem Anos de Solidão.jpg" alt="Livro 14">
+      <div class="info">
+        <h3>Cem Anos de Solidão</h3>
+        <p class="price">R$ 42,00</p>
+        <div class="stars">★★★★★</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="imgs/A Revolução dos Bichos.jpg" alt="Livro 15">
+      <div class="info">
+        <h3>A Revolução dos Bichos</h3>
+        <p class="price">R$ 27,50</p>
+        <div class="stars">★★★★☆</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="imgs/O Conto da Aia.jpg" alt="Livro 16">
+      <div class="info">
+        <h3>O Conto da Aia</h3>
+        <p class="price">R$ 36,00</p>
+        <div class="stars">★★★★☆</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="imgs/Amor e Azeitonas.jpg" alt="Livro 17">
+      <div class="info">
+        <h3>Amor e Azeitonas</h3>
+        <p class="price">R$ 22,90</p>
+        <div class="stars">★★★☆☆</div>
+      </div>
+    </div>
+    <div class="card">
+      <img src="imgs/As vantagens de ser invisivel.jpg" alt="Livro 18">
+      <div class="info">
+        <h3>As Vantagens de Ser Invisível</h3>
+        <p class="price">R$ 38,00</p>
+        <div class="stars">★★★★★</div>
+      </div>
     </div>
   </div>
 </div>
 
-    <!-- Recomendações -->
-   <div class="section-header" style="margin-top: 50px;">
-  <h2>Recomendações</h2>
-    <a href="#" class="ver-mais">Ver mais</a>
-</div>
-<div class="cards cards-recomendacoes">
-  <div class="card">
-    <img src="imgs/Orgulho e Preconceito.jpg" alt="Livro 7">
-    <div class="info">
-      <h3>Orgulho e Preconceito</h3>
-      <p class="price">R$ 34,90</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
-  <div class="card">
-    <img src="imgs/1984.jpg" alt="Livro 8">
-    <div class="info">
-      <h3>1984</h3>
-      <p class="price">R$ 29,99</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
-  <div class="card">
-    <img src="imgs/O Pequeno Príncipe.jpg" alt="Livro 9">
-    <div class="info">
-      <h3>O Pequeno Príncipe</h3>
-      <p class="price">R$ 19,90</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
-  <div class="card">
-    <img src="imgs/Romeu e Julieta.jpg" alt="Livro 10">
-    <div class="info">
-      <h3>Romeu e Julieta</h3>
-      <p class="price">R$ 24,00</p>
-      <div class="stars">★★★☆☆</div>
-    </div>
-  </div>
-  <div class="card">
-    <img src="imgs/Senhor dos Anéis.jpg" alt="Livro 11">
-    <div class="info">
-      <h3>Senhor dos Anéis</h3>
-      <p class="price">R$ 59,90</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
-  <div class="card">
-    <img src="imgs/A Culpa é das Estrelas.jpg" alt="Livro 12">
-    <div class="info">
-      <h3>A Culpa é das Estrelas</h3>
-      <p class="price">R$ 35,00</p>
-      <div class="stars">★★★★☆</div>
-    </div>
-  </div>
-  <div class="card">
-    <img src="imgs/O Hobbit.jpg" alt="Livro 13">
-    <div class="info">
-      <h3>O Hobbit</h3>
-      <p class="price">R$ 39,90</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
-  <div class="card">
-    <img src="imgs/Cem Anos de Solidão.jpg" alt="Livro 14">
-    <div class="info">
-      <h3>Cem Anos de Solidão</h3>
-      <p class="price">R$ 42,00</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
-  <div class="card">
-    <img src="imgs/A Revolução dos Bichos.jpg" alt="Livro 15">
-    <div class="info">
-      <h3>A Revolução dos Bichos</h3>
-      <p class="price">R$ 27,50</p>
-      <div class="stars">★★★★☆</div>
-    </div>
-  </div>
-  <div class="card">
-    <img src="imgs/O Conto da Aia.jpg" alt="Livro 16">
-    <div class="info">
-      <h3>O Conto da Aia</h3>
-      <p class="price">R$ 36,00</p>
-      <div class="stars">★★★★☆</div>
-    </div>
-  </div>
-  <div class="card">
-    <img src="imgs/Amor e Azeitonas.jpg" alt="Livro 17">
-    <div class="info">
-      <h3>Amor e Azeitonas</h3>
-      <p class="price">R$ 22,90</p>
-      <div class="stars">★★★☆☆</div>
-    </div>
-  </div>
-  <div class="card">
-    <img src="imgs/As vantagens de ser invisivel.jpg" alt="Livro 18">
-    <div class="info">
-      <h3>As Vantagens de Ser Invisivel</h3>
-      <p class="price">R$ 38,00</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
-</div>
 
   <div class="footer">
     &copy; 2025 Entre Linhas - Todos os direitos reservados.
