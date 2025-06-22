@@ -30,34 +30,7 @@
     <?php
         include '../conexao.php';
         $stmt = $conn->query("SELECT * FROM cadastro_usuario");
-        echo '
-        <style>
-            table {
-                width: 80%;
-                margin: 20px auto;
-                border-collapse: collapse;
-            }
-
-            th, td {
-                border: 1px solid #555;
-                padding: 10px;
-                text-align: left;
-            }
-
-            th {
-                background-color: #8C5B3F;
-                color: white;
-            }
-
-            tr:nth-child(even) {
-                background-color: #f2f2f2;
-            }
-
-            tr:hover {
-                background-color: #ddd;
-            }
-        </style>
-    ';
+        echo '<link rel="stylesheet" href="consulta.css">';
         echo '<table border="1">';
             echo "<tr>";
                 echo "<th>Código</th>";
@@ -79,34 +52,7 @@
     <?php  
         include '../conexaoVendedor.php';
         $stmt = $conn->query("SELECT * FROM cadastro_vendedor");
-        echo '
-        <style>
-            table {
-                width: 80%;
-                margin: 20px auto;
-                border-collapse: collapse;
-            }
-
-            th, td {
-                border: 1px solid #555;
-                padding: 10px;
-                text-align: left;
-            }
-
-            th {
-                background-color: #8C5B3F;
-                color: white;
-            }
-
-            tr:nth-child(even) {
-                background-color: #f2f2f2;
-            }
-
-            tr:hover {
-                background-color: #ddd;
-            }
-        </style>
-    ';
+        echo '';
         echo '<table border="1">';
             echo "<tr>";
                 echo "<th>Código</th>";
@@ -134,77 +80,48 @@
     <?php  
         include '../conexaoVendedor.php';
         $stmt = $conn->query("SELECT * FROM produto");
-        echo '
-        <style>
-            table {
-                width: 80%;
-                margin: 20px auto;
-                border-collapse: collapse;
+        echo '<table border="1">';
+            echo "<tr>";
+                echo "<th>IMAGEM</th>";
+                echo "<th>Código</th>";
+                echo "<th>Nome DO LIVRO</th>";
+                echo "<th>NÚMERO DE PÁGINAS</th>";
+                echo "<th>EDITORA</th>";
+                echo "<th>AUTOR</th>";
+                echo "<th>CLASSIFICAÇÃO ETÁRIA</th>";
+                echo "<th>DATA DE PUBLICAÇÃO</th>";
+                echo "<th>PREÇO</th>";
+                echo "<th>QUANTIDADE EM ESTOQUE</th>";
+                echo "<th>DESCRIÇÃO</th>";
+                echo "<th>ID VENDEDOR</th>";
+            echo "</tr>"; 
+
+        while ($row = $stmt->fetch()) {
+            echo "<tr>";
+
+            // Verifica se há imagem e converte para base64
+            if (!empty($row['imagem'])) {
+                $imgData = base64_encode($row['imagem']);
+                echo '<td><img src="data:image/jpeg;base64,' . $imgData . '" width="100" height="auto"/></td>';
+            } else {
+                echo "<td>Sem imagem</td>";
             }
 
-            th, td {
-                border: 1px solid #555;
-                padding: 10px;
-                text-align: left;
-            }
-
-            th {
-                background-color: #8C5B3F;
-                color: white;
-            }
-
-            tr:nth-child(even) {
-                background-color: #f2f2f2;
-            }
-
-            tr:hover {
-                background-color: #ddd;
-            }
-        </style>
-    ';
-       echo '<table border="1">';
-echo "<tr>";
-    echo "<th>IMAGEM</th>";
-    echo "<th>Código</th>";
-    echo "<th>Nome DO LIVRO</th>";
-    echo "<th>NÚMERO DE PÁGINAS</th>";
-    echo "<th>EDITORA</th>";
-    echo "<th>AUTOR</th>";
-    echo "<th>CLASSIFICAÇÃO ETÁRIA</th>";
-    echo "<th>DATA DE PUBLICAÇÃO</th>";
-    echo "<th>PREÇO</th>";
-    echo "<th>QUANTIDADE EM ESTOQUE</th>";
-    echo "<th>DESCRIÇÃO</th>";
-    echo "<th>ID VENDEDOR</th>";
-echo "</tr>"; 
-
-while ($row = $stmt->fetch()) {
-    echo "<tr>";
-
-    // Verifica se há imagem e converte para base64
-    if (!empty($row['imagem'])) {
-        $imgData = base64_encode($row['imagem']);
-        echo '<td><img src="data:image/jpeg;base64,' . $imgData . '" width="100" height="auto"/></td>';
-    } else {
-        echo "<td>Sem imagem</td>";
-    }
-
-    echo "<td>".$row['idproduto']."</td>";
-    echo "<td>".htmlspecialchars($row['nome'])."</td>";
-    echo "<td>".$row['numero_paginas']."</td>";
-    echo "<td>".htmlspecialchars($row['editora'])."</td>";
-    echo "<td>".htmlspecialchars($row['autor'])."</td>";
-    echo "<td>".$row['classificacao_idade']."</td>";
-    echo "<td>".$row['data_publicacao']."</td>";
-    echo "<td>R$ ".number_format($row['preco'], 2, ',', '.')."</td>";
-    echo "<td>".$row['quantidade']."</td>";
-    echo "<td>".htmlspecialchars($row['descricao'])."</td>";
-    echo "<td>".$row['idvendedor']."</td>";
-    
-    echo "</tr>";          
-}
-echo '</table>';
-
+            echo "<td>".$row['idproduto']."</td>";
+            echo "<td>".htmlspecialchars($row['nome'])."</td>";
+            echo "<td>".$row['numero_paginas']."</td>";
+            echo "<td>".htmlspecialchars($row['editora'])."</td>";
+            echo "<td>".htmlspecialchars($row['autor'])."</td>";
+            echo "<td>".$row['classificacao_idade']."</td>";
+            echo "<td>".$row['data_publicacao']."</td>";
+            echo "<td>R$ ".number_format($row['preco'], 2, ',', '.')."</td>";
+            echo "<td>".$row['quantidade']."</td>";
+            echo "<td>".htmlspecialchars($row['descricao'])."</td>";
+            echo "<td>".$row['idvendedor']."</td>";
+            
+            echo "</tr>";          
+        }
+        echo '</table>';
     ?>
 </main>
 

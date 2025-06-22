@@ -36,7 +36,7 @@ try {
 
     $stmt->execute();
 
-    header("Location: ../consulta/consulta.php");
+    header("Location: ../../index.php?sucesso=cadastro_usuario");
     exit();
 
 } catch(PDOException $e) {

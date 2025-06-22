@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS `vendedor`.`cadastro_vendedor` (
   `senha` VARCHAR(45) NULL,
   `cpf` CHAR(11) NULL,
   `cnpj` CHAR(14) NULL,
+  `foto_de_perfil` LONGBLOB,
   PRIMARY KEY (`idvendedor`))
 ENGINE = InnoDB;
 
@@ -61,6 +62,7 @@ CREATE TABLE IF NOT EXISTS `vendedor`.`produto` (
   `data_publicacao` DATE NULL,
   `preco` FLOAT NULL,
   `quantidade` INT NULL,
+  `categoria` VARCHAR(45) NULL,
   `imagem` BLOB NULL,
   `descricao` VARCHAR(445) NULL,
   `idvendedor` INT NOT NULL,
