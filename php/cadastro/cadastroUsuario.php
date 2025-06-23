@@ -6,6 +6,7 @@
   <title>Cadastro</title>
   <!-- Fonte Playfair Display -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+
   <style>
     * {
       box-sizing: border-box;
@@ -128,6 +129,7 @@
       text-align: center;
     }
   </style>
+  
 </head>
 <body>
   <div class="container">

@@ -13,12 +13,17 @@ try {
 
     if ($usuario_db) {
         // Guarde o ID e o nome do vendedor corretamente na sessão
-        $_SESSION['id_vendedor'] = $usuario_db['idvendedor']; // Supondo que o campo no banco é 'id'
+        $_SESSION['id_vendedor'] = $usuario_db['idvendedor'];
         $_SESSION['nome_vendedor'] = $usuario_db['nome_completo'];
+
+        // guarda sessao do nome e foto 
+        $_SESSION['nome_usuario'] = $usuario_db['nome_completo'];
+        $_SESSION['tipo'] = 'Vendedor'; 
+        $_SESSION['foto_de_perfil'] = $usuario_db['foto_de_perfil'] ?? 'imgs/usuario.jpg';
+
         header('Location: ../index.php');
         exit();
     } else {
-        // Use o caminho correto para o seu formulário de login de vendedor
         header('Location: loginVendedor.php?error=1');
         exit();
     }

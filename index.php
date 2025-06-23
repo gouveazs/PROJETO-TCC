@@ -2,6 +2,15 @@
 session_start();
 $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
 $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
+$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
+
+//produtos
+include 'php/conexaoVendedor.php';
+
+$stmt = $conn->prepare("SELECT * FROM produto");
+$stmt->execute();
+$produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -254,11 +263,12 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       }
     }
   </style>
+
 </head>
 <body>
   <div class="sidebar">
     <div class="logo">
-      <img src="imgs/usuario.jpg" alt="Foto de Perfil">
+      <img src="<?= $foto_de_perfil ? htmlspecialchars($foto_de_perfil) : 'imgs/usuario.jpg' ?>" alt="Foto de Perfil" >
       <p><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>
     </div>
     <nav>
@@ -276,6 +286,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
           <li><a href="login/login.php"><img src="imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
           <li><a href="php/cadastro/cadastroUsuario.php"><img src="imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
           <li><a href="php/cadastro/cadastroVendedor.php"><img src="imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
+          <li><a href="login/loginVendedor.php"><img src="imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
         <?php else: ?>
           <li><a href="php/perfil/ver_perfil.php"><img src="imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
         <?php endif; ?>
@@ -283,11 +294,11 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
         <?php if ($nome === 'adm'): ?>
           <li><a href="php/consulta/consulta.php"><img src="imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
           <li><a href="php/consultaFiltro/busca.php"><img src="imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
-          <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/querovender.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
+          <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
         <?php endif; ?>
 
         <?php if ($tipo === 'Vendedor'): ?>
-          <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/querovender.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
+          <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
         <?php endif; ?>
 
         <?php if ($nome): ?>
@@ -369,6 +380,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     <a href="#" class="ver-mais">Ver mais</a>
   </div>
   <div class="cards cards-recomendacoes">
+
     <div class="card">
       <img src="imgs/Orgulho e Preconceito.jpg" alt="Livro 7">
       <div class="info">
@@ -377,6 +389,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
         <div class="stars">★★★★★</div>
       </div>
     </div>
+
     <div class="card">
       <img src="imgs/1984.jpg" alt="Livro 8">
       <div class="info">
@@ -385,6 +398,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
         <div class="stars">★★★★★</div>
       </div>
     </div>
+
     <div class="card">
       <img src="imgs/O Pequeno Príncipe.jpg" alt="Livro 9">
       <div class="info">
@@ -393,6 +407,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
         <div class="stars">★★★★★</div>
       </div>
     </div>
+
     <div class="card">
       <img src="imgs/Romeu e Julieta.jpg" alt="Livro 10">
       <div class="info">
@@ -401,6 +416,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
         <div class="stars">★★★☆☆</div>
       </div>
     </div>
+
     <div class="card">
       <img src="imgs/Senhor dos Anéis.jpg" alt="Livro 11">
       <div class="info">
@@ -409,6 +425,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
         <div class="stars">★★★★★</div>
       </div>
     </div>
+
     <div class="card">
       <img src="imgs/A Culpa é das Estrelas.jpg" alt="Livro 12">
       <div class="info">
@@ -417,6 +434,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
         <div class="stars">★★★★☆</div>
       </div>
     </div>
+
     <div class="card">
       <img src="imgs/O Hobbit.jpg" alt="Livro 13">
       <div class="info">
@@ -425,6 +443,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
         <div class="stars">★★★★★</div>
       </div>
     </div>
+
     <div class="card">
       <img src="imgs/Cem Anos de Solidão.jpg" alt="Livro 14">
       <div class="info">
@@ -433,6 +452,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
         <div class="stars">★★★★★</div>
       </div>
     </div>
+
     <div class="card">
       <img src="imgs/A Revolução dos Bichos.jpg" alt="Livro 15">
       <div class="info">
@@ -441,6 +461,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
         <div class="stars">★★★★☆</div>
       </div>
     </div>
+
     <div class="card">
       <img src="imgs/O Conto da Aia.jpg" alt="Livro 16">
       <div class="info">
@@ -449,6 +470,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
         <div class="stars">★★★★☆</div>
       </div>
     </div>
+
     <div class="card">
       <img src="imgs/Amor e Azeitonas.jpg" alt="Livro 17">
       <div class="info">
@@ -457,6 +479,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
         <div class="stars">★★★☆☆</div>
       </div>
     </div>
+
     <div class="card">
       <img src="imgs/As vantagens de ser invisivel.jpg" alt="Livro 18">
       <div class="info">
@@ -466,6 +489,26 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       </div>
     </div>
   </div>
+
+  <div class="section-header">
+    <h2>Ofertas Recem Adicionadas</h2>
+    <a href="#" class="ver-mais">Ver mais</a>
+  </div>
+  <div class="cards cards-novidades">
+  <div class="produtos-container">
+    <?php foreach ($produtos as $produto): ?>
+      <div class="card">
+      <img src="<?= htmlspecialchars($produto['imagem'] ?? 'imgs/usuario.jpg') ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+        <div class="info">
+          <h3><?= htmlspecialchars($produto['nome']) ?></h3>
+          <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+
+    </div>
 </div>  
 
   <div class="footer">
