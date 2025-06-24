@@ -270,6 +270,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="logo">
       <img src="<?= $foto_de_perfil ? htmlspecialchars($foto_de_perfil) : 'imgs/usuario.jpg' ?>" alt="Foto de Perfil" >
       <p><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>
+      <p><?= $tipo ? htmlspecialchars($tipo) : 'Usuário'; ?></p>
     </div>
     <nav>
       <ul class="menu">
