@@ -20,7 +20,7 @@ USE `vendedor` ;
 CREATE TABLE IF NOT EXISTS `vendedor`.`cadastro_vendedor` (
   `idvendedor` INT NOT NULL AUTO_INCREMENT,
   `nome_completo` VARCHAR(45) NULL,
-  `idade` INT NULL,
+  `data_nascimento` DATE NULL,
   `email` VARCHAR(45) NULL,
   `senha` VARCHAR(45) NULL,
   `cpf` CHAR(11) NULL,
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `vendedor`.`produto` (
   `preco` FLOAT NULL,
   `quantidade` INT NULL,
   `categoria` VARCHAR(45) NULL,
-  `imagem` BLOB NULL,
+  `imagem` LONGBLOB NULL,
   `descricao` VARCHAR(445) NULL,
   `idvendedor` INT NOT NULL,
   PRIMARY KEY (`idproduto`, `idvendedor`),

@@ -145,7 +145,7 @@
         <input type="email" name="email" placeholder="E-mail" required>
         <input type="password" name="senha" placeholder="Senha" required>
         <!-- Botão de arquivo nativo, sem estilização extra -->
-        <input type="file" name="foto_de_perfil" required>
+        <input type="file" name="foto_de_perfil" accept="image/*">
         <input type="submit" value="Cadastrar">
       </form>
       <?php if (isset($_GET['erro']) && $_GET['erro'] == 'nome_ou_email'): ?>

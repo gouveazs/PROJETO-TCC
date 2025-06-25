@@ -32,7 +32,7 @@ try {
     $stmt->bindParam(':nome', $nome);
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':senha', $senha);
-    $stmt->bindParam(':foto', $fotoBin, PDO::PARAM_LOB);
+    $stmt->bindParam(':foto', $foto_de_perfil, PDO::PARAM_LOB);
 
     $stmt->execute();
 

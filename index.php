@@ -6,7 +6,6 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
 
 //produtos
 include 'php/conexaoVendedor.php';
-
 $stmt = $conn->prepare("SELECT * FROM produto");
 $stmt->execute();
 $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -268,7 +267,11 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
   <div class="sidebar">
     <div class="logo">
-      <img src="<?= $foto_de_perfil ? htmlspecialchars($foto_de_perfil) : 'imgs/usuario.jpg' ?>" alt="Foto de Perfil" >
+        <?php if ($foto_de_perfil): ?>
+          <img src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>">
+        <?php else: ?>
+          <img src="imgs/usuario.jpg" alt="Foto de Perfil">
+        <?php endif; ?>
       <p><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>
       <p><?= $tipo ? htmlspecialchars($tipo) : 'Usuário'; ?></p>
     </div>
@@ -311,7 +314,10 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <div class="topbar">
     <h1>Entre Linhas - Livraria Moderna</h1>
-    <input type="text" placeholder="Pesquisar livros, autores...">
+    <form action="php/consultaFiltro/consultaFiltro.php" method="POST">
+      <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
+      <input type="submit" value="Buscar">
+    </form>
   </div>
 
   <div class="banner">
@@ -490,16 +496,21 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </div>
     </div>
   </div>
-
+    
+  <br><br>
+  <!-- produtos do banco -->
   <div class="section-header">
-    <h2>Ofertas Recem Adicionadas</h2>
-    <a href="#" class="ver-mais">Ver mais</a>
+      <h2>Ofertas Recem Adicionadas</h2>
+      <a href="#" class="ver-mais">Ver mais</a>
   </div>
   <div class="cards cards-novidades">
-  <div class="produtos-container">
     <?php foreach ($produtos as $produto): ?>
       <div class="card">
-      <img src="<?= htmlspecialchars($produto['imagem'] ?? 'imgs/usuario.jpg') ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+        <?php if (!empty($produto['imagem'])): ?>
+          <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>">
+        <?php else: ?>
+          <img src="imgs/usuario.jpg" alt="Foto de Perfil">
+        <?php endif; ?>
         <div class="info">
           <h3><?= htmlspecialchars($produto['nome']) ?></h3>
           <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
@@ -509,7 +520,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php endforeach; ?>
   </div>
 
-    </div>
+  </div>
 </div>  
 
   <div class="footer">

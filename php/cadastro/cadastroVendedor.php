@@ -119,7 +119,7 @@
         </div>
         <div class="form-control">
           <label for="idade">Data de nascimento</label>
-          <input type="date" id="idade" name="idade" required>
+          <input type="date" id="data_nascimento" name="data_nascimento" required>
         </div>
       </div>
 

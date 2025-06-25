@@ -57,7 +57,7 @@
             echo "<tr>";
                 echo "<th>Código</th>";
                 echo "<th>Nome</th>";
-                echo "<th>Idade</th>";
+                echo "<th>DATA DE NASCIMENTO</th>";
                 echo "<th>EMAIL</th>";
                 echo "<th>SENHA</th>";
                 echo "<th>CPF</th>";
@@ -67,7 +67,7 @@
             echo "<tr>";
                 echo "<td>".$row['idvendedor']."</td>";
                 echo "<td>".$row['nome_completo']."</td>";
-                echo "<td>".$row['idade']."</td>";
+                echo "<td>".$row['data_nascimento']."</td>";
                 echo "<td>".$row['email']."</td>";
                 echo "<td>".$row['senha']."</td>";
                 echo "<td>".$row['cpf']."</td>";

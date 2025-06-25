@@ -14,6 +14,7 @@ try {
         session_start();
         $_SESSION['usuario_logado'] = $usuario_db['id'];
         $_SESSION['nome_usuario'] = $usuario_db['nome']; // <-- adiciona isso
+        $_SESSION['foto_de_perfil'] = $usuario_db['foto_de_perfil']; // <-- adiciona isso
         header('Location: ../index.php');
         exit();
     } else {
