@@ -1,5 +1,6 @@
 <?php
-include '../conexao.php';
+//include '../conexao.php';
+include '../conexaoVendedor.php';
 $busca = $_POST['nome']; // ou $_GET['q'] se vier do GET
 
 try {
