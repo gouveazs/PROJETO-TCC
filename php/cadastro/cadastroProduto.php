@@ -40,7 +40,6 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       display: flex;
     }
 
-    /* Sidebar */
     .sidebar {
       position: fixed;
       top: 0;
@@ -62,7 +61,6 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       margin-bottom: 15px;
       font-size: 1.7rem;
       font-weight: 700;
-      color: var(--branco);
       user-select: none;
     }
 
@@ -91,7 +89,6 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       background-color: #6f8562;
     }
 
-    /* Área principal */
     .content-area {
       margin-left: 250px;
       width: calc(100% - 250px);
@@ -182,18 +179,6 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
       background-color: #48603b;
     }
 
-    footer.rodape {
-      background-color: var(--marrom);
-      color: var(--branco);
-      text-align: center;
-      padding: 15px 20px;
-      font-size: 0.9rem;
-      width: 100%;
-      max-width: 700px;
-      border-radius: 0 0 12px 12px;
-      margin-top: 20px;
-    }
-
     @media (max-width: 768px) {
       .sidebar {
         width: 200px;
@@ -232,6 +217,8 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     <div class="logo">Entre Linhas</div>
     <nav>
       <ul>
+        <li><a href="../../index.php"><i class="fas fa-home"></i> Home</a></li>
+
         <?php if (!$nome): ?>
           <li><a href="../../login/login.php"><i class="fas fa-sign-in-alt"></i> Entrar na conta</a></li>
           <li><a href="../../php/cadastro/cadastroUsuario.php"><i class="fas fa-user-plus"></i> Criar conta</a></li>
@@ -311,10 +298,9 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
         <input type="submit" value="Cadastrar">
       </form>
     </main>
-
-    <footer class="rodape">
-      Todos os direitos reservados - 2025
-    </footer>
   </div>
+
+ 
+
 </body>
 </html>
