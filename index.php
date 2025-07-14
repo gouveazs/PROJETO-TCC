@@ -366,85 +366,76 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </form>
   </div>
 
- <!-- ✅ BANNER E PRODUTOS LADO A LADO -->
-<div style="display: flex; gap: 30px; margin-bottom: 30px; align-items: flex-start; flex-wrap: wrap;">
-
-  <!-- Banner HARDCOVER à esquerda -->
-  <div style="flex: 2;">
-   <img src="imgs/Banner.png" alt="Banner HARDCOVER"
-     style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-
-  </div>
-
-  <!-- Lista de produtos à direita -->
-  <div style="flex: 1; display: flex; flex-direction: column; gap: 12px;">
-
-    <!-- Produto 1 -->
-    <div style="display: flex; align-items: center; background: #f7f7f7; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
-      <img src="imgs/1984.jpg" alt="Produto" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; margin-right: 12px;">
-      <div>
-        <p style="font-weight: bold; font-size: 0.95rem;">Headphone Portátil</p>
-        <p style="color: green;">R$ 86,00 <span style="color: #999; text-decoration: line-through; font-size: 0.85rem;">R$ 95,00</span></p>
+ <div style="margin-left: 250px; margin-top: 70px; padding: 30px; background-color: #fff;">
+    <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+      <div style="flex: 2; background: #f3f7f2; padding: 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <p style="color: green; font-weight: bold; font-size: 1rem;">Book Mockup</p>
+          <h2 style="font-size: 2rem; font-weight: bold; margin: 10px 0;">HARDCOVER.</h2>
+          <p style="margin-bottom: 20px;">Cover up front of book and leave summary</p>
+          <a href="#" style="background-color: #8BC34A; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold;">Shopping Now</a>
+        </div>
+        <img src="imgs/1984.jpg" alt="Book" style="max-height: 180px; border-radius: 8px;">
+      </div>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; background: #f7f7f7; padding: 10px; border-radius: 8px; align-items: center;">
+          <img src="imgs/1984.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
+          <div>
+            <p style="font-weight: bold; font-size: 0.9rem;">Headphone Portátil</p>
+            <p style="color: green;">R$ 86,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 95,00</span></p>
+          </div>
+        </div>
+        <div style="display: flex; background: #f7f7f7; padding: 10px; border-radius: 8px; align-items: center;">
+          <img src="imgs/fone2.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
+          <div>
+            <p style="font-weight: bold; font-size: 0.9rem;">Fone de Ouvido On Ear</p>
+            <p style="color: green;">R$ 80,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 86,00</span></p>
+          </div>
+        </div>
+        <div style="display: flex; background: #f7f7f7; padding: 10px; border-radius: 8px; align-items: center;">
+          <img src="imgs/caixinha.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
+          <div>
+            <p style="font-weight: bold; font-size: 0.9rem;">Caixa de Som Bluetooth</p>
+            <p style="color: green;">R$ 98,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 120,00</span></p>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Produto 2 -->
-    <div style="display: flex; align-items: center; background: #f7f7f7; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
-      <img src="imgs/fone2.jpg" alt="Produto" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; margin-right: 12px;">
-      <div>
-        <p style="font-weight: bold; font-size: 0.95rem;">Fone de Ouvido On Ear</p>
-        <p style="color: green;">R$ 80,00 <span style="color: #999; text-decoration: line-through; font-size: 0.85rem;">R$ 86,00</span></p>
+    <div style="display: flex; justify-content: space-around; align-items: center; margin: 30px 0; flex-wrap: wrap;">
+      <div style="text-align: center;">
+        <img src="imgs/1984.jpg" alt="Frete" style="height: 40px;">
+        <p>Frete grátis para pedidos <br><small>Acima de R$ 50</small></p>
+      </div>
+      <div style="text-align: center;">
+        <img src="imgs/garantia.png" alt="Garantia" style="height: 40px;">
+        <p>Garantia de devolução do dinheiro<br><small>100% do seu dinheiro de volta</small></p>
+      </div>
+      <div style="text-align: center;">
+        <img src="imgs/pagamento.png" alt="Pagamento" style="height: 40px;">
+        <p>Pagamento<br><small>Formas de pagamento</small></p>
+      </div>
+      <div style="text-align: center;">
+        <img src="imgs/suporte.png" alt="Suporte" style="height: 40px;">
+        <p>Ajuda e Suporte<br><small>(11) 4002-8922</small></p>
       </div>
     </div>
 
-    <!-- Produto 3 -->
-    <div style="display: flex; align-items: center; background: #f7f7f7; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
-      <img src="imgs/caixinha.jpg" alt="Produto" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; margin-right: 12px;">
-      <div>
-        <p style="font-weight: bold; font-size: 0.95rem;">Caixa de Som Bluetooth</p>
-        <p style="color: green;">R$ 98,00 <span style="color: #999; text-decoration: line-through; font-size: 0.85rem;">R$ 120,00</span></p>
+    <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+      <div style="flex: 1; background-color: #fcecc2; border-radius: 12px; padding: 20px; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <p style="color: #8D6E63; font-size: 0.9rem;">The Book</p>
+          <h3 style="font-size: 1.4rem;">Available Worldwide</h3>
+          <a href="#" style="margin-top: 10px; display: inline-block; background-color: #8D6E63; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Shop Now</a>
+        </div>
+        <img src="imgs/book_card.png" alt="Card" style="height: 100px;">
+      </div>
+      <div style="flex: 1; background-color: #c62828; color: white; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <h2 style="font-size: 2rem;">SALE</h2>
+        <p style="font-size: 1.2rem;">UP TO <strong>40% OFF</strong></p>
       </div>
     </div>
-
   </div>
-</div>
-  <!-- ✅ VANTAGENS -->
-  <div style="display: flex; justify-content: space-around; align-items: center; margin: 30px 0; flex-wrap: wrap;">
-    <div style="text-align: center;">
-      <img src="imgs/1984.jpg" alt="Frete" style="height: 40px;">
-      <p>Frete grátis para pedidos<br><small>Acima de R$ 50</small></p>
-    </div>
-    <div style="text-align: center;">
-      <img src="imgs/garantia.png" alt="Garantia" style="height: 40px;">
-      <p>Garantia de devolução do dinheiro<br><small>100% do seu dinheiro de volta</small></p>
-    </div>
-    <div style="text-align: center;">
-      <img src="imgs/pagamento.png" alt="Pagamento" style="height: 40px;">
-      <p>Pagamento<br><small>Formas de pagamento</small></p>
-    </div>
-    <div style="text-align: center;">
-      <img src="imgs/suporte.png" alt="Suporte" style="height: 40px;">
-      <p>Ajuda e Suporte<br><small>(11) 4002-8922</small></p>
-    </div>
-  </div>
-
-  <!-- ✅ MINI-CARDS (Book / Sale) -->
-  <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-    <div style="flex: 1; background-color: #fcecc2; border-radius: 12px; padding: 20px; display: flex; align-items: center; justify-content: space-between;">
-      <div>
-        <p style="color: #8D6E63; font-size: 0.9rem;">The Book</p>
-        <h3 style="font-size: 1.4rem;">Available Worldwide</h3>
-        <a href="#" style="margin-top: 10px; display: inline-block; background-color: #8D6E63; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Shop Now</a>
-      </div>
-      <img src="imgs/book_card.png" alt="Card" style="height: 100px;">
-    </div>
-    <div style="flex: 1; background-color: #c62828; color: white; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-      <h2 style="font-size: 2rem;">SALE</h2>
-      <p style="font-size: 1.2rem;">UP TO <strong>40% OFF</strong></p>
-    </div>
-  </div>
-
-</div>
 
   <div class="main">
   <!-- Novidades -->
