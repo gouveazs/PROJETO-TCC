@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':descricao', $descricao);
     $stmt->execute();
 
-    header("Location: listar_comunidades.php");
+    header("Location: ../comunidade.php");
     exit;
 }
 ?>

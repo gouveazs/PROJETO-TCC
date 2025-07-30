@@ -2,6 +2,10 @@
 session_start();
 $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
 $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
+
+include '../php/conexao_comunidade.php';
+$result = $conn->query("SELECT * FROM comunidades ORDER BY criada_em DESC");
+
 ?>
 
 <!DOCTYPE html>
@@ -269,6 +273,8 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
     <a href="#">Mistério</a>
     <a href="#">Drama</a>
     <a href="#">Não Ficção</a>
+
+    <a href="comunidades/criar_comunidade.php">Criar Comunidades</a>
   </div>
 
   <!-- Conteúdo -->
@@ -286,6 +292,20 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
         </p>
       </div>
     </div>
+
+    <?php while ($com = $result->fetch(PDO::FETCH_ASSOC)): ?>
+      <div class="comunidade-box">
+        <img src="imgs/livros-ciencia.jpg" alt="<?= htmlspecialchars($com['nome']) ?>">
+        <div class="descricao">
+          <h3><?= htmlspecialchars($com['nome']) ?></h3>
+          <p>
+            <?= nl2br(htmlspecialchars($com['descricao'])) ?>
+          </p>
+          <a href="ver_comunidade.php?id=<?= $com['id'] ?>">Entrar</a>
+        </div>
+      </div>
+    <?php endwhile; ?>
+
   </div>
 
   <div class="footer">

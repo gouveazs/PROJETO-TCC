@@ -21,7 +21,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
-  <style>
+<style>
   :root {
     --marrom: #5a4224;
     --verde: #5a6b50;
@@ -80,30 +80,30 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     margin-bottom: 20px;
   }
 
-.sidebar .logo img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 15px;
-  }
+  .sidebar .logo img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 15px;
+    }
 
-.sidebar .user-info {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-  }
+  .sidebar .user-info {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
 
-.sidebar .user-info .nome-usuario {
-    font-weight: bold;
-    font-size: 0.95rem; 
-    color: #fff;
-  }
+  .sidebar .user-info .nome-usuario {
+      font-weight: bold;
+      font-size: 0.95rem; 
+      color: #fff;
+    }
 
-.sidebar .user-info .tipo-usuario {
-    font-size: 0.8rem;
-    color: #ddd;
-  }
+  .sidebar .user-info .tipo-usuario {
+      font-size: 0.8rem;
+      color: #ddd;
+    }
 
 
   .sidebar .logo p {
@@ -303,7 +303,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 </style>
 
-
 </head>
 <body>
   <div class="sidebar">
@@ -323,7 +322,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
      <ul class="menu">
         <li><a href="#"><img src="imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
         <li><a href="explorar.php"><img src="imgs/explorar.png" alt="Explorar" style="width:20px; margin-right:10px;"> Explorar</a></li>
-        <li><a href="comunidade.php"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
+        <li><a href="comunidades/comunidade.php"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
         <li><a href="#"><img src="imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
         <li><a href="#"><img src="imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
         <li><a href="#"><img src="imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
