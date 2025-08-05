@@ -321,7 +321,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <nav>
      <ul class="menu">
         <li><a href="#"><img src="imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="explorar.php"><img src="imgs/explorar.png" alt="Explorar" style="width:20px; margin-right:10px;"> Explorar</a></li>
         <li><a href="comunidades/comunidade.php"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
         <li><a href="#"><img src="imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
         <li><a href="#"><img src="imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
