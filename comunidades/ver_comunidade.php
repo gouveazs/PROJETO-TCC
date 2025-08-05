@@ -1,7 +1,7 @@
 <?php
 include '../php/conexao_comunidade.php';
 
-$id_usuario_externo = 2; // ID do usuário logado (exemplo fixo)
+$id_usuario_externo = 1; // ID do usuário logado (exemplo fixo)
 $id_comunidade = $_GET['id'] ?? 0;
 
 // Verifica se já é membro da comunidade

@@ -220,7 +220,7 @@ $result = $conn->query("SELECT * FROM comunidades ORDER BY criada_em DESC");
     </div>
     <nav>
       <ul class="menu">
-        <li><a href="index.php"><img src="imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
+        <li><a href="../index.php"><img src="imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
         <li><a href="explorar.php"><img src="imgs/explorar.png" alt="Explorar" style="width:20px; margin-right:10px;"> Explorar</a></li>
         <li><a href="#"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
         <li><a href="#"><img src="imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
@@ -274,7 +274,7 @@ $result = $conn->query("SELECT * FROM comunidades ORDER BY criada_em DESC");
     <a href="#">Drama</a>
     <a href="#">Não Ficção</a>
 
-    <a href="comunidades/criar_comunidade.php">Criar Comunidades</a>
+    <a href="criar_comunidade.php">Criar Comunidades</a>
   </div>
 
   <!-- Conteúdo -->
