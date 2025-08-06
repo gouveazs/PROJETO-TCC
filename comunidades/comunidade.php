@@ -2,9 +2,10 @@
 session_start();
 $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
 $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
+$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
 include '../php/conexao_comunidade.php';
-$result = $conn->query("SELECT * FROM comunidades ORDER BY criada_em DESC");
+$result = $conn->query("SELECT id, nome, descricao, imagem FROM comunidades ORDER BY criada_em DESC");
 
 ?>
 
@@ -215,7 +216,11 @@ $result = $conn->query("SELECT * FROM comunidades ORDER BY criada_em DESC");
 <body>
   <div class="sidebar">
     <div class="logo">
-      <img src="imgs/usuario.jpg" alt="Foto de Perfil">
+      <?php if ($foto_de_perfil): ?>
+      <img src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>">
+      <?php else: ?>
+        <img src="imgs/usuario.jpg" alt="Foto de Perfil">
+      <?php endif; ?>
       <p><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>
     </div>
     <nav>
@@ -283,7 +288,7 @@ $result = $conn->query("SELECT * FROM comunidades ORDER BY criada_em DESC");
     <p>Faça parte de bate-papos sobre seus livros preferidos</p>
 
     <div class="comunidade-box">
-      <img src="imgs/livros-ciencia.jpg" alt="Ficção Científica">
+      <img src="../imgs/iconromance.jpg" alt="Ficção Científica">
       <div class="descricao">
         <h3>Descrição</h3>
         <p>
@@ -295,7 +300,7 @@ $result = $conn->query("SELECT * FROM comunidades ORDER BY criada_em DESC");
 
     <?php while ($com = $result->fetch(PDO::FETCH_ASSOC)): ?>
       <div class="comunidade-box">
-        <img src="imgs/livros-ciencia.jpg" alt="<?= htmlspecialchars($com['nome']) ?>">
+      <img src="data:image/jpeg;base64,<?= base64_encode($com['imagem']) ?>" alt="<?= htmlspecialchars($com['nome']) ?>">
         <div class="descricao">
           <h3><?= htmlspecialchars($com['nome']) ?></h3>
           <p>

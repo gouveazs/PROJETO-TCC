@@ -1,19 +1,32 @@
 <?php
-include '../php/conexao_comunidade.php';
+session_start();
+include '../php/conexao_comunidade.php'; // conexão para o banco 'comunidades'
+include '../php/conexao.php'; // conexão para o banco de usuários
 
-$id_usuario_externo = 1; // ID do usuário logado (exemplo fixo)
+$nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
+if (!$nome) {
+    die("Usuário não logado.");
+}
+
+// Buscar o id_usuario_externo no banco de usuários
+$sqlUser = "SELECT idusuario FROM cadastro_usuario WHERE nome = :nome";
+$stmtUser = $conn->prepare($sqlUser); // conexão do banco de usuários
+$stmtUser->execute([':nome' => $nome]);
+$user = $stmtUser->fetch(PDO::FETCH_ASSOC);
+
+$id_usuario_externo = $user['id'] ?? 0;
 $id_comunidade = $_GET['id'] ?? 0;
 
 // Verifica se já é membro da comunidade
 $sql = "SELECT * FROM membros_comunidade WHERE id_comunidade = :id_comunidade AND id_usuario_externo = :id_usuario";
-$stmt = $conn->prepare($sql);
+$stmt = $conn->prepare($sql); // conexão do banco de comunidades
 $stmt->execute([':id_comunidade' => $id_comunidade, ':id_usuario' => $id_usuario_externo]);
 $ja_membro = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Se enviou formulário e ainda não é membro, insere
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$ja_membro) {
     $sqlInsert = "INSERT INTO membros_comunidade (id_comunidade, id_usuario_externo) VALUES (:id_comunidade, :id_usuario)";
-    $stmtInsert = $conn->prepare($sqlInsert);
+    $stmtInsert = $conn_comunidade->prepare($sqlInsert);
     $stmtInsert->execute([':id_comunidade' => $id_comunidade, ':id_usuario' => $id_usuario_externo]);
 
     header("Location: chat.php?id_comunidade=$id_comunidade");
@@ -22,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$ja_membro) {
 
 // Busca dados da comunidade
 $sqlCom = "SELECT * FROM comunidades WHERE id = :id_comunidade";
-$stmtCom = $conn->prepare($sqlCom);
+$stmtCom = $conn_comunidade->prepare($sqlCom);
 $stmtCom->execute([':id_comunidade' => $id_comunidade]);
 $com = $stmtCom->fetch(PDO::FETCH_ASSOC);
 
@@ -48,7 +61,7 @@ if (!$com) {
     </form>
 <?php else: ?>
     <p>Você já participa desta comunidade.</p>
-    <a href="chat.php">Ir para o Chat</a>
+    <a href="chat.php?id_comunidade=<?= $id_comunidade ?>">Ir para o Chat</a>
 <?php endif; ?>
 
 </body>
