@@ -17,11 +17,11 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Entre Linhas - Explorar</title>
+  <title>Entre Linhas - Livraria Moderna</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
-  <style>
+<style>
   :root {
     --marrom: #5a4224;
     --verde: #5a6b50;
@@ -53,7 +53,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     flex-direction: column;
     align-items: flex-start;
     padding-top: 20px;
-    overflow-y: auto; /* SCROLL HABILITADO */
+    overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #ccc transparent;
   }
@@ -80,31 +80,30 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     margin-bottom: 20px;
   }
 
-.sidebar .logo img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 15px;
-  }
+  .sidebar .logo img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 15px;
+    }
 
-.sidebar .user-info {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-  }
+  .sidebar .user-info {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
 
-.sidebar .user-info .nome-usuario {
-    font-weight: bold;
-    font-size: 0.95rem; 
-    color: #fff;
-  }
+  .sidebar .user-info .nome-usuario {
+      font-weight: bold;
+      font-size: 0.95rem; 
+      color: #fff;
+    }
 
-.sidebar .user-info .tipo-usuario {
-    font-size: 0.8rem;
-    color: #ddd;
-  }
-
+  .sidebar .user-info .tipo-usuario {
+      font-size: 0.8rem;
+      color: #ddd;
+    }
 
   .sidebar .logo p {
     font-weight: bold;
@@ -267,6 +266,142 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     color: #f5c518;
   }
 
+  /* Estilos para a página do produto */
+  .product-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .product-title {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .product-title h1 {
+    font-size: 2.5rem;
+    color: var(--marrom);
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  
+  .product-title h2 {
+    font-size: 3rem;
+    color: var(--verde);
+    line-height: 1;
+  }
+  
+  .product-container {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  
+  .product-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .product-image img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  
+  .product-details {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .product-info h3 {
+    font-size: 2rem;
+    color: var(--verde);
+    margin-bottom: 20px;
+  }
+  
+  .product-info p {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+  }
+  
+  .product-conditions {
+    margin: 20px 0;
+  }
+  
+  .condition {
+    display: inline-block;
+    padding: 5px 15px;
+    margin-right: 10px;
+    border-radius: 20px;
+    font-weight: bold;
+  }
+  
+  .used {
+    background-color: #f0f0f0;
+    color: #555;
+    border: 1px solid #ddd;
+  }
+  
+  .new {
+    background-color: var(--verde);
+    color: white;
+    border: 1px solid var(--verde);
+  }
+  
+  .product-price {
+    margin: 25px 0;
+  }
+  
+  .product-price strong {
+    font-size: 1.8rem;
+    color: var(--marrom);
+  }
+  
+  .buy-button {
+    background-color: var(--verde);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .buy-button:hover {
+    background-color: #6f8562;
+  }
+  
+  .product-tabs ul {
+    display: flex;
+    list-style: none;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-top: 40px;
+  }
+  
+  .product-tabs li {
+    margin-right: 30px;
+    padding: 10px 0;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+  
+  .product-tabs li.active {
+    color: var(--marrom);
+    border-bottom: 3px solid var(--marrom);
+  }
+
   .footer {
     margin-left: 250px;
     background-color: var(--marrom);
@@ -291,6 +426,18 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     .cards-novidades, .cards-recomendacoes {
       grid-template-columns: repeat(2, 1fr);
     }
+    
+    .product-container {
+      flex-direction: column;
+    }
+    
+    .product-title h1 {
+      font-size: 2rem;
+    }
+    
+    .product-title h2 {
+      font-size: 2.5rem;
+    }
   }
 
   @media (max-width: 576px) {
@@ -302,7 +449,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
   }
 </style>
-
 
 </head>
 <body>
@@ -322,13 +468,11 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <nav>
      <ul class="menu">
         <li><a href="#"><img src="imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="explorar.php"><img src="imgs/explorar.png" alt="Explorar" style="width:20px; margin-right:10px;"> Explorar</a></li>
-        <li><a href="comunidade.php"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
-        <li><a href="#"><img src="imgs/destaques.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
+        <li><a href="comunidades/comunidade.php"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
+        <li><a href="#"><img src="imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
         <li><a href="#"><img src="imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
         <li><a href="#"><img src="imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
       </ul>
-
 
       <h3>Conta</h3>
       <ul class="account">
@@ -352,7 +496,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
 
         <?php if ($nome): ?>
-          <li><a href="login/logout.php"><img src="imgs/logout.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
+          <li><a href="login/logout.php"><img src="imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
         <?php endif; ?>
       </ul>
     </nav>
@@ -366,208 +510,57 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </form>
   </div>
 
-  <div class="banner">
-    <img src="imgs/" alt="Banner 1">
-  </div>
-
   <div class="main">
-  <!-- Novidades -->
-  <div class="section-header">
-    <h2>Novidades</h2>
-    <a href="#" class="ver-mais">Ver mais</a>
-  </div>
-  <div class="cards cards-novidades">
-    <div class="card">
-      <img src="imgs/Daisy Jone & The Six.jpg" alt="Livro 1">
-      <div class="info">
-        <h3>Daisy Jone & The Six</h3>
-        <p class="price">R$ 44,90</p>
-        <div class="stars">★★★★☆</div>
+    <!-- Seção do produto -->
+    <div class="product-page">
+      <div class="product-title">
+        <h1>GEORGE ORWELL</h1>
+        <h2>1984</h2>
       </div>
-    </div>
-    <div class="card">
-      <img src="imgs/A Menina que Roubava Livros.jpg" alt="Livro 2">
-      <div class="info">
-        <h3>A Menina que Roubava Livros</h3>
-        <p class="price">R$ 39,50</p>
-        <div class="stars">★★★★★</div>
-      </div>
-    </div>
-    <div class="card">
-      <img src="imgs/Extraordinário.jpg" alt="Livro 3">
-      <div class="info">
-        <h3>Extraordinário</h3>
-        <p class="price">R$ 28,00</p>
-        <div class="stars">★★★★★</div>
-      </div>
-    </div>
-    <div class="card">
-      <img src="imgs/Relatos de um Gato Viajante.jpg" alt="Livro 4">
-      <div class="info">
-        <h3>Relatos de um Gato Viajante</h3>
-        <p class="price">R$ 33,90</p>
-        <div class="stars">★★★☆☆</div>
-      </div>
-    </div>
-    <div class="card">
-      <img src="imgs/Prisioneiro de Azkaban.jpg" alt="Livro 5">
-      <div class="info">
-        <h3>Prisioneiro de Azkaban</h3>
-        <p class="price">R$ 55,00</p>
-        <div class="stars">★★★★★</div>
-      </div>
-    </div>
-    <div class="card">
-      <img src="imgs/Dom Casmurro.jpg" alt="Livro 6">
-      <div class="info">
-        <h3>Dom Casmurro</h3>
-        <p class="price">R$ 22,00</p>
-        <div class="stars">★★★★☆</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Recomendações -->
-  <div class="section-header" style="margin-top: 50px;">
-    <h2>Recomendações</h2>
-    <a href="#" class="ver-mais">Ver mais</a>
-  </div>
-  <div class="cards cards-recomendacoes">
-
-    <div class="card">
-      <img src="imgs/Orgulho e Preconceito.jpg" alt="Livro 7">
-      <div class="info">
-        <h3>Orgulho e Preconceito</h3>
-        <p class="price">R$ 34,90</p>
-        <div class="stars">★★★★★</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="imgs/1984.jpg" alt="Livro 8">
-      <div class="info">
-        <h3>1984</h3>
-        <p class="price">R$ 29,99</p>
-        <div class="stars">★★★★★</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="imgs/O Pequeno Príncipe.jpg" alt="Livro 9">
-      <div class="info">
-        <h3>O Pequeno Príncipe</h3>
-        <p class="price">R$ 19,90</p>
-        <div class="stars">★★★★★</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="imgs/Romeu e Julieta.jpg" alt="Livro 10">
-      <div class="info">
-        <h3>Romeu e Julieta</h3>
-        <p class="price">R$ 24,00</p>
-        <div class="stars">★★★☆☆</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="imgs/Senhor dos Anéis.jpg" alt="Livro 11">
-      <div class="info">
-        <h3>Senhor dos Anéis</h3>
-        <p class="price">R$ 59,90</p>
-        <div class="stars">★★★★★</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="imgs/A Culpa é das Estrelas.jpg" alt="Livro 12">
-      <div class="info">
-        <h3>A Culpa é das Estrelas</h3>
-        <p class="price">R$ 35,00</p>
-        <div class="stars">★★★★☆</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="imgs/O Hobbit.jpg" alt="Livro 13">
-      <div class="info">
-        <h3>O Hobbit</h3>
-        <p class="price">R$ 39,90</p>
-        <div class="stars">★★★★★</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="imgs/Cem Anos de Solidão.jpg" alt="Livro 14">
-      <div class="info">
-        <h3>Cem Anos de Solidão</h3>
-        <p class="price">R$ 42,00</p>
-        <div class="stars">★★★★★</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="imgs/A Revolução dos Bichos.jpg" alt="Livro 15">
-      <div class="info">
-        <h3>A Revolução dos Bichos</h3>
-        <p class="price">R$ 27,50</p>
-        <div class="stars">★★★★☆</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="imgs/O Conto da Aia.jpg" alt="Livro 16">
-      <div class="info">
-        <h3>O Conto da Aia</h3>
-        <p class="price">R$ 36,00</p>
-        <div class="stars">★★★★☆</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="imgs/Amor e Azeitonas.jpg" alt="Livro 17">
-      <div class="info">
-        <h3>Amor e Azeitonas</h3>
-        <p class="price">R$ 22,90</p>
-        <div class="stars">★★★☆☆</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="imgs/As vantagens de ser invisivel.jpg" alt="Livro 18">
-      <div class="info">
-        <h3>As Vantagens de Ser Invisível</h3>
-        <p class="price">R$ 38,00</p>
-        <div class="stars">★★★★★</div>
-      </div>
-    </div>
-  </div>
-    
-  <br><br>
-  <!-- produtos do banco -->
-  <div class="section-header">
-      <h2>Ofertas Recem Adicionadas</h2>
-      <a href="#" class="ver-mais">Ver mais</a>
-  </div>
-  <div class="cards cards-novidades">
-    <?php foreach ($produtos as $produto): ?>
-      <div class="card">
-        <?php if (!empty($produto['imagem'])): ?>
-          <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>">
-        <?php else: ?>
-          <img src="imgs/usuario.jpg" alt="Foto de Perfil">
-        <?php endif; ?>
-        <div class="info">
-          <h3><?= htmlspecialchars($produto['nome']) ?></h3>
-          <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
-          <div class="stars">★★★★★</div>
+      
+      <div class="product-container">
+        <div class="product-image">
+          <img src="imgs/livro-1984.jpg" alt="Capa do livro 1984">
+        </div>
+        
+        <div class="product-details">
+          <div class="product-info">
+            <h3>1984</h3>
+            <p><strong>Autor:</strong> George Orwell</p>
+            <p><strong>Ano:</strong> 1949</p>
+            <p><strong>ISBN:</strong> 9788533914849</p>
+            
+            <div class="product-conditions">
+              <span class="condition used">Usado</span>
+              <span class="condition new">Novo</span>
+            </div>
+            
+            <div class="product-price">
+              <p>Preço: <strong>R$ 35,00</strong></p>
+            </div>
+            
+            <div class="product-description">
+              <p>Descrição: Livro com leve desgaste nas bordas. Nenhuma página faltando.</p>
+            </div>
+            
+            <div class="product-seller">
+              <p>Vendido por: <strong>Selco Moderno</strong></p>
+            </div>
+            
+            <button class="buy-button">Comprar</button>
+          </div>
         </div>
       </div>
-    <?php endforeach; ?>
+      
+      <div class="product-tabs">
+        <ul>
+          <li class="active">Descrição</li>
+          <li>Informações Adicionais</li>
+          <li>Avaliações</li>
+        </ul>
+      </div>
+    </div>
   </div>
-
-  </div>
-</div>  
 
   <div class="footer">
     &copy; 2025 Entre Linhas - Todos os direitos reservados.

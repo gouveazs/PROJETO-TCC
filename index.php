@@ -21,7 +21,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
- <style>
+<style>
   :root {
     --marrom: #5a4224;
     --verde: #5a6b50;
@@ -80,30 +80,30 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     margin-bottom: 20px;
   }
 
-.sidebar .logo img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 15px;
-  }
+  .sidebar .logo img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 15px;
+    }
 
-.sidebar .user-info {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-  }
+  .sidebar .user-info {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
 
-.sidebar .user-info .nome-usuario {
-    font-weight: bold;
-    font-size: 0.95rem; 
-    color: #fff;
-  }
+  .sidebar .user-info .nome-usuario {
+      font-weight: bold;
+      font-size: 0.95rem; 
+      color: #fff;
+    }
 
-.sidebar .user-info .tipo-usuario {
-    font-size: 0.8rem;
-    color: #ddd;
-  }
+  .sidebar .user-info .tipo-usuario {
+      font-size: 0.8rem;
+      color: #ddd;
+    }
 
 
   .sidebar .logo p {
@@ -303,7 +303,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 </style>
 
-
 </head>
 <body>
   <div class="sidebar">
@@ -322,9 +321,8 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <nav>
      <ul class="menu">
         <li><a href="#"><img src="imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="explorar.php"><img src="imgs/explorar.png" alt="Explorar" style="width:20px; margin-right:10px;"> Explorar</a></li>
-        <li><a href="comunidade.php"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
-        <li><a href="#"><img src="imgs/destaques.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
+        <li><a href="comunidades/comunidade.php"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
+        <li><a href="#"><img src="imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
         <li><a href="#"><img src="imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
         <li><a href="#"><img src="imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
       </ul>
@@ -352,7 +350,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
 
         <?php if ($nome): ?>
-          <li><a href="login/logout.php"><img src="imgs/logout.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
+          <li><a href="login/logout.php"><img src="imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
         <?php endif; ?>
       </ul>
     </nav>
@@ -366,9 +364,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </form>
   </div>
 
- <div style="margin-left: 250px; margin-top: 70px; padding: 30px; background-color: #fff;">
+ <div style="margin-left: 250px; margin-top: 70px; padding: 30px; background-color: #F4F1EE;">
     <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-      <div style="flex: 2; background: #f3f7f2; padding: 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
+      <div style="flex: 2; background: #ffffffff; padding: 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
         <div>
           <p style="color: green; font-weight: bold; font-size: 1rem;">Book Mockup</p>
           <h2 style="font-size: 2rem; font-weight: bold; margin: 10px 0;">HARDCOVER.</h2>
@@ -378,21 +376,21 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <img src="imgs/1984.jpg" alt="Book" style="max-height: 180px; border-radius: 8px;">
       </div>
       <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
-        <div style="display: flex; background: #f7f7f7; padding: 10px; border-radius: 8px; align-items: center;">
-          <img src="imgs/1984.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
+        <div style="display: flex; background: #ffffffff; padding: 10px; border-radius: 8px; align-items: center;">
+          <img src="imgs/iconromance.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
           <div>
             <p style="font-weight: bold; font-size: 0.9rem;">Headphone Portátil</p>
             <p style="color: green;">R$ 86,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 95,00</span></p>
           </div>
         </div>
-        <div style="display: flex; background: #f7f7f7; padding: 10px; border-radius: 8px; align-items: center;">
+        <div style="display: flex; background: #ffffffff; padding: 10px; border-radius: 8px; align-items: center;">
           <img src="imgs/fone2.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
           <div>
             <p style="font-weight: bold; font-size: 0.9rem;">Fone de Ouvido On Ear</p>
             <p style="color: green;">R$ 80,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 86,00</span></p>
           </div>
         </div>
-        <div style="display: flex; background: #f7f7f7; padding: 10px; border-radius: 8px; align-items: center;">
+        <div style="display: flex; background: #ffffffff; padding: 10px; border-radius: 8px; align-items: center;">
           <img src="imgs/caixinha.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
           <div>
             <p style="font-weight: bold; font-size: 0.9rem;">Caixa de Som Bluetooth</p>
@@ -404,33 +402,33 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <div style="display: flex; justify-content: space-around; align-items: center; margin: 30px 0; flex-wrap: wrap;">
       <div style="text-align: center;">
-        <img src="imgs/1984.jpg" alt="Frete" style="height: 40px;">
+        <img src="imgs/entrega-rapida.png" alt="Frete" style="height: 40px;">
         <p>Frete grátis para pedidos <br><small>Acima de R$ 50</small></p>
       </div>
       <div style="text-align: center;">
-        <img src="imgs/garantia.png" alt="Garantia" style="height: 40px;">
+        <img src="imgs/garantia-de-devolucao-de-dinheiro.png" alt="Garantia" style="height: 40px;">
         <p>Garantia de devolução do dinheiro<br><small>100% do seu dinheiro de volta</small></p>
       </div>
       <div style="text-align: center;">
-        <img src="imgs/pagamento.png" alt="Pagamento" style="height: 40px;">
-        <p>Pagamento<br><small>Formas de pagamento</small></p>
+        <img src="imgs/pagamento-com-cartao-de-credito.png" alt="Pagamento" style="height: 40px;">
+        <p>Pagamento<br><small>Pix, Crédito e Débito</small></p>
       </div>
       <div style="text-align: center;">
-        <img src="imgs/suporte.png" alt="Suporte" style="height: 40px;">
+        <img src="imgs/suporte-online.png" alt="Suporte" style="height: 40px;">
         <p>Ajuda e Suporte<br><small>(11) 4002-8922</small></p>
       </div>
     </div>
 
     <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-      <div style="flex: 1; background-color: #fcecc2; border-radius: 12px; padding: 20px; display: flex; align-items: center; justify-content: space-between;">
+      <div style="flex: 1; background-color: #5A6B50; border-radius: 15px; padding: 20px; display: flex; align-items: center; justify-content: space-between;">
         <div>
-          <p style="color: #8D6E63; font-size: 0.9rem;">The Book</p>
-          <h3 style="font-size: 1.4rem;">Available Worldwide</h3>
-          <a href="#" style="margin-top: 10px; display: inline-block; background-color: #8D6E63; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Shop Now</a>
+          <h3 style="color: #ffffffff; font-size: 1.4rem;">Comunidades</h3>
+          <p style="color: #ffffffff; font-size: 0.9rem;"> Visite nossas comunidades e participe dos chats online!</p>
+          <a href="#" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
         </div>
-        <img src="imgs/book_card.png" alt="Card" style="height: 100px;">
+        <img src="imgs/comuni.jpg" alt="Card" style="height: 150px; border-radius: 8px;">
       </div>
-      <div style="flex: 1; background-color: #c62828; color: white; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      <div style="flex: 1; background-color: #5a4224; color: white; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
         <h2 style="font-size: 2rem;">SALE</h2>
         <p style="font-size: 1.2rem;">UP TO <strong>40% OFF</strong></p>
       </div>

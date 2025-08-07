@@ -123,6 +123,37 @@
         }
         echo '</table>';
     ?>
+
+<h1>Consulta de comunidades</h1>
+    <?php  
+        include '../conexao_comunidade.php';
+        $stmt = $conn->query("SELECT * FROM comunidades");
+        echo '<table border="1">';
+            echo "<tr>";
+                echo "<th>IMAGEM</th>";
+                echo "<th>Código</th>";
+                echo "<th>Nome</th>";
+                echo "<th>Descrição</th>";
+            echo "</tr>"; 
+
+        while ($row = $stmt->fetch()) {
+            echo "<tr>";
+
+            // Verifica se há imagem e converte para base64
+            if (!empty($row['imagem'])) {
+                $imgData = base64_encode($row['imagem']);
+                echo '<td><img src="data:image/jpeg;base64,' . $imgData . '" width="100" height="auto"/></td>';
+            } else {
+                echo "<td>Sem imagem</td>";
+            }
+
+                echo "<td>".$row['id']."</td>";
+                echo "<td>".htmlspecialchars($row['nome'])."</td>";
+                echo "<td>".$row['descricao']."</td>";
+            echo "</tr>";          
+        }
+        echo '</table>';
+    ?>
 </main>
 
     <footer class="rodape">
