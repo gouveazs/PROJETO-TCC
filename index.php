@@ -21,7 +21,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
-  <style>
+ <style>
   :root {
     --marrom: #5a4224;
     --verde: #5a6b50;
