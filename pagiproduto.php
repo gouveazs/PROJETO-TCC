@@ -520,7 +520,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       
       <div class="product-container">
         <div class="product-image">
-          <img src="imgs/livro-1984.jpg" alt="Capa do livro 1984">
+          <img src="imgs/1984.jpg" alt="Capa do livro 1984">
         </div>
         
         <div class="product-details">

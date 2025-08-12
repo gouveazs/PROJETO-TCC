@@ -6,7 +6,11 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
 
 //produtos
 include 'php/conexaoVendedor.php';
-$stmt = $conn->prepare("SELECT * FROM produto");
+$stmt = $conn->prepare("
+    SELECT produto.*, cadastro_vendedor.nome_completo
+    FROM produto
+    JOIN cadastro_vendedor ON produto.idvendedor = cadastro_vendedor.idvendedor
+");
 $stmt->execute();
 $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -322,7 +326,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
      <ul class="menu">
         <li><a href="#"><img src="imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
         <li><a href="comunidades/comunidade.php"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
-        <li><a href="#"><img src="imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
+        <li><a href="pagiproduto.php"><img src="imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
         <li><a href="#"><img src="imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
         <li><a href="#"><img src="imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
       </ul>
@@ -626,6 +630,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <h3><?= htmlspecialchars($produto['nome']) ?></h3>
           <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
           <div class="stars">★★★★★</div>
+          <p class="vendedor">Vendedor: <?= htmlspecialchars($produto['nome_completo']) ?></p>
         </div>
       </div>
     <?php endforeach; ?>
