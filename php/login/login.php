@@ -128,7 +128,7 @@
     <div class="left-panel">
       <h2>Olá, novo usuário!</h2>
       <p>Cadastre-se agora<br>para aproveitar todos os recursos</p>
-      <button onclick="window.location.href='../php/cadastro/cadastroUsuario.php'">CADASTRAR</button>
+      <button onclick="window.location.href='../cadastro/cadastroUsuario.php'">CADASTRAR</button>
     </div>
     <div class="right-panel">
       <h2>Entrar na Conta</h2>

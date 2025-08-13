@@ -5,7 +5,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
 $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
 //produtos
-include 'php/conexaoVendedor.php';
+include 'php/conexao.php';
 $stmt = $conn->prepare("SELECT * FROM produto");
 $stmt->execute();
 $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -305,23 +305,22 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 </head>
 <body>
-  <div class="sidebar">
-    <div class="logo">
+<div class="sidebar">
+  <div class="logo">
     <?php if ($foto_de_perfil): ?>
      <img src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>">
     <?php else: ?>
       <img src="imgs/usuario.jpg" alt="Foto de Perfil">
     <?php endif; ?>
-  <div class="user-info">
-    <p class="nome-usuario"><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>
-    <p class="tipo-usuario"><?= $tipo ? htmlspecialchars($tipo) : 'Usuário'; ?></p>
+      <div class="user-info">
+        <p class="nome-usuario"><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>
+        <p class="tipo-usuario"><?= $tipo ? htmlspecialchars($tipo) : 'Usuário'; ?></p>
+      </div>
   </div>
-</div>
-
     <nav>
      <ul class="menu">
-        <li><a href="#"><img src="imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="comunidades/comunidade.php"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
+        <li><a href="index.php"><img src="imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
+        <li><a href="php/comunidades/comunidade.php"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
         <li><a href="#"><img src="imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
         <li><a href="#"><img src="imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
         <li><a href="#"><img src="imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
@@ -331,10 +330,10 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <h3>Conta</h3>
       <ul class="account">
         <?php if (!$nome): ?>
-          <li><a href="login/login.php"><img src="imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
+          <li><a href="php/login/login.php"><img src="imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
           <li><a href="php/cadastro/cadastroUsuario.php"><img src="imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
           <li><a href="php/cadastro/cadastroVendedor.php"><img src="imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
-          <li><a href="login/loginVendedor.php"><img src="imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
+          <li><a href="php/login/loginVendedor.php"><img src="imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
         <?php else: ?>
           <li><a href="php/perfil/ver_perfil.php"><img src="imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
         <?php endif; ?>
@@ -350,7 +349,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
 
         <?php if ($nome): ?>
-          <li><a href="login/logout.php"><img src="imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
+          <li><a href="php/login/logout.php"><img src="imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
         <?php endif; ?>
       </ul>
     </nav>

@@ -1,5 +1,5 @@
 <?php
-include '../php/conexao_comunidade.php'; // Deve retornar um objeto PDO em $connComunidades
+include '../conexao.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];

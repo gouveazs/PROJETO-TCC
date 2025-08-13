@@ -4,8 +4,8 @@ $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
 $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
 $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
-include '../php/conexao_comunidade.php';
-$result = $conn->query("SELECT id, nome, descricao, imagem FROM comunidades ORDER BY criada_em DESC");
+include '../conexao.php';
+$result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comunidades ORDER BY criada_em DESC");
 
 ?>
 
@@ -35,45 +35,113 @@ $result = $conn->query("SELECT id, nome, descricao, imagem FROM comunidades ORDE
     }
 
     .sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 250px;
-      height: 100vh;
-      background-color: var(--verde);
-      padding: 20px;
-      color: white;
+    position: fixed;
+    top: 0; left: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: var(--verde);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 20px;
+    overflow-y: auto; /* SCROLL HABILITADO */
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
     }
 
     .sidebar .logo {
-      text-align: center;
-      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      padding: 0 20px;
+      margin-bottom: 20px;
     }
 
     .sidebar .logo img {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+      }
+
+    .sidebar .user-info {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+      }
+
+    .sidebar .user-info .nome-usuario {
+        font-weight: bold;
+        font-size: 0.95rem; 
+        color: #fff;
+      }
+
+    .sidebar .user-info .tipo-usuario {
+        font-size: 0.8rem;
+        color: #ddd;
+      }
+
 
     .sidebar .logo p {
-      margin-top: 10px;
       font-weight: bold;
     }
 
-    .sidebar ul {
+    .sidebar nav {
+      width: 100%;
+      padding: 0 20px;
+    }
+
+    .sidebar nav h3 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: #ddd;
+    }
+
+    .sidebar nav ul {
       list-style: none;
       padding: 0;
+      margin: 0 0 10px 0;
+      width: 100%;
     }
 
-    .sidebar ul li {
-      margin: 15px 0;
+    .sidebar nav ul li {
+      width: 100%;
+      margin-bottom: 10px;
     }
 
-    .sidebar ul li a {
+    .sidebar nav ul li a {
+      color: #fff;
       text-decoration: none;
-      color: white;
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+
+    .sidebar nav ul li a i {
+      margin-right: 10px;
+    }
+
+    .sidebar nav ul li a:hover {
+      background-color: #6f8562;
     }
 
     .topbar {
@@ -216,44 +284,48 @@ $result = $conn->query("SELECT id, nome, descricao, imagem FROM comunidades ORDE
 <body>
   <div class="sidebar">
     <div class="logo">
-      <?php if ($foto_de_perfil): ?>
-      <img src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>">
-      <?php else: ?>
-        <img src="imgs/usuario.jpg" alt="Foto de Perfil">
-      <?php endif; ?>
-      <p><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>
-    </div>
+    <?php if ($foto_de_perfil): ?>
+     <img src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>">
+    <?php else: ?>
+      <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
+    <?php endif; ?>
+      <div class="user-info">
+        <p class="nome-usuario"><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>
+        <p class="tipo-usuario"><?= $tipo ? htmlspecialchars($tipo) : 'Usuário'; ?></p>
+      </div>
+  </div>
     <nav>
       <ul class="menu">
-        <li><a href="../index.php"><img src="imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="explorar.php"><img src="imgs/explorar.png" alt="Explorar" style="width:20px; margin-right:10px;"> Explorar</a></li>
-        <li><a href="#"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
-        <li><a href="#"><img src="imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
-        <li><a href="#"><img src="imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
+        <li><a href="../../index.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
+        <li><a href="comunidade.php"><img src="../../imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
+        <li><a href="#"><img src="../../imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
+        <li><a href="#"><img src="../../imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
+        <li><a href="#"><img src="../../imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
       </ul>
 
       <h3>Conta</h3>
       <ul class="account">
         <?php if (!$nome): ?>
-          <li><a href="login/login.php"><img src="imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
-          <li><a href="php/cadastro/cadastroUsuario.php"><img src="imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
-          <li><a href="php/cadastro/cadastroVendedor.php"><img src="imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
+          <li><a href="../login/login.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
+          <li><a href="../cadastro/cadastroUsuario.php"><img src="../../imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
+          <li><a href="../cadastro/cadastroVendedor.php"><img src="../../imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
+          <li><a href="../login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
         <?php else: ?>
-          <li><a href="php/perfil/ver_perfil.php"><img src="imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
+          <li><a href="../php/perfil/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
         <?php endif; ?>
 
         <?php if ($nome === 'adm'): ?>
-          <li><a href="php/consulta/consulta.php"><img src="imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
-          <li><a href="php/consultaFiltro/busca.php"><img src="imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
-          <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/querovender.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
+          <li><a href="../consulta/consulta.php"><img src="../../imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
+          <li><a href="../consultaFiltro/busca.php"><img src="../../imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
+          <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/querovender.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
         <?php endif; ?>
 
         <?php if ($tipo === 'Vendedor'): ?>
-          <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/querovender.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
+          <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/querovender.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
         <?php endif; ?>
 
         <?php if ($nome): ?>
-          <li><a href="login/logout.php"><img src="imgs/logout.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
+          <li><a href="../login/logout.php"><img src="../../imgs/logout.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
         <?php endif; ?>
       </ul>
     </nav>
@@ -261,10 +333,10 @@ $result = $conn->query("SELECT id, nome, descricao, imagem FROM comunidades ORDE
 
   <!-- Topo -->
   <div class="topbar">
-    <h1><img src="imgs/livros.png" alt="Logo"> Entre Linhas - Chats Online</h1>
+    <h1><img src="../../imgs/pilha-de-tres-livros.png" alt="Logo"> Entre Linhas - Chats Online</h1>
     <div class="search-box">
       <input type="text" placeholder="Pesquisar tags, outros...">
-      <img src="imgs/lupa.png" alt="Buscar">
+      <img src="../../imgs/lupa.png" alt="Buscar">
     </div>
   </div>
 
@@ -288,7 +360,7 @@ $result = $conn->query("SELECT id, nome, descricao, imagem FROM comunidades ORDE
     <p>Faça parte de bate-papos sobre seus livros preferidos</p>
 
     <div class="comunidade-box">
-      <img src="../imgs/iconromance.jpg" alt="Ficção Científica">
+      <img src="../../imgs/iconromance.jpg" alt="Ficção Científica">
       <div class="descricao">
         <h3>Descrição</h3>
         <p>
@@ -306,7 +378,7 @@ $result = $conn->query("SELECT id, nome, descricao, imagem FROM comunidades ORDE
           <p>
             <?= nl2br(htmlspecialchars($com['descricao'])) ?>
           </p>
-          <a href="ver_comunidade.php?id=<?= $com['id'] ?>">Entrar</a>
+          <a href="ver_comunidade.php?id=<?= $com['idcomunidades'] ?>">Entrar</a>
         </div>
       </div>
     <?php endwhile; ?>

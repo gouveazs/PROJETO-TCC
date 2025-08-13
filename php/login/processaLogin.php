@@ -1,6 +1,6 @@
 <?php
 
-include '../php/conexao.php';
+include '../conexao.php';
 
 $usuario = htmlspecialchars($_POST['usuario']);
 $senha = htmlspecialchars($_POST['senha']);
@@ -15,7 +15,7 @@ try {
         $_SESSION['usuario_logado'] = $usuario_db['id'];
         $_SESSION['nome_usuario'] = $usuario_db['nome']; // <-- adiciona isso
         $_SESSION['foto_de_perfil'] = $usuario_db['foto_de_perfil']; // <-- adiciona isso
-        header('Location: ../index.php');
+        header('Location: ../../index.php');
         exit();
     } else {
         header('Location: login.php?error=1');

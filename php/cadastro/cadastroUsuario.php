@@ -136,7 +136,7 @@
     <div class="left-panel">
       <h2>Bem-vindo de volta!</h2>
       <p>Para se manter conectado,<br>faça login com suas informações pessoais</p>
-      <button onclick="window.location.href='../../login/login.php'">ENTRAR</button>
+      <button onclick="window.location.href='../login/login.php'">ENTRAR</button>
     </div>
     <div class="right-panel">
       <h2>Criar Conta</h2>
