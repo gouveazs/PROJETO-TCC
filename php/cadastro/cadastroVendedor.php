@@ -105,6 +105,12 @@
         flex: 1 1 100%;
       }
     }
+
+     .erro {
+      color: red;
+      margin-top: 10px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -155,6 +161,9 @@
         <input type="submit" value="Cadastrar">
       </div>
     </form>
+    <?php if (isset($_GET['erro']) && $_GET['erro'] == 'nome_ou_email'): ?>
+      <div class="erro">Nome ou e-mail já cadastrados!</div>
+    <?php endif; ?>
   </div>
 
 </body>

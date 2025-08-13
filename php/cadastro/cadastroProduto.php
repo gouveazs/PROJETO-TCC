@@ -292,7 +292,7 @@ $tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
 
         <div class="form-group">
           <label for="imagem">Imagem do produto:</label>
-          <input type="file" id="imagem" name="imagem" accept="image/*" required>
+          <input type="file" id="imagem" name="imagens[]" accept="image/*" multiple required>
         </div>
 
         <input type="submit" value="Cadastrar">

@@ -1,7 +1,7 @@
 <?php
 include '../conexao.php';
 
-//dados vendedor
+// Dados do vendedor
 $nome_completo = $_POST['nomeV'];
 $data_nascimento = $_POST['data_nascimento'];
 $email_vendedor = $_POST['emailV'];
@@ -9,7 +9,7 @@ $senha_vendedor = $_POST['senhaV'];
 $cpf = $_POST['cpf'];
 $cnpj = $_POST['cnpj'];
 
-// verifica se ja existe o nome ou email cadastrado
+// Verifica se já existe o nome ou email cadastrado
 $sqlCheck = "SELECT COUNT(*) FROM cadastro_vendedor WHERE nome_completo = :nome_completo OR email = :email";
 $stmtCheck = $conn->prepare($sqlCheck);
 $stmtCheck->bindParam(':nome_completo', $nome_completo);
@@ -22,23 +22,31 @@ if ($existe > 0) {
     exit();
 }
 
-// foto de perfil
+// Foto de perfil
 $foto_de_perfil = null;
 if (isset($_FILES['foto_de_perfil']) && $_FILES['foto_de_perfil']['error'] == 0) {
-    // Abra o arquivo de imagem em modo binário
     $foto_de_perfil = file_get_contents($_FILES['foto_de_perfil']['tmp_name']);
 }
 
 try {
-    $sql = "INSERT INTO cadastro_vendedor (nome_completo, data_nascimento, email, senha, cpf, cnpj) VALUES ('$nome_completo','$data_nascimento','$email_vendedor','$senha_vendedor','$cpf','$cnpj')";
-    $conn -> exec($sql); 
+    $sql = "INSERT INTO cadastro_vendedor (nome_completo, data_nascimento, email, senha, cpf, cnpj, foto_de_perfil) VALUES 
+            (:nome_completo, :data_nascimento, :email, :senha, :cpf, :cnpj, :foto_de_perfil)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':nome_completo', $nome_completo);
+    $stmt->bindParam(':data_nascimento', $data_nascimento);
+    $stmt->bindParam(':email', $email_vendedor);
+    $stmt->bindParam(':senha', $senha_vendedor);
+    $stmt->bindParam(':cpf', $cpf);
+    $stmt->bindParam(':cnpj', $cnpj);
+    $stmt->bindParam(':foto_de_perfil', $foto_de_perfil, PDO::PARAM_LOB);
 
-    echo "Boa:";
+    $stmt->execute();
+
     header("Location: ../login/loginVendedor.php?sucesso=cadastro_usuario");
     exit();
 
 } catch(PDOException $e) {
-    echo $sql . "<br>" . $e->getMessage();
+    echo "Erro: " . $e->getMessage();
 }
 
 $conn = null;
