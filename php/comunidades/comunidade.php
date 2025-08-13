@@ -325,7 +325,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
         <?php endif; ?>
 
         <?php if ($nome): ?>
-          <li><a href="../login/logout.php"><img src="../../imgs/logout.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
+          <li><a href="../login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
         <?php endif; ?>
       </ul>
     </nav>

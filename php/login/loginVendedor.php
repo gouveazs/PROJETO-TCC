@@ -128,7 +128,7 @@
     <div class="left-panel">
       <h2>Olá, novo vendedor!</h2>
       <p>Cadastre-se agora<br>para começar seus negócios!</p>
-      <button onclick="window.location.href='../php/cadastro/cadastroVendedor.php'">CADASTRAR</button>
+      <button onclick="window.location.href='../cadastro/cadastroVendedor.php'">CADASTRAR</button>
     </div>
     <div class="right-panel">
       <h2>Acessar painel do Livreiro</h2>

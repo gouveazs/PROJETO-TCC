@@ -145,6 +145,12 @@
         </div>
       </div>
 
+      <div class="form-group">
+        <div class="form-control">
+          <input type="file" name="foto_de_perfil" accept="image/*">
+        </div>
+      </div>
+
       <div class="form-footer">
         <input type="submit" value="Cadastrar">
       </div>

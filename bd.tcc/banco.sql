@@ -83,6 +83,7 @@ CREATE TABLE IF NOT EXISTS `banco2.0`.`cadastro_vendedor` (
   `cpf` CHAR(11) NULL,
   `cnpj` CHAR(14) NULL,
   `foto_de_perfil` LONGBLOB NULL,
+  `data_nascimento` DATE NULL,
   PRIMARY KEY (`idvendedor`))
 ENGINE = InnoDB;
 
@@ -211,6 +212,23 @@ CREATE TABLE IF NOT EXISTS `banco2.0`.`mensagens_chat` (
   CONSTRAINT `fk_mensagens_chat_comunidades1`
     FOREIGN KEY (`idcomunidades`)
     REFERENCES `banco2.0`.`comunidades` (`idcomunidades`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `banco2.0`.`imagens`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `banco2.0`.`imagens` (
+  `idimagens` INT NOT NULL AUTO_INCREMENT,
+  `imagem` LONGBLOB NULL,
+  `idproduto` INT NOT NULL,
+  PRIMARY KEY (`idimagens`, `idproduto`),
+  INDEX `fk_imagens_produto1_idx` (`idproduto` ASC) VISIBLE,
+  CONSTRAINT `fk_imagens_produto1`
+    FOREIGN KEY (`idproduto`)
+    REFERENCES `banco2.0`.`produto` (`idproduto`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

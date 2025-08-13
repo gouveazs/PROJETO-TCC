@@ -1,5 +1,5 @@
 <?php
-include '../php/conexaoVendedor.php';
+include '../conexao.php';
 
 session_start(); // Coloque antes de qualquer output
 
@@ -21,7 +21,7 @@ try {
         $_SESSION['tipo'] = 'Vendedor'; 
         $_SESSION['foto_de_perfil'] = $usuario_db['foto_de_perfil'] ?? 'imgs/usuario.jpg';
 
-        header('Location: ../index.php');
+        header('Location: ../../index.php');
         exit();
     } else {
         header('Location: loginVendedor.php?error=1');
