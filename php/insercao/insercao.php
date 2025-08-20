@@ -22,7 +22,6 @@ if ($existe > 0) {
 // foto de perfil
 $foto_de_perfil = null;
 if (isset($_FILES['foto_de_perfil']) && $_FILES['foto_de_perfil']['error'] == 0) {
-    // Abra o arquivo de imagem em modo binário
     $foto_de_perfil = file_get_contents($_FILES['foto_de_perfil']['tmp_name']);
 }
 

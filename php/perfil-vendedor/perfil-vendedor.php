@@ -1,7 +1,7 @@
 <?php
 session_start();
 $nome_vendedor = isset($_SESSION['nome_vendedor']) ? $_SESSION['nome_vendedor'] : null;
-$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
+$foto_de_perfil = isset($_SESSION['foto_de_perfil-vendedor']) ? $_SESSION['foto_de_perfil-vendedor'] : null;
 ?>
 
 <!DOCTYPE html>
@@ -101,7 +101,6 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       color: #ddd;
     }
 
-
     .sidebar .logo p {
       font-weight: bold;
     }
@@ -148,34 +147,66 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       background-color: #6f8562;
     }
 
+    .topbar {
+      position: fixed;
+      top: 0; left: 250px; right: 0;
+      height: 70px;
+      background-color: var(--marrom);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      z-index: 1001;
+    }
+
+    .topbar h1 {
+      font-size: 1.5rem;
+    }
+
+    .topbar input[type="text"] {
+      padding: 10px;
+      border: none;
+      border-radius: 20px;
+      width: 250px;
+    }
+
     main {
       padding: 30px;
       flex: 1;
     }
 
     .header {
-      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 15px;
       margin-bottom: 30px;
+      text-align: left; /* garante que texto interno também fique à esquerda */
     }
 
     .header img {
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid var(--verde);
-      margin-bottom: 15px;
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .header-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .header h1 {
-      font-size: 26px;
-      color: var(--text-dark);
-      margin: 5px 0;
+        font-size: 26px;
+        color: var(--text-dark);
+        margin: 5px 0;
     }
 
     .header p {
-      color: var(--text-muted);
-      font-size: 15px;
+        color: var(--text-muted);
+        font-size: 15px;
+        margin: 0;
     }
 
     .cards {
@@ -302,11 +333,9 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
 
     <nav>
       <ul class="menu">
-        <li><a href="../../index.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="php/comunidades/comunidade.php"><img src="../../imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
-        <li><a href="#"><img src="../../imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
-        <li><a href="#"><img src="../../imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
-        <li><a href="#"><img src="../../imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
+        <li><a href="perfil-vendedor.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
+        <li><a href="vendas.php"><img src="../../imgs/explorar.png.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Suas vendas</a></li>
+        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
       </ul>
 
       <h3>Conta</h3>
@@ -317,33 +346,37 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
           <li><a href="php/cadastro/cadastroVendedor.php"><img src="../../imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
           <li><a href="php/login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
         <?php else: ?>
-          <li><a href="php/perfil/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
-        <?php endif; ?>
-
-        <?php if ($nome_vendedor === 'adm'): ?>
-          <li><a href="php/consulta/consulta.php"><img src="../../imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
-          <li><a href="php/consultaFiltro/busca.php"><img src="../../imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
-          <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
-        <?php endif; ?>
-
-        <?php if ($nome_vendedor): ?>
-          <li><a href="php/login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
+          <li><a href="php/perfil/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Editar informações</a></li>
+          <li><a href="../login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
         <?php endif; ?>
       </ul>
     </nav>
   </div>
 
-  <!-- ===== CONTEÚDO PRINCIPAL ===== -->
-  <main>
-    <div class="header">
-      <img src="../../imgs/usuario.jpg" alt="Perfil">
-      <h1>Bem-vindo, <?= $nome_vendedor ? htmlspecialchars($nome_vendedor) : 'Usuário'; ?></h1>
-      <p>Acompanhe seu desempenho como vendedor</p>
-    </div>
+  <div class="topbar">
+    <h1>Entre Linhas - Painel do Livreiro</h1>
+  </div>
 
+  <main>
+    <br><br><br>
+    <div class="header">
+      <?php if ($foto_de_perfil): ?>
+        <img src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>">
+      <?php else: ?>
+        <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
+      <?php endif; ?>
+      <div class="header-text">
+        <h1>Bem-vindo, <?= $nome_vendedor ? htmlspecialchars($nome_vendedor) : 'Usuário'; ?></h1>
+        <p>Acompanhe seu desempenho como vendedor</p>
+      </div>
+    </div>
+    
+    <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
+    
     <div class="cards">
       <div class="card">
         <h2>Reputação</h2>
+        <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
         <div class="progress-bar">
           <div class="progress">35%</div>
         </div>
@@ -351,6 +384,7 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       </div>
       <div class="card">
         <h2>Taxa de Vendas</h2>
+        <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
         <p><strong>Taxa de sucesso:</strong> 0%</p>
         <p><strong>Vendas concluídas:</strong> 0</p>
         <p><strong>Vendas publicadas:</strong> 1</p>
@@ -380,14 +414,15 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
     <div class="grid">
       <div class="card">
         <h2>Avaliações de Clientes</h2>
+        <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
         <p>Nenhuma avaliação recebida ainda.</p>
       </div>
       <div class="card">
         <h2>Notificações</h2>
+        <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
         <p>Nenhuma notificação no momento.</p>
       </div>
     </div>
-
   </main>
 </body>
 </html>

@@ -117,7 +117,7 @@
 
   <div class="container">
     <div class="form-header">Preencha com suas informações</div>
-    <form method="POST" action="../insercao/insercaoVendedor.php">
+    <form method="POST" action="../insercao/insercaoVendedor.php" enctype="multipart/form-data">
       <div class="form-group">
         <div class="form-control">
           <label for="nomeV">Nome completo</label>

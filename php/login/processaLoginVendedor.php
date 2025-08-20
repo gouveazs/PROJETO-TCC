@@ -14,7 +14,7 @@ try {
     if ($usuario_db) {
         $_SESSION['id_vendedor'] = $usuario_db['idvendedor'];
         $_SESSION['nome_vendedor'] = $usuario_db['nome_completo'];
-        $_SESSION['foto_de_perfil'] = $usuario_db['foto_de_perfil'] ?? 'imgs/usuario.jpg';
+        $_SESSION['foto_de_perfil-vendedor'] = $usuario_db['foto_de_perfil'];
 
         header('Location: ../perfil-vendedor/perfil-vendedor.php');
         exit();

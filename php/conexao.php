@@ -1,8 +1,7 @@
 <?php
-
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "root";
 $dbname = "banco2.0";
 
 try {

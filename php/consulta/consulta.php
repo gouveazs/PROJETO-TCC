@@ -400,6 +400,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       echo '';
       echo '<table border="1">';
           echo "<tr>";
+              echo "<th>IMAGEM</th>";
               echo "<th>Código</th>";
               echo "<th>Nome</th>";
               echo "<th>DATA DE NASCIMENTO</th>";
@@ -410,6 +411,12 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
           echo "</tr>"; 
       while ($row = $stmt->fetch()) {      
           echo "<tr>";
+          if (!empty($row['foto_de_perfil'])) {
+              $imgData = base64_encode($row['foto_de_perfil']);
+              echo '<td><img src="data:image/jpeg;base64,' . $imgData . '" width="100" height="auto"/></td>';
+          } else {
+              echo "<td>Sem imagem</td>";
+          }
               echo "<td>".$row['idvendedor']."</td>";
               echo "<td>".$row['nome_completo']."</td>";
               echo "<td>".$row['data_nascimento']."</td>";
@@ -421,51 +428,59 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
           }
       echo '</table>';  
   ?>
+
   <h1>Consulta de produto</h1>
   <?php  
-      include '../conexao.php';
-      $stmt = $conn->query("SELECT * FROM produto");
-      echo '<table border="1">';
-          echo "<tr>";
-              echo "<th>IMAGEM</th>";
-              echo "<th>Código</th>";
-              echo "<th>Nome DO LIVRO</th>";
-              echo "<th>NÚMERO DE PÁGINAS</th>";
-              echo "<th>EDITORA</th>";
-              echo "<th>AUTOR</th>";
-              echo "<th>CLASSIFICAÇÃO ETÁRIA</th>";
-              echo "<th>DATA DE PUBLICAÇÃO</th>";
-              echo "<th>PREÇO</th>";
-              echo "<th>QUANTIDADE EM ESTOQUE</th>";
-              echo "<th>DESCRIÇÃO</th>";
-              echo "<th>ID VENDEDOR</th>";
-          echo "</tr>"; 
+    include '../conexao.php';
+    $stmt = $conn->prepare("
+      SELECT p.*,
+            (
+                  SELECT i2.imagem
+                  FROM imagens i2
+                  WHERE i2.idproduto = p.idproduto
+                  ORDER BY i2.idimagens ASC
+                  LIMIT 1
+            ) AS imagem
+      FROM produto p
+    ");
+    $stmt->execute();
+    echo '<table border="1">';
+    echo "<tr>
+      <th>IMAGEM</th>
+      <th>Código</th>
+      <th>Nome DO LIVRO</th>
+      <th>NÚMERO DE PÁGINAS</th>
+      <th>EDITORA</th>
+      <th>AUTOR</th>
+      <th>CLASSIFICAÇÃO ETÁRIA</th>
+      <th>DATA DE PUBLICAÇÃO</th>
+      <th>PREÇO</th>
+      <th>QUANTIDADE EM ESTOQUE</th>
+      <th>DESCRIÇÃO</th>
+      <th>ID VENDEDOR</th>
+    </tr>";
 
-      while ($row = $stmt->fetch()) {
-          echo "<tr>";
-
-          // Verifica se há imagem e converte para base64
-          if (!empty($row['imagem'])) {
-              $imgData = base64_encode($row['imagem']);
-              echo '<td><img src="data:image/jpeg;base64,' . $imgData . '" width="100" height="auto"/></td>';
-          } else {
-              echo "<td>Sem imagem</td>";
-          }
-
-          echo "<td>".$row['idproduto']."</td>";
-          echo "<td>".htmlspecialchars($row['nome'])."</td>";
-          echo "<td>".$row['numero_paginas']."</td>";
-          echo "<td>".htmlspecialchars($row['editora'])."</td>";
-          echo "<td>".htmlspecialchars($row['autor'])."</td>";
-          echo "<td>".$row['classificacao_etaria']."</td>";
-          echo "<td>".$row['data_publicacao']."</td>";
-          echo "<td>R$ ".number_format($row['preco'], 2, ',', '.')."</td>";
-          echo "<td>".$row['quantidade']."</td>";
-          echo "<td>".htmlspecialchars($row['descricao'])."</td>";
-          echo "<td>".$row['idvendedor']."</td>";
-          
-          echo "</tr>";          
-      }
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      echo "<tr>";
+        if (!empty($row['imagem'])) {
+            $imgData = base64_encode($row['imagem']);
+            echo '<td><img src="data:image/jpeg;base64,' . $imgData . '" width="50"/></td>';
+        } else {
+            echo "<td>Sem imagem</td>";
+        }
+          echo "<td>{$row['idproduto']}</td>";
+          echo "<td>" . htmlspecialchars($row['nome']) . "</td>";
+          echo "<td>{$row['numero_paginas']}</td>";
+          echo "<td>" . htmlspecialchars($row['editora']) . "</td>";
+          echo "<td>" . htmlspecialchars($row['autor']) . "</td>";
+          echo "<td>{$row['classificacao_etaria']}</td>";
+          echo "<td>{$row['data_publicacao']}</td>";
+          echo "<td>R$ " . number_format($row['preco'], 2, ',', '.') . "</td>";
+          echo "<td>{$row['quantidade']}</td>";
+          echo "<td>" . htmlspecialchars($row['descricao']) . "</td>";
+          echo "<td>{$row['idvendedor']}</td>";
+        echo "</tr>";
+        }
       echo '</table>';
   ?>
 
