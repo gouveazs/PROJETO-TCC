@@ -1,7 +1,7 @@
 <?php
 include '../conexao.php';
 
-session_start(); // Coloque antes de qualquer output
+session_start();
 
 $nome_completo = htmlspecialchars($_POST['nome_completo']);
 $senha = htmlspecialchars($_POST['senha']);
@@ -12,23 +12,17 @@ try {
     $usuario_db = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($usuario_db) {
-        // Guarde o ID e o nome do vendedor corretamente na sessão
         $_SESSION['id_vendedor'] = $usuario_db['idvendedor'];
         $_SESSION['nome_vendedor'] = $usuario_db['nome_completo'];
-
-        // guarda sessao do nome e foto 
-        $_SESSION['nome_usuario'] = $usuario_db['nome_completo'];
-        $_SESSION['tipo'] = 'Vendedor'; 
         $_SESSION['foto_de_perfil'] = $usuario_db['foto_de_perfil'] ?? 'imgs/usuario.jpg';
 
-        header('Location: ../../index.php');
+        header('Location: ../perfil-vendedor/perfil-vendedor.php');
         exit();
     } else {
         header('Location: loginVendedor.php?error=1');
         exit();
     }
 } catch (PDOException $e) {
-    // Debug apenas: não exiba em produção!
     echo "Erro na consulta: " . $e->getMessage();
     die();
 }

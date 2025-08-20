@@ -1,7 +1,6 @@
 <?php
 session_start();
 $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
-$tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
 $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
 //produtos
@@ -93,30 +92,29 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
   .sidebar .logo img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-right: 15px;
-    }
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+  }
 
   .sidebar .user-info {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.2;
-    }
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
 
   .sidebar .user-info .nome-usuario {
-      font-weight: bold;
-      font-size: 0.95rem; 
-      color: #fff;
-    }
+    font-weight: bold;
+    font-size: 0.95rem; 
+    color: #fff;
+  }
 
   .sidebar .user-info .tipo-usuario {
-      font-size: 0.8rem;
-      color: #ddd;
-    }
-
+    font-size: 0.8rem;
+    color: #ddd;
+  }
 
   .sidebar .logo p {
     font-weight: bold;
@@ -326,7 +324,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <?php endif; ?>
       <div class="user-info">
         <p class="nome-usuario"><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>
-        <p class="tipo-usuario"><?= $tipo ? htmlspecialchars($tipo) : 'Usuário'; ?></p>
       </div>
   </div>
 
@@ -334,7 +331,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <ul class="menu">
       <li><a href="index.php"><img src="imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
       <li><a href="php/comunidades/comunidade.php"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
-      <li><a href="pagiproduto.php"><img src="imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
+      <li><a href="#"><img src="imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
       <li><a href="#"><img src="imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
       <li><a href="#"><img src="imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
     </ul>
@@ -354,10 +351,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <?php if ($nome === 'adm'): ?>
         <li><a href="php/consulta/consulta.php"><img src="imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
         <li><a href="php/consultaFiltro/busca.php"><img src="imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
-        <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
-      <?php endif; ?>
-
-      <?php if ($tipo === 'Vendedor'): ?>
         <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
       <?php endif; ?>
 
@@ -384,7 +377,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <p style="color: green; font-weight: bold; font-size: 1rem;">Book Mockup</p>
         <h2 style="font-size: 2rem; font-weight: bold; margin: 10px 0;">HARDCOVER.</h2>
         <p style="margin-bottom: 20px;">Cover up front of book and leave summary</p>
-        <a href="#" style="background-color: #8BC34A; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold;">Shopping Now</a>
+        <a href="php/produto/pagiproduto.php" style="background-color: #8BC34A; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold;">Shopping Now</a>
       </div>
       <img src="imgs/1984.jpg" alt="Book" style="max-height: 180px; border-radius: 8px;">
     </div>

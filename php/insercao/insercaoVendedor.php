@@ -42,7 +42,7 @@ try {
 
     $stmt->execute();
 
-    header("Location: ../login/loginVendedor.php?sucesso=cadastro_usuario");
+    header("Location: ../perfil-vendedor/perfil-vendedor.php");
     exit();
 
 } catch(PDOException $e) {
