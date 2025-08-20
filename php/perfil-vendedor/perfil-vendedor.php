@@ -1,6 +1,6 @@
 <?php
 session_start();
-$nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
+$nome_vendedor = isset($_SESSION['nome_vendedor']) ? $_SESSION['nome_vendedor'] : null;
 $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 ?>
 
@@ -296,7 +296,7 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
           <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
         <?php endif; ?>
         <div class="user-info">
-          <p class="nome-usuario"><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>
+          <p class="nome-usuario"><?= $nome_vendedor ? htmlspecialchars($nome_vendedor) : 'Entre ou crie sua conta'; ?></p>
         </div>
     </div>
 
@@ -311,7 +311,7 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
 
       <h3>Conta</h3>
       <ul class="account">
-        <?php if (!$nome): ?>
+        <?php if (!$nome_vendedor): ?>
           <li><a href="php/login/login.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
           <li><a href="php/cadastro/cadastroUsuario.php"><img src="../../imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
           <li><a href="php/cadastro/cadastroVendedor.php"><img src="../../imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
@@ -320,13 +320,13 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
           <li><a href="php/perfil/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
         <?php endif; ?>
 
-        <?php if ($nome === 'adm'): ?>
+        <?php if ($nome_vendedor === 'adm'): ?>
           <li><a href="php/consulta/consulta.php"><img src="../../imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
           <li><a href="php/consultaFiltro/busca.php"><img src="../../imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
-          <li><a href="php/cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
+          <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
         <?php endif; ?>
 
-        <?php if ($nome): ?>
+        <?php if ($nome_vendedor): ?>
           <li><a href="php/login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
         <?php endif; ?>
       </ul>
@@ -337,7 +337,7 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
   <main>
     <div class="header">
       <img src="../../imgs/usuario.jpg" alt="Perfil">
-      <h1>Bem-vindo, <?= $nome ? htmlspecialchars($nome) : 'Usuário'; ?></h1>
+      <h1>Bem-vindo, <?= $nome_vendedor ? htmlspecialchars($nome_vendedor) : 'Usuário'; ?></h1>
       <p>Acompanhe seu desempenho como vendedor</p>
     </div>
 
@@ -376,7 +376,7 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
         </tr>
       </table>
     </div>
-
+          <br>
     <div class="grid">
       <div class="card">
         <h2>Avaliações de Clientes</h2>
@@ -387,6 +387,7 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
         <p>Nenhuma notificação no momento.</p>
       </div>
     </div>
+
   </main>
 </body>
 </html>

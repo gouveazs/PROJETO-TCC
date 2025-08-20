@@ -42,7 +42,7 @@ try {
 
     $stmt->execute();
 
-    header("Location: ../perfil-vendedor/perfil-vendedor.php");
+    header("Location: ../login/loginVendedor.php");
     exit();
 
 } catch(PDOException $e) {

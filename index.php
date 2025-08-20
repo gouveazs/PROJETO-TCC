@@ -31,288 +31,286 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <title>Entre Linhas - Livraria Moderna</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
-<style>
-  :root {
-    --marrom: #5a4224;
-    --verde: #5a6b50;
-    --background: #F4F1EE;
-  }
-
-  * {
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box;
-    font-family: 'Playfair Display', serif;
-  }
-
-  body {
-    background-color: var(--background);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .sidebar {
-    position: fixed;
-    top: 0; left: 0;
-    width: 250px;
-    height: 100vh;
-    background-color: var(--verde);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding-top: 20px;
-    overflow-y: auto; /* SCROLL HABILITADO */
-    scrollbar-width: thin;
-    scrollbar-color: #ccc transparent;
-  }
-
-  .sidebar::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .sidebar::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 4px;
-  }
-
-  .sidebar::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .sidebar .logo {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    padding: 0 20px;
-    margin-bottom: 20px;
-  }
-
-  .sidebar .logo img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 15px;
-  }
-
-  .sidebar .user-info {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-  }
-
-  .sidebar .user-info .nome-usuario {
-    font-weight: bold;
-    font-size: 0.95rem; 
-    color: #fff;
-  }
-
-  .sidebar .user-info .tipo-usuario {
-    font-size: 0.8rem;
-    color: #ddd;
-  }
-
-  .sidebar .logo p {
-    font-weight: bold;
-  }
-
-  .sidebar nav {
-    width: 100%;
-    padding: 0 20px;
-  }
-
-  .sidebar nav h3 {
-    margin-top: 20px;
-    margin-bottom: 10px;
-    font-size: 1rem;
-    color: #ddd;
-  }
-
-  .sidebar nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 10px 0;
-    width: 100%;
-  }
-
-  .sidebar nav ul li {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  .sidebar nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border-radius: 8px;
-    transition: background 0.3s;
-  }
-
-  .sidebar nav ul li a i {
-    margin-right: 10px;
-  }
-
-  .sidebar nav ul li a:hover {
-    background-color: #6f8562;
-  }
-
-  .topbar {
-    position: fixed;
-    top: 0; left: 250px; right: 0;
-    height: 70px;
-    background-color: var(--marrom);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 30px;
-    z-index: 1001;
-  }
-
-  .topbar h1 {
-    font-size: 1.5rem;
-  }
-
-  .topbar input[type="text"] {
-    padding: 10px;
-    border: none;
-    border-radius: 20px;
-    width: 250px;
-  }
-
-  .banner {
-    position: relative;
-    margin-left: 250px;
-    margin-top: 70px;
-    overflow: hidden;
-  }
-
-  .banner img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    display: block;
-    margin-bottom: 20px;
-  }
-
-  .main {
-    flex: 1;
-    margin-left: 250px;
-    padding: 30px;
-    margin-top: 20px;
-  }
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-
-  .section-header h2 {
-    color: var(--verde);
-  }
-
-  .section-header .ver-mais {
-    color: var(--marrom);
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s;
-  }
-
-  .section-header .ver-mais:hover {
-    color: #000;
-    text-decoration: underline;
-  }
-
-  .cards {
-    display: grid;
-    gap: 20px;
-  }
-
-  .cards-novidades {
-    grid-template-columns: repeat(6, 1fr);
-  }
-
-  .cards-recomendacoes {
-    grid-template-columns: repeat(6, 1fr);
-  }
-
-  .card {
-    background-color: #fff;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
-  }
-
-  .card:hover {
-    transform: translateY(-5px);
-  }
-
-  .card img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-  }
-
-  .card .info {
-    padding: 15px;
-    text-align: center;
-  }
-
-  .card .info h3 {
-    margin-bottom: 10px;
-    font-size: 1rem;
-    color: var(--verde);
-  }
-
-  .card .info .stars {
-    color: #f5c518;
-  }
-
-  .footer {
-    margin-left: 250px;
-    background-color: var(--marrom);
-    color: #fff;
-    text-align: center;
-    padding: 15px;
-  }
-
-  @media (max-width: 1200px) {
-    .cards-novidades, .cards-recomendacoes {
-      grid-template-columns: repeat(4, 1fr);
+  <style>
+    :root {
+      --marrom: #5a4224;
+      --verde: #5a6b50;
+      --background: #F4F1EE;
     }
-  }
 
-  @media (max-width: 768px) {
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+      font-family: 'Playfair Display', serif;
+    }
+
+    body {
+      background-color: var(--background);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
     .sidebar {
-      width: 200px;
+      position: fixed;
+      top: 0; left: 0;
+      width: 250px;
+      height: 100vh;
+      background-color: var(--verde);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding-top: 20px;
+      overflow-y: auto; /* SCROLL HABILITADO */
+      scrollbar-width: thin;
+      scrollbar-color: #ccc transparent;
     }
-    .topbar, .banner, .main, .footer {
-      margin-left: 200px;
-    }
-    .cards-novidades, .cards-recomendacoes {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
 
-  @media (max-width: 576px) {
-    .sidebar {
-      display: none;
+    .sidebar::-webkit-scrollbar {
+      width: 6px;
     }
-    .topbar, .banner, .main, .footer {
-      margin-left: 0;
-    }
-  }
-</style>
 
+    .sidebar::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sidebar .logo {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      padding: 0 20px;
+      margin-bottom: 20px;
+    }
+
+    .sidebar .logo img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 15px;
+    }
+
+    .sidebar .user-info {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .sidebar .user-info .nome-usuario {
+      font-weight: bold;
+      font-size: 0.95rem; 
+      color: #fff;
+    }
+
+    .sidebar .user-info .tipo-usuario {
+      font-size: 0.8rem;
+      color: #ddd;
+    }
+
+    .sidebar .logo p {
+      font-weight: bold;
+    }
+
+    .sidebar nav {
+      width: 100%;
+      padding: 0 20px;
+    }
+
+    .sidebar nav h3 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: #ddd;
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 10px 0;
+      width: 100%;
+    }
+
+    .sidebar nav ul li {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .sidebar nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+
+    .sidebar nav ul li a i {
+      margin-right: 10px;
+    }
+
+    .sidebar nav ul li a:hover {
+      background-color: #6f8562;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0; left: 250px; right: 0;
+      height: 70px;
+      background-color: var(--marrom);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      z-index: 1001;
+    }
+
+    .topbar h1 {
+      font-size: 1.5rem;
+    }
+
+    .topbar input[type="text"] {
+      padding: 10px;
+      border: none;
+      border-radius: 20px;
+      width: 250px;
+    }
+
+    .banner {
+      position: relative;
+      margin-left: 250px;
+      margin-top: 70px;
+      overflow: hidden;
+    }
+
+    .banner img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .main {
+      flex: 1;
+      margin-left: 250px;
+      padding: 30px;
+      margin-top: 20px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-header h2 {
+      color: var(--verde);
+    }
+
+    .section-header .ver-mais {
+      color: var(--marrom);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    .section-header .ver-mais:hover {
+      color: #000;
+      text-decoration: underline;
+    }
+
+    .cards {
+      display: grid;
+      gap: 20px;
+    }
+
+    .cards-novidades {
+      grid-template-columns: repeat(6, 1fr);
+    }
+
+    .cards-recomendacoes {
+      grid-template-columns: repeat(6, 1fr);
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+
+    .card .info {
+      padding: 15px;
+      text-align: center;
+    }
+
+    .card .info h3 {
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: var(--verde);
+    }
+
+    .card .info .stars {
+      color: #f5c518;
+    }
+
+    .footer {
+      margin-left: 250px;
+      background-color: var(--marrom);
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+    }
+
+    @media (max-width: 1200px) {
+      .cards-novidades, .cards-recomendacoes {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 200px;
+      }
+      .topbar, .banner, .main, .footer {
+        margin-left: 200px;
+      }
+      .cards-novidades, .cards-recomendacoes {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 576px) {
+      .sidebar {
+        display: none;
+      }
+      .topbar, .banner, .main, .footer {
+        margin-left: 0;
+      }
+    }
+  </style>
 </head>
 <body>
 <div class="sidebar">
@@ -352,6 +350,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <li><a href="php/consulta/consulta.php"><img src="imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
         <li><a href="php/consultaFiltro/busca.php"><img src="imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
         <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
+        <li><a href="php/perfil-vendedor/perfil-vendedor.php"><img src="imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Pagina de Vendedor</a></li>
       <?php endif; ?>
 
       <?php if ($nome): ?>

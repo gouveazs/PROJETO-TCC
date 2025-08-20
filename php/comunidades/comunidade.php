@@ -279,7 +279,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
         margin-left: 0;
       }
     }
-  </style>
+  </style>///
 </head>
 <body>
   <div class="sidebar">
@@ -317,11 +317,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
         <?php if ($nome === 'adm'): ?>
           <li><a href="../consulta/consulta.php"><img src="../../imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
           <li><a href="../consultaFiltro/busca.php"><img src="../../imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
-          <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/querovender.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
-        <?php endif; ?>
-
-        <?php if ($tipo === 'Vendedor'): ?>
-          <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/querovender.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
+          <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
         <?php endif; ?>
 
         <?php if ($nome): ?>
@@ -333,7 +329,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
 
   <!-- Topo -->
   <div class="topbar">
-    <h1><img src="../../imgs/pilha-de-tres-livros.png" alt="Logo"> Entre Linhas - Chats Online</h1>
+    <h1>Entre Linhas - Chats Online</h1>
     <div class="search-box">
       <input type="text" placeholder="Pesquisar tags, outros...">
       <img src="../../imgs/lupa.png" alt="Buscar">

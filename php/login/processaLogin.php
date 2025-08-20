@@ -12,7 +12,7 @@ try {
 
     if ($usuario_db) {
         session_start();
-        $_SESSION['usuario_logado'] = $usuario_db['id'];
+        $_SESSION['idusuario'] = $usuario_db['idusuario'];
         $_SESSION['nome_usuario'] = $usuario_db['nome']; 
         $_SESSION['foto_de_perfil'] = $usuario_db['foto_de_perfil']; 
         header('Location: ../../index.php');
