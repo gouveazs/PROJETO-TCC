@@ -9,14 +9,14 @@ $senha = htmlspecialchars($_POST['senha']);
 try {
     $stmt = $conn->prepare("SELECT * FROM cadastro_vendedor WHERE nome_completo = ? AND senha = ?");
     $stmt->execute([$nome_completo, $senha]);
-    $usuario_db = $stmt->fetch(PDO::FETCH_ASSOC);
+    $vendedor_db = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($usuario_db) {
-        $_SESSION['id_vendedor'] = $usuario_db['idvendedor'];
-        $_SESSION['nome_vendedor'] = $usuario_db['nome_completo'];
-        $_SESSION['foto_de_perfil-vendedor'] = $usuario_db['foto_de_perfil'];
+    if ($vendedor_db) {
+        $_SESSION['id_vendedor'] = $vendedor_db['idvendedor'];
+        $_SESSION['nome_vendedor'] = $vendedor_db['nome_completo'];
+        $_SESSION['foto_de_perfil-vendedor'] = $vendedor_db['foto_de_perfil'];
 
-        header('Location: ../perfil-vendedor/perfil-vendedor.php');
+        header('Location: ../painel-livreiro/painel_livreiro.php');
         exit();
     } else {
         header('Location: loginVendedor.php?error=1');
