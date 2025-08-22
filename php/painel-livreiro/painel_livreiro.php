@@ -2,6 +2,11 @@
 session_start();
 $nome_vendedor = isset($_SESSION['nome_vendedor']) ? $_SESSION['nome_vendedor'] : null;
 $foto_de_perfil = isset($_SESSION['foto_de_perfil-vendedor']) ? $_SESSION['foto_de_perfil-vendedor'] : null;
+
+if (!isset($_SESSION['nome_vendedor'])) {
+  header('Location: ../login/loginVendedor.php');
+  exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -9,7 +14,7 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil-vendedor']) ? $_SESSION['foto_
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Vendas</title>
+  <title>Painel do Livreiro</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
