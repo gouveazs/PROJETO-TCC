@@ -18,7 +18,7 @@ if (!$idvendedor) {
     die("Vendedor não está logado.");
 }
 
-// 1. Insere o produto (sem imagem)
+//  insere o produto sem imagem primeiro
 try {
     $sql = "INSERT INTO produto 
         (nome, numero_paginas, editora, autor, classificacao_etaria, data_publicacao, preco, quantidade, descricao, idvendedor) 
@@ -38,10 +38,10 @@ try {
     $stmt->bindParam(':idvendedor', $idvendedor, PDO::PARAM_INT);
 
     $stmt->execute();
-    // Pega o id do produto inserido
+    // pega o id do carai do produto 
     $idproduto = $conn->lastInsertId();
 
-    // 2. Salva cada imagem enviada
+    // 2. agr sim salva cada imagem 
     if (!empty($_FILES['imagens']['name'][0])) {
         foreach ($_FILES['imagens']['tmp_name'] as $key => $tmp_name) {
             if ($_FILES['imagens']['error'][$key] === 0) {
@@ -57,7 +57,7 @@ try {
         die("Pelo menos uma imagem deve ser enviada.");
     }
 
-    header("Location: ../consulta/consulta.php");
+    header("Location: ../painel-livreiro/painel_livreiro.php");
     exit();
 
 } catch(PDOException $e) {

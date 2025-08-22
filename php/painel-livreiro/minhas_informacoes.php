@@ -1,5 +1,7 @@
 <?php
 session_start();
+$nome_vendedor = isset($_SESSION['nome_vendedor']) ? $_SESSION['nome_vendedor'] : null;
+$foto_de_perfil = isset($_SESSION['foto_de_perfil-vendedor']) ? $_SESSION['foto_de_perfil-vendedor'] : null;
 
 if (!isset($_SESSION['nome_vendedor'])) {
     header('Location: ../../login/loginVendedor.php');
@@ -7,11 +9,8 @@ if (!isset($_SESSION['nome_vendedor'])) {
 }
 
 include '../conexao.php';
-
-$nome = $_SESSION['nome_vendedor'];
-
 $stmt = $conn->prepare("SELECT * FROM cadastro_vendedor WHERE nome_completo = ?");
-$stmt->execute([$nome]);
+$stmt->execute([$nome_vendedor]);
 $vendedor_db = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$vendedor_db) {
@@ -24,7 +23,7 @@ if (!$vendedor_db) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Minahs informações</title>
+  <title>Minhas informações</title>
   <style>
     * {
       margin: 0;
