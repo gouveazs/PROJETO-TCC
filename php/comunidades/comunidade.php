@@ -291,7 +291,6 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
     <?php endif; ?>
       <div class="user-info">
         <p class="nome-usuario"><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>
-        <p class="tipo-usuario"><?= $tipo ? htmlspecialchars($tipo) : 'Usuário'; ?></p>
       </div>
   </div>
     <nav>

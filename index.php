@@ -350,7 +350,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <li><a href="php/consulta/consulta.php"><img src="imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
         <li><a href="php/consultaFiltro/busca.php"><img src="imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
         <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
-        <li><a href="php/perfil-vendedor/perfil-vendedor.php"><img src="imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Pagina de Vendedor</a></li>
       <?php endif; ?>
 
       <?php if ($nome): ?>
