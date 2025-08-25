@@ -7,7 +7,20 @@ if (!isset($_SESSION['nome_vendedor'])) {
   header('Location: ../login/loginVendedor.php');
   exit;
 }
+
+//produtos
+include '../conexao.php';
+$stmt = $conn->prepare("
+    SELECT p.*, v.nome_completo
+    FROM produto p
+    JOIN cadastro_vendedor v ON p.idvendedor = v.idvendedor
+    WHERE v.nome_completo = :nome_vendedor
+");
+$stmt->bindParam(':nome_vendedor', $nome_vendedor, PDO::PARAM_STR);
+$stmt->execute();
+$produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -376,59 +389,60 @@ if (!isset($_SESSION['nome_vendedor'])) {
         <p>Acompanhe seu desempenho como vendedor</p>
       </div>
     </div>
-    
-    <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
-    
-    <div class="cards">
-      <div class="card">
-        <h2>Reputação</h2>
         <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
-        <div class="progress-bar">
-          <div class="progress">35%</div>
-        </div>
-        <p class="info">Ainda é só o começo, com boas avaliações, entregas no prazo e feedback dos clientes, sua reputação aumenta e consegue aumentar sua clientela!</p>
-      </div>
-      <div class="card">
-        <h2>Taxa de Vendas</h2>
-        <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
-        <p><strong>Taxa de sucesso:</strong> 0%</p>
-        <p><strong>Vendas concluídas:</strong> 0</p>
-        <p><strong>Vendas publicadas:</strong> 0</p>
-      </div>
-    </div>
+    <?php  
+    include '../conexao.php';
+    $stmt = $conn->prepare("
+      SELECT p.*,
+            (
+                  SELECT i2.imagem
+                  FROM imagens i2
+                  WHERE i2.idproduto = p.idproduto
+                  ORDER BY i2.idimagens ASC
+                  LIMIT 1
+            ) AS imagem
+      FROM produto p
+    ");
+    $stmt->execute();
+    echo '<table border="1">';
+    echo "<tr>
+      <th>IMAGEM</th>
+      <th>Código</th>
+      <th>Nome DO LIVRO</th>
+      <th>NÚMERO DE PÁGINAS</th>
+      <th>EDITORA</th>
+      <th>AUTOR</th>
+      <th>CLASSIFICAÇÃO ETÁRIA</th>
+      <th>DATA DE PUBLICAÇÃO</th>
+      <th>PREÇO</th>
+      <th>QUANTIDADE EM ESTOQUE</th>
+      <th>DESCRIÇÃO</th>
+      <th>ID VENDEDOR</th>
+    </tr>";
 
-    <div class="card">
-      <h2>Pedidos para Entregar</h2>
-      <table class="table">
-        <tr>
-          <th>#</th>
-          <th>Produto</th>
-          <th>Comprador</th>
-          <th>Status</th>
-          <th>Data de Envio</th>
-        </tr>
-        <tr>
-          <td>0</td>
-          <td>Nenhum pedido realizado</td>
-          <td>x</td>
-          <td>x</td>
-          <td>xx/xx/xxxx</td>
-        </tr>
-      </table>
-    </div>
-          <br>
-    <div class="grid">
-      <div class="card">
-        <h2>Avaliações de Clientes</h2>
-        <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
-        <p>Nenhuma avaliação recebida ainda.</p>
-      </div>
-      <div class="card">
-        <h2>Notificações</h2>
-        <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
-        <p>Nenhuma notificação no momento.</p>
-      </div>
-    </div>
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      echo "<tr>";
+        if (!empty($row['imagem'])) {
+            $imgData = base64_encode($row['imagem']);
+            echo '<td><img src="data:image/jpeg;base64,' . $imgData . '" width="50"/></td>';
+        } else {
+            echo "<td>Sem imagem</td>";
+        }
+          echo "<td>{$row['idproduto']}</td>";
+          echo "<td>" . htmlspecialchars($row['nome']) . "</td>";
+          echo "<td>{$row['numero_paginas']}</td>";
+          echo "<td>" . htmlspecialchars($row['editora']) . "</td>";
+          echo "<td>" . htmlspecialchars($row['autor']) . "</td>";
+          echo "<td>{$row['classificacao_etaria']}</td>";
+          echo "<td>{$row['data_publicacao']}</td>";
+          echo "<td>R$ " . number_format($row['preco'], 2, ',', '.') . "</td>";
+          echo "<td>{$row['quantidade']}</td>";
+          echo "<td>" . htmlspecialchars($row['descricao']) . "</td>";
+          echo "<td>{$row['idvendedor']}</td>";
+        echo "</tr>";
+        }
+    echo '</table>';
+  ?>
   </main>
 </body>
 </html>
