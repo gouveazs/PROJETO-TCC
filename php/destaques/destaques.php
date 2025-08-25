@@ -4,7 +4,7 @@ $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
 $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
 //produtos
-include 'php/conexao.php';
+include '../conexao.php';
 $stmt = $conn->prepare("
     SELECT p.*, i.imagem
     FROM produto p
