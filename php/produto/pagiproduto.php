@@ -212,6 +212,8 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         }
+        
+        /* CARROSSEL DE IMAGENS */
         .product-image {
             text-align: center;
             margin-bottom: 25px;
@@ -219,14 +221,98 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: relative;
         }
-        .product-image img {
-            max-width: 100%;
+        .carousel {
+            position: relative;
+            overflow: hidden;
+            border-radius: 6px;
+        }
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .carousel-item {
+            min-width: 100%;
+            position: relative;
+        }
+        .carousel-item img {
+            width: 100%;
             height: auto;
             max-height: 400px;
+            object-fit: contain;
             border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color 0.3s;
+        }
+        .carousel-control:hover {
+            background-color: rgba(0,0,0,0.7);
+        }
+        .carousel-control.prev {
+            left: 15px;
+        }
+        .carousel-control.next {
+            right: 15px;
+        }
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+            gap: 8px;
+        }
+        .carousel-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ccc;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .carousel-indicator.active {
+            background-color: var(--verde);
+        }
+        .carousel-thumbnails {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+            gap: 10px;
+        }
+        .carousel-thumbnail {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+            border: 2px solid transparent;
+        }
+        .carousel-thumbnail:hover,
+        .carousel-thumbnail.active {
+            opacity: 1;
+            border-color: var(--verde);
+        }
+        .carousel-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
         .product-info {
             background: white;
             border-radius: 8px;
@@ -519,6 +605,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 padding: 15px 20px;
                 font-size: 1rem;
             }
+            .carousel-thumbnails {
+                flex-wrap: wrap;
+            }
         } 
         @media (max-width: 576px) { 
             .sidebar { 
@@ -536,6 +625,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             .product-tabs li {
                 padding: 12px 15px;
                 font-size: 0.9rem;
+            }
+            .carousel-thumbnails {
+                display: none;
             }
         } 
     </style> 
@@ -602,9 +694,50 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="product-container">
             <!-- Coluna principal -->
             <div class="product-main">
-                <!-- Imagem do produto -->
+                <!-- Carrossel de imagens do produto -->
                 <div class="product-image">
-                    <img src="../../imgs/1984.jpg" alt="Capa do livro 1984">
+                    <div class="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item">
+                                <img src="../../imgs/1984.jpg" alt="Capa do livro 1984">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="../../imgs/1984-2.jpg" alt="Contra-capa do livro 1984">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="../../imgs/1984-3.jpg" alt="Detalhe das páginas do livro 1984">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="../../imgs/1984-4.jpg" alt="Lombada do livro 1984">
+                            </div>
+                        </div>
+                        <button class="carousel-control prev" onclick="moveSlide(-1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="carousel-control next" onclick="moveSlide(1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="carousel-indicators">
+                            <span class="carousel-indicator active" onclick="goToSlide(0)"></span>
+                            <span class="carousel-indicator" onclick="goToSlide(1)"></span>
+                            <span class="carousel-indicator" onclick="goToSlide(2)"></span>
+                            <span class="carousel-indicator" onclick="goToSlide(3)"></span>
+                        </div>
+                    </div>
+                    <div class="carousel-thumbnails">
+                        <div class="carousel-thumbnail active" onclick="goToSlide(0)">
+                            <img src="../../imgs/1984.jpg" alt="Miniatura 1">
+                        </div>
+                        <div class="carousel-thumbnail" onclick="goToSlide(1)">
+                            <img src="../../imgs/1984-2.jpg" alt="Miniatura 2">
+                        </div>
+                        <div class="carousel-thumbnail" onclick="goToSlide(2)">
+                            <img src="../../imgs/1984-3.jpg" alt="Miniatura 3">
+                        </div>
+                        <div class="carousel-thumbnail" onclick="goToSlide(3)">
+                            <img src="../../imgs/1984-4.jpg" alt="Miniatura 4">
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Informações do produto -->
@@ -734,6 +867,56 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div> 
     
     <script>
+        // Funções para o carrossel de imagens
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-item');
+        const totalSlides = slides.length;
+        const carouselInner = document.querySelector('.carousel-inner');
+        const indicators = document.querySelectorAll('.carousel-indicator');
+        const thumbnails = document.querySelectorAll('.carousel-thumbnail');
+        
+        function updateCarousel() {
+            carouselInner.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Atualizar indicadores
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentSlide);
+            });
+            
+            // Atualizar miniaturas
+            thumbnails.forEach((thumbnail, index) => {
+                thumbnail.classList.toggle('active', index === currentSlide);
+            });
+        }
+        
+        function moveSlide(direction) {
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+        
+        function goToSlide(index) {
+            currentSlide = index;
+            updateCarousel();
+        }
+        
+        // Auto-play do carrossel (opcional)
+        let carouselInterval = setInterval(() => {
+            moveSlide(1);
+        }, 5000);
+        
+        // Pausar auto-play ao interagir com o carrossel
+        const carousel = document.querySelector('.carousel');
+        carousel.addEventListener('mouseenter', () => {
+            clearInterval(carouselInterval);
+        });
+        
+        carousel.addEventListener('mouseleave', () => {
+            carouselInterval = setInterval(() => {
+                moveSlide(1);
+            }, 5000);
+        });
+        
+        // Função para as abas
         function changeTab(index) {
             // Remove a classe active de todas as abas
             const tabs = document.querySelectorAll('.product-tabs li');
