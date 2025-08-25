@@ -27,6 +27,8 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             --cinza-claro: #f8f9fa;
             --cinza-escuro: #6c757d;
             --laranja: #fd7e14;
+            --cinza-texto: #565959;
+            --azul-link: #007185;
         } 
         * { 
             margin: 0; 
@@ -178,26 +180,49 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 30px; 
             margin-top: 70px; 
         }
-        /* NOVOS ESTILOS PARA A PÁGINA DO PRODUTO */
+        /* ESTILOS REFORMULADOS PARA A PÁGINA DO PRODUTO */
         .product-header {
             margin-bottom: 25px;
-            text-align: center;
         }
         .product-header h1 {
-            font-size: 1.8rem;
-            color: var(--marrom);
+            font-size: 1.4rem;
+            color: var(--cinza-texto);
             margin-bottom: 5px;
-            font-weight: 600;
+            font-weight: 400;
         }
         .product-header h2 {
-            font-size: 2.8rem;
-            color: var(--verde);
+            font-size: 2.4rem;
+            color: var(--marrom);
+            margin-bottom: 10px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        .rating-stock {
+            display: flex;
+            align-items: center;
+            gap: 20px;
             margin-bottom: 15px;
-            font-weight: 700;
+        }
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .rating-stars {
+            color: #ffc107;
+        }
+        .rating-count {
+            color: var(--azul-link);
+            font-size: 0.9rem;
+        }
+        .in-stock {
+            color: #007600;
+            font-size: 1rem;
+            font-weight: 500;
         }
         .product-container {
             display: flex;
-            gap: 40px;
+            gap: 30px;
             margin-bottom: 40px;
             flex-wrap: wrap;
         }
@@ -211,6 +236,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border: 1px solid #ddd;
         }
         
         /* CARROSSEL DE IMAGENS */
@@ -222,6 +248,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
             position: relative;
+            border: 1px solid #ddd;
         }
         .carousel {
             position: relative;
@@ -319,6 +346,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 25px;
             margin-bottom: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border: 1px solid #ddd;
         }
         .product-info h3 {
             font-size: 1.6rem;
@@ -357,30 +385,46 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             color: white;
             border: 1px solid var(--verde);
         }
+        
+        /* SEÇÃO DE COMPRA REFORMULADA */
         .buy-section {
             background: white;
             border-radius: 8px;
-            padding: 25px;
+            padding: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
             margin-bottom: 25px;
+            border: 1px solid #ddd;
+        }
+        .price-container {
+            margin: 0 0 15px 0;
+        }
+        .price-label {
+            font-size: 0.9rem;
+            color: var(--cinza-texto);
         }
         .product-price {
-            margin: 0 0 20px 0;
-            padding: 15px;
-            background-color: var(--cinza-claro);
-            border-radius: 8px;
-            text-align: center;
-        }
-        .product-price strong {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: var(--marrom);
+            font-weight: 600;
+            margin: 5px 0;
+        }
+        .shipping-info {
+            font-size: 0.9rem;
+            color: var(--cinza-texto);
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .shipping-info i {
+            color: var(--verde);
+            margin-right: 5px;
         }
         .product-description {
             margin: 15px 0;
             padding: 15px;
             background-color: var(--cinza-claro);
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             line-height: 1.5;
         }
         .product-seller {
@@ -388,17 +432,25 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 15px;
             background-color: var(--cinza-claro);
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
         .product-seller strong {
             color: var(--marrom);
+        }
+        .seller-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+            color: var(--cinza-texto);
+            font-size: 0.9rem;
         }
         .buy-button {
             background-color: var(--laranja);
             color: white;
             border: none;
-            padding: 15px;
-            font-size: 1.2rem;
+            padding: 12px;
+            font-size: 1.1rem;
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.3s;
@@ -411,11 +463,23 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .buy-button:hover {
             background-color: #e76f00;
         }
+        .secure-transaction {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--cinza-texto);
+            margin-top: 10px;
+        }
+        .secure-transaction i {
+            color: var(--verde);
+            margin-right: 5px;
+        }
         .buy-options {
             display: flex;
             flex-direction: column;
             gap: 15px;
             margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
         }
         .buy-option {
             display: flex;
@@ -430,7 +494,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             accent-color: var(--verde);
         }
         .buy-option a {
-            color: var(--marrom);
+            color: var(--azul-link);
             text-decoration: none;
             font-weight: 500;
             display: flex;
@@ -439,13 +503,17 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
         .buy-option a:hover {
             text-decoration: underline;
+            color: #c7511f;
         }
+        
+        /* OUTRAS OFERTAS - ESTILO AMAZON */
         .other-offers {
             background: white;
             border-radius: 8px;
-            padding: 25px;
+            padding: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
             margin-bottom: 20px;
+            border: 1px solid #ddd;
         }
         .other-offers h3 {
             font-size: 1.3rem;
@@ -458,7 +526,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 0;
+            padding: 15px 0;
             border-bottom: 1px solid #eee;
         }
         .offer:last-child {
@@ -474,19 +542,25 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
         .offer-seller {
             font-size: 0.95rem;
-            color: var(--marrom);
+            color: var(--azul-link);
             margin-bottom: 6px;
             font-weight: 500;
+        }
+        .seller-details {
+            font-size: 0.85rem;
+            color: var(--cinza-texto);
         }
         .offer-price {
             font-weight: bold;
             color: var(--marrom);
             font-size: 1.2rem;
+            margin-top: 5px;
         }
         .offer-actions {
             display: flex;
             flex-direction: column;
             gap: 8px;
+            min-width: 120px;
         }
         .offer-buy-btn {
             background-color: var(--verde);
@@ -506,19 +580,23 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             text-align: center;
         }
         .more-offers a {
-            color: var(--marrom);
+            color: var(--azul-link);
             text-decoration: none;
             font-weight: 500;
         }
         .more-offers a:hover {
             text-decoration: underline;
+            color: #c7511f;
         }
+        
+        /* ABAS DE CONTEÚDO */
         .product-tabs {
             background: white;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
             margin-top: 25px;
+            border: 1px solid #ddd;
         }
         .product-tabs ul {
             display: flex;
@@ -526,6 +604,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             border-bottom: 2px solid #eee;
             padding: 0;
             margin: 0;
+            background: #f8f9fa;
         }
         .product-tabs li {
             padding: 18px 30px;
@@ -534,10 +613,12 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             font-size: 1.1rem;
             color: #777;
             transition: all 0.3s;
+            border-bottom: 3px solid transparent;
         }
         .product-tabs li.active {
             color: var(--marrom);
             border-bottom: 3px solid var(--marrom);
+            background: white;
         }
         .product-tabs li:hover {
             color: var(--marrom);
@@ -553,6 +634,19 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .tab-content div.active {
             display: block;
         }
+        .tab-content h4 {
+            color: var(--marrom);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        .tab-content ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+        .tab-content li {
+            margin-bottom: 8px;
+        }
+        
         .footer { 
             margin-left: 250px; 
             background-color: var(--marrom); 
@@ -596,10 +690,10 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 margin-left: 200px; 
             }
             .product-header h1 {
-                font-size: 1.6rem;
+                font-size: 1.3rem;
             }
             .product-header h2 {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
             .product-tabs li {
                 padding: 15px 20px;
@@ -607,6 +701,17 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
             .carousel-thumbnails {
                 flex-wrap: wrap;
+            }
+            .offer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .offer-actions {
+                width: 100%;
+            }
+            .offer-buy-btn {
+                width: 100%;
             }
         } 
         @media (max-width: 576px) { 
@@ -617,10 +722,10 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 margin-left: 0; 
             }
             .product-header h1 {
-                font-size: 1.4rem;
+                font-size: 1.2rem;
             }
             .product-header h2 {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
             .product-tabs li {
                 padding: 12px 15px;
@@ -628,6 +733,12 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
             .carousel-thumbnails {
                 display: none;
+            }
+            .product-tabs ul {
+                flex-direction: column;
+            }
+            .product-tabs li {
+                border-bottom: 1px solid #eee;
             }
         } 
     </style> 
@@ -687,8 +798,24 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="main"> 
         <!-- Cabeçalho do produto -->
         <div class="product-header">
-            <h1>GEORGE ORWELL</h1>
-            <h2>1984</h2>
+            <h1>JENNA EVANS WELCH </h1>
+            <h2>Amor & azeitonas</h2>
+            
+            <div class="rating-stock">
+                <div class="rating">
+                    <div class="rating-stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <a href="#" class="rating-count"> 4.270 avaliações </a>
+                </div>
+                <div class="in-stock">
+                    <i class="fas fa-check-circle"></i> Em estoque
+                </div>
+            </div>
         </div>
         
         <div class="product-container">
@@ -699,16 +826,13 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item">
-                                <img src="../../imgs/1984.jpg" alt="Capa do livro 1984">
+                                <img src="../../imgs/A Culpa é das Estrelas.jpg" alt="Capa do livro A Metamorfose">
                             </div>
                             <div class="carousel-item">
-                                <img src="../../imgs/1984-2.jpg" alt="Contra-capa do livro 1984">
+                                <img src="../../imgs/A Menina que Roubava Livros.jpg" alt="Contra-capa do livro A Metamorfose">
                             </div>
                             <div class="carousel-item">
-                                <img src="../../imgs/1984-3.jpg" alt="Detalhe das páginas do livro 1984">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="../../imgs/1984-4.jpg" alt="Lombada do livro 1984">
+                                <img src="../../imgs/Amor e Azeitonas.jpg" alt="Detalhe das páginas do livro A Metamorfose">
                             </div>
                         </div>
                         <button class="carousel-control prev" onclick="moveSlide(-1)">
@@ -721,35 +845,34 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <span class="carousel-indicator active" onclick="goToSlide(0)"></span>
                             <span class="carousel-indicator" onclick="goToSlide(1)"></span>
                             <span class="carousel-indicator" onclick="goToSlide(2)"></span>
-                            <span class="carousel-indicator" onclick="goToSlide(3)"></span>
                         </div>
                     </div>
                     <div class="carousel-thumbnails">
                         <div class="carousel-thumbnail active" onclick="goToSlide(0)">
-                            <img src="../../imgs/1984.jpg" alt="Miniatura 1">
+                            <img src="../../imgs/A Culpa é das Estrelas.jpg" alt="Miniatura 1">
                         </div>
                         <div class="carousel-thumbnail" onclick="goToSlide(1)">
-                            <img src="../../imgs/1984-2.jpg" alt="Miniatura 2">
+                            <img src="../../imgs/A Menina que Roubava Livros.jpg" alt="Miniatura 2">
                         </div>
                         <div class="carousel-thumbnail" onclick="goToSlide(2)">
-                            <img src="../../imgs/1984-3.jpg" alt="Miniatura 3">
-                        </div>
-                        <div class="carousel-thumbnail" onclick="goToSlide(3)">
-                            <img src="../../imgs/1984-4.jpg" alt="Miniatura 4">
+                            <img src="../../imgs/Amor e Azeitonas.jpg" alt="Miniatura 3">
                         </div>
                     </div>
                 </div>
                 
                 <!-- Informações do produto -->
                 <div class="product-info">
-                    <h3>1984</h3>
-                    <p><strong>Autor:</strong> George Orwell</p>
-                    <p><strong>Ano:</strong> 1949</p>
-                    <p><strong>ISBN:</strong> 9788533914849</p>
+                    <h3>Detalhes do produto</h3>
+                    <p><strong>Autor:</strong>  Jenna Evans Welch </p>
+                    <p><strong>Editora:</strong> Intrínseca</p>
+                    <p><strong>Idioma:</strong> Português</p>
+                    <p><strong>ISBN-10:</strong> 6555603070</p>
+                    <p><strong>ISBN-13:</strong> 978-6555603071</p>
+                    <p><strong>Dimensões:</strong> 14 x 2.1 x 21 cm</p>
                     
                     <div class="product-conditions">
-                        <span class="condition used">Usado</span>
-                        <span class="condition new">Novo</span>
+                        <span class="condition used">Usado a partir de R$ 9,04</span>
+                        <span class="condition new">Novo: R$ 49,99</span>
                     </div>
                 </div>
                 
@@ -757,31 +880,50 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="product-tabs">
                     <ul>
                         <li class="active" onclick="changeTab(0)">Descrição</li>
-                        <li onclick="changeTab(1)">Informações Adicionais</li>
+                        <li onclick="changeTab(1)">Detalhes</li>
                         <li onclick="changeTab(2)">Avaliações</li>
                     </ul>
                     <div class="tab-content">
                         <div class="active">
-                            <p>Uma distopia clássica que retrata um futuro sombrio sob um regime totalitário. O romance é centrado na vida de Winston Smith, um funcionário do Ministério da Verdade que se rebela contra a opressão do Partido e do Grande Irmão.</p>
-                            <p>O livro explora temas como vigilância governamental, manipulação da verdade, controle de pensamento e a luta pela liberdade individual.</p>
+                            <p>O que a lenda de uma cidade submersa tem a ver com a vida de uma adolescente? No caso da greco-americana Liv Varanakis, a resposta é tudo. Quando era pequena, Liv e seu pai passavam horas tentando descobrir a localização de Atlântida, mas, desde que ele foi embora sem explicação, ela evita pensar na cidade perdida a todo custo. Com dezessete anos, Liv tem uma nova vida, um novo namorado e está muito bem, obrigada. </p>
+                            <p>Até que um cartão-postal amassado chega de Santorini e faz seus planos irem por água abaixo. Nele, seu pai explica que está gravando um documentário a respeito de Atlântida e que mandou uma passagem de avião para Liv ir até a Grécia ajudá-lo. Agora, ela terá que deixar para trás tudo que construiu e embarcar rumo ao desconhecido.</p>
                         </div>
                         <div>
-                            <p><strong>Editora:</strong> Companhia das Letras</p>
-                            <p><strong>Edição:</strong> 1ª edição</p>
-                            <p><strong>Número de páginas:</strong> 416</p>
-                            <p><strong>Idioma:</strong> Português</p>
-                            <p><strong>Dimensões:</strong> 23 x 16 x 2 cm</p>
+                            <h4>Informações do produto</h4>
+                            <ul>
+                                <li><strong>Editora:</strong> Edição padrão (27 setembro 2019)</li>
+                                <li><strong>Idioma:</strong> Português</li>
+                                <li><strong>Capinha comum:</strong> 120 páginas</li>
+                                <li><strong>ISBN-10:</strong> 8595084752</li>
+                                <li><strong>ISBN-13:</strong> 978-8595084752</li>
+                                <li><strong>Dimensões:</strong> 22.8 x 15.6 x 1.2 cm</li>
+                                <li><strong>Ranking dos mais vendidos:</strong> #12 em Livros</li>
+                                <li><strong>Classificação etária:</strong> 15 anos e acima</li>
+                            </ul>
                         </div>
                         <div>
-                            <p><strong>Avaliação média:</strong> 4.8/5 (1.234 avaliações)</p>
+                            <h4>Avaliações dos clientes</h4>
+                            <p><strong>4.7 de 5 estrelas</strong> (8.443 avaliações de clientes)</p>
+                            
                             <div style="margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                                <p><strong>João Silva:</strong> "Uma obra-prima da literatura distópica. Leitura obrigatória para entender os perigos do autoritarismo."</p>
+                                <p><strong>Maria Santos:</strong> "Uma obra fascinante que nos faz refletir sobre a condição humana. A entrega foi rápida e o livro chegou em perfeito estado."</p>
                                 <div style="color: #ffc107;">
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            
+                            <div style="margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                <p><strong>João Silva:</strong> "Leitura obrigatória para quem quer entender a literatura do século XX. A tradução é excelente e as notas explicativas ajudam muito."</p>
+                                <div style="color: #ffc107;">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
                                 </div>
                             </div>
                         </div>
@@ -793,27 +935,47 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="product-sidebar">
                 <!-- Seção de compra -->
                 <div class="buy-section">
-                    <div class="product-price">
-                        <p>Preço: <strong>R$ 35,00</strong></p>
+                    <div class="price-container">
+                        <div class="price-label">Preço:</div>
+                        <div class="product-price">R$ 35,00</div>
+                    </div>
+                    
+                    <div class="shipping-info">
+                        <i class="fas fa-truck"></i> Entrega GRÁTIS: <strong>29 de Agosto - 2 de Setembro</strong> no seu primeiro pedido
                     </div>
                     
                     <div class="product-description">
-                        <p>Livro com leve desgaste nas bordas. Nenhuma página faltando.</p>
+                        <p>Livro com leve desgaste nas bordas. Nenhuma página faltando. Anotações a lápis em algumas páginas.</p>
                     </div>
                     
                     <div class="product-seller">
                         <p>Vendido por: <strong>Selco Moderno</strong></p>
+                        <div class="seller-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            4.7 (1.284 avaliações)
+                        </div>
                     </div>
                     
-                    <button class="buy-button">COMPRAR</button>
+                    <button class="buy-button">COMPRAR AGORA</button>
+                    
+                    <div class="secure-transaction">
+                        <i class="fas fa-lock"></i> Transação segura
+                    </div>
                     
                     <div class="buy-options">
                         <div class="buy-option">
                             <input type="checkbox" id="buy-later">
-                            <label for="buy-later">Comprar mais tarde</label>
+                            <label for="buy-later">Adicionar à lista de desejos</label>
                         </div>
                         <div class="buy-option">
                             <a href="#"><i class="fas fa-comments"></i> Falar com vendedor</a>
+                        </div>
+                        <div class="buy-option">
+                            <a href="#"><i class="fas fa-gift"></i> Presentear</a>
                         </div>
                     </div>
                 </div>
@@ -826,6 +988,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="offer-info">
                             <div class="offer-condition">Novo</div>
                             <div class="offer-seller">Livraria Cultura</div>
+                            <div class="seller-details">Entrega grátis</div>
                             <div class="offer-price">R$ 42,90</div>
                         </div>
                         <div class="offer-actions">
@@ -835,8 +998,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     
                     <div class="offer">
                         <div class="offer-info">
-                            <div class="offer-condition">Usado</div>
+                            <div class="offer-condition">Usado - Bom estado</div>
                             <div class="offer-seller">Sebo do Léo</div>
+                            <div class="seller-details">+ R$ 9,90 para envio</div>
                             <div class="offer-price">R$ 28,50</div>
                         </div>
                         <div class="offer-actions">
@@ -848,6 +1012,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="offer-info">
                             <div class="offer-condition">Novo</div>
                             <div class="offer-seller">Amazon</div>
+                            <div class="seller-details">Entrega grátis</div>
                             <div class="offer-price">R$ 39,90</div>
                         </div>
                         <div class="offer-actions">
@@ -856,7 +1021,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                     
                     <div class="more-offers">
-                        <a href="#">Ver as outras 5 ofertas deste livro</a>
+                        <a href="#">Ver as outras 7 ofertas deste livro</a>
                     </div>
                 </div>
             </div>
