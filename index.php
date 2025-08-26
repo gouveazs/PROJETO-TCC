@@ -352,7 +352,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <li><a href="php/comunidades/comunidade.php"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
       <li><a href="#"><img src="imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
       <li><a href="php/favoritos/favoritos.php"><img src="imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
-      <li><a href="#"><img src="imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
+      <li><a href="php/carrinho/carrinho.php"><img src="imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
     </ul>
 
 
