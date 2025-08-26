@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cadastro</title>
-  <!-- Fonte Playfair Display -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
 
   <style>
@@ -103,9 +102,39 @@
       font-size: 14px;
     }
 
-    form input[type="file"] {
-      font-family: inherit; 
+    /* ====== INPUT DE ARQUIVO ESTILIZADO ====== */
+    .custom-file {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .custom-file input[type="file"] {
+      display: none; /* Esconde o input padrão */
+    }
+
+    .custom-file label {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background-color: #5a6b50;
+      color: white;
+      text-align: center;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.3s;
       font-size: 14px;
+    }
+
+    .custom-file label:hover {
+      background-color: #3f4e39;
+    }
+
+    .file-name {
+      margin-top: 5px;
+      font-size: 13px;
+      color: #555;
+      text-align: center;
     }
 
     form input[type="submit"] {
@@ -129,7 +158,6 @@
       text-align: center;
     }
   </style>
-  
 </head>
 <body>
   <div class="container">
@@ -144,8 +172,14 @@
         <input type="text" name="nome" placeholder="Nome de usuário" required>
         <input type="email" name="email" placeholder="E-mail" required>
         <input type="password" name="senha" placeholder="Senha" required>
-        <!-- Botão de arquivo nativo, sem estilização extra -->
-        <input type="file" name="foto_de_perfil" accept="image/*">
+
+        <!-- INPUT DE FOTO DE PERFIL -->
+        <div class="custom-file">
+          <input type="file" id="foto" name="foto_de_perfil" accept="image/*" required>
+          <label for="foto">Adicione foto de perfil</label>
+          <div class="file-name" id="file-name">Nenhum arquivo escolhido</div>
+        </div>
+
         <input type="submit" value="Cadastrar">
       </form>
       <?php if (isset($_GET['erro']) && $_GET['erro'] == 'nome_ou_email'): ?>
@@ -153,5 +187,19 @@
       <?php endif; ?>
     </div>
   </div>
+
+  <script>
+    // Mostra o nome do arquivo selecionado
+    const inputFile = document.getElementById("foto");
+    const fileName = document.getElementById("file-name");
+
+    inputFile.addEventListener("change", () => {
+      if (inputFile.files.length > 0) {
+        fileName.textContent = inputFile.files[0].name;
+      } else {
+        fileName.textContent = "Nenhum arquivo escolhido";
+      }
+    });
+  </script>
 </body>
 </html>

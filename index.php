@@ -178,11 +178,26 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       font-size: 1.5rem;
     }
 
+    .search-form {
+      display: flex;
+      align-items: center;
+    }
+    
     .topbar input[type="text"] {
-      padding: 10px;
+      padding: 10px 15px;
       border: none;
-      border-radius: 20px;
+      border-radius: 20px 0 0 20px;
       width: 250px;
+      font-size: 0.9rem;
+    }
+    
+    .topbar input[type="submit"] {
+      padding: 10px 15px;
+      background: var(--verde);
+      color: white;
+      border: none;
+      border-radius: 0 20px 20px 0;
+      cursor: pointer;
     }
 
     .banner {
@@ -363,43 +378,43 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="topbar">
   <h1>Entre Linhas - Livraria Moderna</h1>
-    <form action="php/consultaFiltro/consultaFiltro.php" method="POST">
-      <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
-      <input type="submit" value="Buscar">
-    </form>
+  <form class="search-form" action="php/consultaFiltro/consultaFiltro.php" method="POST">
+    <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
+    <input type="submit" value="Buscar">
+  </form>
 </div>
 
 <div style="margin-left: 250px; margin-top: 70px; padding: 30px; background-color: #F4F1EE;">
   <div style="display: flex; gap: 30px; flex-wrap: wrap;">
     <div style="flex: 2; background: #ffffffff; padding: 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
       <div>
-        <p style="color: green; font-weight: bold; font-size: 1rem;">Book Mockup</p>
-        <h2 style="font-size: 2rem; font-weight: bold; margin: 10px 0;">HARDCOVER.</h2>
-        <p style="margin-bottom: 20px;">Cover up front of book and leave summary</p>
-        <a href="php/produto/pagiproduto.php" style="background-color: #8BC34A; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold;">Shopping Now</a>
+        <p style="color: #5a6b50; font-weight: bold; font-size: 1rem;">Livro de destaque</p>
+        <h2 style="font-size: 2rem; font-weight: bold; margin: 10px 0; color: #5a4224;">Amor & azeitonas</h2>
+        <p style="margin-bottom: 20px; color: #555;">Jenna Evans Welch</p>
+        <a href="php/produto/pagiproduto.php" style="background-color: #5a4224; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">Compre agora</a>
       </div>
-      <img src="imgs/1984.jpg" alt="Book" style="max-height: 180px; border-radius: 8px;">
+      <img src="imgs/Amor e Azeitonas.jpg" alt="Livro Amor & Azeitonas" style="max-height: 180px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
     </div>
     <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
-      <div style="display: flex; background: #ffffffff; padding: 10px; border-radius: 8px; align-items: center;">
+      <div style="display: flex; background: #ffffffff; padding: 10px; border-radius: 8px; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
         <img src="imgs/iconromance.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
         <div>
           <p style="font-weight: bold; font-size: 0.9rem;">Headphone Portátil</p>
-          <p style="color: green;">R$ 86,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 95,00</span></p>
+          <p style="color: #5a6b50;">R$ 86,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 95,00</span></p>
         </div>
       </div>
-      <div style="display: flex; background: #ffffffff; padding: 10px; border-radius: 8px; align-items: center;">
+      <div style="display: flex; background: #ffffffff; padding: 10px; border-radius: 8px; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
         <img src="imgs/fone2.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
         <div>
           <p style="font-weight: bold; font-size: 0.9rem;">Fone de Ouvido On Ear</p>
-          <p style="color: green;">R$ 80,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 86,00</span></p>
+          <p style="color: #5a6b50;">R$ 80,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 86,00</span></p>
         </div>
       </div>
-      <div style="display: flex; background: #ffffffff; padding: 10px; border-radius: 8px; align-items: center;">
+      <div style="display: flex; background: #ffffffff; padding: 10px; border-radius: 8px; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
         <img src="imgs/caixinha.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
         <div>
           <p style="font-weight: bold; font-size: 0.9rem;">Caixa de Som Bluetooth</p>
-          <p style="color: green;">R$ 98,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 120,00</span></p>
+          <p style="color: #5a6b50;">R$ 98,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 120,00</span></p>
         </div>
       </div>
     </div>
@@ -434,8 +449,8 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <img src="imgs/comuni.jpg" alt="Card" style="height: 150px; border-radius: 8px;">
     </div>
     <div style="flex: 1; background-color: #5a4224; color: white; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-      <h2 style="font-size: 2rem;">SALE</h2>
-      <p style="font-size: 1.2rem;">UP TO <strong>40% OFF</strong></p>
+      <h2 style="font-size: 2rem;">PROMOÇÃO</h2>
+      <p style="font-size: 1.2rem;">ATÉ <strong>40% OFF</strong></p>
     </div>
   </div>
 </div>
@@ -636,7 +651,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <img src="imgs/usuario.jpg" alt="Foto de Perfil">
       <?php endif; ?>
       <div class="info">
-        <h3><?= htmlspecialchars($produto['nome']) ?></h3>
+        <h3><?= htmlspecialchars($produto['nombre']) ?></h3>
         <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
         <div class="stars">★★★★★</div>
         <!-- Removido vendedor -->
