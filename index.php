@@ -299,6 +299,84 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       padding: 15px;
     }
 
+    /* Estilos para a seção Mais Destaques */
+    .mais-destaque-container {
+      margin: 20px 0 40px 0;
+    }
+
+    .mais-destaque-card {
+      display: flex;
+      background-color: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .mais-destaque-imagem {
+      flex: 1;
+      max-width: 40%;
+    }
+
+    .mais-destaque-imagem img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .mais-destaque-conteudo {
+      flex: 2;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .mais-destaque-conteudo h3 {
+      font-size: 1.8rem;
+      color: var(--marrom);
+      margin-bottom: 15px;
+    }
+
+    .mais-destaque-conteudo p {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .mais-destaque-preco {
+      margin-bottom: 20px;
+    }
+
+    .preco-atual {
+      font-size: 1.4rem;
+      color: var(--verde);
+      font-weight: bold;
+      margin-right: 15px;
+    }
+
+    .preco-antigo {
+      font-size: 1.1rem;
+      color: #999;
+      text-decoration: line-through;
+    }
+
+    .btn-destaque {
+      display: inline-block;
+      background-color: var(--verde);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      text-align: center;
+      transition: background-color 0.3s;
+      max-width: 250px;
+    }
+
+    .btn-destaque:hover {
+      background-color: #4a5a40;
+    }
+
     @media (max-width: 1200px) {
       .cards-novidades, .cards-recomendacoes {
         grid-template-columns: repeat(4, 1fr);
@@ -314,6 +392,24 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       }
       .cards-novidades, .cards-recomendacoes {
         grid-template-columns: repeat(2, 1fr);
+      }
+      
+      /* Responsividade para Mais Destaques */
+      .mais-destaque-card {
+        flex-direction: column;
+      }
+      
+      .mais-destaque-imagem {
+        max-width: 100%;
+        height: 200px;
+      }
+      
+      .mais-destaque-conteudo {
+        padding: 20px;
+      }
+      
+      .mais-destaque-conteudo h3 {
+        font-size: 1.5rem;
       }
     }
 
@@ -665,6 +761,31 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
   <?php endforeach; ?>
 </div>
+
+<!-- + Mais Destaques -->
+<div class="section-header" style="margin-top: 50px;">
+  <h2>+ Mais Destaques</h2>
+  <a href="#" class="ver-mais">Ver mais</a>
+</div>
+
+<div class="mais-destaque-container">
+  <div class="mais-destaque-card">
+    <div class="mais-destaque-imagem">
+      <img src="imgs/colecao-especial.jpg" alt="Coleção Especial de Verão">
+    </div>
+    <div class="mais-destaque-conteudo">
+      <h3>Coleção Especial de Verão</h3>
+      <p>Descubra nossa seleção exclusiva de livros para aproveitar a estação mais quente do ano. 
+        Romances leves, aventuras emocionantes e histórias que vão te transportar para praias paradisíacas.</p>
+      <div class="mais-destaque-preco">
+        <span class="preco-atual">A partir de R$ 29,90</span>
+        <span class="preco-antigo">R$ 49,90</span>
+      </div>
+      <a href="#" class="btn-destaque">Ver Coleção Completa</a>
+    </div>
+  </div>
+</div>
+
 </div>  
 
   <div class="footer">
