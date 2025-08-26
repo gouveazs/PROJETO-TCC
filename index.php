@@ -657,14 +657,14 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <img src="imgs/usuario.jpg" alt="Foto de Perfil">
       <?php endif; ?>
       <div class="info">
-        <h3><?= htmlspecialchars($produto['nombre']) ?></h3>
+        <h3><?= htmlspecialchars($produto['nome']) ?></h3>
         <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
         <div class="stars">★★★★★</div>
         <!-- Removido vendedor -->
       </div>
     </div>
   <?php endforeach; ?>
-</div>
+  </div>
 </div>  
 
   <div class="footer">

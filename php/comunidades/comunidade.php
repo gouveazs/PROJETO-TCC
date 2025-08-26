@@ -1,7 +1,6 @@
 <?php
 session_start();
 $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
-$tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null;
 $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
 include '../conexao.php';
@@ -279,7 +278,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
         margin-left: 0;
       }
     }
-  </style>///
+  </style>
 </head>
 <body>
   <div class="sidebar">

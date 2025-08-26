@@ -1,7 +1,6 @@
 <?php
 session_start();
-include '../php/conexao_comunidade.php'; // conexão para o banco 'comunidades'
-include '../php/conexao.php'; // conexão para o banco de usuários
+include '../conexao.php'; // conexão para o banco de usuários
 
 $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
 if (!$nome) {
@@ -18,9 +17,9 @@ $id_usuario_externo = $user['id'] ?? 0;
 $id_comunidade = $_GET['id'] ?? 0;
 
 // Verifica se já é membro da comunidade
-$sql = "SELECT * FROM membros_comunidade WHERE id_comunidade = :id_comunidade AND id_usuario_externo = :id_usuario";
+$sql = "SELECT * FROM membros_comunidade WHERE idcomunidade = :idcomunidade AND id_usuario_externo = :id_usuario";
 $stmt = $conn->prepare($sql); // conexão do banco de comunidades
-$stmt->execute([':id_comunidade' => $id_comunidade, ':id_usuario' => $id_usuario_externo]);
+$stmt->execute([':idcomunidade' => $id_comunidade, ':id_usuario' => $id_usuario_externo]);
 $ja_membro = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Se enviou formulário e ainda não é membro, insere
