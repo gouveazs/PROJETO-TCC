@@ -336,7 +336,13 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <img src="imgs/usuario.jpg" alt="Foto de Perfil">
       <?php endif; ?>
       <div class="user-info">
-        <p class="nome-usuario"><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>
+        <?php if (!$nome): ?>
+          <a href="php/cadastro/cadastroUsuario.php" style="text-decoration: none; color: white;">
+            <p class="nome-usuario">Entre ou crie sua conta</p>
+          </a>
+        <?php else: ?>
+          <p class="nome-usuario"><?= htmlspecialchars($nome) ?></p>
+        <?php endif; ?>
       </div>
   </div>
 
