@@ -752,8 +752,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <img src="../../imgs/usuario.jpg" alt="Foto de Perfil"> 
             <?php endif; ?> 
             <div class="user-info"> 
-                <p class="nome-usuario"><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p> 
-                <p class="tipo-usuario"><?= $tipo ? htmlspecialchars($tipo) : 'Usuário'; ?></p> 
+                <p class="nome-usuario"><?= $nome ? htmlspecialchars($nome) : 'Entre ou crie sua conta'; ?></p>  
             </div> 
         </div> 
         <nav> 
