@@ -72,25 +72,59 @@
       outline: none;
     }
 
+    /* ====== INPUT DE ARQUIVO ESTILIZADO ====== */
+    .custom-file {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .custom-file input[type="file"] {
+      display: none; /* Esconde o input padrão */
+    }
+
+    .custom-file label {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background-color: #5a6b50;
+      color: white;
+      text-align: center;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 14px;
+    }
+
+    .custom-file label:hover {
+      background-color: #3f4e39;
+    }
+
+    .file-name {
+      margin-top: 5px;
+      font-size: 13px;
+      color: #555;
+      text-align: center;
+    }
+
     .form-footer {
       text-align: center;
       margin-top: 30px;
     }
 
-   input[type="submit"] {
-    background-color: #5a6b50;
-    color: white;
-    border: none;
-    padding: 14px 28px;
-    border-radius: 20px;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    font-family: 'Playfair Display', serif;
-    width: 100%; /* <-- Aqui faz o botão ocupar toda a largura */
+    input[type="submit"] {
+      background-color: #5a6b50;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+      font-family: 'Playfair Display', serif;
+      width: 100%;
     }
-
 
     input[type="submit"]:hover {
       background-color: #4a5843;
@@ -106,7 +140,7 @@
       }
     }
 
-     .erro {
+    .erro {
       color: red;
       margin-top: 10px;
       text-align: center;
@@ -151,9 +185,14 @@
         </div>
       </div>
 
+      <!-- INPUT DE FOTO DE PERFIL -->
       <div class="form-group">
         <div class="form-control">
-          <input type="file" name="foto_de_perfil" accept="image/*">
+          <div class="custom-file">
+            <input type="file" id="foto" name="foto_de_perfil" accept="image/*" required>
+            <label for="foto">Adicione foto de perfil</label>
+            <div class="file-name" id="file-name">Nenhum arquivo escolhido</div>
+          </div>
         </div>
       </div>
 
@@ -166,5 +205,18 @@
     <?php endif; ?>
   </div>
 
+  <script>
+    // Mostra o nome do arquivo selecionado
+    const inputFile = document.getElementById("foto");
+    const fileName = document.getElementById("file-name");
+
+    inputFile.addEventListener("change", () => {
+      if (inputFile.files.length > 0) {
+        fileName.textContent = inputFile.files[0].name;
+      } else {
+        fileName.textContent = "Nenhum arquivo escolhido";
+      }
+    });
+  </script>
 </body>
 </html>
