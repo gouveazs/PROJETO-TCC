@@ -27,7 +27,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel do Livreiro</title>
+  <title>Painel do Livreiro - Meus Anúncios</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
@@ -339,20 +339,20 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
   <div class="sidebar">
     <div class="logo">
-        <?php if ($foto_de_perfil): ?>
-        <img src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>">
-        <?php else: ?>
-          <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
-        <?php endif; ?>
-        <div class="user-info">
-          <p class="nome-usuario"><?= $nome_vendedor ? htmlspecialchars($nome_vendedor) : 'Entre ou crie sua conta'; ?></p>
-        </div>
+      <?php if ($foto_de_perfil): ?>
+      <img src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>">
+      <?php else: ?>
+        <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
+      <?php endif; ?>
+      <div class="user-info">
+        <p class="nome-usuario"><?= $nome_vendedor ? htmlspecialchars($nome_vendedor) : 'Entre ou crie sua conta'; ?></p>
+      </div>
     </div>
 
     <nav>
       <ul class="menu">
         <li><a href="painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="anuncios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Anúncios</a></li>
+        <li><a href="anuncios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Vendas publicadas</a></li>
         <li><a href="rendimento.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
         <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
       </ul>
@@ -392,57 +392,70 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
     <?php  
     include '../conexao.php';
+
+    // Consulta com JOIN para trazer todas as imagens
     $stmt = $conn->prepare("
-      SELECT p.*,
-            (
-                  SELECT i2.imagem
-                  FROM imagens i2
-                  WHERE i2.idproduto = p.idproduto
-                  ORDER BY i2.idimagens ASC
-                  LIMIT 1
-            ) AS imagem
-      FROM produto p
+        SELECT p.*, i.imagem
+        FROM produto p
+        LEFT JOIN imagens i ON i.idproduto = p.idproduto
+        ORDER BY p.idproduto, i.idimagens
     ");
     $stmt->execute();
-    echo '<table border="1">';
-    echo "<tr>
-      <th>IMAGEM</th>
-      <th>Código</th>
-      <th>Nome DO LIVRO</th>
-      <th>NÚMERO DE PÁGINAS</th>
-      <th>EDITORA</th>
-      <th>AUTOR</th>
-      <th>CLASSIFICAÇÃO ETÁRIA</th>
-      <th>DATA DE PUBLICAÇÃO</th>
-      <th>PREÇO</th>
-      <th>QUANTIDADE EM ESTOQUE</th>
-      <th>DESCRIÇÃO</th>
-      <th>ID VENDEDOR</th>
-    </tr>";
 
+    // Organiza os resultados agrupando imagens pelo produto
+    $produtos = [];
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      echo "<tr>";
+        $id = $row['idproduto'];
+        if (!isset($produtos[$id])) {
+            $produtos[$id] = [
+                'dados' => $row,
+                'imagens' => []
+            ];
+        }
         if (!empty($row['imagem'])) {
-            $imgData = base64_encode($row['imagem']);
-            echo '<td><img src="data:image/jpeg;base64,' . $imgData . '" width="50"/></td>';
-        } else {
-            echo "<td>Sem imagem</td>";
+            $produtos[$id]['imagens'][] = $row['imagem'];
         }
-          echo "<td>{$row['idproduto']}</td>";
-          echo "<td>" . htmlspecialchars($row['nome']) . "</td>";
-          echo "<td>{$row['numero_paginas']}</td>";
-          echo "<td>" . htmlspecialchars($row['editora']) . "</td>";
-          echo "<td>" . htmlspecialchars($row['autor']) . "</td>";
-          echo "<td>{$row['classificacao_etaria']}</td>";
-          echo "<td>{$row['data_publicacao']}</td>";
-          echo "<td>R$ " . number_format($row['preco'], 2, ',', '.') . "</td>";
-          echo "<td>{$row['quantidade']}</td>";
-          echo "<td>" . htmlspecialchars($row['descricao']) . "</td>";
-          echo "<td>{$row['idvendedor']}</td>";
-        echo "</tr>";
-        }
-    echo '</table>';
-  ?>
+    }
+    ?>
+
+    <div class="card">
+      <h2>Vendas publicadas</h2>
+      <table class="table" border="1">
+        <tr>
+          <th>Imagens</th>
+          <th>Nome do livro</th>
+          <th>Número de página</th>
+          <th>Editora</th>
+          <th>Autor</th>
+          <th>Classificação etária</th>
+          <th>Data de publicação</th>
+          <th>Preço</th>
+          <th>Quantidade</th>
+          <th>Descrição</th>
+        </tr>
+        <?php foreach ($produtos as $produto): ?>
+          <tr>
+            <td>
+              <?php foreach ($produto['imagens'] as $img): ?>
+                <img src="data:image/jpeg;base64,<?= base64_encode($img) ?>" width="50"/>
+              <?php endforeach; ?>
+              <?php if (empty($produto['imagens'])): ?>
+                Sem imagem
+              <?php endif; ?>
+            </td>
+            <td><?= htmlspecialchars($produto['dados']['nome']) ?></td>
+            <td><?= $produto['dados']['numero_paginas'] ?></td>
+            <td><?= htmlspecialchars($produto['dados']['editora']) ?></td>
+            <td><?= htmlspecialchars($produto['dados']['autor']) ?></td>
+            <td><?= $produto['dados']['classificacao_etaria'] ?></td>
+            <td><?= $produto['dados']['data_publicacao'] ?></td>
+            <td>R$ <?= number_format($produto['dados']['preco'], 2, ',', '.') ?></td>
+            <td><?= $produto['dados']['quantidade'] ?></td>
+            <td><?= htmlspecialchars($produto['dados']['descricao']) ?></td>
+          </tr>
+        <?php endforeach; ?>
+      </table>
+    </div>
   </main>
 </body>
 </html>

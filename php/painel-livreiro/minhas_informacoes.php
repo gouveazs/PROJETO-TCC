@@ -24,7 +24,7 @@ if (!$vendedor_db) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Minahs informações</title>
+  <title>Painel do Livreiro - Minahs informações</title>
   <style>
     * {
       margin: 0;
