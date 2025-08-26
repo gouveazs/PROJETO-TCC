@@ -368,72 +368,17 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <input type="submit" value="Buscar">
     </form>
 </div>
-
 <div style="margin-left: 250px; margin-top: 70px; padding: 30px;">
-<div class="section-header">
-  <h2>Seus livros Favoritos</h2>
-</div>
-  </div>
 
-  <div class="main">
-
-<div class="cards cards-novidades">
-  <div class="card">
-    <img src="../../imgs/Daisy Jone & The Six.jpg" alt="Livro 1">
-    <div class="info">
-      <h3>Daisy Jone & The Six</h3>
-      <p class="price">R$ 44,90</p>
-      <div class="stars">★★★★☆</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="../../imgs/A Menina que Roubava Livros.jpg" alt="Livro 2">
-    <div class="info">
-      <h3>A Menina que Roubava Livros</h3>
-      <p class="price">R$ 39,50</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="../../imgs/Extraordinário.jpg" alt="Livro 3">
-    <div class="info">
-      <h3>Extraordinário</h3>
-      <p class="price">R$ 28,00</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="../../imgs/Relatos de um Gato Viajante.jpg" alt="Livro 4">
-    <div class="info">
-      <h3>Relatos de um Gato Viajante</h3>
-      <p class="price">R$ 33,90</p>
-      <div class="stars">★★★☆☆</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="../../imgs/Prisioneiro de Azkaban.jpg" alt="Livro 5">
-    <div class="info">
-      <h3>Prisioneiro de Azkaban</h3>
-      <p class="price">R$ 55,00</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="../../imgs/Dom Casmurro.jpg" alt="Livro 6">
-    <div class="info">
-      <h3>Dom Casmurro</h3>
-      <p class="price">R$ 22,00</p>
-      <div class="stars">★★★★☆</div>
+  <!-- Título alterado de "Seus Livros Favoritos" para "Nossos Livros" -->
+  <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+    <div style="flex: 2; background: #ffffff; padding: 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
+      <h2>Nossos Livros</h2>
     </div>
   </div>
 
   <!-- Cards Destaques e Carrinho lado a lado -->
-  <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+  <div style="display: flex; gap: 30px; flex-wrap: wrap; margin-top: 30px;">
     
     <div style="flex: 1; background-color: #5A6B50; border-radius: 15px; padding: 20px; display: flex; align-items: center; justify-content: space-between; min-width: 300px;">
       <div>
@@ -448,14 +393,37 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div>
         <h3 style="color: #ffffff; font-size: 1.4rem;">Carrinho</h3>
         <p style="color: #ffffff; font-size: 0.9rem;">Veja todos os itens adicionados!</p>
-        <a href="php/destaques/destaques.php" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
+        <a href="php/carrinho/carrinho.php" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
       </div>
       <img src="../../imgs/comuni.jpg" alt="Card Carrinho" style="height: 150px; border-radius: 8px;">
     </div>
   </div>
 </div>
 
+<div class="main">
+<!-- Novidades -->
+<div class="section-header">
+</div>
 
+<div class="cards cards-novidades">
+  <?php if(count($produtos) > 0): ?>
+    <?php foreach($produtos as $produto): ?>
+      <div class="card">
+        <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+        <div class="info">
+          <h3><?= htmlspecialchars($produto['nome']) ?></h3>
+          <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+          <div class="stars">★★★★☆</div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  <?php else: ?>
+  <?php endif; ?>
+</div>
+</div>
+
+<div class="footer">
+  <p>Todos os direitos reservados</p>
 </div>
 </body>
 </html>
