@@ -499,9 +499,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
     <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
       <div style="display: flex; background: #ffffffff; padding: 10px; border-radius: 8px; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        <img src="imgs/iconromance.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
+        <img src="imgs/divinosrivais.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
         <div>
-          <p style="font-weight: bold; font-size: 0.9rem;">Headphone Portátil</p>
+          <p style="font-weight: bold; font-size: 0.9rem;">Divinos Rivais</p>
           <p style="color: #5a6b50;">R$ 86,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 95,00</span></p>
         </div>
       </div>
