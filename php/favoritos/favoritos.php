@@ -368,63 +368,14 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <input type="submit" value="Buscar">
     </form>
 </div>
+
 <div style="margin-left: 250px; margin-top: 70px; padding: 30px;">
-
-  <!-- Espaço vazio (pode ser removido se não precisar) -->
-  <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-    <div style="flex: 2; background: #ffffff; padding: 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
-      <!-- Conteúdo aqui, se necessário -->
-    </div>
-  </div>
-
-  <!-- Informações rápidas (frete, garantia, etc) -->
-  <div style="display: flex; justify-content: space-around; align-items: center; margin: 30px 0; flex-wrap: wrap; gap: 20px;">
-    <div style="text-align: center; min-width: 150px;">
-      <img src="../../imgs/entrega-rapida.png" alt="Frete" style="height: 40px;">
-      <p>Frete grátis para pedidos <br><small>Acima de R$ 50</small></p>
-    </div>
-    <div style="text-align: center; min-width: 150px;">
-      <img src="../../imgs/garantia-de-devolucao-de-dinheiro.png" alt="Garantia" style="height: 40px;">
-      <p>Garantia de devolução do dinheiro<br><small>100% do seu dinheiro de volta</small></p>
-    </div>
-    <div style="text-align: center; min-width: 150px;">
-      <img src="../../imgs/pagamento-com-cartao-de-credito.png" alt="Pagamento" style="height: 40px;">
-      <p>Pagamento<br><small>Pix, Crédito e Débito</small></p>
-    </div>
-    <div style="text-align: center; min-width: 150px;">
-      <img src="../../imgs/suporte-online.png" alt="Suporte" style="height: 40px;">
-      <p>Ajuda e Suporte<br><small>(11) 4002-8922</small></p>
-    </div>
-  </div>
-
-  <!-- Cards Destaques e Carrinho lado a lado -->
-  <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-    
-    <div style="flex: 1; background-color: #5A6B50; border-radius: 15px; padding: 20px; display: flex; align-items: center; justify-content: space-between; min-width: 300px;">
-      <div>
-        <h3 style="color: #ffffff; font-size: 1.4rem;">Destaques</h3>
-        <p style="color: #ffffff; font-size: 0.9rem;">Veja todo nosso acervo de livros!</p>
-        <a href="php/destaques/destaques.php" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
-      </div>
-      <img src="../../imgs/comuni.jpg" alt="Card Destaques" style="height: 150px; border-radius: 8px;">
-    </div>
-
-    <div style="flex: 1; background-color: #5A6B50; border-radius: 15px; padding: 20px; display: flex; align-items: center; justify-content: space-between; min-width: 300px;">
-      <div>
-        <h3 style="color: #ffffff; font-size: 1.4rem;">Carrinho</h3>
-        <p style="color: #ffffff; font-size: 0.9rem;">Veja todos os itens adicionados!</p>
-        <a href="php/destaques/destaques.php" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
-      </div>
-      <img src="../../imgs/comuni.jpg" alt="Card Carrinho" style="height: 150px; border-radius: 8px;">
-    </div>
-  </div>
-</div>
-
-<div class="main">
-<!-- Novidades -->
 <div class="section-header">
-  <h2>Novidades</h2>
+  <h2>Seus livros Favoritos</h2>
 </div>
+  </div>
+
+  <div class="main">
 
 <div class="cards cards-novidades">
   <div class="card">
@@ -480,6 +431,31 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div class="stars">★★★★☆</div>
     </div>
   </div>
+
+  <!-- Cards Destaques e Carrinho lado a lado -->
+  <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+    
+    <div style="flex: 1; background-color: #5A6B50; border-radius: 15px; padding: 20px; display: flex; align-items: center; justify-content: space-between; min-width: 300px;">
+      <div>
+        <h3 style="color: #ffffff; font-size: 1.4rem;">Destaques</h3>
+        <p style="color: #ffffff; font-size: 0.9rem;">Veja todo nosso acervo de livros!</p>
+        <a href="php/destaques/destaques.php" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
+      </div>
+      <img src="../../imgs/comuni.jpg" alt="Card Destaques" style="height: 150px; border-radius: 8px;">
+    </div>
+
+    <div style="flex: 1; background-color: #5A6B50; border-radius: 15px; padding: 20px; display: flex; align-items: center; justify-content: space-between; min-width: 300px;">
+      <div>
+        <h3 style="color: #ffffff; font-size: 1.4rem;">Carrinho</h3>
+        <p style="color: #ffffff; font-size: 0.9rem;">Veja todos os itens adicionados!</p>
+        <a href="php/destaques/destaques.php" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
+      </div>
+      <img src="../../imgs/comuni.jpg" alt="Card Carrinho" style="height: 150px; border-radius: 8px;">
+    </div>
+  </div>
+</div>
+
+
 </div>
 </body>
 </html>
