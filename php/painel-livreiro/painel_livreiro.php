@@ -2,11 +2,19 @@
 session_start();
 $nome_vendedor = isset($_SESSION['nome_vendedor']) ? $_SESSION['nome_vendedor'] : null;
 $foto_de_perfil = isset($_SESSION['foto_de_perfil-vendedor']) ? $_SESSION['foto_de_perfil-vendedor'] : null;
+$id_vendedor = isset($_SESSION['id_vendedor']) ? $_SESSION['id_vendedor'] : null; 
 
 if (!isset($_SESSION['nome_vendedor'])) {
   header('Location: ../login/loginVendedor.php');
   exit;
 }
+
+include '../conexao.php';
+
+$query = $conn->prepare("SELECT COUNT(*) AS total_vendas FROM produto WHERE idvendedor = ?");
+$query->execute([$id_vendedor]);
+$resultado = $query->fetch(PDO::FETCH_ASSOC);
+$total_vendas = $resultado['total_vendas'];
 ?>
 
 <!DOCTYPE html>
