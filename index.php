@@ -506,16 +506,16 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
       </div>
       <div style="display: flex; background: #ffffffff; padding: 10px; border-radius: 8px; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        <img src="imgs/fone2.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
+        <img src="imgs/emrotadecolisao.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
         <div>
-          <p style="font-weight: bold; font-size: 0.9rem;">Fone de Ouvido On Ear</p>
+          <p style="font-weight: bold; font-size: 0.9rem;">Em Rota De Colisão</p>
           <p style="color: #5a6b50;">R$ 80,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 86,00</span></p>
         </div>
       </div>
       <div style="display: flex; background: #ffffffff; padding: 10px; border-radius: 8px; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        <img src="imgs/caixinha.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
+        <img src="imgs/bibliotecadameianoite.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
         <div>
-          <p style="font-weight: bold; font-size: 0.9rem;">Caixa de Som Bluetooth</p>
+          <p style="font-weight: bold; font-size: 0.9rem;">A Biblioteca da Meia-Noite</p>
           <p style="color: #5a6b50;">R$ 98,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 120,00</span></p>
         </div>
       </div>
