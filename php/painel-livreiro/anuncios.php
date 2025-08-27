@@ -261,6 +261,51 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       font-size: 14px;
       text-align: left;
     }
+
+    .produto-actions {
+    display: flex;
+    flex-direction: column; /* Alinha os botões um embaixo do outro */
+    margin-top: 10px;
+    gap: 10px; /* Espaçamento entre os botões */
+}
+
+.btn-action {
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s;
+    width: 100%; /* Faz os botões ocuparem toda a largura do card */
+}
+
+.btn-toggle.mostrar-detalhes {
+    background-color: var(--verde); /* Cor da sidebar */
+    color: white;
+}
+
+.btn-toggle.mostrar-detalhes:hover {
+    background-color: #4e5c43; /* Cor mais escura */
+}
+
+.btn-action.editar {
+    background-color: var(--verde); /* Cor da sidebar */
+    color: white;
+}
+
+.btn-action.editar:hover {
+    background-color: #4e5c43; /* Cor mais escura */
+}
+
+.btn-action.excluir {
+    background-color: var(--marrom); /* Cor da barra de título "Entre Linhas" */
+    color: white;
+}
+
+.btn-action.excluir:hover {
+    background-color: #6f4f28; /* Cor mais escura */
+}
+
   </style>
 </head>
 <body>
@@ -278,11 +323,11 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <nav>
       <ul class="menu">
-        <li><a href="painel_livreiro.php">Início</a></li>
+        <li><a href="painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;">Início</a></li>
 
-<li><a href="anuncios.php">Vendas publicadas</a></li>
-        <li><a href="rendimento.php">Rendimento</a></li>
-        <li><a href="../cadastro/cadastroProduto.php">Cadastrar Produto</a></li>
+<li><a href="anuncios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;">Vendas publicadas</a></li>
+        <li><a href="rendimento.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;">Rendimento</a></li>
+        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;">Cadastrar Produto</a></li>
       </ul>
     </nav>
   </div>
@@ -321,7 +366,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <?php endif; ?>
                 </div>
 
-                <button class="btn-toggle" onclick="toggleDetalhes('detalhes-<?= $index ?>')">
+                <button class="btn-toggle mostrar-detalhes" onclick="toggleDetalhes('detalhes-<?= $index ?>')">
                     Mostrar detalhes
                 </button>
 
@@ -333,13 +378,20 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <p><strong>Quantidade:</strong> <?= (int)$produto['quantidade'] ?></p>
                     <p><strong>Descrição:</strong> <?= nl2br(htmlspecialchars($produto['descricao'])) ?></p>
                 </div>
+
+                <!-- Botões organizados um embaixo do outro -->
+                <div class="produto-actions">
+                    <a href="editarProduto.php?id=<?= $produto['idproduto'] ?>" class="btn-action editar">Editar Produto</a>
+                    <a href="excluirProduto.php?id=<?= $produto['idproduto'] ?>" class="btn-action excluir" onclick="return confirm('Tem certeza que deseja excluir este produto?');">Excluir Produto</a>
+                </div>
             </div>
         <?php endforeach; ?>
     <?php else: ?>
         <p>Nenhum produto cadastrado.</p>
-        <a href="cadastrar_produto.php" class="btn-toggle">Cadastrar Novo Produto</a>
+        <a href="../cadastro/cadastroProduto.php" class="btn-toggle">Cadastrar Novo Produto</a>
     <?php endif; ?>
-  </div>
+</div>
+
 </main>
 
 <script>
