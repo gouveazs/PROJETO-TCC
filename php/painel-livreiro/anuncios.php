@@ -1,15 +1,22 @@
 <?php
 session_start();
-$nome_vendedor = isset($_SESSION['nome_vendedor']) ? $_SESSION['nome_vendedor'] : null;
-$foto_de_perfil = isset($_SESSION['foto_de_perfil-vendedor']) ? $_SESSION['foto_de_perfil-vendedor'] : null;
 
-if (!isset($_SESSION['nome_vendedor'])) {
-  header('Location: ../login/loginVendedor.php');
-  exit;
+// Obtém o nome e foto do vendedor a partir da sessão
+$nome_vendedor = $_SESSION['nome_vendedor'] ?? null;
+$foto_de_perfil = $_SESSION['foto_de_perfil-vendedor'] ?? null;
+
+if (!$nome_vendedor) {
+    header('Location: ../login/loginVendedor.php');
+    exit;
 }
 
-//produtos
 include '../conexao.php';
+
+// Verifique a conexão com o banco de dados
+if (!$conn) {
+    die('Falha na conexão com o banco de dados');
+}
+
 $stmt = $conn->prepare("
     SELECT p.*, v.nome_completo
     FROM produto p
@@ -20,7 +27,6 @@ $stmt->bindParam(':nome_vendedor', $nome_vendedor, PDO::PARAM_STR);
 $stmt->execute();
 $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -42,8 +48,8 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     * {
-      margin: 0; 
-      padding: 0; 
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
       font-family: 'Playfair Display', serif;
     }
@@ -53,12 +59,13 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-left: 250px; /* espaço pro conteúdo não invadir a sidebar */
+      padding-left: 250px;
     }
 
     .sidebar {
       position: fixed;
-      top: 0; left: 0;
+      top: 0;
+      left: 0;
       width: 250px;
       height: 100vh;
       background-color: var(--verde);
@@ -67,22 +74,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       flex-direction: column;
       align-items: flex-start;
       padding-top: 20px;
-      overflow-y: auto; /* SCROLL HABILITADO */
-      scrollbar-width: thin;
-      scrollbar-color: #ccc transparent;
-    } 
-
-    .sidebar::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .sidebar::-webkit-scrollbar-thumb {
-      background-color: #ccc;
-      border-radius: 4px;
-    }
-
-    .sidebar::-webkit-scrollbar-track {
-      background: transparent;
+      overflow-y: auto;
     }
 
     .sidebar .logo {
@@ -110,29 +102,13 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     .sidebar .user-info .nome-usuario {
       font-weight: bold;
-      font-size: 0.95rem; 
+      font-size: 0.95rem;
       color: #fff;
-    }
-
-    .sidebar .user-info .tipo-usuario {
-      font-size: 0.8rem;
-      color: #ddd;
-    }
-
-    .sidebar .logo p {
-      font-weight: bold;
     }
 
     .sidebar nav {
       width: 100%;
       padding: 0 20px;
-    }
-
-    .sidebar nav h3 {
-      margin-top: 20px;
-      margin-bottom: 10px;
-      font-size: 1rem;
-      color: #ddd;
     }
 
     .sidebar nav ul {
@@ -157,17 +133,15 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       transition: background 0.3s;
     }
 
-    .sidebar nav ul li a i {
-      margin-right: 10px;
-    }
-
     .sidebar nav ul li a:hover {
       background-color: #6f8562;
     }
 
     .topbar {
       position: fixed;
-      top: 0; left: 250px; right: 0;
+      top: 0;
+      left: 250px;
+      right: 0;
       height: 70px;
       background-color: var(--marrom);
       color: #fff;
@@ -182,13 +156,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       font-size: 1.5rem;
     }
 
-    .topbar input[type="text"] {
-      padding: 10px;
-      border: none;
-      border-radius: 20px;
-      width: 250px;
-    }
-
     main {
       padding: 30px;
       flex: 1;
@@ -199,14 +166,13 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       align-items: center;
       gap: 15px;
       margin-bottom: 30px;
-      text-align: left; /* garante que texto interno também fique à esquerda */
     }
 
     .header img {
-        width: 110px;
-        height: 110px;
-        border-radius: 50%;
-        object-fit: cover;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
     }
 
     .header-text {
@@ -216,123 +182,84 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     .header h1 {
-        font-size: 26px;
-        color: var(--text-dark);
-        margin: 5px 0;
+      font-size: 26px;
+      color: var(--text-dark);
+      margin: 5px 0;
     }
 
     .header p {
-        color: var(--text-muted);
-        font-size: 15px;
-        margin: 0;
+      color: var(--text-muted);
+      font-size: 15px;
+      margin: 0;
     }
 
-    .cards {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
+    .produtos-container {
+      display: flex;
+      flex-wrap: wrap;
       gap: 20px;
-      margin-bottom: 25px;
+      margin-top: 15px;
     }
 
-    .card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
+    .produto-card {
+      width: 250px;
+      background: #fff;
       border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: 0.3s;
     }
 
-    .card h2 {
-      margin-top: 0;
-      font-size: 20px;
-      margin-bottom: 15px;
-      color: var(--text-dark);
+    .produto-card:hover {
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
 
-    /* Barra de progresso */
-    .progress-bar {
-      background-color: #eee;
-      border-radius: 5px;
-      overflow: hidden;
-      height: 20px;
+    .produto-img {
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f9f9f9;
+      border-radius: 8px;
       margin-bottom: 10px;
+      overflow: hidden;
     }
 
-    .progress {
-      background-color: var(--verde);
-      width: 35%;
-      height: 100%;
-      text-align: center;
-      font-size: 12px;
+    .produto-img img {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .sem-imagem {
+      color: #999;
+      font-size: 14px;
+    }
+
+    .btn-toggle {
+      background: #556B2F;
       color: #fff;
-      line-height: 20px;
       font-weight: bold;
-    }
-
-    .info {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    /* Tabela */
-    .table {
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-top: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
       width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 15px;
+    }
+
+    .btn-toggle:hover {
+      background: #445522;
+    }
+
+    .produto-detalhes {
+      display: none;
+      margin-top: 10px;
+      border-top: 1px solid #ddd;
+      padding-top: 8px;
       font-size: 14px;
-    }
-
-    .table th, .table td {
-      border: 1px solid var(--card-border);
-      padding: 10px;
       text-align: left;
-    }
-
-    .table th {
-      background-color: #f5f5f5;
-      color: var(--text-dark);
-    }
-
-    .table td {
-      color: var(--text-muted);
-    }
-
-    /* Grid inferior */
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-
-    @media (max-width: 900px) {
-      body {
-        padding-left: 0; /* sidebar vira topo em telas pequenas */
-      }
-      .cards, .grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 200px;
-      }
-      .topbar, .banner, .main, .footer {
-        margin-left: 200px;
-      }
-      .cards-novidades, .cards-recomendacoes {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 576px) {
-      .sidebar {
-        display: none;
-      }
-      .topbar, .banner, .main, .footer {
-        margin-left: 0;
-      }
     }
   </style>
 </head>
@@ -340,34 +267,22 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <div class="sidebar">
     <div class="logo">
       <?php if ($foto_de_perfil): ?>
-      <img src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>">
+        <img src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>" alt="Foto de Perfil">
       <?php else: ?>
         <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
       <?php endif; ?>
       <div class="user-info">
-        <p class="nome-usuario"><?= $nome_vendedor ? htmlspecialchars($nome_vendedor) : 'Entre ou crie sua conta'; ?></p>
+        <p class="nome-usuario"><?= htmlspecialchars($nome_vendedor ?? 'Entre ou crie sua conta'); ?></p>
       </div>
     </div>
 
     <nav>
       <ul class="menu">
-        <li><a href="painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="anuncios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Vendas publicadas</a></li>
-        <li><a href="rendimento.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
-        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
-      </ul>
+        <li><a href="painel_livreiro.php">Início</a></li>
 
-      <h3>Conta</h3>
-      <ul class="account">
-        <?php if (!$nome_vendedor): ?>
-          <li><a href="php/login/login.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
-          <li><a href="php/cadastro/cadastroUsuario.php"><img src="../../imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
-          <li><a href="php/cadastro/cadastroVendedor.php"><img src="../../imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
-          <li><a href="php/login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
-        <?php else: ?>
-          <li><a href="minhas_informacoes.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Editar informações</a></li>
-          <li><a href="../login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
-        <?php endif; ?>
+<li><a href="anuncios.php">Vendas publicadas</a></li>
+        <li><a href="rendimento.php">Rendimento</a></li>
+        <li><a href="../cadastro/cadastroProduto.php">Cadastrar Produto</a></li>
       </ul>
     </nav>
   </div>
@@ -377,85 +292,66 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 
   <main>
-    <br><br><br>
-    <div class="header">
-      <?php if ($foto_de_perfil): ?>
-        <img src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>">
-      <?php else: ?>
-        <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
-      <?php endif; ?>
-      <div class="header-text">
-        <h1>Bem-vindo, <?= $nome_vendedor ? htmlspecialchars($nome_vendedor) : 'Usuário'; ?></h1>
-        <p>Acompanhe seu desempenho como vendedor</p>
-      </div>
+  <br><br><br>
+  <div class="header">
+    <?php if ($foto_de_perfil): ?>
+      <img src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>" alt="Foto de Perfil">
+    <?php else: ?>
+      <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
+    <?php endif; ?>
+    <div class="header-text">
+      <h1>Bem-vindo, <?= htmlspecialchars($nome_vendedor ?? 'Usuário') ?></h1>
+      <p>Acompanhe seu desempenho como vendedor</p>
     </div>
-        <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
-    <?php  
-    include '../conexao.php';
+  </div>
 
-    // Consulta com JOIN para trazer todas as imagens
-    $stmt = $conn->prepare("
-        SELECT p.*, i.imagem
-        FROM produto p
-        LEFT JOIN imagens i ON i.idproduto = p.idproduto
-        ORDER BY p.idproduto, i.idimagens
-    ");
-    $stmt->execute();
+  <hr style="border: 0; height: 1px; background-color: #afafafff; margin-bottom: 20px;">
 
-    // Organiza os resultados agrupando imagens pelo produto
-    $produtos = [];
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $id = $row['idproduto'];
-        if (!isset($produtos[$id])) {
-            $produtos[$id] = [
-                'dados' => $row,
-                'imagens' => []
-            ];
-        }
-        if (!empty($row['imagem'])) {
-            $produtos[$id]['imagens'][] = $row['imagem'];
-        }
-    }
-    ?>
+  <h2><b>Vendas publicadas</b></h2>
 
-    <div class="card">
-      <h2>Vendas publicadas</h2>
-      <table class="table" border="1">
-        <tr>
-          <th>Imagens</th>
-          <th>Nome do livro</th>
-          <th>Número de página</th>
-          <th>Editora</th>
-          <th>Autor</th>
-          <th>Classificação etária</th>
-          <th>Data de publicação</th>
-          <th>Preço</th>
-          <th>Quantidade</th>
-          <th>Descrição</th>
-        </tr>
-        <?php foreach ($produtos as $produto): ?>
-          <tr>
-            <td>
-              <?php foreach ($produto['imagens'] as $img): ?>
-                <img src="data:image/jpeg;base64,<?= base64_encode($img) ?>" width="50"/>
-              <?php endforeach; ?>
-              <?php if (empty($produto['imagens'])): ?>
-                Sem imagem
-              <?php endif; ?>
-            </td>
-            <td><?= htmlspecialchars($produto['dados']['nome']) ?></td>
-            <td><?= $produto['dados']['numero_paginas'] ?></td>
-            <td><?= htmlspecialchars($produto['dados']['editora']) ?></td>
-            <td><?= htmlspecialchars($produto['dados']['autor']) ?></td>
-            <td><?= $produto['dados']['classificacao_etaria'] ?></td>
-            <td><?= $produto['dados']['data_publicacao'] ?></td>
-            <td>R$ <?= number_format($produto['dados']['preco'], 2, ',', '.') ?></td>
-            <td><?= $produto['dados']['quantidade'] ?></td>
-            <td><?= htmlspecialchars($produto['dados']['descricao']) ?></td>
-          </tr>
+  <div class="produtos-container">
+    <?php if (!empty($produtos)): ?>
+        <?php foreach ($produtos as $index => $produto): ?>
+            <div class="produto-card">
+                <div class="produto-img">
+                    <?php if (!empty($produto['imagem'])): ?>
+                        <img src="<?= htmlspecialchars($produto['imagem']) ?>" alt="Imagem do Produto">
+                    <?php else: ?>
+                        <span class="sem-imagem">Sem imagem</span>
+                    <?php endif; ?>
+                </div>
+
+                <button class="btn-toggle" onclick="toggleDetalhes('detalhes-<?= $index ?>')">
+                    Mostrar detalhes
+                </button>
+
+                <div id="detalhes-<?= $index ?>" class="produto-detalhes">
+                    <p><strong>Título:</strong> <?= htmlspecialchars($produto['nome']) ?></p>
+                    <p><strong>Editora:</strong> <?= htmlspecialchars($produto['editora']) ?></p>
+                    <p><strong>Autor:</strong> <?= htmlspecialchars($produto['autor']) ?></p>
+                    <p><strong>Preço:</strong> R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+                    <p><strong>Quantidade:</strong> <?= (int)$produto['quantidade'] ?></p>
+                    <p><strong>Descrição:</strong> <?= nl2br(htmlspecialchars($produto['descricao'])) ?></p>
+                </div>
+            </div>
         <?php endforeach; ?>
-      </table>
-    </div>
-  </main>
+    <?php else: ?>
+        <p>Nenhum produto cadastrado.</p>
+        <a href="cadastrar_produto.php" class="btn-toggle">Cadastrar Novo Produto</a>
+    <?php endif; ?>
+  </div>
+</main>
+
+<script>
+function toggleDetalhes(id) {
+    const detalhes = document.getElementById(id);
+    if (detalhes.style.display === 'none' || detalhes.style.display === '') {
+        detalhes.style.display = 'block';
+    } else {
+        detalhes.style.display = 'none';
+    }
+}
+</script>
+
 </body>
 </html>
