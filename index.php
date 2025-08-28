@@ -287,6 +287,20 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       color: var(--verde);
     }
 
+    .card-link {
+      text-decoration: none;
+      color: inherit;
+      display: block; /* faz o link ocupar todo o card */
+    }
+    .card-link .card {
+      cursor: pointer; /* indica que é clicável */
+      transition: transform 0.2s;
+    }
+    .card-link .card:hover {
+      transform: scale(1.03); /* efeito visual ao passar o mouse */
+    }
+
+
     .card .info .stars {
       color: #f5c518;
     }
@@ -465,7 +479,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
       <?php if ($nome === 'adm'): ?>
         <li><a href="php/consulta/consulta.php"><img src="imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
-        <li><a href="php/produto/pagiproduto.php"><img src="imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Pagina Produto</a></li>
         <li><a href="php/consultaFiltro/busca.php"><img src="imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
         <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
       <?php endif; ?>
@@ -744,23 +757,26 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <h2>Ofertas Recem Adicionadas</h2>
     <a href="#" class="ver-mais">Ver mais</a>
 </div>
+
 <div class="cards cards-novidades">
   <?php foreach ($produtos as $produto): ?>
-    <div class="card">
-      <?php if (!empty($produto['imagem'])): ?>
-        <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>">
-      <?php else: ?>
-        <img src="imgs/usuario.jpg" alt="Foto de Perfil">
-      <?php endif; ?>
-      <div class="info">
-        <h3><?= htmlspecialchars($produto['nome']) ?></h3>
-        <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
-        <div class="stars">★★★★★</div>
-        <!-- Removido vendedor -->
+    <a href="php/produto/pagiproduto.php?nome=<?= urlencode($produto['nome']) ?>" class="card-link">
+      <div class="card">
+        <?php if (!empty($produto['imagem'])): ?>
+          <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+        <?php else: ?>
+          <img src="imgs/usuario.jpg" alt="Foto de Perfil">
+        <?php endif; ?>
+        <div class="info">
+          <h3><?= htmlspecialchars($produto['nome']) ?></h3>
+          <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+          <div class="stars">★★★★★</div>
+        </div>
       </div>
-    </div>
+    </a>
   <?php endforeach; ?>
 </div>
+
 <!-- + Mais Destaques -->
 <div class="section-header" style="margin-top: 50px;">
   <h2>+ Mais Destaques</h2>

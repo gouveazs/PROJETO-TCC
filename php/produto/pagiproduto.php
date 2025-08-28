@@ -1,15 +1,35 @@
-<?php 
-session_start(); 
-$nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null; 
-$tipo = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : null; 
-$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null; 
+<?php
+session_start();
+$nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
+$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
-//produtos 
-include '../conexao.php'; 
-$stmt = $conn->prepare("SELECT * FROM produto"); 
-$stmt->execute(); 
-$produtos = $stmt->fetchAll(PDO::FETCH_ASSOC); 
-?> 
+include '../conexao.php';
+
+if (!isset($_GET['nome'])) {
+    die("Produto não especificado.");
+}
+
+$nomeProduto = $_GET['nome'];
+
+$stmt = $conn->prepare("
+    SELECT p.*, i.imagem, v.nome_completo, v.email
+    FROM produto p
+    LEFT JOIN imagens i 
+        ON i.idproduto = p.idproduto
+    LEFT JOIN cadastro_vendedor v
+        ON v.idvendedor = p.idvendedor
+    WHERE p.nome = :nome
+    ORDER BY i.idimagens ASC
+    LIMIT 1
+");
+$stmt->bindParam(':nome', $nomeProduto, PDO::PARAM_STR);
+$stmt->execute();
+$produto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$produto) {
+    die("Produto não encontrado.");
+}
+?>
 
 <!DOCTYPE html> 
 <html lang="pt-BR"> 
@@ -756,34 +776,35 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div> 
         </div> 
         <nav> 
-            <ul class="menu"> 
-                <li><a href="../../index.php"><i class="fas fa-home"></i> Início</a></li> 
-                <li><a href="../comunidades/comunidade.php"><i class="fas fa-users"></i> Comunidades</a></li> 
-                <li><a href="#"><i class="fas fa-star"></i> Destaques</a></li> 
-                <li><a href="#"><i class="fas fa-heart"></i> Favoritos</a></li> 
-                <li><a href="#"><i class="fas fa-shopping-cart"></i> Carrinho</a></li> 
-            </ul> 
-            <h3>Conta</h3> 
-            <ul class="account"> 
-                <?php if (!$nome): ?> 
-                    <li><a href="../login/login.php"><i class="fas fa-sign-in-alt"></i> Entrar na conta</a></li> 
-                    <li><a href="../cadastro/cadastroUsuario.php"><i class="fas fa-user-plus"></i> Criar conta</a></li> 
-                    <li><a href="../cadastro/cadastroVendedor.php"><i class="fas fa-store"></i> Quero vender</a></li> 
-                    <li><a href="../loginVendedor.php"><i class="fas fa-tachometer-alt"></i> Painel do Livreiro</a></li> 
-                <?php else: ?> 
-                    <li><a href="../perfil/ver_perfil.php"><i class="fas fa-user"></i> Ver perfil</a></li> 
-                <?php endif; ?> 
-                <?php if ($nome === 'adm'): ?> 
-                    <li><a href="../consulta/consulta.php"><i class="fas fa-search"></i> Consulta</a></li> 
-                    <li><a href="../consultaFiltro/busca.php"><i class="fas fa-search"></i> Consulta por Nome</a></li> 
-                    <li><a href="../cadastro/cadastroProduto.php"><i class="fas fa-plus-circle"></i> Cadastrar Produto</a></li> 
-                <?php endif; ?> 
-                <?php if ($tipo === 'Vendedor'): ?> 
-                    <li><a href="../cadastro/cadastroProduto.php"><i class="fas fa-plus-circle"></i> Cadastrar Produto</a></li> 
-                <?php endif; ?> 
-                <?php if ($nome): ?> 
-                    <li><a href="../login/logout.php"><i class="fas fa-sign-out-alt"></i> Sair</a></li> 
-                <?php endif; ?> 
+            <ul class="menu">
+                <li><a href="../../index.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
+                <li><a href="../comunidades/comunidade.php"><img src="../../imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
+                <li><a href="../produto/pagiproduto.php"><img src="../../imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
+                <li><a href="#"><img src="../../imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
+                <li><a href="#"><img src="../../imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
+            </ul>
+
+
+            <h3>Conta</h3>
+            <ul class="account">
+                <?php if (!$nome): ?>
+                    <li><a href="php/login/login.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
+                    <li><a href="php/cadastro/cadastroUsuario.php"><img src="../../imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
+                    <li><a href="php/cadastro/cadastroVendedor.php"><img src="../../imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
+                    <li><a href="php/login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
+                <?php else: ?>
+                    <li><a href="php/perfil/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
+                <?php endif; ?>
+
+                <?php if ($nome === 'adm'): ?>
+                    <li><a href="php/consulta/consulta.php"><img src="../../imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
+                    <li><a href="php/consultaFiltro/busca.php"><img src="../../imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
+                    <li><a href="php/cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
+                <?php endif; ?>
+
+                <?php if ($nome): ?>
+                    <li><a href="php/login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
+                <?php endif; ?>
             </ul> 
         </nav> 
     </div> 
@@ -797,8 +818,8 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="main"> 
         <!-- Cabeçalho do produto -->
         <div class="product-header">
-            <h1>JENNA EVANS WELCH </h1>
-            <h2>Amor & azeitonas</h2>
+            <h1><?= htmlspecialchars($produto['autor']) ?></h1>
+            <h2><?= htmlspecialchars($produto['nome']) ?></h2>
             
             <div class="rating-stock">
                 <div class="rating">
@@ -936,7 +957,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="buy-section">
                     <div class="price-container">
                         <div class="price-label">Preço:</div>
-                        <div class="product-price">R$ 35,00</div>
+                        <div class="product-price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></div>
                     </div>
                     
                     <div class="shipping-info">
@@ -948,7 +969,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                     
                     <div class="product-seller">
-                        <p>Vendido por: <strong>Selco Moderno</strong></p>
+                        <p>Vendido por: <strong><?= htmlspecialchars($produto['nome_completo']) ?></strong></p>
                         <div class="seller-rating">
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
