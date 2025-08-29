@@ -12,7 +12,7 @@ try {
     $vendedor_db = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($vendedor_db) {
-        $_SESSION['id_vendedor'] = $vendedor_db['id_vendedor'];
+        $_SESSION['id_vendedor'] = $vendedor_db['idvendedor'];
         $_SESSION['nome_vendedor'] = $vendedor_db['nome_completo'];
         $_SESSION['foto_de_perfil-vendedor'] = $vendedor_db['foto_de_perfil'];
 

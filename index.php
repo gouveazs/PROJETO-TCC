@@ -465,7 +465,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <li><a href="php/carrinho/carrinho.php"><img src="imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
     </ul>
 
-
     <h3>Conta</h3>
     <ul class="account">
       <?php if (!$nome): ?>
@@ -760,7 +759,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="cards cards-novidades">
   <?php foreach ($produtos as $produto): ?>
-    <a href="php/produto/pagiproduto.php?nome=<?= urlencode($produto['nome']) ?>" class="card-link">
+    <a href="php/produto/pagiproduto.php?id=<?= $produto['idproduto'] ?>" class="card-link">
       <div class="card">
         <?php if (!empty($produto['imagem'])): ?>
           <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">

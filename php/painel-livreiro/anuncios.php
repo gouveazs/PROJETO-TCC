@@ -1,9 +1,8 @@
 <?php
 session_start();
-
-// Obtém o nome e foto do vendedor a partir da sessão
-$nome_vendedor = $_SESSION['nome_vendedor'] ?? null;
-$foto_de_perfil = $_SESSION['foto_de_perfil-vendedor'] ?? null;
+$nome_vendedor = isset($_SESSION['nome_vendedor']) ? $_SESSION['nome_vendedor'] : null;
+$foto_de_perfil = isset($_SESSION['foto_de_perfil-vendedor']) ? $_SESSION['foto_de_perfil-vendedor'] : null;
+$id_vendedor = isset($_SESSION['id_vendedor']) ? $_SESSION['id_vendedor'] : null; 
 
 if (!$nome_vendedor) {
     header('Location: ../login/loginVendedor.php');
@@ -11,17 +10,24 @@ if (!$nome_vendedor) {
 }
 
 include '../conexao.php';
-
-// Verifique a conexão com o banco de dados
-if (!$conn) {
-    die('Falha na conexão com o banco de dados');
-}
-
 $stmt = $conn->prepare("
-    SELECT p.*, v.nome_completo
+   SELECT 
+    p.*, 
+    v.nome_completo, 
+    i.imagem
     FROM produto p
-    JOIN cadastro_vendedor v ON p.idvendedor = v.idvendedor
-    WHERE v.nome_completo = :nome_vendedor
+    JOIN cadastro_vendedor v 
+        ON p.idvendedor = v.idvendedor
+    LEFT JOIN imagens i 
+        ON i.idproduto = p.idproduto 
+        AND i.idimagens = (
+            SELECT idimagens 
+            FROM imagens 
+            WHERE idproduto = p.idproduto 
+            ORDER BY idimagens ASC 
+            LIMIT 1
+        )
+    WHERE v.nome_completo = :nome_vendedor;
 ");
 $stmt->bindParam(':nome_vendedor', $nome_vendedor, PDO::PARAM_STR);
 $stmt->execute();
@@ -263,49 +269,48 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     .produto-actions {
-    display: flex;
-    flex-direction: column; /* Alinha os botões um embaixo do outro */
-    margin-top: 10px;
-    gap: 10px; /* Espaçamento entre os botões */
-}
+      display: flex;
+      flex-direction: column; /* Alinha os botões um embaixo do outro */
+      margin-top: 10px;
+      gap: 10px; /* Espaçamento entre os botões */
+    }
 
-.btn-action {
-    padding: 10px 15px;
-    border-radius: 8px;
-    text-align: center;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background 0.3s;
-    width: 100%; /* Faz os botões ocuparem toda a largura do card */
-}
+    .btn-action {
+        padding: 10px 15px;
+        border-radius: 8px;
+        text-align: center;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background 0.3s;
+        width: 100%; /* Faz os botões ocuparem toda a largura do card */
+    }
 
-.btn-toggle.mostrar-detalhes {
-    background-color: var(--verde); /* Cor da sidebar */
-    color: white;
-}
+    .btn-toggle.mostrar-detalhes {
+        background-color: var(--verde); /* Cor da sidebar */
+        color: white;
+    }
 
-.btn-toggle.mostrar-detalhes:hover {
-    background-color: #4e5c43; /* Cor mais escura */
-}
+    .btn-toggle.mostrar-detalhes:hover {
+        background-color: #4e5c43; /* Cor mais escura */
+    }
 
-.btn-action.editar {
-    background-color: var(--verde); /* Cor da sidebar */
-    color: white;
-}
+    .btn-action.editar {
+        background-color: var(--verde); /* Cor da sidebar */
+        color: white;
+    }
 
-.btn-action.editar:hover {
-    background-color: #4e5c43; /* Cor mais escura */
-}
+    .btn-action.editar:hover {
+        background-color: #4e5c43; /* Cor mais escura */
+    }
 
-.btn-action.excluir {
-    background-color: var(--marrom); /* Cor da barra de título "Entre Linhas" */
-    color: white;
-}
+    .btn-action.excluir {
+        background-color: var(--marrom); /* Cor da barra de título "Entre Linhas" */
+        color: white;
+    }
 
-.btn-action.excluir:hover {
-    background-color: #6f4f28; /* Cor mais escura */
-}
-
+    .btn-action.excluir:hover {
+        background-color: #6f4f28; /* Cor mais escura */
+    }
   </style>
 </head>
 <body>
@@ -324,10 +329,22 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <nav>
       <ul class="menu">
         <li><a href="painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;">Início</a></li>
-
-<li><a href="anuncios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;">Vendas publicadas</a></li>
+        <li><a href="anuncios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;">Vendas publicadas</a></li>
         <li><a href="rendimento.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;">Rendimento</a></li>
         <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;">Cadastrar Produto</a></li>
+      </ul>
+
+      <h3>Conta</h3>
+      <ul class="account">
+        <?php if (!$nome_vendedor): ?>
+          <li><a href="php/login/login.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
+          <li><a href="php/cadastro/cadastroUsuario.php"><img src="../../imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
+          <li><a href="php/cadastro/cadastroVendedor.php"><img src="../../imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
+          <li><a href="php/login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
+        <?php else: ?>
+          <li><a href="../painel-livreiro/minhas_informacoes.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Editar informações</a></li>
+          <li><a href="../login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
+        <?php endif; ?>
       </ul>
     </nav>
   </div>
@@ -360,9 +377,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="produto-card">
                 <div class="produto-img">
                     <?php if (!empty($produto['imagem'])): ?>
-                        <img src="<?= htmlspecialchars($produto['imagem']) ?>" alt="Imagem do Produto">
+                      <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
                     <?php else: ?>
-                        <span class="sem-imagem">Sem imagem</span>
+                      <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
                     <?php endif; ?>
                 </div>
 

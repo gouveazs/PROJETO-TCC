@@ -351,7 +351,7 @@ if (!isset($_SESSION['nome_vendedor'])) {
     <nav>
       <ul class="menu">
         <li><a href="../painel-livreiro/painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="../painel-livreiro/vendas.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Vendas e Anúncios</a></li>
+        <li><a href="../painel-livreiro/anuncios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Vendas publicadas</a></li>
         <li><a href="../painel-livreiro/rendimento.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
         <li><a href="cadastroProduto.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
       </ul>
@@ -405,6 +405,16 @@ if (!isset($_SESSION['nome_vendedor'])) {
         </div>
 
         <div class="form-group">
+            <label for="idioma">Idioma:</label>
+            <input type="text" id="idioma" name="idioma" required>
+        </div>
+
+        <div class="form-group">
+            <label for="categoria">Categoria:</label>
+            <input type="text" id="categoria" name="categoria" required>
+        </div>
+
+        <div class="form-group">
             <label for="preco">Preço (R$):</label>
             <input type="number" id="preco" name="preco" step="0.01" min="0" required>
         </div>
@@ -412,6 +422,26 @@ if (!isset($_SESSION['nome_vendedor'])) {
         <div class="form-group">
             <label for="quantidade">Quantidade em estoque:</label>
             <input type="number" id="quantidade" name="quantidade" min="0" required>
+        </div>
+
+        <div class="form-group">
+            <label for="isbn">ISBN:</label>
+            <input type="text" id="isbn" name="isbn" required>
+        </div>
+
+        <div class="form-group">
+            <label for="dimensoes">Dimensões:</label>
+            <input type="text" id="dimensoes" name="dimensoes" required>
+        </div>
+
+        <div class="form-group">
+            <label for="estado_livro">Estado do livro:</label>
+            <input type="text" id="estado_livro" name="estado_livro" required>
+        </div>
+
+        <div class="form-group">
+            <label for="estado_detalhado">Descrição do estado:</label>
+            <textarea id="estado_detalhado" name="estado_detalhado" rows="4" required></textarea>
         </div>
 
         <div class="form-group">

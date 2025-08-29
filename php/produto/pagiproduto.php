@@ -5,32 +5,38 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
 
 include '../conexao.php';
 
-if (!isset($_GET['nome'])) {
-    die("Produto não especificado.");
+if (!isset($_GET['id']) || empty($_GET['id'])) {
+    die("Produto não informado.");
 }
 
-$nomeProduto = $_GET['nome'];
+$idProduto = (int) $_GET['id'];
 
-$stmt = $conn->prepare("
-    SELECT p.*, i.imagem, v.nome_completo, v.email
-    FROM produto p
-    LEFT JOIN imagens i 
-        ON i.idproduto = p.idproduto
-    LEFT JOIN cadastro_vendedor v
-        ON v.idvendedor = p.idvendedor
-    WHERE p.nome = :nome
-    ORDER BY i.idimagens ASC
-    LIMIT 1
-");
-$stmt->bindParam(':nome', $nomeProduto, PDO::PARAM_STR);
-$stmt->execute();
-$produto = $stmt->fetch(PDO::FETCH_ASSOC);
+try {
+    $stmt = $conn->prepare("
+        SELECT p.*, i.imagem, v.nome_completo, v.email
+        FROM produto p
+        LEFT JOIN imagens i ON i.idproduto = p.idproduto
+        LEFT JOIN cadastro_vendedor v ON v.idvendedor = p.idvendedor
+        WHERE p.idproduto = :id
+        ORDER BY i.idimagens ASC
+    ");
+    $stmt->execute([':id' => $idProduto]);
+    $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if (!$produto) {
-    die("Produto não encontrado.");
+    if (!$resultados) {
+        die("Produto não encontrado.");
+    }
+
+    // Dados do produto
+    $produto = $resultados[0];
+
+    // Array de imagens (somente os dados)
+    $imagens = array_filter(array_column($resultados, 'imagem'));
+
+} catch (PDOException $e) {
+    die("Erro de conexão: " . $e->getMessage());
 }
 ?>
-
 <!DOCTYPE html> 
 <html lang="pt-BR"> 
 <head> 
@@ -761,7 +767,7 @@ if (!$produto) {
                 border-bottom: 1px solid #eee;
             }
         } 
-    </style> 
+    </style>
 </head> 
 <body> 
     <div class="sidebar"> 
@@ -779,31 +785,30 @@ if (!$produto) {
             <ul class="menu">
                 <li><a href="../../index.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
                 <li><a href="../comunidades/comunidade.php"><img src="../../imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
-                <li><a href="../produto/pagiproduto.php"><img src="../../imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
-                <li><a href="#"><img src="../../imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
-                <li><a href="#"><img src="../../imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
+                <li><a href="../destaques/destaques.php"><img src="../../imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
+                <li><a href="../favoritos/favoritos.php"><img src="../../imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
+                <li><a href="../carrinho/carrinho.php"><img src="../../imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
             </ul>
-
 
             <h3>Conta</h3>
             <ul class="account">
                 <?php if (!$nome): ?>
-                    <li><a href="php/login/login.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
-                    <li><a href="php/cadastro/cadastroUsuario.php"><img src="../../imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
-                    <li><a href="php/cadastro/cadastroVendedor.php"><img src="../../imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
-                    <li><a href="php/login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
+                    <li><a href="../login/login.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
+                    <li><a href="../cadastro/cadastroUsuario.php"><img src="../../imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
+                    <li><a href="../cadastro/cadastroVendedor.php"><img src="../../imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
+                    <li><a href="../login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
                 <?php else: ?>
                     <li><a href="php/perfil/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
                 <?php endif; ?>
 
                 <?php if ($nome === 'adm'): ?>
-                    <li><a href="php/consulta/consulta.php"><img src="../../imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
-                    <li><a href="php/consultaFiltro/busca.php"><img src="../../imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
-                    <li><a href="php/cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
+                    <li><a href="../consulta/consulta.php"><img src="../../imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
+                    <li><a href="../consultaFiltro/busca.php"><img src="../../imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
+                    <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
                 <?php endif; ?>
 
                 <?php if ($nome): ?>
-                    <li><a href="php/login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
+                    <li><a href="../login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
                 <?php endif; ?>
             </ul> 
         </nav> 
@@ -843,57 +848,58 @@ if (!$produto) {
             <div class="product-main">
                 <!-- Carrossel de imagens do produto -->
                 <div class="product-image">
-                    <div class="carousel">
-                        <div class="carousel-inner">
-                            <div class="carousel-item">
-                                <img src="../../imgs/A Culpa é das Estrelas.jpg" alt="Capa do livro A Metamorfose">
+                <div class="carousel">
+                    <div class="carousel-inner">
+                        <?php if (!empty($imagens)): ?>
+                            <?php foreach ($imagens as $index => $img): ?>
+                                <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+                                    <img src="data:image/jpeg;base64,<?= base64_encode($img) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="carousel-item active">
+                                <img src="imgs/usuario.jpg" alt="Sem imagem">
                             </div>
-                            <div class="carousel-item">
-                                <img src="../../imgs/A Menina que Roubava Livros.jpg" alt="Contra-capa do livro A Metamorfose">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="../../imgs/Amor e Azeitonas.jpg" alt="Detalhe das páginas do livro A Metamorfose">
-                            </div>
-                        </div>
-                        <button class="carousel-control prev" onclick="moveSlide(-1)">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button class="carousel-control next" onclick="moveSlide(1)">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                        <div class="carousel-indicators">
-                            <span class="carousel-indicator active" onclick="goToSlide(0)"></span>
-                            <span class="carousel-indicator" onclick="goToSlide(1)"></span>
-                            <span class="carousel-indicator" onclick="goToSlide(2)"></span>
-                        </div>
+                        <?php endif; ?>
                     </div>
-                    <div class="carousel-thumbnails">
-                        <div class="carousel-thumbnail active" onclick="goToSlide(0)">
-                            <img src="../../imgs/A Culpa é das Estrelas.jpg" alt="Miniatura 1">
-                        </div>
-                        <div class="carousel-thumbnail" onclick="goToSlide(1)">
-                            <img src="../../imgs/A Menina que Roubava Livros.jpg" alt="Miniatura 2">
-                        </div>
-                        <div class="carousel-thumbnail" onclick="goToSlide(2)">
-                            <img src="../../imgs/Amor e Azeitonas.jpg" alt="Miniatura 3">
-                        </div>
+
+                    <button class="carousel-control prev" onclick="moveSlide(-1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-control next" onclick="moveSlide(1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+
+                    <div class="carousel-indicators">
+                        <?php if (!empty($imagens)): ?>
+                            <?php foreach ($imagens as $index => $img): ?>
+                                <span class="carousel-indicator <?= $index === 0 ? 'active' : '' ?>" 
+                                    onclick="goToSlide(<?= $index ?>)"></span>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
                 </div>
+
+                <div class="carousel-thumbnails">
+                    <?php if (!empty($imagens)): ?>
+                        <?php foreach ($imagens as $index => $img): ?>
+                            <div class="carousel-thumbnail <?= $index === 0 ? 'active' : '' ?>" onclick="goToSlide(<?= $index ?>)">
+                                <img src="data:image/jpeg;base64,<?= base64_encode($img) ?>" alt="Miniatura <?= $index + 1 ?>">
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
                 
                 <!-- Informações do produto -->
                 <div class="product-info">
                     <h3>Detalhes do produto</h3>
-                    <p><strong>Autor:</strong>  Jenna Evans Welch </p>
-                    <p><strong>Editora:</strong> Intrínseca</p>
-                    <p><strong>Idioma:</strong> Português</p>
-                    <p><strong>ISBN-10:</strong> 6555603070</p>
-                    <p><strong>ISBN-13:</strong> 978-6555603071</p>
-                    <p><strong>Dimensões:</strong> 14 x 2.1 x 21 cm</p>
-                    
-                    <div class="product-conditions">
-                        <span class="condition used">Usado a partir de R$ 9,04</span>
-                        <span class="condition new">Novo: R$ 49,99</span>
-                    </div>
+                    <p><strong>Autor:</strong>   <?= htmlspecialchars($produto['autor']) ?> </p>
+                    <p><strong>Editora:</strong> <?= htmlspecialchars($produto['editora']) ?></p>
+                    <p><strong>Idioma:</strong>  <?= htmlspecialchars($produto['idioma']) ?></p>
+                    <p><strong>ISBN:</strong> <?= htmlspecialchars($produto['isbn']) ?></p>
+                    <p><strong>Estado do livro:</strong> <?= htmlspecialchars($produto['estado_livro']) ?></p>
+                    <p><strong>Dimensões:</strong> <?= htmlspecialchars($produto['dimensoes']) ?></p>
                 </div>
                 
                 <!-- Abas de conteúdo -->
@@ -905,20 +911,15 @@ if (!$produto) {
                     </ul>
                     <div class="tab-content">
                         <div class="active">
-                            <p>O que a lenda de uma cidade submersa tem a ver com a vida de uma adolescente? No caso da greco-americana Liv Varanakis, a resposta é tudo. Quando era pequena, Liv e seu pai passavam horas tentando descobrir a localização de Atlântida, mas, desde que ele foi embora sem explicação, ela evita pensar na cidade perdida a todo custo. Com dezessete anos, Liv tem uma nova vida, um novo namorado e está muito bem, obrigada. </p>
-                            <p>Até que um cartão-postal amassado chega de Santorini e faz seus planos irem por água abaixo. Nele, seu pai explica que está gravando um documentário a respeito de Atlântida e que mandou uma passagem de avião para Liv ir até a Grécia ajudá-lo. Agora, ela terá que deixar para trás tudo que construiu e embarcar rumo ao desconhecido.</p>
+                            <p><?= htmlspecialchars($produto['descricao']) ?></p>
                         </div>
                         <div>
                             <h4>Informações do produto</h4>
                             <ul>
-                                <li><strong>Editora:</strong> Edição padrão (27 setembro 2019)</li>
-                                <li><strong>Idioma:</strong> Português</li>
-                                <li><strong>Capinha comum:</strong> 120 páginas</li>
-                                <li><strong>ISBN-10:</strong> 8595084752</li>
-                                <li><strong>ISBN-13:</strong> 978-8595084752</li>
-                                <li><strong>Dimensões:</strong> 22.8 x 15.6 x 1.2 cm</li>
-                                <li><strong>Ranking dos mais vendidos:</strong> #12 em Livros</li>
-                                <li><strong>Classificação etária:</strong> 15 anos e acima</li>
+                                <li><strong>Editora:</strong> <?= htmlspecialchars($produto['editora']) ?></li>
+                                <li><strong>Números de página:</strong> <?= htmlspecialchars($produto['numero_paginas']) ?></li>
+                                <li><strong>Data de publicação:</strong> <?= htmlspecialchars($produto['data_publicacao']) ?></li>
+                                <li><strong>Classificação etária:</strong> <?= htmlspecialchars($produto['classificacao_etaria']) ?></li>
                             </ul>
                         </div>
                         <div>
@@ -965,7 +966,7 @@ if (!$produto) {
                     </div>
                     
                     <div class="product-description">
-                        <p>Livro com leve desgaste nas bordas. Nenhuma página faltando. Anotações a lápis em algumas páginas.</p>
+                        <p>Estado detalhado do livro: <?= htmlspecialchars($produto['estado_detalhado']) ?></p>
                     </div>
                     
                     <div class="product-seller">
