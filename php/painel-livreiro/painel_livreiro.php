@@ -11,10 +11,13 @@ if (!isset($_SESSION['nome_vendedor'])) {
 
 include '../conexao.php';
 
-$query = $conn->prepare("SELECT COUNT(*) AS total_vendas FROM produto WHERE idvendedor = ?");
-$query->execute([$id_vendedor]);
-$resultado = $query->fetch(PDO::FETCH_ASSOC);
-$total_vendas = $resultado['total_vendas'];
+// Conta os produtos cadastrados por esse vendedor
+$stmt = $conn->prepare("SELECT COUNT(*) AS total FROM produto WHERE idvendedor = ?");
+$stmt->execute([$id_vendedor]);
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Armazena o número de produtos publicados
+$vendas_publicadas = $result['total'];
 ?>
 
 <!DOCTYPE html>
@@ -401,7 +404,7 @@ $total_vendas = $resultado['total_vendas'];
         <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
         <p><strong>Taxa de sucesso:</strong> 0%</p>
         <p><strong>Vendas concluídas:</strong> 0</p>
-        <p><strong>Vendas publicadas:</strong> 0</p>
+        <p><strong>Vendas publicadas:</strong> <?php echo $vendas_publicadas; ?></p>
       </div>
     </div>
 
