@@ -1004,7 +1004,7 @@ try {
                 <!-- Outras ofertas -->
                 <div class="other-offers">
                     <h3>Outras ofertas</h3>
-                    
+                    <!--
                     <div class="offer">
                         <div class="offer-info">
                             <div class="offer-condition">Novo</div>
@@ -1044,6 +1044,7 @@ try {
                     <div class="more-offers">
                         <a href="#">Ver as outras 7 ofertas deste livro</a>
                     </div>
+                    -->
                 </div>
             </div>
         </div>
