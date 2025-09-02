@@ -1,4 +1,8 @@
 <?php
+session_start();
+$nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
+$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
+
 include '../conexao.php';
 $busca = $_POST['nome']; // ou $_GET['q'] se vier do GET
 
