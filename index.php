@@ -491,7 +491,8 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <div class="topbar">
-  <h1>Entre Linhas - Livraria Moderna</h1>
+  <img src="imgs/livrin.png" style="width:120px;">
+  <h1>Entre Linhas - Sebo Moderna</h1>
   <form class="search-form" action="php/consultaFiltro/consultaFiltro.php" method="POST">
     <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
     <input type="submit" value="Buscar">

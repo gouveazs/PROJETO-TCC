@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `banco2.0`.`produto` (
   `dimensoes` VARCHAR(50) NULL,
   `idioma` VARCHAR(45) NULL,
   `estado_livro` VARCHAR(45) NULL,
-  `estado_detalhado` VARCHAR(45) NULL,
+  `estado_detalhado` VARCHAR(1750) NULL,
   PRIMARY KEY (`idproduto`),
   INDEX `fk_produto_cadastro_vendedor1_idx` (`idvendedor` ASC) VISIBLE,
   CONSTRAINT `fk_produto_cadastro_vendedor1`
