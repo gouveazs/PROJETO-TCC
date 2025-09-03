@@ -66,6 +66,8 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       overflow-y: auto; /* SCROLL HABILITADO */
       scrollbar-width: thin;
       scrollbar-color: #ccc transparent;
+      z-index: 1002;
+      transition: transform 0.3s ease;
     }
 
     .sidebar::-webkit-scrollbar {
@@ -172,6 +174,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       justify-content: space-between;
       padding: 0 30px;
       z-index: 1001;
+      transition: left 0.3s ease;
     }
 
     .topbar h1 {
@@ -200,11 +203,22 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       cursor: pointer;
     }
 
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      margin-right: 15px;
+    }
+
     .banner {
       position: relative;
       margin-left: 250px;
       margin-top: 70px;
       overflow: hidden;
+      transition: margin-left 0.3s ease;
     }
 
     .banner img {
@@ -220,6 +234,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       margin-left: 250px;
       padding: 30px;
       margin-top: 20px;
+      transition: margin-left 0.3s ease;
     }
 
     .section-header {
@@ -311,6 +326,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       color: #fff;
       text-align: center;
       padding: 15px;
+      transition: margin-left 0.3s ease;
     }
 
     /* Estilos para a seção Mais Destaques */
@@ -391,21 +407,180 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       background-color: #4a5a40;
     }
 
+    /* Estilos para a área de promoções */
+    .promo-area {
+      margin-left: 250px;
+      margin-top: 70px;
+      padding: 30px;
+      background-color: #F4F1EE;
+      transition: margin-left 0.3s ease;
+    }
+
+    .destaque-principal {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .destaque-livro {
+      flex: 2;
+      background: #ffffffff;
+      padding: 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 300px;
+    }
+
+    .produtos-laterais {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 250px;
+    }
+
+    .produto-lateral {
+      display: flex;
+      background: #ffffffff;
+      padding: 10px;
+      border-radius: 8px;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .produto-lateral img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-right: 10px;
+    }
+
+    .servicos {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin: 30px 0;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .servico {
+      text-align: center;
+      min-width: 180px;
+    }
+
+    .servico img {
+      height: 40px;
+    }
+
+    .cards-promocionais {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .card-promocional {
+      flex: 1;
+      border-radius: 15px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 300px;
+    }
+
+    .card-promocional.comunidades {
+      background-color: #5A6B50;
+    }
+
+    .card-promocional.promocao {
+      background-color: #5a4224;
+      color: white;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-promocional img {
+      height: 150px;
+      border-radius: 8px;
+    }
+
+    /* Media Queries para responsividade */
+    @media (max-width: 1400px) {
+      .cards-novidades, .cards-recomendacoes {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+
     @media (max-width: 1200px) {
       .cards-novidades, .cards-recomendacoes {
         grid-template-columns: repeat(4, 1fr);
       }
+      
+      .topbar h1 {
+        font-size: 1.3rem;
+      }
+      
+      .topbar input[type="text"] {
+        width: 200px;
+      }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
+      .cards-novidades, .cards-recomendacoes {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      
       .sidebar {
         width: 200px;
       }
-      .topbar, .banner, .main, .footer {
+      
+      .topbar, .banner, .main, .footer, .promo-area {
         margin-left: 200px;
       }
+      
+      .topbar {
+        left: 200px;
+        padding: 0 20px;
+      }
+    }
+
+    @media (max-width: 900px) {
       .cards-novidades, .cards-recomendacoes {
         grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .menu-toggle {
+        display: block;
+      }
+      
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      
+      .topbar, .banner, .main, .footer, .promo-area {
+        margin-left: 0;
+      }
+      
+      .topbar {
+        left: 0;
+      }
+      
+      .destaque-principal, .cards-promocionais {
+        flex-direction: column;
+      }
+      
+      .destaque-livro, .card-promocional {
+        max-width: 100%;
       }
       
       /* Responsividade para Mais Destaques */
@@ -427,12 +602,84 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       }
     }
 
-    @media (max-width: 576px) {
-      .sidebar {
-        display: none;
+    @media (max-width: 768px) {
+      .topbar {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 10px 15px;
       }
-      .topbar, .banner, .main, .footer {
-        margin-left: 0;
+      
+      .topbar h1 {
+        font-size: 1.2rem;
+        margin-right: 15px;
+      }
+      
+      .search-form {
+        order: 3;
+        width: 100%;
+        margin-top: 10px;
+      }
+      
+      .topbar input[type="text"] {
+        width: calc(100% - 100px);
+      }
+      
+      .servicos {
+        justify-content: center;
+      }
+      
+      .servico {
+        flex: 1;
+        min-width: 140px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .cards-novidades, .cards-recomendacoes {
+        grid-template-columns: 1fr;
+      }
+      
+      .card img {
+        height: 250px;
+      }
+      
+      .banner img {
+        height: 200px;
+      }
+      
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      
+      .produto-lateral {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .produto-lateral img {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+      
+      .destaque-livro {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .destaque-livro img {
+        margin-top: 15px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .topbar h1 {
+        font-size: 1rem;
+      }
+      
+      .menu-toggle {
+        font-size: 1.2rem;
       }
     }
   </style>
@@ -491,8 +738,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <div class="topbar">
-  <!--Arrumar essa imagem depois-->
-  <!--<img src="imgs/livrin.png" style="width:120px;">!-->
+  <button class="menu-toggle">☰</button>
   <h1>Entre Linhas - Sebo Moderna</h1>
   <form class="search-form" action="php/consultaFiltro/consultaFiltro.php" method="POST">
     <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
@@ -500,9 +746,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </form>
 </div>
 
-<div style="margin-left: 250px; margin-top: 70px; padding: 30px; background-color: #F4F1EE;">
-  <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-    <div style="flex: 2; background: #ffffffff; padding: 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
+<div class="promo-area">
+  <div class="destaque-principal">
+    <div class="destaque-livro">
       <div>
         <p style="color: #5a6b50; font-weight: bold; font-size: 1rem;">Livro de destaque</p>
         <h2 style="font-size: 2rem; font-weight: bold; margin: 10px 0; color: #5a4224;">Amor & azeitonas</h2>
@@ -511,23 +757,23 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </div>
       <img src="imgs/Amor e Azeitonas.jpg" alt="Livro Amor & Azeitonas" style="max-height: 180px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
     </div>
-    <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
-      <div style="display: flex; background: #ffffffff; padding: 10px; border-radius: 8px; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        <img src="imgs/divinosrivais.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
+    <div class="produtos-laterais">
+      <div class="produto-lateral">
+        <img src="imgs/divinosrivais.jpg" alt="Produto">
         <div>
           <p style="font-weight: bold; font-size: 0.9rem;">Divinos Rivais</p>
           <p style="color: #5a6b50;">R$ 86,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 95,00</span></p>
         </div>
       </div>
-      <div style="display: flex; background: #ffffffff; padding: 10px; border-radius: 8px; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        <img src="imgs/emrotadecolisao.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
+      <div class="produto-lateral">
+        <img src="imgs/emrotadecolisao.jpg" alt="Produto">
         <div>
           <p style="font-weight: bold; font-size: 0.9rem;">Em Rota De Colisão</p>
           <p style="color: #5a6b50;">R$ 80,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 86,00</span></p>
         </div>
       </div>
-      <div style="display: flex; background: #ffffffff; padding: 10px; border-radius: 8px; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        <img src="imgs/bibliotecadameianoite.jpg" alt="Produto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 10px;">
+      <div class="produto-lateral">
+        <img src="imgs/bibliotecadameianoite.jpg" alt="Produto">
         <div>
           <p style="font-weight: bold; font-size: 0.9rem;">A Biblioteca da Meia-Noite</p>
           <p style="color: #5a6b50;">R$ 98,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 120,00</span></p>
@@ -536,35 +782,35 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
   </div>
 
-  <div style="display: flex; justify-content: space-around; align-items: center; margin: 30px 0; flex-wrap: wrap;">
-    <div style="text-align: center;">
-      <img src="imgs/entrega-rapida.png" alt="Frete" style="height: 40px;">
+  <div class="servicos">
+    <div class="servico">
+      <img src="imgs/entrega-rapida.png" alt="Frete">
       <p>Frete grátis para pedidos <br><small>Acima de R$ 50</small></p>
     </div>
-    <div style="text-align: center;">
-      <img src="imgs/garantia-de-devolucao-de-dinheiro.png" alt="Garantia" style="height: 40px;">
+    <div class="servico">
+      <img src="imgs/garantia-de-devolucao-de-dinheiro.png" alt="Garantia">
       <p>Garantia de devolução do dinheiro<br><small>100% do seu dinheiro de volta</small></p>
     </div>
-    <div style="text-align: center;">
-      <img src="imgs/pagamento-com-cartao-de-credito.png" alt="Pagamento" style="height: 40px;">
+    <div class="servico">
+      <img src="imgs/pagamento-com-cartao-de-credito.png" alt="Pagamento">
       <p>Pagamento<br><small>Pix, Crédito e Débito</small></p>
     </div>
-    <div style="text-align: center;">
-      <img src="imgs/suporte-online.png" alt="Suporte" style="height: 40px;">
+    <div class="servico">
+      <img src="imgs/suporte-online.png" alt="Suporte">
       <p>Ajuda e Suporte<br><small>(11) 4002-8922</small></p>
     </div>
   </div>
 
-  <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-    <div style="flex: 1; background-color: #5A6B50; border-radius: 15px; padding: 20px; display: flex; align-items: center; justify-content: space-between;">
+  <div class="cards-promocionais">
+    <div class="card-promocional comunidades">
       <div>
         <h3 style="color: #ffffffff; font-size: 1.4rem;">Comunidades</h3>
         <p style="color: #ffffffff; font-size: 0.9rem;"> Visite nossas comunidades e participe dos chats online!</p>
         <a href="#" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
       </div>
-      <img src="imgs/comuni.jpg" alt="Card" style="height: 150px; border-radius: 8px;">
+      <img src="imgs/comuni.jpg" alt="Card">
     </div>
-    <div style="flex: 1; background-color: #5a4224; color: white; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div class="card-promocional promocao">
       <h2 style="font-size: 2rem;">PROMOÇÃO</h2>
       <p style="font-size: 1.2rem;">ATÉ <strong>40% OFF</strong></p>
     </div>
@@ -807,5 +1053,21 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <div class="footer">
     &copy; 2025 Entre Linhas - Todos os direitos reservados.
   </div>
+
+  <script>
+    // Menu toggle para dispositivos móveis
+    document.querySelector('.menu-toggle').addEventListener('click', function() {
+      document.querySelector('.sidebar').classList.toggle('active');
+    });
+    
+    // Fechar menu ao clicar em um link (em dispositivos móveis)
+    document.querySelectorAll('.sidebar a').forEach(link => {
+      link.addEventListener('click', function() {
+        if (window.innerWidth <= 900) {
+          document.querySelector('.sidebar').classList.remove('active');
+        }
+      });
+    });
+  </script>
 </body>
 </html>

@@ -1,11 +1,11 @@
 <?php
 
-$db = 2;
+$db = 1;
 
 if ( $db == 1) {
     $servername = "localhost";
     $username = "root";
-    $password = "root";
+    $password = "";
     $dbname = "banco2.0";
 } else {
     $servername = "localhost";
