@@ -54,7 +54,7 @@ if (!isset($_SESSION['nome_vendedor'])) {
       flex-direction: column;
       align-items: flex-start;
       padding-top: 20px;
-      overflow-y: auto; /* SCROLL HABILITADO */
+      overflow-y: auto;
       scrollbar-width: thin;
       scrollbar-color: #ccc transparent;
     } 
@@ -104,10 +104,6 @@ if (!isset($_SESSION['nome_vendedor'])) {
     .sidebar .user-info .tipo-usuario {
       font-size: 0.8rem;
       color: #ddd;
-    }
-
-    .sidebar .logo p {
-      font-weight: bold;
     }
 
     .sidebar nav {
@@ -243,6 +239,29 @@ if (!isset($_SESSION['nome_vendedor'])) {
       box-shadow: 0 0 5px var(--verde);
     }
 
+    /* Botão simples do input file */
+    input[type="file"]::file-selector-button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--verde);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      margin-right: 12px;
+    }
+
+    input[type="file"]::file-selector-button:hover {
+      background-color: #48603b;
+      transform: translateY(-1px);
+    }
+
+    input[type="file"]::file-selector-button:active {
+      background-color: #3b4e2f;
+      transform: scale(0.98);
+    }
+
     textarea {
       resize: vertical;
       min-height: 80px;
@@ -258,12 +277,18 @@ if (!isset($_SESSION['nome_vendedor'])) {
       font-size: 1.15rem;
       font-weight: 700;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.2s ease;
       margin-top: 20px;
     }
 
     input[type="submit"]:hover {
       background-color: #48603b;
+      transform: translateY(-2px);
+    }
+
+    input[type="submit"]:active {
+      background-color: #3b4e2f;
+      transform: scale(0.98);
     }
 
     @media (max-width: 768px) {
@@ -294,43 +319,6 @@ if (!isset($_SESSION['nome_vendedor'])) {
         width: 100%;
         text-align: left;
         margin-bottom: 6px;
-      }
-    }
-
-    /* Grid inferior */
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-
-    @media (max-width: 900px) {
-      body {
-        padding-left: 0; /* sidebar vira topo em telas pequenas */
-      }
-      .cards, .grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 200px;
-      }
-      .topbar, .banner, .main, .footer {
-        margin-left: 200px;
-      }
-      .cards-novidades, .cards-recomendacoes {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 576px) {
-      .sidebar {
-        display: none;
-      }
-      .topbar, .banner, .main, .footer {
-        margin-left: 0;
       }
     }
   </style>
@@ -370,7 +358,8 @@ if (!isset($_SESSION['nome_vendedor'])) {
       </ul>
     </nav>
   </div>
-    <div class="content-area">
+
+  <div class="content-area">
     <main class="conteudo">
         <h1>Cadastro de Produto</h1>
         <form action="../insercao/insercaoProduto.php" method="post" enctype="multipart/form-data">
@@ -457,6 +446,6 @@ if (!isset($_SESSION['nome_vendedor'])) {
         <input type="submit" value="Cadastrar">
         </form>
     </main>
-    </div>
+  </div>
 </body>
 </html>
