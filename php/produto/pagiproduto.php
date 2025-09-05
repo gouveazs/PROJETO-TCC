@@ -16,7 +16,7 @@ try {
         SELECT p.*, i.imagem, v.nome_completo, v.email
         FROM produto p
         LEFT JOIN imagens i ON i.idproduto = p.idproduto
-        LEFT JOIN cadastro_vendedor v ON v.idvendedor = p.idvendedor
+        LEFT JOIN vendedor v ON v.idvendedor = p.idvendedor
         WHERE p.idproduto = :id
         ORDER BY i.idimagens ASC
     ");

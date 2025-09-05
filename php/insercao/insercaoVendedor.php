@@ -10,7 +10,7 @@ $cpf = $_POST['cpf'];
 $cnpj = $_POST['cnpj'];
 
 // Verifica se já existe o nome ou email cadastrado
-$sqlCheck = "SELECT COUNT(*) FROM cadastro_vendedor WHERE nome_completo = :nome_completo OR email = :email";
+$sqlCheck = "SELECT COUNT(*) FROM vendedor WHERE nome_completo = :nome_completo OR email = :email";
 $stmtCheck = $conn->prepare($sqlCheck);
 $stmtCheck->bindParam(':nome_completo', $nome_completo);
 $stmtCheck->bindParam(':email', $email_vendedor);
@@ -29,7 +29,7 @@ if (isset($_FILES['foto_de_perfil']) && $_FILES['foto_de_perfil']['error'] == 0)
 }
 
 try {
-    $sql = "INSERT INTO cadastro_vendedor (nome_completo, data_nascimento, email, senha, cpf, cnpj, foto_de_perfil) VALUES 
+    $sql = "INSERT INTO vendedor (nome_completo, data_nascimento, email, senha, cpf, cnpj, foto_de_perfil) VALUES 
             (:nome_completo, :data_nascimento, :email, :senha, :cpf, :cnpj, :foto_de_perfil)";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':nome_completo', $nome_completo);

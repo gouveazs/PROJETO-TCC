@@ -8,9 +8,9 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
 include '../conexao.php';
 $stmt = $conn->prepare("SELECT * FROM produto");;
 $stmt = $conn->prepare("
-    SELECT produto.*, cadastro_vendedor.nome_completo
+    SELECT produto.*, vendedor.nome_completo
     FROM produto
-    JOIN cadastro_vendedor ON produto.idvendedor = cadastro_vendedor.idvendedor
+    JOIN vendedor ON produto.idvendedor = vendedor.idvendedor
 ");
 $stmt->execute();
 $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -374,7 +374,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <h1>Consulta de usuários</h1>
   <?php
       include '../conexao.php';
-      $stmt = $conn->query("SELECT * FROM cadastro_usuario");
+      $stmt = $conn->query("SELECT * FROM usuario");
       echo '<link rel="stylesheet" href="consulta.css">';
       echo '<table border="1">';
           echo "<tr>";
@@ -382,6 +382,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
               echo "<th>Nome</th>";
               echo "<th>Email</th>";
               echo "<th>Senha</th>";
+              echo "<th>Foto</th>";
           echo "</tr>"; 
       while ($row = $stmt->fetch()) {      
           echo "<tr>";
@@ -389,6 +390,12 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
               echo "<td>".$row['nome']."</td>";
               echo "<td>".$row['email']."</td>";
               echo "<td>".$row['senha']."</td>";
+              if (!empty($row['foto_de_perfil'])) {
+              $imgData = base64_encode($row['foto_de_perfil']);
+              echo '<td><img src="data:image/jpeg;base64,' . $imgData . '" width="100" height="auto"/></td>';
+              } else {
+                  echo "<td>Sem imagem</td>";
+              }
           echo "</tr>";          
           }
       echo '</table>';
@@ -396,7 +403,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <h1>Consulta de vendedores</h1>
   <?php  
       include '../conexao.php';
-      $stmt = $conn->query("SELECT * FROM cadastro_vendedor");
+      $stmt = $conn->query("SELECT * FROM vendedor");
       echo '';
       echo '<table border="1">';
           echo "<tr>";

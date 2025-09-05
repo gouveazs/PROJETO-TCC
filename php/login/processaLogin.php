@@ -6,7 +6,7 @@ $usuario = htmlspecialchars($_POST['usuario']);
 $senha = htmlspecialchars($_POST['senha']);
 
 try {
-    $stmt = $conn->prepare("SELECT * FROM cadastro_usuario WHERE nome = ? AND senha = ?");
+    $stmt = $conn->prepare("SELECT * FROM usuario WHERE nome = ? AND senha = ?");
     $stmt->execute([$usuario, $senha]);
     $usuario_db = $stmt->fetch(PDO::FETCH_ASSOC);
 

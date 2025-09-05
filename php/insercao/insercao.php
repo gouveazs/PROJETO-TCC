@@ -7,7 +7,7 @@ $email = $_POST['email'];
 $senha = $_POST['senha'];
 
 // verifica se ja existe o nome ou email cadastrado
-$sqlCheck = "SELECT COUNT(*) FROM cadastro_usuario WHERE nome = :nome OR email = :email";
+$sqlCheck = "SELECT COUNT(*) FROM usuario WHERE nome = :nome OR email = :email";
 $stmtCheck = $conn->prepare($sqlCheck);
 $stmtCheck->bindParam(':nome', $nome);
 $stmtCheck->bindParam(':email', $email);
@@ -26,7 +26,7 @@ if (isset($_FILES['foto_de_perfil']) && $_FILES['foto_de_perfil']['error'] == 0)
 }
 
 try {
-    $sql = "INSERT INTO cadastro_usuario (nome, email, senha, foto_de_perfil) VALUES (:nome, :email, :senha, :foto)";
+    $sql = "INSERT INTO usuario (nome, email, senha, foto_de_perfil) VALUES (:nome, :email, :senha, :foto)";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':nome', $nome);
     $stmt->bindParam(':email', $email);
@@ -35,7 +35,7 @@ try {
 
     $stmt->execute();
 
-    header("Location: ../login/login.php?sucesso=cadastro_usuario");
+    header("Location: ../login/login.php?sucesso=usuario");
     exit();
 
 } catch(PDOException $e) {

@@ -16,7 +16,7 @@ $stmt = $conn->prepare("
     v.nome_completo, 
     i.imagem
     FROM produto p
-    JOIN cadastro_vendedor v 
+    JOIN vendedor v 
         ON p.idvendedor = v.idvendedor
     LEFT JOIN imagens i 
         ON i.idproduto = p.idproduto 

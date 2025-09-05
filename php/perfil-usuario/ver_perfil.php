@@ -10,7 +10,7 @@ include '../conexao.php';
 
 $nome = $_SESSION['nome_usuario'];
 
-$stmt = $conn->prepare("SELECT * FROM cadastro_usuario WHERE nome = ?");
+$stmt = $conn->prepare("SELECT * FROM usuario WHERE nome = ?");
 $stmt->execute([$nome]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 

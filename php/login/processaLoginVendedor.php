@@ -7,7 +7,7 @@ $nome_completo = htmlspecialchars($_POST['nome_completo']);
 $senha = htmlspecialchars($_POST['senha']);
 
 try {
-    $stmt = $conn->prepare("SELECT * FROM cadastro_vendedor WHERE nome_completo = ? AND senha = ?");
+    $stmt = $conn->prepare("SELECT * FROM vendedor WHERE nome_completo = ? AND senha = ?");
     $stmt->execute([$nome_completo, $senha]);
     $vendedor_db = $stmt->fetch(PDO::FETCH_ASSOC);
 
