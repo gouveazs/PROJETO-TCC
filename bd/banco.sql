@@ -15,9 +15,9 @@ CREATE SCHEMA IF NOT EXISTS `banco2.0` DEFAULT CHARACTER SET utf8 ;
 USE `banco2.0` ;
 
 -- -----------------------------------------------------
--- Table `banco2.0`.`cadastro_usuario`
+-- Table `banco2.0`.`usuario`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `banco2.0`.`cadastro_usuario` (
+CREATE TABLE IF NOT EXISTS `banco2.0`.`usuario` (
   `idusuario` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NULL,
   `email` VARCHAR(45) NULL,
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `banco2.0`.`login_usuario` (
   INDEX `fk_login_usuario_cadastro_usuario_idx` (`idusuario` ASC) VISIBLE,
   CONSTRAINT `fk_login_usuario_cadastro_usuario`
     FOREIGN KEY (`idusuario`)
-    REFERENCES `banco2.0`.`cadastro_usuario` (`idusuario`)
+    REFERENCES `banco2.0`.`usuario` (`idusuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -65,16 +65,16 @@ CREATE TABLE IF NOT EXISTS `banco2.0`.`usuario_compra` (
   INDEX `fk_usuario_compra_cadastro_usuario1_idx` (`idusuario` ASC) VISIBLE,
   CONSTRAINT `fk_usuario_compra_cadastro_usuario1`
     FOREIGN KEY (`idusuario`)
-    REFERENCES `banco2.0`.`cadastro_usuario` (`idusuario`)
+    REFERENCES `banco2.0`.`usuario` (`idusuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `banco2.0`.`cadastro_vendedor`
+-- Table `banco2.0`.`vendedor`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `banco2.0`.`cadastro_vendedor` (
+CREATE TABLE IF NOT EXISTS `banco2.0`.`vendedor` (
   `idvendedor` INT NOT NULL AUTO_INCREMENT,
   `nome_completo` VARCHAR(45) NULL,
   `idade` INT NULL,
@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `banco2.0`.`produto` (
   INDEX `fk_produto_cadastro_vendedor1_idx` (`idvendedor` ASC) VISIBLE,
   CONSTRAINT `fk_produto_cadastro_vendedor1`
     FOREIGN KEY (`idvendedor`)
-    REFERENCES `banco2.0`.`cadastro_vendedor` (`idvendedor`)
+    REFERENCES `banco2.0`.`vendedor` (`idvendedor`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `banco2.0`.`pedido` (
   INDEX `fk_pedido_cadastro_usuario1_idx` (`idusuario` ASC) VISIBLE,
   CONSTRAINT `fk_pedido_cadastro_usuario1`
     FOREIGN KEY (`idusuario`)
-    REFERENCES `banco2.0`.`cadastro_usuario` (`idusuario`)
+    REFERENCES `banco2.0`.`usuario` (`idusuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -176,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `banco2.0`.`comunidades` (
   INDEX `fk_comunidades_cadastro_usuario1_idx` (`idusuario` ASC) VISIBLE,
   CONSTRAINT `fk_comunidades_cadastro_usuario1`
     FOREIGN KEY (`idusuario`)
-    REFERENCES `banco2.0`.`cadastro_usuario` (`idusuario`)
+    REFERENCES `banco2.0`.`usuario` (`idusuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -227,6 +227,53 @@ CREATE TABLE IF NOT EXISTS `banco2.0`.`imagens` (
   PRIMARY KEY (`idimagens`),
   INDEX `fk_imagens_produto1_idx` (`idproduto` ASC) VISIBLE,
   CONSTRAINT `fk_imagens_produto1`
+    FOREIGN KEY (`idproduto`)
+    REFERENCES `banco2.0`.`produto` (`idproduto`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `banco2.0`.`carrinho`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `banco2.0`.`carrinho` (
+  `idcarrinho` INT NOT NULL AUTO_INCREMENT,
+  `preco_unitario` DOUBLE(10,2) NULL,
+  `idproduto` INT NOT NULL,
+  `idusuario` INT NOT NULL,
+  PRIMARY KEY (`idcarrinho`),
+  INDEX `fk_carrinho_produto1_idx` (`idproduto` ASC) VISIBLE,
+  INDEX `fk_carrinho_cadastro_usuario1_idx` (`idusuario` ASC) VISIBLE,
+  CONSTRAINT `fk_carrinho_produto1`
+    FOREIGN KEY (`idproduto`)
+    REFERENCES `banco2.0`.`produto` (`idproduto`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_carrinho_cadastro_usuario1`
+    FOREIGN KEY (`idusuario`)
+    REFERENCES `banco2.0`.`usuario` (`idusuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `banco2.0`.`favoritos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `banco2.0`.`favoritos` (
+  `idfavoritos` INT NOT NULL AUTO_INCREMENT,
+  `idusuario` INT NOT NULL,
+  `idproduto` INT NOT NULL,
+  PRIMARY KEY (`idfavoritos`),
+  INDEX `fk_favoritos_usuario1_idx` (`idusuario` ASC) VISIBLE,
+  INDEX `fk_favoritos_produto1_idx` (`idproduto` ASC) VISIBLE,
+  CONSTRAINT `fk_favoritos_usuario1`
+    FOREIGN KEY (`idusuario`)
+    REFERENCES `banco2.0`.`usuario` (`idusuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_favoritos_produto1`
     FOREIGN KEY (`idproduto`)
     REFERENCES `banco2.0`.`produto` (`idproduto`)
     ON DELETE NO ACTION
