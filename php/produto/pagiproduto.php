@@ -9,7 +9,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
     die("Produto não informado.");
 }
 
-$idProduto = (int) $_GET['id'];
+$idproduto = (int) $_GET['id'];
 
 try {
     $stmt = $conn->prepare("
@@ -20,7 +20,7 @@ try {
         WHERE p.idproduto = :id
         ORDER BY i.idimagens ASC
     ");
-    $stmt->execute([':id' => $idProduto]);
+    $stmt->execute([':id' => $idproduto]);
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (!$resultados) {
@@ -997,6 +997,20 @@ try {
                         </div>
                         <div class="buy-option">
                             <a href="#"><i class="fas fa-gift"></i> Presentear</a>
+                        </div>
+                        <div class="buy-option">
+                            <?php
+                                if (!isset($_SESSION['idusuario'])) {
+                                    echo '<p><a href="../login/login.php">Faça login para adicionar aos favoritos</a></p>';
+                                } else {
+                                    $idproduto = $_GET['id']; // vindo da URL
+                                    echo '
+                                    <form method="post" action="../favoritos/adicionar_favoritos.php">
+                                        <input type="hidden" name="id_produto" value="'.$idproduto.'">
+                                        <button type="submit" class="btn-favorito">Adicionar aos Favoritos ❤️</button>
+                                    </form>';
+                                }
+                            ?>
                         </div>
                     </div>
                 </div>
