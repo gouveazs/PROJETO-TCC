@@ -7,7 +7,7 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
 $carrinho_itens = [
     [
         'id' => 1,
-        'imagem' => 'imgs/Extraordinário.jpg',
+        'imagem' => '../../imgs/Extraordinário.jpg',
         'titulo' => 'Extraordinário',
         'descricao' => 'Capa comum - Edição padrão, 3/janeiro 2013',
         'preco' => 42.29,
@@ -15,7 +15,7 @@ $carrinho_itens = [
     ],
     [
         'id' => 2,
-        'imagem' => 'imgs/A Menina que Roubava Livros.jpg',
+        'imagem' => '../../imgs/A Menina que Roubava Livros.jpg',
         'titulo' => 'A Menina que Roubava Livros',
         'descricao' => 'Capa comum - Edição padrão, 10 junho 2013',
         'preco' => 42.29,
@@ -23,7 +23,7 @@ $carrinho_itens = [
     ],
     [
         'id' => 3,
-        'imagem' => 'imgs/Alice no País das Maravilhas.jpg',
+        'imagem' => '../../imgs/alice.jpg',
         'titulo' => 'Alice no País das Maravilhas (Classic Edition)',
         'descricao' => 'Capa dura - 4 outubro 2019',
         'preco' => 48.93,
@@ -454,34 +454,33 @@ $total = $subtotal + $frete;
 
   <nav>
     <ul class="menu">
-      <li><a href="index.php"><img src="imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-      <li><a href="php/comunidades/comunidade.php"><img src="imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
-      <li><a href="#"><img src="imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
-      <li><a href="php/favoritos/favoritos.php"><img src="imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
-      <li><a href="php/carrinho/carrinho.php"><img src="imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
+      <li><a href="../../index.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
+      <li><a href="../comunidades/comunidade.php"><img src="../../imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
+      <li><a href="../destaques/destaques.php"><img src="../../imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
+      <li><a href="../favoritos/favoritos.php"><img src="../../imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
+      <li><a href="../carrinho/carrinho.php"><img src="../../imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
     </ul>
 
 
     <h3>Conta</h3>
     <ul class="account">
       <?php if (!$nome): ?>
-        <li><a href="php/login/login.php"><img src="imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
-        <li><a href="php/cadastro/cadastroUsuario.php"><img src="imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
-        <li><a href="php/cadastro/cadastroVendedor.php"><img src="imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
-        <li><a href="php/login/loginVendedor.php"><img src="imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
+        <li><a href="../login/login.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
+        <li><a href="../cadastro/cadastroUsuario.php"><img src="../../imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
+        <li><a href="../cadastro/cadastroVendedor.php"><img src="../../imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
+        <li><a href="../login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
       <?php else: ?>
-        <li><a href="php/perfil-usuario/ver_perfil.php"><img src="imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
+        <li><a href="../perfil-usuario/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
       <?php endif; ?>
 
       <?php if ($nome === 'adm'): ?>
-        <li><a href="php/consulta/consulta.php"><img src="imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
-        <li><a href="php/produto/pagiproduto.php"><img src="imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Pagina Produto</a></li>
-        <li><a href="php/consultaFiltro/busca.php"><img src="imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
-        <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
+        <li><a href="../consulta/consulta.php"><img src="../../imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
+        <li><a href="../consultaFiltro/busca.php"><img src="../../imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
+        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
       <?php endif; ?>
 
       <?php if ($nome): ?>
-        <li><a href="php/login/logout.php"><img src="imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
+        <li><a href="../login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
       <?php endif; ?>
     </ul>
   </nav>
@@ -489,7 +488,7 @@ $total = $subtotal + $frete;
 </div>
 
 <div class="topbar">
-  <h1>Entre Linhas - Livraria Moderna</h1>
+  <h1>Entre Linhas - Sebo Moderna</h1>
   <form class="search-form" action="php/consultaFiltro/consultaFiltro.php" method="POST">
     <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
     <input type="submit" value="Buscar">
@@ -497,10 +496,6 @@ $total = $subtotal + $frete;
 </div>
 
 <div class="main">
-  <div class="breadcrumb">
-    <a href="index.php">Home</a> <span>/</span> <a href="#">Store</a> <span>/</span> <a href="#">Cart</a>
-  </div>
-
   <h1 class="page-title">Meu Carrinho</h1>
 
   <div class="checkout-steps">
@@ -541,7 +536,7 @@ $total = $subtotal + $frete;
         </div>
       <?php endforeach; ?>
       
-      <a href="index.php" class="continue-shopping">
+      <a href="../../index.php" class="continue-shopping">
         ← Continuar comprando
       </a>
     </div>

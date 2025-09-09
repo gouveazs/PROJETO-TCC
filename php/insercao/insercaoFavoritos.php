@@ -10,21 +10,21 @@ if (!isset($_SESSION['idusuario'])) {
 $idusuario = $_SESSION['idusuario'];
 $idproduto = $_POST['idproduto'];
 
+if (empty($idproduto)) {
+    die("Produto não informado.");
+}
+
 try {
     $sql = "INSERT INTO favoritos (idusuario, idproduto) VALUES (:idusuario, :idproduto)";
     $stmt = $conn->prepare($sql);
-    $stmt->execute([
-        ':idusuario' => $idusuario,
-        ':idproduto' => $idproduto
-    ]);
+    $stmt->bindParam(':idusuario', $idusuario);
+    $stmt->bindParam(':idproduto', $idproduto);
+    $stmt->execute();
 
-    header("Location: produto.php?id=$idproduto&msg=favorito_adicionado");
+    header("Location: ../produto/pagiproduto.php?id=$idproduto");
     exit();
 
 } catch (PDOException $e) {
-    if ($e->getCode() == 23000) { // entrada duplicada
-        header("Location: ../../index.php");
-    } else {
-        die("Erro: " . $e->getMessage());
-    }
+    echo "Erro ao inserir: " . $e->getMessage();
 }
+?>
