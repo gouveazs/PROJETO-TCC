@@ -394,9 +394,34 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <!-- Título alterado de "Seus Livros Favoritos" para "Nossos Livros" -->
   <div style="display: flex; gap: 30px; flex-wrap: wrap;">
     <div style="flex: 2; background: #ffffff; padding: 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
-      <h2>Nossos Livros</h2>
+      <h2>Seus Livros Favoritos</h2>
     </div>
   </div>
+
+<!-- Botão quadrado marrom com imagem e texto -->
+<div style="margin-top: 30px; text-align: center;">
+  <a href="../destaques/destaques.php" 
+     style="display: inline-block; 
+            width: 150px; 
+            height: 150px; 
+            background-color: #5a4224; 
+            color: #fff; 
+            font-weight: bold; 
+            font-size: 0.95rem; 
+            border-radius: 10px; 
+            text-decoration: none; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px;">
+    <img src="../../imgs/book.png" alt="Adicionar Livro" style="width:50px; height:50px;">
+    Adicionar Livro
+  </a>
+</div>
+
+
+
 
   <!-- Cards Destaques e Carrinho lado a lado -->
   <div style="display: flex; gap: 30px; flex-wrap: wrap; margin-top: 30px;">
@@ -440,7 +465,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <div class="footer">
-  <p>Todos os direitos reservados</p>
+&copy; 2025 Entre Linhas - Todos os direitos reservados.
 </div>
 </body>
 </html>
