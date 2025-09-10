@@ -243,23 +243,36 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
       align-items: center;
     }
 
-    .comunidade-box img {
-      width: 180px;
-      height: 130px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin-right: 20px;
-    }
+    .comunidade-box {
+  display: flex;
+  background-color: var(--marrom);
+  border-radius: 10px;
+  padding: 20px;
+  color: white; /* textos brancos */
+  margin-bottom: 30px;
+  align-items: flex-start; /* textos mais para cima */
+}
 
-    .comunidade-box .descricao h3 {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-    }
+.comunidade-box img {
+  width: 180px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-right: 20px;
+}
 
-    .comunidade-box .descricao p {
-      font-size: 1rem;
-      line-height: 1.4;
-    }
+.comunidade-box .descricao h3 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  color: #fff; /* título branco */
+}
+
+.comunidade-box .descricao p {
+  font-size: 1rem;
+  line-height: 1.4;
+  color: #fff; /* descrição branca */
+  margin-top: 0; /* tira espaço extra acima */
+}
 
     .footer {
       margin-left: 250px;
@@ -327,7 +340,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
 
   <!-- Topo -->
   <div class="topbar">
-    <h1>Entre Linhas - Chats Online</h1>
+    <h1>Entre Linhas - Chats</h1>
     <div class="search-box">
       <input type="text" placeholder="Pesquisar tags, outros...">
       <img src="../../imgs/lupa.png" alt="Buscar">
@@ -350,19 +363,27 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
 
   <!-- Conteúdo -->
   <div class="content">
-    <h2>Bem vindo, conheça nossas comunidades!</h2>
-    <p>Faça parte de bate-papos sobre seus livros preferidos</p>
-
-    <div class="comunidade-box">
-      <img src="../../imgs/iconromance.jpg" alt="Ficção Científica">
-      <div class="descricao">
-        <h3>Descrição</h3>
-        <p>
-          Neste canto digital onde o tempo dobra e as realidades se entrelaçam, mentes inquietas se reúnem para tecer o futuro com palavras. <br><br>
-          Entre mensagens que viajam mais rápido que a luz, exploramos juntos os enigmas dos multiversos, os segredos das civilizações estelares e os dilemas éticos das inteligências artificiais.
-        </p>
-      </div>
+     <!-- Conteúdo Principal -->
+  <div class="main-content">
+    <div class="welcome-section">
+      <h2>Bem-vindo às Comunidades</h2>
+      <p>Conecte-se com outros leitores, compartilhe suas opiniões e descubra novos livros através das nossas comunidades temáticas.</p>
     </div>
+    
+    <!-- O conteúdo das comunidades será adicionado aqui posteriormente -->
+  </div>
+
+  <div class="comunidade-box">
+  <img src="../../imgs/iconromance.jpg" alt="Ficção Científica">
+  <div class="descricao">
+    <h3>Descrição</h3>
+    <p>
+      Neste canto digital onde o tempo dobra e as realidades se entrelaçam, mentes inquietas se reúnem para tecer o futuro com palavras. <br><br>
+      Entre mensagens que viajam mais rápido que a luz, exploramos juntos os enigmas dos multiversos, os segredos das civilizações estelares e os dilemas éticos das inteligências artificiais.
+    </p>
+  </div>
+</div>
+
 
     <?php while ($com = $result->fetch(PDO::FETCH_ASSOC)): ?>
       <div class="comunidade-box">

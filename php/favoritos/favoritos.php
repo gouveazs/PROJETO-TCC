@@ -393,9 +393,10 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <!-- Título alterado de "Seus Livros Favoritos" para "Nossos Livros" -->
   <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-    <div style="flex: 2; background: #ffffff; padding: 20px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
-      <h2>Seus Livros Favoritos</h2>
-    </div>
+   <!-- Novidades -->
+<div class="section-header">
+  <h2>Seus Livros Favoritos</h2> 
+</div>
   </div>
 
 <!-- Botão quadrado marrom com imagem e texto -->
