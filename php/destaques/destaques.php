@@ -154,7 +154,30 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       font-size: 1.6rem;
     }
 
-    /* Barra de categorias (NAVBAR ADICIONADA) */
+    /* Barra de busca - Estilo corrigido */
+    .search-form {
+      display: flex;
+      align-items: center;
+    }
+    
+    .topbar input[type="text"] {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 20px 0 0 20px;
+      width: 250px;
+      font-size: 0.9rem;
+    }
+    
+    .topbar input[type="submit"] {
+      padding: 10px 15px;
+      background: var(--verde);
+      color: white;
+      border: none;
+      border-radius: 0 20px 20px 0;
+      cursor: pointer;
+    }
+
+    /* Barra de categorias */
     .categorias-barra {
       margin-left: 250px;
       margin-top: 70px;
@@ -203,12 +226,29 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       margin: 0 auto;
     }
 
+    /* Estilo para a seção de autores */
+    .autores-section {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .autores-info {
+      font-style: italic;
+      color: var(--marrom);
+      font-size: 1.2rem;
+    }
+
     .footer {
       margin-left: 250px;
       background-color: var(--marrom);
       color: white;
       text-align: center;
       padding: 15px;
+      margin-top: auto;
     }
 
     @media (max-width: 768px) {
@@ -222,19 +262,32 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       
       .topbar {
         padding: 0 20px;
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
       }
       
       .topbar h1 {
         font-size: 1.3rem;
+        margin-bottom: 10px;
       }
 
       .categorias-barra {
-        margin-top: 70px;
+        margin-top: 120px; /* Ajustado para a topbar maior */
         padding: 10px 20px;
       }
 
       .main-content {
-        margin-top: 140px; /* Ajuste para versão mobile */
+        margin-top: 180px; /* Ajuste para versão mobile */
+        padding: 20px;
+      }
+
+      .search-form {
+        width: 100%;
+      }
+      
+      .topbar input[type="text"] {
+        width: calc(100% - 100px);
       }
     }
   </style>
@@ -288,9 +341,13 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
   <!-- Topo -->
   <div class="topbar">
     <h1>Entre Linhas - Destaques</h1>
+    <form class="search-form" action="../consultaFiltro/consultaFiltro.php" method="POST">
+      <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
+      <input type="submit" value="Buscar">
+    </form>
   </div>
 
-  <!-- Barra de categorias (NAVBAR ADICIONADA) -->
+  <!-- Barra de categorias -->
   <div class="categorias-barra">
     <a href="#">Terror</a>
     <a href="#">Suspense</a>
@@ -304,10 +361,8 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
 
   <!-- Conteúdo Principal -->
   <div class="main-content">
-    <div class="welcome-section">
-      <h2>Bem-vindo aos Destaques Entre Linhas</h2>
-      <p>Descubra os livros mais populares, as comunidades em alta e os lançamentos mais aguardados em nossa seleção especial de destaques.</p>
-    </div>
+
+   
     
     <!-- O conteúdo dos destaques será adicionado aqui posteriormente -->
   </div>
