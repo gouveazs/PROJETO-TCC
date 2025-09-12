@@ -9,7 +9,7 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Comunidades - Entre Linhas</title>
+  <title>Destaques - Entre Linhas</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -154,9 +154,33 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       font-size: 1.6rem;
     }
 
-    .main-content {
+    /* Barra de categorias (NAVBAR ADICIONADA) */
+    .categorias-barra {
       margin-left: 250px;
       margin-top: 70px;
+      background-color: #9a8c7c;
+      padding: 10px 40px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .categorias-barra a {
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+
+    .categorias-barra a:hover {
+      background-color: var(--marrom);
+    }
+
+    .main-content {
+      margin-left: 250px;
+      margin-top: 130px; /* Aumentado para acomodar a navbar de categorias */
       padding: 40px;
       flex: 1;
     }
@@ -192,7 +216,7 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
         display: none;
       }
 
-      .topbar, .main-content, .footer {
+      .topbar, .categorias-barra, .main-content, .footer {
         margin-left: 0;
       }
       
@@ -202,6 +226,15 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       
       .topbar h1 {
         font-size: 1.3rem;
+      }
+
+      .categorias-barra {
+        margin-top: 70px;
+        padding: 10px 20px;
+      }
+
+      .main-content {
+        margin-top: 140px; /* Ajuste para versão mobile */
       }
     }
   </style>
@@ -254,17 +287,29 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
 
   <!-- Topo -->
   <div class="topbar">
-    <h1>Entre Linhas - Comunidades</h1>
+    <h1>Entre Linhas - Destaques</h1>
+  </div>
+
+  <!-- Barra de categorias (NAVBAR ADICIONADA) -->
+  <div class="categorias-barra">
+    <a href="#">Terror</a>
+    <a href="#">Suspense</a>
+    <a href="#">Romance</a>
+    <a href="#">Fantasia</a>
+    <a href="#">Biográfico</a>
+    <a href="#">Ficção Científica</a>
+    <a href="#">Comédia</a>
+    <a href="#">Drama</a>
   </div>
 
   <!-- Conteúdo Principal -->
   <div class="main-content">
     <div class="welcome-section">
-      <h2>Bem-vindo às Comunidades Entre Linhas</h2>
-      <p>Conecte-se com outros leitores, compartilhe suas opiniões e descubra novos livros através das nossas comunidades temáticas.</p>
+      <h2>Bem-vindo aos Destaques Entre Linhas</h2>
+      <p>Descubra os livros mais populares, as comunidades em alta e os lançamentos mais aguardados em nossa seleção especial de destaques.</p>
     </div>
     
-    <!-- O conteúdo das comunidades será adicionado aqui posteriormente -->
+    <!-- O conteúdo dos destaques será adicionado aqui posteriormente -->
   </div>
 
   <div class="footer">
