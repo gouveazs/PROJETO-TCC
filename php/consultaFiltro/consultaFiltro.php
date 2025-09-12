@@ -25,9 +25,9 @@ try {
     $stmt->bindValue(':busca', "%$busca%");
     $stmt->execute();
     $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        echo "Erro: " . $e->getMessage();
-    }
+} catch (PDOException $e) {
+    echo "Erro: " . $e->getMessage();
+}
 
 $conn = null;
 ?>
@@ -513,27 +513,33 @@ $conn = null;
 
 <!-- produtos do banco -->
 <div class="section-header">
-    <h2>Resultados para sua busca: <?php $busca ?></h2>
+    <h2>Resultados para sua busca: <?= htmlspecialchars($busca) ?></h2>
     <a href="#" class="ver-mais">Ver mais</a>
 </div>
 
 <div class="cards cards-novidades">
-  <?php foreach ($produtos as $produto): ?>
-    <a href="../produto/pagiproduto.php?id=<?= $produto['idproduto'] ?>" class="card-link">
-      <div class="card">
-        <?php if (!empty($produto['imagem'])): ?>
-          <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
-        <?php else: ?>
-          <img src="imgs/usuario.jpg" alt="Foto de Perfil">
-        <?php endif; ?>
-        <div class="info">
-          <h3><?= htmlspecialchars($produto['nome']) ?></h3>
-          <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
-          <div class="stars">★★★★★</div>
+  <?php if (empty($produtos)): ?>
+    <p style="font-size: 1.2em; color: #a00; margin: 30px;">
+      Sem resultados para "<?= htmlspecialchars($busca) ?>".
+    </p>
+  <?php else: ?>
+    <?php foreach ($produtos as $produto): ?>
+      <a href="../produto/pagiproduto.php?id=<?= $produto['idproduto'] ?>" class="card-link">
+        <div class="card">
+          <?php if (!empty($produto['imagem'])): ?>
+            <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+          <?php else: ?>
+            <img src="imgs/usuario.jpg" alt="Foto de Perfil">
+          <?php endif; ?>
+          <div class="info">
+            <h3><?= htmlspecialchars($produto['nome']) ?></h3>
+            <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+            <div class="stars">★★★★★</div>
+          </div>
         </div>
-      </div>
-    </a>
-  <?php endforeach; ?>
+      </a>
+    <?php endforeach; ?>
+  <?php endif; ?>
 </div>
 
 </div>

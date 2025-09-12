@@ -439,7 +439,7 @@ $total = $subtotal + $frete;
       <?php if ($foto_de_perfil): ?>
       <img src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>">
       <?php else: ?>
-        <img src="imgs/usuario.jpg" alt="Foto de Perfil">
+        <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
       <?php endif; ?>
       <div class="user-info">
         <?php if (!$nome): ?>
@@ -489,7 +489,7 @@ $total = $subtotal + $frete;
 
 <div class="topbar">
   <h1>Entre Linhas - Sebo Moderna</h1>
-  <form class="search-form" action="php/consultaFiltro/consultaFiltro.php" method="POST">
+  <form class="search-form" action="../consultaFiltro/consultaFiltro.php" method="POST">
     <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
     <input type="submit" value="Buscar">
   </form>

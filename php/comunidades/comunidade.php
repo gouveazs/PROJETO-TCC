@@ -34,19 +34,19 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
     }
 
     .sidebar {
-    position: fixed;
-    top: 0; left: 0;
-    width: 250px;
-    height: 100vh;
-    background-color: var(--verde);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding-top: 20px;
-    overflow-y: auto; /* SCROLL HABILITADO */
-    scrollbar-width: thin;
-    scrollbar-color: #ccc transparent;
+      position: fixed;
+      top: 0; left: 0;
+      width: 250px;
+      height: 100vh;
+      background-color: var(--verde);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding-top: 20px;
+      overflow-y: auto; /* SCROLL HABILITADO */
+      scrollbar-width: thin;
+      scrollbar-color: #ccc transparent;
     }
 
     .sidebar::-webkit-scrollbar {
@@ -72,29 +72,29 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
     }
 
     .sidebar .logo img {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-right: 15px;
-      }
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 15px;
+    }
 
     .sidebar .user-info {
-        display: flex;
-        flex-direction: column;
-        line-height: 1.2;
-      }
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
 
     .sidebar .user-info .nome-usuario {
-        font-weight: bold;
-        font-size: 0.95rem; 
-        color: #fff;
-      }
+      font-weight: bold;
+      font-size: 0.95rem; 
+      color: #fff;
+    }
 
     .sidebar .user-info .tipo-usuario {
-        font-size: 0.8rem;
-        color: #ddd;
-      }
+      font-size: 0.8rem;
+      color: #ddd;
+    }
 
 
     .sidebar .logo p {
@@ -244,35 +244,35 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
     }
 
     .comunidade-box {
-  display: flex;
-  background-color: var(--marrom);
-  border-radius: 10px;
-  padding: 20px;
-  color: white; /* textos brancos */
-  margin-bottom: 30px;
-  align-items: flex-start; /* textos mais para cima */
-}
+      display: flex;
+      background-color: var(--marrom);
+      border-radius: 10px;
+      padding: 20px;
+      color: white; /* textos brancos */
+      margin-bottom: 30px;
+      align-items: flex-start; /* textos mais para cima */
+    }
 
-.comunidade-box img {
-  width: 180px;
-  height: 130px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-right: 20px;
-}
+    .comunidade-box img {
+      width: 180px;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-right: 20px;
+    }
 
-.comunidade-box .descricao h3 {
-  font-size: 1.2rem;
-  margin-bottom: 8px;
-  color: #fff; /* título branco */
-}
+    .comunidade-box .descricao h3 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      color: #fff; /* título branco */
+    }
 
-.comunidade-box .descricao p {
-  font-size: 1rem;
-  line-height: 1.4;
-  color: #fff; /* descrição branca */
-  margin-top: 0; /* tira espaço extra acima */
-}
+    .comunidade-box .descricao p {
+      font-size: 1rem;
+      line-height: 1.4;
+      color: #fff; /* descrição branca */
+      margin-top: 0; /* tira espaço extra acima */
+    }
 
     .footer {
       margin-left: 250px;
@@ -309,9 +309,9 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
       <ul class="menu">
         <li><a href="../../index.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
         <li><a href="comunidade.php"><img src="../../imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
-        <li><a href="#"><img src="../../imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
-        <li><a href="php/favoritos/favoritos.php"><img src="../../imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
-        <li><a href="#"><img src="../../imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
+        <li><a href="../destaques/destaques.php"><img src="../../imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
+        <li><a href="../favoritos/favoritos.php"><img src="../../imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
+        <li><a href="../carrinho/carrinho.php"><img src="../../imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
       </ul>
 
       <h3>Conta</h3>

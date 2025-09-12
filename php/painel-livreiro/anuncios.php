@@ -322,7 +322,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
       <?php endif; ?>
       <div class="user-info">
-        <p class="nome-usuario"><?= htmlspecialchars($nome_vendedor ?? 'Entre ou crie sua conta'); ?></p>
+        <p class="nome-usuario"><?= htmlspecialchars($nome_vendedor); ?></p>
       </div>
     </div>
 
@@ -362,7 +362,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
     <?php endif; ?>
     <div class="header-text">
-      <h1>Bem-vindo, <?= htmlspecialchars($nome_vendedor ?? 'Usuário') ?></h1>
+      <h1>Bem-vindo, <?= htmlspecialchars($nome_vendedor) ?></h1>
       <p>Acompanhe seu desempenho como vendedor</p>
     </div>
   </div>
