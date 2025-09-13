@@ -15,18 +15,24 @@ $idvendedor = isset($_SESSION['id_vendedor']) ? $_SESSION['id_vendedor'] : null;
 if (!$idvendedor) {
     die("Vendedor não está logado.");
 }
-$categoria = $_POST['categoria'];
+$idcategoria = $_POST['idcategoria'];
 $isbn = $_POST['isbn'];
 $dimensoes = $_POST['dimensoes'];
 $idioma = $_POST['idioma'];
 $estado_livro = $_POST['estado_livro'];
+$paginas_faltando = $_POST['paginas_faltando'];
+$folhas_amareladas = $_POST['folhas_amareladas'];
+$paginas_rasgadas = $_POST['paginas_rasgadas'];
+$anotacoes = $_POST['anotacoes'];
+$lombada_danificada = $_POST['lombada_danificada'];
+$capa_danificada = $_POST['capa_danificada'];
 $estado_detalhado = $_POST['estado_detalhado'];
 
 try {
     $sql = "INSERT INTO produto 
-        (nome, numero_paginas, editora, autor, classificacao_etaria, data_publicacao, preco, quantidade, descricao, idvendedor, categoria, isbn, dimensoes, idioma, estado_livro, estado_detalhado) 
+        (nome, numero_paginas, editora, autor, classificacao_etaria, data_publicacao, preco, quantidade, descricao, idvendedor, idcategoria, isbn, dimensoes, idioma, estado_livro, estado_detalhado, paginas_faltando, folhas_amareladas, paginas_rasgadas, anotacoes, lombada_danificada, capa_danificada) 
         VALUES 
-        (:nome, :num_paginas, :editora, :autor, :classificacao, :data_publicacao, :preco, :quantidade, :descricao, :idvendedor, :categoria, :isbn, :dimensoes, :idioma, :estado_livro, :estado_detalhado)";
+        (:nome, :num_paginas, :editora, :autor, :classificacao, :data_publicacao, :preco, :quantidade, :descricao, :idvendedor, :idcategoria, :isbn, :dimensoes, :idioma, :estado_livro, :estado_detalhado, :paginas_faltando, :folhas_amareladas, :paginas_rasgadas, :anotacoes, :lombada_danificada, :capa_danificada)";
     
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':nome', $nome);
@@ -39,12 +45,19 @@ try {
     $stmt->bindParam(':quantidade', $quantidade);
     $stmt->bindParam(':descricao', $descricao);
     $stmt->bindParam(':idvendedor', $idvendedor, PDO::PARAM_INT);
-    $stmt->bindParam(':categoria', $categoria);
+    $stmt->bindParam(':idcategoria', $idcategoria);
     $stmt->bindParam(':isbn', $isbn);
     $stmt->bindParam(':dimensoes', $dimensoes);
     $stmt->bindParam(':idioma', $idioma);
     $stmt->bindParam(':estado_livro', $estado_livro);
-    $stmt->bindParam(':estado_detalhado', $estado_detalhado);      
+    $stmt->bindParam(':estado_detalhado', $estado_detalhado);    
+    $stmt->bindParam(':paginas_faltando', $paginas_faltando);
+    $stmt->bindParam(':folhas_amareladas', $folhas_amareladas);
+    $stmt->bindParam(':paginas_rasgadas', $paginas_rasgadas);
+    $stmt->bindParam(':anotacoes', $anotacoes);
+    $stmt->bindParam(':lombada_danificada', $lombada_danificada);
+    $stmt->bindParam(':capa_danificada', $capa_danificada);
+    
     $stmt->execute();
     $idproduto = $conn->lastInsertId();
 

@@ -7,6 +7,14 @@ if (!isset($_SESSION['nome_vendedor'])) {
   header('Location: ../login/loginVendedor.php');
   exit;
 }
+
+// puxa categorias do banco
+include '../conexao.php';
+$categorias = [];
+$stmt = $conn->query("SELECT * FROM categoria");
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $categorias[] = $row;
+}
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +22,7 @@ if (!isset($_SESSION['nome_vendedor'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastro de Produto</title>
+  <title>Cadastro de livro - Entre Linhas</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
@@ -361,16 +369,21 @@ if (!isset($_SESSION['nome_vendedor'])) {
 
   <div class="content-area">
     <main class="conteudo">
-        <h1>Cadastro de Produto</h1>
+        <h1>Cadastre seu livro para venda:</h1>
         <form action="../insercao/insercaoProduto.php" method="post" enctype="multipart/form-data">
         <div class="form-group">
-            <label for="nome">Nome do produto:</label>
+            <label for="nome">Título:</label>
             <input type="text" id="nome" name="nome" required>
         </div>
 
         <div class="form-group">
-            <label for="numero_paginas">Número de páginas:</label>
-            <input type="number" id="numero_paginas" name="numero_paginas" min="1" required>
+            <label for="autor">Autor:</label>
+            <input type="text" id="autor" name="autor" required>
+        </div>
+
+        <div class="form-group">
+            <label for="descricao">Sinopse:</label>
+            <textarea id="descricao" name="descricao" rows="4" required></textarea>
         </div>
 
         <div class="form-group">
@@ -379,8 +392,8 @@ if (!isset($_SESSION['nome_vendedor'])) {
         </div>
 
         <div class="form-group">
-            <label for="autor">Autor:</label>
-            <input type="text" id="autor" name="autor" required>
+            <label for="numero_paginas">Número de páginas:</label>
+            <input type="number" id="numero_paginas" name="numero_paginas" min="1" required>
         </div>
 
         <div class="form-group">
@@ -399,17 +412,22 @@ if (!isset($_SESSION['nome_vendedor'])) {
         </div>
 
         <div class="form-group">
-            <label for="categoria">Categoria:</label>
-            <input type="text" id="categoria" name="categoria" required>
+          <label for="categoria">Categoria:</label>
+          <select name="idcategoria" required>
+            <option value="">Selecione a categoria</option>
+              <?php foreach($categorias as $categoria): ?>
+                <option value="<?= $categoria['idcategoria'] ?>"><?= htmlspecialchars($categoria['nome']) ?></option>
+              <?php endforeach; ?>
+          </select>
         </div>
 
         <div class="form-group">
-            <label for="preco">Preço (R$):</label>
+            <label for="preco">Preço de venda (R$):</label>
             <input type="number" id="preco" name="preco" step="0.01" min="0" required>
         </div>
 
         <div class="form-group">
-            <label for="quantidade">Quantidade em estoque:</label>
+            <label for="quantidade">Quantidade:</label>
             <input type="number" id="quantidade" name="quantidade" min="0" required>
         </div>
 
@@ -424,18 +442,72 @@ if (!isset($_SESSION['nome_vendedor'])) {
         </div>
 
         <div class="form-group">
-            <label for="estado_livro">Estado do livro:</label>
-            <input type="text" id="estado_livro" name="estado_livro" required>
+            <label>Estado do livro:</label>
+            <select name="estado_livro" required>
+              <option value="novo">Novo</option>
+              <option value="usado">Usado</option>
+            </select>
         </div>
+
+        <div id="detalhes-usado" style="display:none;">
+          <div class="form-group">
+              <label for="paginas_faltando">Tem páginas faltando?</label>
+              <select id="paginas_faltando" name="paginas_faltando">
+                  <option value="">Selecione</option>
+                  <option value="nao">Não</option>
+                  <option value="sim">Sim</option>
+              </select>
+          </div>
+
+          <div class="form-group">
+              <label for="paginas_rasgadas">Possui páginas rasgadas?</label>
+              <select id="paginas_rasgadas" name="paginas_rasgadas">
+                  <option value="">Selecione</option>
+                  <option value="nao">Não</option>
+                  <option value="sim">Sim</option>
+              </select>
+          </div>
+
+          <div class="form-group">
+              <label for="folhas_amareladas">As páginas estão amareladas?</label>
+              <select id="folhas_amareladas" name="folhas_amareladas">
+                  <option value="">Selecione</option>
+                  <option value="nao">Não</option>
+                  <option value="sim">Sim</option>
+              </select>
+          </div>
+
+          <div class="form-group">
+              <label for="anotacoes">Possui anotações/rabiscos?</label>
+              <select id="anotacoes" name="anotacoes">
+                  <option value="">Selecione</option>
+                  <option value="nao">Não</option>
+                  <option value="sim">Sim</option>
+              </select>
+          </div>
+
+          <div class="form-group">
+              <label for="lombada_danificada">A lombada está danificada?</label>
+              <select id="lombada_danificada" name="lombada_danificada">
+                  <option value="">Selecione</option>
+                  <option value="nao">Não</option>
+                  <option value="sim">Sim</option>
+              </select>
+          </div>
+
+          <div class="form-group">
+              <label for="capa_danificada">A capa está danificada?</label>
+              <select id="capa_danificada" name="capa_danificada">
+                  <option value="">Selecione</option>
+                  <option value="nao">Não</option>
+                  <option value="sim">Sim</option>
+              </select>
+          </div>
+      </div>
 
         <div class="form-group">
             <label for="estado_detalhado">Descrição do estado:</label>
             <textarea id="estado_detalhado" name="estado_detalhado" rows="4" required></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="descricao">Descrição:</label>
-            <textarea id="descricao" name="descricao" rows="4" required></textarea>
         </div>
 
         <div class="form-group">
@@ -447,5 +519,22 @@ if (!isset($_SESSION['nome_vendedor'])) {
         </form>
     </main>
   </div>
+  <script>
+    document.getElementsByName('estado_livro')[0].addEventListener('change', function() {
+        var usadoDiv = document.getElementById('detalhes-usado');
+        if(this.value === 'usado') {
+            usadoDiv.style.display = 'block';
+            // Se quiser tornar os campos obrigatórios somente quando 'usado':
+            usadoDiv.querySelectorAll('select').forEach(function(el) {
+                el.required = true;
+            });
+        } else {
+            usadoDiv.style.display = 'none';
+            usadoDiv.querySelectorAll('select').forEach(function(el) {
+                el.required = false;
+            });
+        }
+    });
+  </script>
 </body>
 </html>

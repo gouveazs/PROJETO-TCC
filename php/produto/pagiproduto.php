@@ -13,24 +13,22 @@ $idproduto = (int) $_GET['id'];
 
 try {
     $stmt = $conn->prepare("
-        SELECT p.*, i.imagem, v.nome_completo, v.email
-        FROM produto p
-        LEFT JOIN imagens i ON i.idproduto = p.idproduto
-        LEFT JOIN vendedor v ON v.idvendedor = p.idvendedor
-        WHERE p.idproduto = :id
-        ORDER BY i.idimagens ASC
+    SELECT p.*, i.imagem, v.nome_completo, v.email, c.nome AS nome_categoria
+    FROM produto p
+    LEFT JOIN imagens i ON i.idproduto = p.idproduto
+    LEFT JOIN vendedor v ON v.idvendedor = p.idvendedor
+    LEFT JOIN categoria c ON c.idcategoria = p.idcategoria
+    WHERE p.idproduto = :id
+    ORDER BY i.idimagens ASC
     ");
     $stmt->execute([':id' => $idproduto]);
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (!$resultados) {
-        die("Produto não encontrado.");
+        die('Produto não encontrado.');
     }
 
-    // Dados do produto
     $produto = $resultados[0];
-
-    // Array de imagens (somente os dados)
     $imagens = array_filter(array_column($resultados, 'imagem'));
 
 } catch (PDOException $e) {
@@ -814,8 +812,8 @@ try {
         </nav> 
     </div> 
     <div class="topbar"> 
-        <h1>Entre Linhas - Livraria Moderna</h1> 
-        <form class="search-form" action="php/consultaFiltro/consultaFiltro.php" method="POST"> 
+        <h1>Entre Linhas - Sebo Moderna</h1> 
+        <form class="search-form" action="../consultaFiltro/consultaFiltro.php" method="POST"> 
             <input type="text" name="nome" placeholder="Pesquisar livros, autores..."> 
             <input type="submit" value="Buscar"> 
         </form> 
@@ -893,19 +891,20 @@ try {
                 
                 <!-- Informações do produto -->
                 <div class="product-info">
-                    <h3>Detalhes do produto</h3>
-                    <p><strong>Autor:</strong>   <?= htmlspecialchars($produto['autor']) ?> </p>
-                    <p><strong>Editora:</strong> <?= htmlspecialchars($produto['editora']) ?></p>
-                    <p><strong>Idioma:</strong>  <?= htmlspecialchars($produto['idioma']) ?></p>
-                    <p><strong>ISBN:</strong> <?= htmlspecialchars($produto['isbn']) ?></p>
-                    <p><strong>Estado do livro:</strong> <?= htmlspecialchars($produto['estado_livro']) ?></p>
+                    <h3>Estado do livro:</h3>
+                    <p><strong>Páginas faltando?</strong> <?= htmlspecialchars($produto['paginas_faltando']) ?> </p>
+                    <p><strong>Páginas rasgadas?</strong> <?= htmlspecialchars($produto['paginas_rasgadas']) ?></p>
+                    <p><strong>Páginas amareladas?</strong>  <?= htmlspecialchars($produto['folhas_amareladas']) ?></p>
+                    <p><strong>Possui anotações/rabiscos?</strong> <?= htmlspecialchars($produto['anotacoes']) ?></p>
+                    <p><strong>Lombada danificada?</strong> <?= htmlspecialchars($produto['lombada_danificada']) ?></p>
+                    <p><strong>Capa danificada?</strong> <?= htmlspecialchars($produto['capa_danificada']) ?></p>
                     <p><strong>Dimensões:</strong> <?= htmlspecialchars($produto['dimensoes']) ?></p>
                 </div>
                 
                 <!-- Abas de conteúdo -->
                 <div class="product-tabs">
                     <ul>
-                        <li class="active" onclick="changeTab(0)">Descrição</li>
+                        <li class="active" onclick="changeTab(0)">Sinopse</li>
                         <li onclick="changeTab(1)">Detalhes</li>
                         <li onclick="changeTab(2)">Avaliações</li>
                     </ul>
@@ -916,9 +915,11 @@ try {
                         <div>
                             <h4>Informações do produto</h4>
                             <ul>
+                                <li><strong>Autor:</strong>   <?= htmlspecialchars($produto['autor']) ?> </li>
+                                <li><strong>Número de páginas:</strong> <?= htmlspecialchars($produto['numero_paginas']) ?></li>
                                 <li><strong>Editora:</strong> <?= htmlspecialchars($produto['editora']) ?></li>
-                                <li><strong>Números de página:</strong> <?= htmlspecialchars($produto['numero_paginas']) ?></li>
-                                <li><strong>Data de publicação:</strong> <?= htmlspecialchars($produto['data_publicacao']) ?></li>
+                                <li><strong>Idioma:</strong>  <?= htmlspecialchars($produto['idioma']) ?></li>
+                                <li><strong>ISBN:</strong> <?= htmlspecialchars($produto['isbn']) ?></li>
                                 <li><strong>Classificação etária:</strong> <?= htmlspecialchars($produto['classificacao_etaria']) ?></li>
                             </ul>
                         </div>
@@ -966,7 +967,11 @@ try {
                     </div>
                     
                     <div class="product-description">
-                        <p>Estado detalhado do livro: <?= htmlspecialchars($produto['estado_detalhado']) ?></p>
+                        <p><?= htmlspecialchars($produto['estado_livro']) ?></p>
+                    </div>
+
+                     <div class="product-description">
+                        <p>Categoria: <?= htmlspecialchars($produto['nome_categoria']) ?></p>
                     </div>
                     
                     <div class="product-seller">
@@ -1014,7 +1019,7 @@ try {
                                     echo "<p>Produto não encontrado.</p>";
                                 }
                             }
-                            ?>
+                        ?>
                         </div>
                     </div>
                 </div>
