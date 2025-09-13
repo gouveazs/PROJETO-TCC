@@ -140,36 +140,35 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       top: 0;
       left: 250px;
       right: 0;
-      height: 70px;
+      height: 60px;
       background-color: var(--marrom);
       color: white;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 40px;
+      padding: 0 30px;
       z-index: 1001;
     }
 
     .topbar h1 {
-      font-size: 1.6rem;
+      font-size: 1.4rem;
     }
 
-    /* Barra de busca - Estilo corrigido */
     .search-form {
       display: flex;
       align-items: center;
     }
     
     .topbar input[type="text"] {
-      padding: 10px 15px;
+      padding: 8px 12px;
       border: none;
       border-radius: 20px 0 0 20px;
-      width: 250px;
+      width: 220px;
       font-size: 0.9rem;
     }
     
     .topbar input[type="submit"] {
-      padding: 10px 15px;
+      padding: 8px 12px;
       background: var(--verde);
       color: white;
       border: none;
@@ -177,22 +176,25 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       cursor: pointer;
     }
 
-    /* Barra de categorias */
+    /* Barra de categorias - Ajustada para ficar mais próxima do carrossel */
     .categorias-barra {
-      margin-left: 250px;
-      margin-top: 70px;
+      position: fixed;
+      top: 60px;
+      left: 250px;
+      right: 0;
       background-color: #9a8c7c;
-      padding: 10px 40px;
+      padding: 8px 30px;
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
+      z-index: 999;
     }
 
     .categorias-barra a {
       color: white;
       text-decoration: none;
-      font-size: 1rem;
-      padding: 8px 12px;
+      font-size: 0.9rem;
+      padding: 6px 10px;
       border-radius: 6px;
       transition: background 0.3s;
     }
@@ -201,45 +203,124 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       background-color: var(--marrom);
     }
 
+    /* Conteúdo principal - Margem superior reduzida significativamente */
     .main-content {
       margin-left: 250px;
-      margin-top: 130px; /* Aumentado para acomodar a navbar de categorias */
-      padding: 40px;
+      margin-top: 100px; /* Reduzido de 130px para 100px */
+      padding: 20px 30px 30px; /* Padding superior reduzido */
       flex: 1;
+    }
+
+    /* Carrossel - Margem superior removida */
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto 20px; /* Margem inferior reduzida */
+      overflow: hidden;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .carousel {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+
+    .carousel-item {
+      min-width: 100%;
+      position: relative;
+    }
+
+    .carousel-item img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0,0,0,0.4);
+      color: white;
+      border: none;
+      padding: 12px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      z-index: 10;
+      transition: background-color 0.3s;
+    }
+
+    .carousel-btn:hover {
+      background-color: rgba(0,0,0,0.7);
+    }
+
+    .carousel-btn.prev {
+      left: 10px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .carousel-btn.next {
+      right: 10px;
+      border-radius: 4px 0 0 4px;
+    }
+
+    .carousel-indicators {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .carousel-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .carousel-indicator.active {
+      background-color: white;
     }
 
     .welcome-section {
       text-align: center;
-      margin-bottom: 50px;
+      margin-bottom: 30px; /* Reduzido de 40px */
     }
 
     .welcome-section h2 {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       color: var(--marrom);
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
 
     .welcome-section p {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: #555;
       max-width: 800px;
       margin: 0 auto;
     }
 
-    /* Estilo para a seção de autores */
     .autores-section {
       text-align: center;
-      margin-bottom: 30px;
-      padding: 15px;
+      margin-bottom: 25px;
+      padding: 12px;
       background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     .autores-info {
       font-style: italic;
       color: var(--marrom);
-      font-size: 1.2rem;
+      font-size: 1.1rem;
     }
 
     .footer {
@@ -247,7 +328,7 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       background-color: var(--marrom);
       color: white;
       text-align: center;
-      padding: 15px;
+      padding: 12px;
       margin-top: auto;
     }
 
@@ -261,25 +342,26 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       }
       
       .topbar {
-        padding: 0 20px;
+        padding: 0 15px;
         flex-direction: column;
         height: auto;
-        padding: 10px;
+        padding: 8px;
       }
       
       .topbar h1 {
-        font-size: 1.3rem;
-        margin-bottom: 10px;
+        font-size: 1.2rem;
+        margin-bottom: 8px;
       }
 
       .categorias-barra {
-        margin-top: 120px; /* Ajustado para a topbar maior */
-        padding: 10px 20px;
+        position: static;
+        margin-top: 60px;
+        padding: 8px 15px;
       }
 
       .main-content {
-        margin-top: 180px; /* Ajuste para versão mobile */
-        padding: 20px;
+        margin-top: 0;
+        padding: 15px;
       }
 
       .search-form {
@@ -287,7 +369,16 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       }
       
       .topbar input[type="text"] {
-        width: calc(100% - 100px);
+        width: calc(100% - 90px);
+      }
+      
+      .carousel-item img {
+        height: 200px;
+      }
+      
+      .carousel-btn {
+        padding: 8px;
+        font-size: 1rem;
       }
     }
   </style>
@@ -361,14 +452,102 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
 
   <!-- Conteúdo Principal -->
   <div class="main-content">
-
-   
+    <!-- Carrossel de banners simplificado - apenas imagens -->
+    <div class="carousel-container">
+      <div class="carousel">
+        <div class="carousel-item">
+          <img src="../../imgs/Banner1.png" alt="Promoção de Livros de Fantasia">
+        </div>
+        <div class="carousel-item">
+          <img src="https://placehold.co/1200x350/5a4224/FFFFFF/png?text=Novos+Lançamentos" alt="Novos Lançamentos">
+        </div>
+        <div class="carousel-item">
+          <img src="https://placehold.co/1200x350/9a8c7c/FFFFFF/png?text=Clube+de+Leitura" alt="Clube de Leitura">
+        </div>
+      </div>
+      <button class="carousel-btn prev">&#10094;</button>
+      <button class="carousel-btn next">&#10095;</button>
+      <div class="carousel-indicators">
+        <span class="carousel-indicator active"></span>
+        <span class="carousel-indicator"></span>
+        <span class="carousel-indicator"></span>
+      </div>
+    </div>
     
+    <div class="welcome-section">
+      <h2>Bem-vindo aos Destaques</h2>
+      <p>Descubra as obras em destaque, autores renomados e as novidades que separamos especialmente para você.</p>
+    </div>
+
     <!-- O conteúdo dos destaques será adicionado aqui posteriormente -->
   </div>
 
   <div class="footer">
     &copy; 2025 Entre Linhas - Todos os direitos reservados.
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const carousel = document.querySelector('.carousel');
+      const items = document.querySelectorAll('.carousel-item');
+      const prevBtn = document.querySelector('.carousel-btn.prev');
+      const nextBtn = document.querySelector('.carousel-btn.next');
+      const indicators = document.querySelectorAll('.carousel-indicator');
+      
+      let currentIndex = 0;
+      const totalItems = items.length;
+      
+      // Função para atualizar o carrossel
+      function updateCarousel() {
+        carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+        
+        // Atualizar indicadores
+        indicators.forEach((indicator, index) => {
+          if (index === currentIndex) {
+            indicator.classList.add('active');
+          } else {
+            indicator.classList.remove('active');
+          }
+        });
+      }
+      
+      // Avançar para o próximo slide
+      function nextSlide() {
+        currentIndex = (currentIndex + 1) % totalItems;
+        updateCarousel();
+      }
+      
+      // Voltar para o slide anterior
+      function prevSlide() {
+        currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+        updateCarousel();
+      }
+      
+      // Event listeners para os botões
+      nextBtn.addEventListener('click', nextSlide);
+      prevBtn.addEventListener('click', prevSlide);
+      
+      // Event listeners para os indicadores
+      indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+          currentIndex = index;
+          updateCarousel();
+        });
+      });
+      
+      // Auto-avanço do carrossel
+      let interval = setInterval(nextSlide, 5000);
+      
+      // Pausar auto-avanço quando o mouse estiver sobre o carrossel
+      const carouselContainer = document.querySelector('.carousel-container');
+      carouselContainer.addEventListener('mouseenter', () => {
+        clearInterval(interval);
+      });
+      
+      carouselContainer.addEventListener('mouseleave', () => {
+        interval = setInterval(nextSlide, 5000);
+      });
+    });
+  </script>
 </body>
 </html>
