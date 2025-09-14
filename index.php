@@ -684,46 +684,79 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
      /* NOVOS ESTILOS PARA A LOGO */
     .logo-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .logo-img {
-      width: 40px;
-      height: 40px;
-      object-fit: contain;
-    }
-    
-    /* Ajuste para o título quando tiver logo */
-    .topbar h1 {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    /* Ajustes responsivos para a logo */
-    @media (max-width: 768px) {
-      .logo-img {
-        width: 32px;
-        height: 32px;
-      }
-      
-      .topbar h1 {
-        font-size: 1.1rem;
-      }
-    }
-    
-    @media (max-width: 576px) {
-      .logo-img {
-        width: 28px;
-        height: 28px;
-      }
-      
-      .topbar h1 {
-        font-size: 1rem;
-      }
-    }
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Aumentei o espaçamento */
+}
+
+.logo-img {
+  width: 40px;  /* Aumentei de 40px para 60px */
+  height: 40px; /* Aumentei de 40px para 60px */
+  object-fit: contain;
+}
+
+/* Ajuste para o título quando tiver logo */
+.topbar h1 {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Aumentei o espaçamento */
+  font-size: 1.8rem; /* Aumentei ligeiramente o tamanho da fonte */
+}
+
+/* Ajustes responsivos para a logo aumentada */
+@media (max-width: 1024px) {
+  .logo-img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .topbar h1 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .logo-img {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .topbar h1 {
+    font-size: 1.3rem;
+    gap: 10px;
+  }
+  
+  .logo-container {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .logo-img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .topbar h1 {
+    font-size: 1.1rem;
+    gap: 8px;
+  }
+  
+  .logo-container {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 400px) {
+  .logo-img {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .topbar h1 {
+    font-size: 1rem;
+  }
+}
   </style>
 </head>
 <body>
@@ -783,8 +816,8 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <button class="menu-toggle">☰</button>
     <h1>
       <div class="logo-container">
-        <img src="imgs/logolivro.png" alt="Logo Entre Linhas" class="logo-img">
-        Entre Linhas - Sebo Moderna
+        <img src="imgs/logotipo.png" alt="Logo Entre Linhas" class="logo-img">
+        Entre Linhas
       </div>
     </h1>
     <form class="search-form" action="php/consultaFiltro/consultaFiltro.php" method="POST">
