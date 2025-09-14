@@ -682,6 +682,48 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         font-size: 1.2rem;
       }
     }
+     /* NOVOS ESTILOS PARA A LOGO */
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .logo-img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+    
+    /* Ajuste para o título quando tiver logo */
+    .topbar h1 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    /* Ajustes responsivos para a logo */
+    @media (max-width: 768px) {
+      .logo-img {
+        width: 32px;
+        height: 32px;
+      }
+      
+      .topbar h1 {
+        font-size: 1.1rem;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .logo-img {
+        width: 28px;
+        height: 28px;
+      }
+      
+      .topbar h1 {
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -737,14 +779,19 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 </div>
 
-<div class="topbar">
-  <button class="menu-toggle">☰</button>
-  <h1>Entre Linhas - Sebo Moderna</h1>
-  <form class="search-form" action="php/consultaFiltro/consultaFiltro.php" method="POST">
-    <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
-    <input type="submit" value="Buscar">
-  </form>
-</div>
+ <div class="topbar">
+    <button class="menu-toggle">☰</button>
+    <h1>
+      <div class="logo-container">
+        <img src="imgs/logolivro.png" alt="Logo Entre Linhas" class="logo-img">
+        Entre Linhas - Sebo Moderna
+      </div>
+    </h1>
+    <form class="search-form" action="php/consultaFiltro/consultaFiltro.php" method="POST">
+      <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
+      <input type="submit" value="Buscar">
+    </form>
+  </div>
 
 <div class="promo-area">
   <div class="destaque-principal">

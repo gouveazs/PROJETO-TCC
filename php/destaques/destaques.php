@@ -27,15 +27,11 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
 
     body {
       background-color: var(--background);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
     .sidebar {
       position: fixed;
-      top: 0; 
-      left: 0;
+      top: 0; left: 0;
       width: 250px;
       height: 100vh;
       background-color: var(--verde);
@@ -97,6 +93,10 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       color: #ddd;
     }
 
+    .sidebar .logo p {
+      font-weight: bold;
+    }
+
     .sidebar nav {
       width: 100%;
       padding: 0 20px;
@@ -131,6 +131,10 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       transition: background 0.3s;
     }
 
+    .sidebar nav ul li a i {
+      margin-right: 10px;
+    }
+
     .sidebar nav ul li a:hover {
       background-color: #6f8562;
     }
@@ -140,18 +144,26 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       top: 0;
       left: 250px;
       right: 0;
-      height: 60px;
+      height: 70px;
       background-color: var(--marrom);
       color: white;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 30px;
+      padding: 0 40px;
       z-index: 1001;
     }
 
     .topbar h1 {
-      font-size: 1.4rem;
+      font-size: 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .topbar h1 img {
+      width: 30px;
+      height: 30px;
     }
 
     .search-form {
@@ -163,8 +175,9 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       padding: 8px 12px;
       border: none;
       border-radius: 20px 0 0 20px;
-      width: 220px;
-      font-size: 0.9rem;
+      width: 250px;
+      font-size: 1rem;
+      background-color: var(--background);
     }
     
     .topbar input[type="submit"] {
@@ -174,16 +187,16 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       border: none;
       border-radius: 0 20px 20px 0;
       cursor: pointer;
+      font-size: 1rem;
     }
 
-    /* Barra de categorias - Ajustada para ficar mais próxima do carrossel */
     .categorias-barra {
       position: fixed;
-      top: 60px;
+      top: 70px;
       left: 250px;
       right: 0;
       background-color: #9a8c7c;
-      padding: 8px 30px;
+      padding: 10px 40px;
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
@@ -193,8 +206,8 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
     .categorias-barra a {
       color: white;
       text-decoration: none;
-      font-size: 0.9rem;
-      padding: 6px 10px;
+      font-size: 1rem;
+      padding: 8px 12px;
       border-radius: 6px;
       transition: background 0.3s;
     }
@@ -203,20 +216,30 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       background-color: var(--marrom);
     }
 
-    /* Conteúdo principal - Margem superior reduzida significativamente */
-    .main-content {
+    .content {
       margin-left: 250px;
-      margin-top: 100px; /* Reduzido de 130px para 100px */
-      padding: 20px 30px 30px; /* Padding superior reduzido */
-      flex: 1;
+      margin-top: 130px;
+      padding: 30px;
     }
 
-    /* Carrossel - Margem superior removida */
+    .content h2 {
+      font-size: 2rem;
+      color: var(--marrom);
+      margin-bottom: 10px;
+    }
+
+    .content p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    /* Estilos do carrossel - POSICIONAMENTO CORRIGIDO */
     .carousel-container {
       position: relative;
       width: 100%;
       max-width: 1200px;
-      margin: 0 auto 20px; /* Margem inferior reduzida */
+      margin: 0 auto 40px;
       overflow: hidden;
       border-radius: 8px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.1);
@@ -290,46 +313,12 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       background-color: white;
     }
 
-    .welcome-section {
-      text-align: center;
-      margin-bottom: 30px; /* Reduzido de 40px */
-    }
-
-    .welcome-section h2 {
-      font-size: 2.2rem;
-      color: var(--marrom);
-      margin-bottom: 12px;
-    }
-
-    .welcome-section p {
-      font-size: 1.1rem;
-      color: #555;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .autores-section {
-      text-align: center;
-      margin-bottom: 25px;
-      padding: 12px;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .autores-info {
-      font-style: italic;
-      color: var(--marrom);
-      font-size: 1.1rem;
-    }
-
     .footer {
       margin-left: 250px;
       background-color: var(--marrom);
       color: white;
       text-align: center;
-      padding: 12px;
-      margin-top: auto;
+      padding: 15px;
     }
 
     @media (max-width: 768px) {
@@ -337,7 +326,7 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
         display: none;
       }
 
-      .topbar, .categorias-barra, .main-content, .footer {
+      .topbar, .categorias-barra, .content, .footer {
         margin-left: 0;
       }
       
@@ -359,13 +348,9 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
         padding: 8px 15px;
       }
 
-      .main-content {
+      .content {
         margin-top: 0;
         padding: 15px;
-      }
-
-      .search-form {
-        width: 100%;
       }
       
       .topbar input[type="text"] {
@@ -450,9 +435,9 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
     <a href="#">Drama</a>
   </div>
 
-  <!-- Conteúdo Principal -->
-  <div class="main-content">
-    <!-- Carrossel de banners simplificado - apenas imagens -->
+  <!-- Conteúdo -->
+  <div class="content">
+    <!-- Carrossel de banners - AGORA COM 5 BANNERS -->
     <div class="carousel-container">
       <div class="carousel">
         <div class="carousel-item">
@@ -462,7 +447,13 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
           <img src="https://placehold.co/1200x350/5a4224/FFFFFF/png?text=Novos+Lançamentos" alt="Novos Lançamentos">
         </div>
         <div class="carousel-item">
-          <img src="https://placehold.co/1200x350/9a8c7c/FFFFFF/png?text=Clube+de+Leitura" alt="Clube de Leitura">
+          <img src="https://placehold.co/1200x350/9a8c7c/FFFFFF/png?text=Ofertas+Especiais" alt="Ofertas Especiais">
+        </div>
+        <div class="carousel-item">
+          <img src="https://placehold.co/1200x350/5a6b50/FFFFFF/png?text=Autores+Em+Destaque" alt="Autores em Destaque">
+        </div>
+        <div class="carousel-item">
+          <img src="https://placehold.co/1200x350/8B4513/FFFFFF/png?text=Clássicos+da+Literatura" alt="Clássicos da Literatura">
         </div>
       </div>
       <button class="carousel-btn prev">&#10094;</button>
@@ -471,13 +462,13 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
         <span class="carousel-indicator active"></span>
         <span class="carousel-indicator"></span>
         <span class="carousel-indicator"></span>
+        <span class="carousel-indicator"></span>
+        <span class="carousel-indicator"></span>
       </div>
     </div>
     
-    <div class="welcome-section">
-      <h2>Bem-vindo aos Destaques</h2>
-      <p>Descubra as obras em destaque, autores renomados e as novidades que separamos especialmente para você.</p>
-    </div>
+    <h2>Bem-vindo aos Destaques</h2>
+    <p>Descubra as obras em destaque, autores renomados e as novidades que separamos especialmente para você.</p>
 
     <!-- O conteúdo dos destaques será adicionado aqui posteriormente -->
   </div>
@@ -496,7 +487,8 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       
       let currentIndex = 0;
       const totalItems = items.length;
-      
+   
+
       // Função para atualizar o carrossel
       function updateCarousel() {
         carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
