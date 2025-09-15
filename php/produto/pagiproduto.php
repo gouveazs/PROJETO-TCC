@@ -12,14 +12,15 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 $idproduto = (int) $_GET['id'];
 
 try {
+    // 1. Buscar o produto principal
     $stmt = $conn->prepare("
-    SELECT p.*, i.imagem, v.nome_completo, v.email, c.nome AS nome_categoria
-    FROM produto p
-    LEFT JOIN imagens i ON i.idproduto = p.idproduto
-    LEFT JOIN vendedor v ON v.idvendedor = p.idvendedor
-    LEFT JOIN categoria c ON c.idcategoria = p.idcategoria
-    WHERE p.idproduto = :id
-    ORDER BY i.idimagens ASC
+        SELECT p.*, i.imagem, v.nome_completo, v.email, c.nome AS nome_categoria
+        FROM produto p
+        LEFT JOIN imagens i ON i.idproduto = p.idproduto
+        LEFT JOIN vendedor v ON v.idvendedor = p.idvendedor
+        LEFT JOIN categoria c ON c.idcategoria = p.idcategoria
+        WHERE p.idproduto = :id
+        ORDER BY i.idimagens ASC
     ");
     $stmt->execute([':id' => $idproduto]);
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -30,11 +31,17 @@ try {
 
     $produto = $resultados[0];
     $imagens = array_filter(array_column($resultados, 'imagem'));
+    $nome_produto = $produto['nome'];
+
+    $stmt2 = $conn->prepare("SELECT * FROM produto WHERE nome LIKE ? AND idproduto != ?");
+    $stmt2->execute(['%' . $nome_produto . '%', $idproduto]);
+    $ofertas = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
     die("Erro de conexão: " . $e->getMessage());
 }
 ?>
+
 <!DOCTYPE html> 
 <html lang="pt-BR"> 
 <head> 
@@ -796,7 +803,7 @@ try {
                     <li><a href="../cadastro/cadastroVendedor.php"><img src="../../imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
                     <li><a href="../login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
                 <?php else: ?>
-                    <li><a href="php/perfil/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
+                    <li><a href="../perfil/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
                 <?php endif; ?>
 
                 <?php if ($nome === 'adm'): ?>
@@ -1027,47 +1034,28 @@ try {
                 <!-- Outras ofertas -->
                 <div class="other-offers">
                     <h3>Outras ofertas</h3>
-                    <!--
-                    <div class="offer">
-                        <div class="offer-info">
-                            <div class="offer-condition">Novo</div>
-                            <div class="offer-seller">Livraria Cultura</div>
-                            <div class="seller-details">Entrega grátis</div>
-                            <div class="offer-price">R$ 42,90</div>
-                        </div>
-                        <div class="offer-actions">
-                            <button class="offer-buy-btn">Comprar</button>
-                        </div>
-                    </div>
-                    
-                    <div class="offer">
-                        <div class="offer-info">
-                            <div class="offer-condition">Usado - Bom estado</div>
-                            <div class="offer-seller">Sebo do Léo</div>
-                            <div class="seller-details">+ R$ 9,90 para envio</div>
-                            <div class="offer-price">R$ 28,50</div>
-                        </div>
-                        <div class="offer-actions">
-                            <button class="offer-buy-btn">Comprar</button>
-                        </div>
-                    </div>
-                    
-                    <div class="offer">
-                        <div class="offer-info">
-                            <div class="offer-condition">Novo</div>
-                            <div class="offer-seller">Amazon</div>
-                            <div class="seller-details">Entrega grátis</div>
-                            <div class="offer-price">R$ 39,90</div>
-                        </div>
-                        <div class="offer-actions">
-                            <button class="offer-buy-btn">Comprar</button>
-                        </div>
-                    </div>
-                    
-                    <div class="more-offers">
-                        <a href="#">Ver as outras 7 ofertas deste livro</a>
-                    </div>
-                    -->
+                    <?php if (count($ofertas) > 0): ?>
+                        <?php foreach ($ofertas as $oferta): ?>
+                            <div class="offer">
+                                <div class="offer-info">
+                                    <div class="offer-condition"><?= htmlspecialchars($oferta['condicao']) ?></div>
+                                    <div class="offer-seller"><?= htmlspecialchars($oferta['vendedor']) ?></div>
+                                    <div class="seller-details"><?= htmlspecialchars($oferta['detalhes_envio']) ?></div>
+                                    <div class="offer-price">R$ <?= number_format($oferta['preco'], 2, ',', '.') ?></div>
+                                </div>
+                                <div class="offer-actions">
+                                    <button class="offer-buy-btn">Comprar</button>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                        <?php if (count($ofertas) > 3): ?>
+                            <div class="more-offers">
+                                <a href="#">Ver as outras <?= count($ofertas) - 3 ?> ofertas deste produto</a>
+                            </div>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <p>Não há outras ofertas para este produto.</p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
