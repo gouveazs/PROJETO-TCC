@@ -27,15 +27,11 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
 
     body {
       background-color: var(--background);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
     .sidebar {
       position: fixed;
-      top: 0; 
-      left: 0;
+      top: 0; left: 0;
       width: 250px;
       height: 100vh;
       background-color: var(--verde);
@@ -97,6 +93,10 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       color: #ddd;
     }
 
+    .sidebar .logo p {
+      font-weight: bold;
+    }
+
     .sidebar nav {
       width: 100%;
       padding: 0 20px;
@@ -131,6 +131,10 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       transition: background 0.3s;
     }
 
+    .sidebar nav ul li a i {
+      margin-right: 10px;
+    }
+
     .sidebar nav ul li a:hover {
       background-color: #6f8562;
     }
@@ -152,40 +156,51 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
 
     .topbar h1 {
       font-size: 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    /* Barra de busca - Estilo corrigido */
+    .topbar h1 img {
+      width: 30px;
+      height: 30px;
+    }
+
     .search-form {
       display: flex;
       align-items: center;
     }
     
     .topbar input[type="text"] {
-      padding: 10px 15px;
+      padding: 8px 12px;
       border: none;
       border-radius: 20px 0 0 20px;
       width: 250px;
-      font-size: 0.9rem;
+      font-size: 1rem;
+      background-color: var(--background);
     }
     
     .topbar input[type="submit"] {
-      padding: 10px 15px;
+      padding: 8px 12px;
       background: var(--verde);
       color: white;
       border: none;
       border-radius: 0 20px 20px 0;
       cursor: pointer;
+      font-size: 1rem;
     }
 
-    /* Barra de categorias */
     .categorias-barra {
-      margin-left: 250px;
-      margin-top: 70px;
+      position: fixed;
+      top: 70px;
+      left: 250px;
+      right: 0;
       background-color: #9a8c7c;
       padding: 10px 40px;
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
+      z-index: 999;
     }
 
     .categorias-barra a {
@@ -201,45 +216,101 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       background-color: var(--marrom);
     }
 
-    .main-content {
+    .content {
       margin-left: 250px;
-      margin-top: 130px; /* Aumentado para acomodar a navbar de categorias */
-      padding: 40px;
-      flex: 1;
+      margin-top: 130px;
+      padding: 30px;
     }
 
-    .welcome-section {
-      text-align: center;
-      margin-bottom: 50px;
-    }
-
-    .welcome-section h2 {
-      font-size: 2.5rem;
+    .content h2 {
+      font-size: 2rem;
       color: var(--marrom);
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
 
-    .welcome-section p {
+    .content p {
       font-size: 1.2rem;
-      color: #555;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    /* Estilo para a seção de autores */
-    .autores-section {
-      text-align: center;
       margin-bottom: 30px;
-      padding: 15px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      color: #333;
     }
 
-    .autores-info {
-      font-style: italic;
-      color: var(--marrom);
+    /* Estilos do carrossel - POSICIONAMENTO CORRIGIDO */
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto 40px;
+      overflow: hidden;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .carousel {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+
+    .carousel-item {
+      min-width: 100%;
+      position: relative;
+    }
+
+    .carousel-item img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0,0,0,0.4);
+      color: white;
+      border: none;
+      padding: 12px;
+      cursor: pointer;
       font-size: 1.2rem;
+      z-index: 10;
+      transition: background-color 0.3s;
+    }
+
+    .carousel-btn:hover {
+      background-color: rgba(0,0,0,0.7);
+    }
+
+    .carousel-btn.prev {
+      left: 10px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .carousel-btn.next {
+      right: 10px;
+      border-radius: 4px 0 0 4px;
+    }
+
+    .carousel-indicators {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .carousel-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .carousel-indicator.active {
+      background-color: white;
     }
 
     .footer {
@@ -248,7 +319,6 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       color: white;
       text-align: center;
       padding: 15px;
-      margin-top: auto;
     }
 
     @media (max-width: 768px) {
@@ -256,38 +326,44 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
         display: none;
       }
 
-      .topbar, .categorias-barra, .main-content, .footer {
+      .topbar, .categorias-barra, .content, .footer {
         margin-left: 0;
       }
       
       .topbar {
-        padding: 0 20px;
+        padding: 0 15px;
         flex-direction: column;
         height: auto;
-        padding: 10px;
+        padding: 8px;
       }
       
       .topbar h1 {
-        font-size: 1.3rem;
-        margin-bottom: 10px;
+        font-size: 1.2rem;
+        margin-bottom: 8px;
       }
 
       .categorias-barra {
-        margin-top: 120px; /* Ajustado para a topbar maior */
-        padding: 10px 20px;
+        position: static;
+        margin-top: 60px;
+        padding: 8px 15px;
       }
 
-      .main-content {
-        margin-top: 180px; /* Ajuste para versão mobile */
-        padding: 20px;
-      }
-
-      .search-form {
-        width: 100%;
+      .content {
+        margin-top: 0;
+        padding: 15px;
       }
       
       .topbar input[type="text"] {
-        width: calc(100% - 100px);
+        width: calc(100% - 90px);
+      }
+      
+      .carousel-item img {
+        height: 200px;
+      }
+      
+      .carousel-btn {
+        padding: 8px;
+        font-size: 1rem;
       }
     }
   </style>
@@ -355,20 +431,115 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
     <a href="#">Fantasia</a>
     <a href="#">Biográfico</a>
     <a href="#">Ficção Científica</a>
-    <a href="#">Comédia</a>
+    <a href="#">Infantil</a>
     <a href="#">Drama</a>
   </div>
 
-  <!-- Conteúdo Principal -->
-  <div class="main-content">
-
-   
+  <!-- Conteúdo -->
+  <div class="content">
+    <!-- Carrossel de banners - AGORA COM 5 BANNERS -->
+    <div class="carousel-container">
+      <div class="carousel">
+        <div class="carousel-item">
+          <img src="../../imgs/Banner1.png" alt="Promoção de Livros de Fantasia">
+        </div>
+        <div class="carousel-item">
+          <img src="https://placehold.co/1200x350/5a4224/FFFFFF/png?text=Novos+Lançamentos" alt="Novos Lançamentos">
+        </div>
+        <div class="carousel-item">
+          <img src="https://placehold.co/1200x350/9a8c7c/FFFFFF/png?text=Ofertas+Especiais" alt="Ofertas Especiais">
+        </div>
+        <div class="carousel-item">
+          <img src="https://placehold.co/1200x350/5a6b50/FFFFFF/png?text=Autores+Em+Destaque" alt="Autores em Destaque">
+        </div>
+        <div class="carousel-item">
+          <img src="https://placehold.co/1200x350/8B4513/FFFFFF/png?text=Clássicos+da+Literatura" alt="Clássicos da Literatura">
+        </div>
+      </div>
+      <button class="carousel-btn prev">&#10094;</button>
+      <button class="carousel-btn next">&#10095;</button>
+      <div class="carousel-indicators">
+        <span class="carousel-indicator active"></span>
+        <span class="carousel-indicator"></span>
+        <span class="carousel-indicator"></span>
+        <span class="carousel-indicator"></span>
+        <span class="carousel-indicator"></span>
+      </div>
+    </div>
     
+    <h2>Bem-vindo aos Destaques</h2>
+    <p>Descubra as obras em destaque, autores renomados e as novidades que separamos especialmente para você.</p>
+
     <!-- O conteúdo dos destaques será adicionado aqui posteriormente -->
   </div>
 
   <div class="footer">
     &copy; 2025 Entre Linhas - Todos os direitos reservados.
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const carousel = document.querySelector('.carousel');
+      const items = document.querySelectorAll('.carousel-item');
+      const prevBtn = document.querySelector('.carousel-btn.prev');
+      const nextBtn = document.querySelector('.carousel-btn.next');
+      const indicators = document.querySelectorAll('.carousel-indicator');
+      
+      let currentIndex = 0;
+      const totalItems = items.length;
+   
+
+      // Função para atualizar o carrossel
+      function updateCarousel() {
+        carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+        
+        // Atualizar indicadores
+        indicators.forEach((indicator, index) => {
+          if (index === currentIndex) {
+            indicator.classList.add('active');
+          } else {
+            indicator.classList.remove('active');
+          }
+        });
+      }
+      
+      // Avançar para o próximo slide
+      function nextSlide() {
+        currentIndex = (currentIndex + 1) % totalItems;
+        updateCarousel();
+      }
+      
+      // Voltar para o slide anterior
+      function prevSlide() {
+        currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+        updateCarousel();
+      }
+      
+      // Event listeners para os botões
+      nextBtn.addEventListener('click', nextSlide);
+      prevBtn.addEventListener('click', prevSlide);
+      
+      // Event listeners para os indicadores
+      indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+          currentIndex = index;
+          updateCarousel();
+        });
+      });
+      
+      // Auto-avanço do carrossel
+      let interval = setInterval(nextSlide, 5000);
+      
+      // Pausar auto-avanço quando o mouse estiver sobre o carrossel
+      const carouselContainer = document.querySelector('.carousel-container');
+      carouselContainer.addEventListener('mouseenter', () => {
+        clearInterval(interval);
+      });
+      
+      carouselContainer.addEventListener('mouseleave', () => {
+        interval = setInterval(nextSlide, 5000);
+      });
+    });
+  </script>
 </body>
 </html>
