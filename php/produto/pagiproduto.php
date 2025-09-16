@@ -1043,7 +1043,9 @@ try {
                                     <div class="offer-price">R$ <?= number_format($oferta['preco'], 2, ',', '.') ?></div>
                                 </div>
                                 <div class="offer-actions">
-                                    <button class="offer-buy-btn">Comprar</button>
+                                     <a href="pagiproduto.php?id=<?= urlencode($oferta['idproduto']) ?>">
+                                        <button class="offer-buy-btn">Comprar</button>
+                                    </a>
                                 </div>
                             </div>
                         <?php endforeach; ?>
