@@ -501,7 +501,7 @@ $conn = null;
 
 <div class="topbar">
   <h1>Entre Linhas - Sebo Moderna</h1>
-  <form class="search-form" action="php/consultaFiltro/consultaFiltro.php" method="POST">
+  <form class="search-form" action="consultaFiltro.php" method="POST">
     <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
     <input type="submit" value="Buscar">
   </form>

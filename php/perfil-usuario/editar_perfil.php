@@ -9,7 +9,7 @@ if (!$nome_usuario) {
     exit;
 }
 
-$stmt = $conn->prepare("SELECT idusuario FROM cadastro_usuario WHERE nome = ?");
+$stmt = $conn->prepare("SELECT idusuario FROM usuario WHERE nome = ?");
 $stmt->execute([$nome_usuario]);
 $dados_usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 $idusuario = isset($dados_usuario['idusuario']) ? $dados_usuario['idusuario'] : null;
@@ -22,14 +22,15 @@ if (!$idusuario) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $novo_nome = $_POST['nome'];
     $novo_email = $_POST['email'];
+    $cep = $_POST['cep'];
 
     if (!empty($_FILES['foto']['tmp_name'])) {
         $foto = file_get_contents($_FILES['foto']['tmp_name']);
-        $stmt = $conn->prepare("UPDATE cadastro_usuario SET nome = ?, email = ?, foto_de_perfil = ? WHERE idusuario = ?");
-        $stmt->execute([$novo_nome, $novo_email, $foto, $idusuario]);
+        $stmt = $conn->prepare("UPDATE usuario SET nome = ?, email = ?, cep = ?, foto_de_perfil = ? WHERE idusuario = ?");
+        $stmt->execute([$novo_nome, $novo_email, $cep, $foto, $idusuario]);
     } else {
-        $stmt = $conn->prepare("UPDATE cadastro_usuario SET nome = ?, email = ? WHERE idusuario = ?");
-        $stmt->execute([$novo_nome, $novo_email, $idusuario]);
+        $stmt = $conn->prepare("UPDATE usuario SET nome = ?, email = ?, cep = ? WHERE idusuario = ?");
+        $stmt->execute([$novo_nome, $novo_email, $cep, $idusuario]);
     }
 
     $_SESSION['nome_usuario'] = $novo_nome;
@@ -37,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-$stmt = $conn->prepare("SELECT nome, email, foto_de_perfil FROM cadastro_usuario WHERE idusuario = ?");
+$stmt = $conn->prepare("SELECT nome, email, foto_de_perfil FROM usuario WHERE idusuario = ?");
 $stmt->execute([$idusuario]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
@@ -185,6 +186,21 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
             <input type="email" name="email" value="<?= htmlspecialchars($usuario['email']) ?>" required>
         </div>
 
+        <div class="profile-field">
+            <label>CEP:</label>
+            <input type="text" name="cep" id="cep" value="<?= htmlspecialchars($usuario['cep'] ?? '') ?>" required>
+        </div>
+
+        <div class="profile-field">
+            <label>Cidade:</label>
+            <input type="text" name="cidade" id="cidade" value="<?= htmlspecialchars($usuario['cidade'] ?? '') ?>">
+        </div>
+
+        <div class="profile-field">
+            <label>UF:</label>
+            <input type="text" name="uf" id="uf" value="<?= htmlspecialchars($usuario['uf'] ?? '') ?>">
+        </div>
+
         <div class="file-upload-container">
             <label class="file-upload-label">Foto de Perfil:</label>
             <?php if (!empty($usuario['foto_de_perfil'])): ?>
@@ -206,6 +222,20 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
     document.getElementById('foto-upload').addEventListener('change', function(e) {
         const fileName = e.target.files[0] ? e.target.files[0].name : 'Nenhum arquivo escolhido';
         document.querySelector('.no-file').textContent = fileName;
+    });
+
+    document.getElementById('cep').addEventListener('blur', async function() {
+    const cep = this.value.replace(/\D/g, '');
+    if (cep.length === 8) {
+        const resp = await fetch(`busca_cep.php?cep=${cep}`);
+        const data = await resp.json();
+        if (!data.erro) {
+        document.getElementById('cidade').value = data.localidade;
+        document.getElementById('uf').value = data.uf;
+        } else {
+        alert('CEP não encontrado');
+        }
+    }
     });
 </script>
 
