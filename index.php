@@ -63,7 +63,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       flex-direction: column;
       align-items: flex-start;
       padding-top: 20px;
-      overflow-y: auto; /* SCROLL HABILITADO */
+      overflow-y: auto;
       scrollbar-width: thin;
       scrollbar-color: #ccc transparent;
       z-index: 1002;
@@ -305,16 +305,15 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     .card-link {
       text-decoration: none;
       color: inherit;
-      display: block; /* faz o link ocupar todo o card */
+      display: block;
     }
     .card-link .card {
-      cursor: pointer; /* indica que é clicável */
+      cursor: pointer;
       transition: transform 0.2s;
     }
     .card-link .card:hover {
-      transform: scale(1.03); /* efeito visual ao passar o mouse */
+      transform: scale(1.03);
     }
-
 
     .card .info .stars {
       color: #f5c518;
@@ -510,6 +509,47 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       border-radius: 8px;
     }
 
+    /* NOVOS ESTILOS PARA A SEÇÃO DE EDITORAS - FORMATO REDONDO */
+    .editoras-container {
+      margin: 40px 0 30px 0;
+    }
+    
+    .editoras-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .editora-item {
+      background-color: #fff;
+      border-radius: 50%;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 1/1;
+      min-height: 120px;
+    }
+    
+    .editora-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      background-color: #f8f8f8;
+    }
+    
+    .editora-nome {
+      font-weight: 600;
+      color: var(--marrom);
+      font-size: 0.85rem;
+      text-align: center;
+      line-height: 1.2;
+    }
+
     /* Media Queries para responsividade */
     @media (max-width: 1400px) {
       .cards-novidades, .cards-recomendacoes {
@@ -548,6 +588,15 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         left: 200px;
         padding: 0 20px;
       }
+      
+      .editoras-grid {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      }
+      
+      .editora-item {
+        min-height: 110px;
+        padding: 15px;
+      }
     }
 
     @media (max-width: 900px) {
@@ -583,7 +632,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         max-width: 100%;
       }
       
-      /* Responsividade para Mais Destaques */
       .mais-destaque-card {
         flex-direction: column;
       }
@@ -599,6 +647,20 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       
       .mais-destaque-conteudo h3 {
         font-size: 1.5rem;
+      }
+      
+      .editoras-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 15px;
+      }
+      
+      .editora-item {
+        min-height: 100px;
+        padding: 15px;
+      }
+      
+      .editora-nome {
+        font-size: 0.8rem;
       }
     }
 
@@ -631,6 +693,10 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       .servico {
         flex: 1;
         min-width: 140px;
+      }
+      
+      .editoras-grid {
+        grid-template-columns: repeat(4, 1fr);
       }
     }
 
@@ -671,6 +737,20 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       .destaque-livro img {
         margin-top: 15px;
       }
+      
+      .editoras-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      
+      .editora-item {
+        min-height: 90px;
+        padding: 12px;
+      }
+      
+      .editora-nome {
+        font-size: 0.75rem;
+      }
     }
 
     @media (max-width: 400px) {
@@ -681,29 +761,41 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       .menu-toggle {
         font-size: 1.2rem;
       }
+      
+      .editoras-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .editora-item {
+        min-height: 80px;
+        padding: 10px;
+      }
+      
+      .editora-nome {
+        font-size: 0.7rem;
+      }
     }
-     /* NOVOS ESTILOS PARA A LOGO */
+    
+    /* NOVOS ESTILOS PARA A LOGO */
     .logo-container {
       display: flex;
       align-items: center;
-      gap: 15px; /* Aumentei o espaçamento */
+      gap: 15px;
     }
 
     .logo-img {
-      width: 40px;  /* Aumentei de 40px para 60px */
-      height: 40px; /* Aumentei de 40px para 60px */
+      width: 40px;
+      height: 40px;
       object-fit: contain;
     }
 
-    /* Ajuste para o título quando tiver logo */
     .topbar h1 {
       display: flex;
       align-items: center;
-      gap: 15px; /* Aumentei o espaçamento */
-      font-size: 1.8rem; /* Aumentei ligeiramente o tamanho da fonte */
+      gap: 15px;
+      font-size: 1.8rem;
     }
 
-    /* Ajustes responsivos para a logo aumentada */
     @media (max-width: 1024px) {
       .logo-img {
         width: 50px;
@@ -886,7 +978,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div>
         <h3 style="color: #ffffffff; font-size: 1.4rem;">Comunidades</h3>
         <p style="color: #ffffffff; font-size: 0.9rem;"> Visite nossas comunidades e participe dos chats online!</p>
-        <a href="#" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
+        <a href="#" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; extreme-radius: 50%; border-radius: 6px; text-decoration: none;">Clique aqui</a>
       </div>
       <img src="imgs/comuni.jpg" alt="Card">
     </div>
@@ -916,7 +1008,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 
   <div class="card">
-    <img src="imgs/A Menina que Roubava Livros.jpg" alt="Livro 2">
+    <img src="imgs/A Menina que Roubava Livros.jpg" extreme-radius: 50%; alt="Livro 2">
     <div class="info">
       <h3>A Menina que Roubava Livros</h3>
       <p class="price">R$ 39,50</p>
@@ -938,7 +1030,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="info">
       <h3>Relatos de um Gato Viajante</h3>
       <p class="price">R$ 33,90</p>
-      <div class="stars">★★★☆☆</div>
+     <div class="stars">★★★★★</div>
     </div>
   </div>
 
@@ -1005,6 +1097,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 
   <div class="card">
+    extreme-radius: 50%;
     <img src="imgs/Senhor dos Anéis.jpg" alt="Livro 11">
     <div class="info">
       <h3>Senhor dos Anéis</h3>
@@ -1104,10 +1197,39 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <?php endforeach; ?>
 </div>
 
-<!-- + Mais Destaques -->
-<div class="section-header" style="margin-top: 50px;">
-  <h2>+ Mais Destaques</h2>
-  <a href="#" class="ver-mais">Ver mais</a>
+
+<!-- NOVA SEÇÃO: Navegue por Editora - FORMATO REDONDO -->
+<div class="editoras-container">
+  <div class="section-header">
+    <h2>Editoras</h2>
+  </div>
+  
+  <div class="editoras-grid">
+    <div class="editora-item">
+      <div class="editora-nome">Record</div>
+    </div>
+    <div class="editora-item">
+      <div class="editora-nome">Cia das Letras</div>
+    </div>
+    <div class="editora-item">
+      <div class="editora-nome">GRUPO COMPANHIA DAS LETRAS</div>
+    </div>
+    <div class="editora-item">
+      <div class="editora-nome">Rocco</div>
+    </div>
+    <div class="editora-item">
+      <div class="editora-nome">Male</div>
+    </div>
+    <div class="editora-item">
+      <div class="editora-nome">Grupo A</div>
+    </div>
+    <div class="editora-item">
+      <div class="editora-nome">Panini</div>
+    </div>
+    <div class="editora-item">
+      <div class="editora-nome">Intriseca</div>
+    </div>
+  </div>
 </div>
 
 <div class="mais-destaque-container">
