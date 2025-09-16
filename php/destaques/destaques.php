@@ -470,7 +470,7 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
     <a href="#">Biográfico</a>
     <a href="#">Ficção Científica</a>
     <a href="#">Infantil</a>
-    <a href="#">Drama</a>
+    <a href="#">Ficção literária</a>
   </div>
 
   <!-- Conteúdo -->
