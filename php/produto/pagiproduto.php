@@ -1038,13 +1038,14 @@ try {
                         <?php foreach ($ofertas as $oferta): ?>
                             <div class="offer">
                                 <div class="offer-info">
-                                    <div class="offer-condition"><?= htmlspecialchars($oferta['condicao']) ?></div>
-                                    <div class="offer-seller"><?= htmlspecialchars($oferta['vendedor']) ?></div>
-                                    <div class="seller-details"><?= htmlspecialchars($oferta['detalhes_envio']) ?></div>
+                                    <div class="offer-condition"><?= htmlspecialchars($oferta['estado_livro']) ?></div>
+                                    <div class="seller-details"><?= htmlspecialchars($oferta['nome']) ?></div>
                                     <div class="offer-price">R$ <?= number_format($oferta['preco'], 2, ',', '.') ?></div>
                                 </div>
                                 <div class="offer-actions">
-                                    <button class="offer-buy-btn">Comprar</button>
+                                    <a href="pagiproduto.php?id=<?= urlencode($oferta['idproduto']) ?>">
+                                        <button class="offer-buy-btn">Comprar</button>
+                                    </a>
                                 </div>
                             </div>
                         <?php endforeach; ?>
