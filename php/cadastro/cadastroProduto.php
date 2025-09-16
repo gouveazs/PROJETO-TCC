@@ -34,6 +34,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       --card-border: #ddd;
       --text-dark: #333;
       --text-muted: #666;
+      --input-bg: #F4F1EE; /* Nova cor para os inputs */
     }
 
     * {
@@ -194,7 +195,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     main.conteudo {
       width: 100%;
       max-width: 700px;
-      background-color: var(--branco);
+      background-color: var(--card-bg); /* Fundo branco para o formulário */
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       padding: 40px 30px;
@@ -230,7 +231,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     .form-group input[type="number"],
     .form-group input[type="date"],
     .form-group textarea,
-    .form-group input[type="file"] {
+    .form-group input[type="file"],
+    .form-group select {
       flex-grow: 1;
       padding: 8px 12px;
       font-size: 1rem;
@@ -238,16 +240,35 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       border-radius: 6px;
       font-family: inherit;
       transition: border-color 0.3s ease;
+      background-color: var(--input-bg); /* Cor de fundo igual ao background da página */
     }
 
     .form-group input:focus,
-    .form-group textarea:focus {
+    .form-group textarea:focus,
+    .form-group select:focus {
       outline: none;
       border-color: var(--verde);
       box-shadow: 0 0 5px var(--verde);
     }
 
-    /* Botão simples do input file */
+    /* Estilização específica para selects */
+    .form-group select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235a4224' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 16px;
+      padding-right: 35px;
+    }
+
+    /* Estilização do input file com fonte correta */
+    input[type="file"] {
+      font-family: 'Playfair Display', serif;
+      color: var(--text-dark);
+    }
+
     input[type="file"]::file-selector-button {
       padding: 10px 18px;
       border: none;
@@ -258,6 +279,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.2s ease;
       margin-right: 12px;
+      font-family: 'Playfair Display', serif;
     }
 
     input[type="file"]::file-selector-button:hover {
@@ -287,6 +309,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.2s ease;
       margin-top: 20px;
+      font-family: 'Playfair Display', serif;
     }
 
     input[type="submit"]:hover {
@@ -299,6 +322,19 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       transform: scale(0.98);
     }
 
+    /* Estilo para a seção de detalhes de livro usado */
+    #detalhes-usado {
+      border-left: 4px solid var(--verde);
+      padding-left: 15px;
+      margin-left: 195px;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    #detalhes-usado .form-group {
+      margin-bottom: 12px;
+    }
+
     @media (max-width: 768px) {
       .sidebar {
         width: 200px;
@@ -306,6 +342,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       .content-area {
         margin-left: 200px;
         width: calc(100% - 200px);
+      }
+      
+      #detalhes-usado {
+        margin-left: 0;
+        border-left: none;
+        border-top: 4px solid var(--verde);
+        padding-left: 0;
+        padding-top: 15px;
       }
     }
 
@@ -327,6 +371,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         width: 100%;
         text-align: left;
         margin-bottom: 6px;
+      }
+      
+      #detalhes-usado {
+        margin-left: 0;
+        border-left: none;
+        border-top: 4px solid var(--verde);
+        padding-left: 0;
+        padding-top: 15px;
       }
     }
   </style>
@@ -413,7 +465,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         <div class="form-group">
           <label for="categoria">Categoria:</label>
-          <select name="idcategoria" required>
+          <select name="idcategoria" id="categoria" required>
             <option value="">Selecione a categoria</option>
               <?php foreach($categorias as $categoria): ?>
                 <option value="<?= $categoria['idcategoria'] ?>"><?= htmlspecialchars($categoria['nome']) ?></option>
@@ -442,8 +494,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         </div>
 
         <div class="form-group">
-            <label>Estado do livro:</label>
-            <select name="estado_livro" required>
+            <label for="estado_livro">Estado do livro:</label>
+            <select name="estado_livro" id="estado_livro" required>
               <option value="novo">Novo</option>
               <option value="usado">Usado</option>
             </select>
