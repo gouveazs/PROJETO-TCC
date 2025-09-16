@@ -1097,7 +1097,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 
   <div class="card">
-    extreme-radius: 50%;
     <img src="imgs/Senhor dos Anéis.jpg" alt="Livro 11">
     <div class="info">
       <h3>Senhor dos Anéis</h3>
