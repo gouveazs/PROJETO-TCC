@@ -1,23 +1,23 @@
 <?php
-session_start();
+  session_start();
 
-if (!isset($_SESSION['nome_usuario'])) {
-    header('Location: ../../login/login.php');
-    exit;
-}
+  if (!isset($_SESSION['nome_usuario'])) {
+      header('Location: ../../login/login.php');
+      exit;
+  }
 
-include '../conexao.php';
+  include '../conexao.php';
 
-$nome = $_SESSION['nome_usuario'];
+  $nome = $_SESSION['nome_usuario'];
 
-$stmt = $conn->prepare("SELECT * FROM usuario WHERE nome = ?");
-$stmt->execute([$nome]);
-$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+  $stmt = $conn->prepare("SELECT * FROM usuario WHERE nome = ?");
+  $stmt->execute([$nome]);
+  $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$usuario) {
-    echo "Usuário não encontrado.";
-    exit;
-}
+  if (!$usuario) {
+      echo "Usuário não encontrado.";
+      exit;
+  }
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -175,6 +175,12 @@ if (!$usuario) {
         <strong>Senha:</strong>
         <input type="password" id="senhaInput" value="<?php echo htmlspecialchars($usuario['senha']); ?>" readonly>
       </div>
+
+      <div class="info-linha">
+        <strong>CEP:</strong>
+        <span><?php echo htmlspecialchars($usuario['cep'] ?? 'Termine de cadastrar suas informações'); ?></span>
+      </div>
+
     </div>
 
     <div class="btn-container">

@@ -19,10 +19,18 @@ USE `banco` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `banco`.`usuario` (
   `idusuario` INT NOT NULL AUTO_INCREMENT,
+  `pais` VARCHAR(45) NULL,
+  `cidade` VARCHAR(45) NULL,
+  `estado` CHAR(2) NULL,
+  `nome_completo` VARCHAR(145) NULL,
+  `cep` VARCHAR(8) NULL,
+  `rua` VARCHAR(45) NULL,
+  `bairro` VARCHAR(45) NULL,
+  `cpf` VARCHAR(8) NULL,
   `nome` VARCHAR(45) NULL,
   `email` VARCHAR(45) NULL,
   `senha` VARCHAR(45) NULL,
-  `telefone` INT NULL,
+  `telefone` CHAR(14) NULL,
   `foto_de_perfil` LONGBLOB NULL,
   PRIMARY KEY (`idusuario`))
 ENGINE = InnoDB;
@@ -35,36 +43,11 @@ CREATE TABLE IF NOT EXISTS `banco`.`login_usuario` (
   `idlogin` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(45) NULL,
   `senha` VARCHAR(45) NULL,
-  `idusuario` INT NOT NULL,
+  `usuario_idusuario` INT NOT NULL,
   PRIMARY KEY (`idlogin`),
-  INDEX `fk_login_usuario_cadastro_usuario_idx` (`idusuario` ASC) VISIBLE,
-  CONSTRAINT `fk_login_usuario_cadastro_usuario`
-    FOREIGN KEY (`idusuario`)
-    REFERENCES `banco`.`usuario` (`idusuario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `banco`.`usuario_compra`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `banco`.`usuario_compra` (
-  `idusuario_compra` INT NOT NULL AUTO_INCREMENT,
-  `pais` VARCHAR(45) NULL,
-  `cidade` VARCHAR(45) NULL,
-  `estado` CHAR(2) NULL,
-  `nome_completo` VARCHAR(145) NULL,
-  `telefone` VARCHAR(45) NULL,
-  `cep` VARCHAR(8) NULL,
-  `rua` VARCHAR(45) NULL,
-  `bairro` VARCHAR(45) NULL,
-  `cpf` VARCHAR(8) NULL,
-  `idusuario` INT NOT NULL,
-  PRIMARY KEY (`idusuario_compra`),
-  INDEX `fk_usuario_compra_cadastro_usuario1_idx` (`idusuario` ASC) VISIBLE,
-  CONSTRAINT `fk_usuario_compra_cadastro_usuario1`
-    FOREIGN KEY (`idusuario`)
+  INDEX `fk_login_usuario_usuario1_idx` (`usuario_idusuario` ASC) VISIBLE,
+  CONSTRAINT `fk_login_usuario_usuario1`
+    FOREIGN KEY (`usuario_idusuario`)
     REFERENCES `banco`.`usuario` (`idusuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -151,8 +134,8 @@ CREATE TABLE IF NOT EXISTS `banco`.`pedido` (
   `data_pedido` DATE NULL,
   `idusuario` INT NOT NULL,
   PRIMARY KEY (`idpedido`),
-  INDEX `fk_pedido_cadastro_usuario1_idx` (`idusuario` ASC) VISIBLE,
-  CONSTRAINT `fk_pedido_cadastro_usuario1`
+  INDEX `fk_pedido_usuario1_idx` (`idusuario` ASC) VISIBLE,
+  CONSTRAINT `fk_pedido_usuario1`
     FOREIGN KEY (`idusuario`)
     REFERENCES `banco`.`usuario` (`idusuario`)
     ON DELETE NO ACTION
@@ -196,8 +179,8 @@ CREATE TABLE IF NOT EXISTS `banco`.`comunidades` (
   `quantidade_usuarios` INT NULL,
   `idusuario` INT NOT NULL,
   PRIMARY KEY (`idcomunidades`),
-  INDEX `fk_comunidades_cadastro_usuario1_idx` (`idusuario` ASC) VISIBLE,
-  CONSTRAINT `fk_comunidades_cadastro_usuario1`
+  INDEX `fk_comunidades_usuario1_idx` (`idusuario` ASC) VISIBLE,
+  CONSTRAINT `fk_comunidades_usuario1`
     FOREIGN KEY (`idusuario`)
     REFERENCES `banco`.`usuario` (`idusuario`)
     ON DELETE NO ACTION
@@ -267,13 +250,13 @@ CREATE TABLE IF NOT EXISTS `banco`.`carrinho` (
   `idusuario` INT NOT NULL,
   PRIMARY KEY (`idcarrinho`),
   INDEX `fk_carrinho_produto1_idx` (`idproduto` ASC) VISIBLE,
-  INDEX `fk_carrinho_cadastro_usuario1_idx` (`idusuario` ASC) VISIBLE,
+  INDEX `fk_carrinho_usuario1_idx` (`idusuario` ASC) VISIBLE,
   CONSTRAINT `fk_carrinho_produto1`
     FOREIGN KEY (`idproduto`)
     REFERENCES `banco`.`produto` (`idproduto`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_carrinho_cadastro_usuario1`
+  CONSTRAINT `fk_carrinho_usuario1`
     FOREIGN KEY (`idusuario`)
     REFERENCES `banco`.`usuario` (`idusuario`)
     ON DELETE NO ACTION
@@ -286,19 +269,19 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `banco`.`favoritos` (
   `idfavoritos` INT NOT NULL AUTO_INCREMENT,
-  `idusuario` INT NOT NULL,
   `idproduto` INT NOT NULL,
+  `idusuario` INT NOT NULL,
   PRIMARY KEY (`idfavoritos`),
-  INDEX `fk_favoritos_usuario1_idx` (`idusuario` ASC) VISIBLE,
   INDEX `fk_favoritos_produto1_idx` (`idproduto` ASC) VISIBLE,
-  CONSTRAINT `fk_favoritos_usuario1`
-    FOREIGN KEY (`idusuario`)
-    REFERENCES `banco`.`usuario` (`idusuario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  INDEX `fk_favoritos_usuario1_idx` (`idusuario` ASC) VISIBLE,
   CONSTRAINT `fk_favoritos_produto1`
     FOREIGN KEY (`idproduto`)
     REFERENCES `banco`.`produto` (`idproduto`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_favoritos_usuario1`
+    FOREIGN KEY (`idusuario`)
+    REFERENCES `banco`.`usuario` (`idusuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
