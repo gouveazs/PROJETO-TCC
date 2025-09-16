@@ -154,18 +154,6 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       z-index: 1001;
     }
 
-    .topbar h1 {
-      font-size: 1.6rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .topbar h1 img {
-      width: 30px;
-      height: 30px;
-    }
-
     .search-form {
       display: flex;
       align-items: center;
@@ -188,6 +176,27 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       border-radius: 0 20px 20px 0;
       cursor: pointer;
       font-size: 1rem;
+    }
+
+    /* NOVOS ESTILOS PARA A LOGO */
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo-img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    /* Ajuste para o título quando tiver logo */
+    .topbar h1 {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 1.6rem;
     }
 
     .categorias-barra {
@@ -338,8 +347,14 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       }
       
       .topbar h1 {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         margin-bottom: 8px;
+        gap: 10px;
+      }
+
+      .logo-img {
+        width: 35px;
+        height: 35px;
       }
 
       .categorias-barra {
@@ -364,6 +379,18 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
       .carousel-btn {
         padding: 8px;
         font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .logo-img {
+        width: 30px;
+        height: 30px;
+      }
+      
+      .topbar h1 {
+        font-size: 1.1rem;
+        gap: 8px;
       }
     }
   </style>
@@ -416,7 +443,12 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
 
   <!-- Topo -->
   <div class="topbar">
-    <h1>Entre Linhas - Destaques</h1>
+    <h1>
+      <div class="logo-container">
+        <img src="../../imgs/logotipo.png" alt="Logo Entre Linhas" class="logo-img">
+        Entre Linhas - Destaques
+      </div>
+    </h1>
     <form class="search-form" action="../consultaFiltro/consultaFiltro.php" method="POST">
       <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
       <input type="submit" value="Buscar">

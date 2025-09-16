@@ -198,6 +198,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     .topbar h1 {
       font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 15px;
     }
 
     .topbar input[type="text"] {
@@ -205,6 +208,19 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       border: none;
       border-radius: 20px;
       width: 250px;
+    }
+
+    /* NOVOS ESTILOS PARA A LOGO */
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo-img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
     }
 
     .banner {
@@ -312,6 +328,18 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       }
     }
 
+    @media (max-width: 1024px) {
+      .logo-img {
+        width: 35px;
+        height: 35px;
+      }
+      
+      .topbar h1 {
+        font-size: 1.3rem;
+        gap: 10px;
+      }
+    }
+
     @media (max-width: 768px) {
       .sidebar {
         width: 200px;
@@ -322,6 +350,16 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       .cards-novidades, .cards-recomendacoes {
         grid-template-columns: repeat(2, 1fr);
       }
+      
+      .logo-img {
+        width: 30px;
+        height: 30px;
+      }
+      
+      .topbar h1 {
+        font-size: 1.1rem;
+        gap: 8px;
+      }
     }
 
     @media (max-width: 576px) {
@@ -330,6 +368,16 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       }
       .topbar, .banner, .main, .footer {
         margin-left: 0;
+      }
+      
+      .logo-img {
+        width: 25px;
+        height: 25px;
+      }
+      
+      .topbar h1 {
+        font-size: 1rem;
+        gap: 6px;
       }
     }
   </style>
@@ -383,12 +431,18 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <div class="topbar">
-  <h1>Entre Linhas - Sebo Moderna</h1>
-    <form class="search-form" action="../consultaFiltro/consultaFiltro.php" method="POST">
-      <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
-      <input type="submit" value="Buscar">
-    </form>
+  <h1>
+    <div class="logo-container">
+      <img src="../../imgs/logotipo.png" alt="Logo Entre Linhas" class="logo-img">
+      Entre Linhas - Favoritos
+    </div>
+  </h1>
+  <form class="search-form" action="../consultaFiltro/consultaFiltro.php" method="POST">
+    <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
+    <input type="submit" value="Buscar">
+  </form>
 </div>
+
 <div style="margin-left: 250px; margin-top: 70px; padding: 30px;">
 
   <!-- Título alterado de "Seus Livros Favoritos" para "Nossos Livros" -->
@@ -399,7 +453,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
   </div>
 
-<!-- Botão quadrado marrom com imagem e texto -->
+<!-- Botão quadrado marrom com imagem and texto -->
 <div style="margin-top: 30px; text-align: center;">
   <a href="../destaques/destaques.php" 
      style="display: inline-block; 
@@ -431,7 +485,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div>
         <h3 style="color: #ffffff; font-size: 1.4rem;">Destaques</h3>
         <p style="color: #ffffff; font-size: 0.9rem;">Veja todo nosso acervo de livros!</p>
-        <a href="php/destaques/destaques.php" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
+        <a href="../destaques/destaques.php" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
       </div>
       <img src="../../imgs/comuni.jpg" alt="Card Destaques" style="height: 150px; border-radius: 8px;">
     </div>
@@ -440,7 +494,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div>
         <h3 style="color: #ffffff; font-size: 1.4rem;">Carrinho</h3>
         <p style="color: #ffffff; font-size: 0.9rem;">Veja todos os itens adicionados!</p>
-        <a href="php/carrinho/carrinho.php" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
+        <a href="../carrinho/carrinho.php" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
       </div>
       <img src="../../imgs/comuni.jpg" alt="Card Carrinho" style="height: 150px; border-radius: 8px;">
     </div>
