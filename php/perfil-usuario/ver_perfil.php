@@ -166,6 +166,12 @@
     <h1><?php echo htmlspecialchars($usuario['nome']); ?></h1>
 
     <div class="info-container">
+
+      <div class="info-linha">
+        <strong>Nome completo:</strong>
+        <span><?php echo htmlspecialchars($usuario['nome_completo']); ?></span>
+      </div>
+
       <div class="info-linha">
         <strong>Email:</strong>
         <span><?php echo htmlspecialchars($usuario['email']); ?></span>
@@ -177,10 +183,34 @@
       </div>
 
       <div class="info-linha">
+        <strong>CPF:</strong>
+        <input type="text" name="estado" id="estado" value="<?= htmlspecialchars($usuario['estado'] ?? '') ?>" readonly>
+      </div>
+
+      <div class="info-linha">
         <strong>CEP:</strong>
         <span><?php echo htmlspecialchars($usuario['cep'] ?? 'Termine de cadastrar suas informações'); ?></span>
       </div>
 
+      <div class="info-linha">
+        <label>Estado:</label>
+        <input type="text" name="estado" id="estado" value="<?= htmlspecialchars($usuario['estado'] ?? '') ?>" readonly>
+      </div>
+
+      <div class="info-linha">
+        <label>Cidade:</label>
+        <input type="text" name="cidade" id="cidade" value="<?= htmlspecialchars($usuario['cidade'] ?? '') ?>" readonly>
+      </div>
+
+      <div class="info-linha">
+        <label>Bairro:</label>
+        <input type="text" name="cidade" id="cidade" value="<?= htmlspecialchars($usuario['bairro'] ?? '') ?>" readonly>
+      </div>
+
+      <div class="info-linha">
+        <label>Rua:</label>
+        <input type="text" name="cidade" id="cidade" value="<?= htmlspecialchars($usuario['rua'] ?? '') ?>" readonly>
+      </div>
     </div>
 
     <div class="btn-container">

@@ -22,15 +22,23 @@ if (!$idusuario) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $novo_nome = $_POST['nome'];
     $novo_email = $_POST['email'];
-    $cep = $_POST['cep'];
-
+    $cep = preg_replace('/[^0-9]/', '', $_POST['cep']);
+    $cidade = $_POST['cidade'];
+    $estado = $_POST['uf'];
+    $rua = $_POST['logradouro'];
+    $bairro = $_POST['bairro'];
+    
     if (!empty($_FILES['foto']['tmp_name'])) {
         $foto = file_get_contents($_FILES['foto']['tmp_name']);
-        $stmt = $conn->prepare("UPDATE usuario SET nome = ?, email = ?, cep = ?, foto_de_perfil = ? WHERE idusuario = ?");
-        $stmt->execute([$novo_nome, $novo_email, $cep, $foto, $idusuario]);
+        $stmt = $conn->prepare(
+            "UPDATE usuario SET nome = ?, email = ?, cep = ?, cidade = ?, estado = ?, rua = ?, bairro = ?, foto_de_perfil = ? WHERE idusuario = ?"
+        );
+        $stmt->execute([$novo_nome, $novo_email, $cep, $cidade, $estado, $rua, $bairro, $foto, $idusuario]);
     } else {
-        $stmt = $conn->prepare("UPDATE usuario SET nome = ?, email = ?, cep = ? WHERE idusuario = ?");
-        $stmt->execute([$novo_nome, $novo_email, $cep, $idusuario]);
+        $stmt = $conn->prepare(
+            "UPDATE usuario SET nome = ?, email = ?, cep = ?, cidade = ?, estado = ?, rua = ?, bairro = ? WHERE idusuario = ?"
+        );
+        $stmt->execute([$novo_nome, $novo_email, $cep, $cidade, $estado, $rua, $bairro, $idusuario]);
     }
 
     $_SESSION['nome_usuario'] = $novo_nome;
@@ -38,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-$stmt = $conn->prepare("SELECT nome, email, foto_de_perfil FROM usuario WHERE idusuario = ?");
+$stmt = $conn->prepare("SELECT * FROM usuario WHERE idusuario = ?");
 $stmt->execute([$idusuario]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
@@ -177,6 +185,11 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
     <form method="POST" enctype="multipart/form-data">
         <div class="profile-field">
+            <label>Nome completo:</label>
+            <input type="text" name="nome" value="<?= htmlspecialchars($usuario['nome']) ?>" required>
+        </div>
+
+        <div class="profile-field">
             <label>Nome:</label>
             <input type="text" name="nome" value="<?= htmlspecialchars($usuario['nome']) ?>" required>
         </div>
@@ -188,17 +201,27 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
         <div class="profile-field">
             <label>CEP:</label>
-            <input type="text" name="cep" id="cep" value="<?= htmlspecialchars($usuario['cep'] ?? '') ?>" required>
+            <input type="text" name="cep" id="cep" value="<?= htmlspecialchars($usuario['cep']) ?>" required>
+        </div>
+
+        <div class="profile-field">
+            <label>Estado:</label>
+            <input type="text" name="uf" id="uf" value="<?= htmlspecialchars($usuario['estado']) ?>" readonly>
         </div>
 
         <div class="profile-field">
             <label>Cidade:</label>
-            <input type="text" name="cidade" id="cidade" value="<?= htmlspecialchars($usuario['cidade'] ?? '') ?>">
+            <input type="text" name="cidade" id="cidade" value="<?= htmlspecialchars($usuario['cidade']) ?>" readonly>
         </div>
 
         <div class="profile-field">
-            <label>UF:</label>
-            <input type="text" name="uf" id="uf" value="<?= htmlspecialchars($usuario['uf'] ?? '') ?>">
+            <label>Bairro:</label>
+            <input type="text" name="bairro" id="bairro" value="<?= htmlspecialchars($usuario['bairro']) ?>" readonly>
+        </div>
+
+        <div class="profile-field">
+            <label>Rua:</label>
+            <input type="text" name="logradouro" id="logradouro" value="<?= htmlspecialchars($usuario['rua']) ?>" readonly>
         </div>
 
         <div class="file-upload-container">
@@ -232,6 +255,8 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!data.erro) {
         document.getElementById('cidade').value = data.localidade;
         document.getElementById('uf').value = data.uf;
+        document.getElementById('bairro').value = data.bairro;
+        document.getElementById('logradouro').value = data.logradouro;
         } else {
         alert('CEP não encontrado');
         }
