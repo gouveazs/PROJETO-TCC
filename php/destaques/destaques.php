@@ -482,10 +482,10 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
           <img src="../../imgs/Banner1.png" alt="Promoção de Livros de Fantasia">
         </div>
         <div class="carousel-item">
-          <img src="https://placehold.co/1200x350/5a4224/FFFFFF/png?text=Novos+Lançamentos" alt="Novos Lançamentos">
+          <img src="../../imgs/Banner2.png" alt="Novos Lançamentos">
         </div>
         <div class="carousel-item">
-          <img src="https://placehold.co/1200x350/9a8c7c/FFFFFF/png?text=Ofertas+Especiais" alt="Ofertas Especiais">
+          <img src="../../imgs/Banner3.png" alt="Ofertas Especiais">
         </div>
         <div class="carousel-item">
           <img src="https://placehold.co/1200x350/5a6b50/FFFFFF/png?text=Autores+Em+Destaque" alt="Autores em Destaque">
