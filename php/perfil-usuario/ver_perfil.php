@@ -184,7 +184,7 @@
 
       <div class="info-linha">
         <strong>CPF:</strong>
-        <input type="text" name="estado" id="estado" value="<?= htmlspecialchars($usuario['estado'] ?? '') ?>" readonly>
+        <input type="text" name="cpf" id="cpf" value="<?= htmlspecialchars($usuario['cpf'] ?? '') ?>" readonly>
       </div>
 
       <div class="info-linha">
@@ -243,6 +243,15 @@
         input.type = "password";
       }
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('cpf');
+    let cpf = input.value.replace(/\D/g, ''); // tira tudo que não é número
+    if (cpf.length === 11) {
+      cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    }
+    input.value = cpf;
+    });
   </script>
 </body>
 </html>

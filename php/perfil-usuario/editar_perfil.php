@@ -3,6 +3,7 @@ session_start();
 include '../conexao.php';
 
 $nome_usuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
+$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
 if (!$nome_usuario) {
     header("Location: ../login/login.php");
@@ -23,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome_completo = $_POST['nome_completo'];
     $novo_nome = $_POST['nome'];
     $novo_email = $_POST['email'];
+    $cpf = preg_replace('/\D/', '', $_POST['cpf']);
     $cep = preg_replace('/[^0-9]/', '', $_POST['cep']);
     $cidade = $_POST['cidade'];
     $estado = $_POST['uf'];
@@ -30,19 +32,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $bairro = $_POST['bairro'];
     
     if (!empty($_FILES['foto']['tmp_name'])) {
-        $foto = file_get_contents($_FILES['foto']['tmp_name']);
+        $foto_de_perfil = file_get_contents($_FILES['foto']['tmp_name']);
         $stmt = $conn->prepare(
-            "UPDATE usuario SET nome_completo = ?, nome = ?, email = ?, cep = ?, cidade = ?, estado = ?, rua = ?, bairro = ?, foto_de_perfil = ? WHERE idusuario = ?"
+            "UPDATE usuario SET nome_completo = ?, nome = ?, email = ?, cpf = ?, cep = ?, cidade = ?, estado = ?, rua = ?, bairro = ?, foto_de_perfil = ? WHERE idusuario = ?"
         );
-        $stmt->execute([$nome_completo ,$novo_nome, $novo_email, $cep, $cidade, $estado, $rua, $bairro, $foto, $idusuario]);
+        $stmt->execute([$nome_completo ,$novo_nome, $novo_email, $cpf, $cep, $cidade, $estado, $rua, $bairro, $foto_de_perfil, $idusuario]);
     } else {
         $stmt = $conn->prepare(
-            "UPDATE usuario SET nome_completo = ?, nome = ?, email = ?, cep = ?, cidade = ?, estado = ?, rua = ?, bairro = ? WHERE idusuario = ?"
+            "UPDATE usuario SET nome_completo = ?, nome = ?, email = ?, cpf = ?, cep = ?, cidade = ?, estado = ?, rua = ?, bairro = ? WHERE idusuario = ?"
         );
-        $stmt->execute([$nome_completo, $novo_nome, $novo_email, $cep, $cidade, $estado, $rua, $bairro, $idusuario]);
+        $stmt->execute([$nome_completo, $novo_nome, $novo_email, $cpf, $cep, $cidade, $estado, $rua, $bairro, $idusuario]);
     }
 
     $_SESSION['nome_usuario'] = $novo_nome;
+    $_SESSION['foto_de_perfil'] = $foto_de_perfil;
     header("Location: ver_perfil.php");
     exit;
 }
@@ -198,6 +201,11 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="profile-field">
             <label>Email:</label>
             <input type="email" name="email" value="<?= htmlspecialchars($usuario['email'] ?? '') ?>" required>
+        </div>
+
+        <div class="profile-field">
+            <label>CPF:</label>
+            <input type="text" name="cpf" id="cpf" value="<?= htmlspecialchars($usuario['cpf'] ?? '') ?>" required>
         </div>
 
         <div class="profile-field">

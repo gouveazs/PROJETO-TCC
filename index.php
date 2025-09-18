@@ -967,7 +967,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div>
         <h3 style="color: #ffffffff; font-size: 1.4rem;">Comunidades</h3>
         <p style="color: #ffffffff; font-size: 0.9rem;"> Visite nossas comunidades e participe dos chats online!</p>
-        <a href="#" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
+        <a href="php/comunidades/comunidade.php" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
       </div>
       <img src="imgs/comuni.jpg" alt="Card">
     </div>

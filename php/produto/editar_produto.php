@@ -9,6 +9,7 @@ if (!$nome_vendedor) {
 }
 
 include '../conexao.php';
+
 $idproduto = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($idproduto <= 0) {
     echo "Produto não encontrado.";
@@ -25,12 +26,17 @@ $stmt = $conn->prepare("SELECT * FROM produto WHERE idproduto = ?");
 $stmt->execute([$idproduto]);
 $produto = $stmt->fetch(PDO::FETCH_ASSOC);
 
+$stmt_imgs = $conn->prepare("SELECT idimagens, imagem FROM imagens WHERE idproduto = ?");
+$stmt_imgs->execute([$idproduto]);
+$imagens_existentes = $stmt_imgs->fetchAll(PDO::FETCH_ASSOC);
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];
     $num_paginas = $_POST['numero_paginas'];
     $editora = $_POST['editora'];
     $autor = $_POST['autor'];
-    $classificacao = $_POST['classificacao_idade'];
+    $classificacao = $_POST['classificacao_etaria'];
     $data_publicacao = $_POST['data_publicacao'];
     $preco = $_POST['preco'];
     $quantidade = $_POST['quantidade'];
@@ -50,13 +56,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Atualiza os campos do produto
     $stmt = $conn->prepare("UPDATE produto 
-        SET nome=?, autor=?, descricao=?, editora=?, numero_paginas=?, classificacao_idade=?, data_publicacao=?, idioma=?, idcategoria=?, preco=?, quantidade=?, isbn=?, dimensoes=?, estado_livro=?, paginas_faltando=?, folhas_amareladas=?, paginas_rasgadas=?, anotacoes=?, lombada_danificada=?, capa_danificada=?, estado_detalhado=? 
+        SET nome=?, autor=?, descricao=?, editora=?, numero_paginas=?, classificacao_etaria=?, data_publicacao=?, idioma=?, idcategoria=?, preco=?, quantidade=?, isbn=?, dimensoes=?, estado_livro=?, paginas_faltando=?, folhas_amareladas=?, paginas_rasgadas=?, anotacoes=?, lombada_danificada=?, capa_danificada=?, estado_detalhado=? 
         WHERE idproduto=?");
     $stmt->execute([
         $nome, $autor, $descricao, $editora, $num_paginas, $classificacao, $data_publicacao, $idioma, $idcategoria, $preco, $quantidade, $isbn, $dimensoes, $estado_livro, $paginas_faltando, $folhas_amareladas, $paginas_rasgadas, $anotacoes, $lombada_danificada, $capa_danificada, $estado_detalhado, $idproduto
     ]);
 
     if (!empty($_FILES['imagens']['name'][0])) {
+
+      $conn->prepare("DELETE FROM imagens WHERE idproduto = ?")->execute([$idproduto]);
+
       foreach ($_FILES['imagens']['tmp_name'] as $key => $tmp_name) {
           if ($_FILES['imagens']['error'][$key] === 0) {
               $imagem = file_get_contents($tmp_name);
@@ -67,11 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               $stmt_img->execute();
           }
       }
-    } else {
-        die("Pelo menos uma imagem deve ser enviada.");
     }
-
-    header("../../index.php");
+    header("Location: ../painel-livreiro/anuncios.php");
     exit;
 }
 ?>
@@ -84,6 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Editar Anúncio - Entre Linhas</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <style>
     :root {
       --marrom: #5a4224;
@@ -457,9 +465,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <nav>
       <ul class="menu">
-        <li><a href="painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="anuncios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Vendas publicadas</a></li>
-        <li><a href="painel-livreiro/rendimento.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
+        <li><a href="../painel-livreiro/painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
+        <li><a href="../painel-livreiro/anuncios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Vendas publicadas</a></li>
+        <li><a href="../painel-livreiro/rendimento.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
         <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
       </ul>
 
@@ -509,7 +517,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="form-group">
             <label for="classificacao_idade">Classificação etária:</label>
-            <input type="number" name="classificacao_idade" value="<?= $produto['classificacao_etaria'] ?>" required>
+            <input type="number" name="classificacao_etaria" value="<?= $produto['classificacao_etaria'] ?>" required>
         </div>
 
         <div class="form-group">
@@ -541,7 +549,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="form-group">
             <label for="quantidade">Quantidade:</label>
-            <input type="number" id="quantidade" name="quantidade" min="0" value="<?= htmlspecialchars($produto['preco']) ?>" required>
+            <input type="number" id="quantidade" name="quantidade" min="0" value="<?= htmlspecialchars($produto['quantidade']) ?>" required>
         </div>
 
         <div class="form-group">
@@ -557,8 +565,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="form-group">
             <label for="estado_livro">Estado do livro:</label>
             <select name="estado_livro" id="estado_livro" required>
-              <option value="novo" <?= $produto['estado_livro']=='novo'?'selected':'' ?>>Novo</option>
-              <option value="usado" <?= $produto['estado_livro']=='usado'?'selected':'' ?>>Usado</option>
+              <option value="novo" <?= $produto['estado_livro']=='Novo'?'selected':'' ?>>Novo</option>
+              <option value="usado" <?= $produto['estado_livro']=='Usado'?'selected':'' ?>>Usado</option>
             </select>
         </div>
 
@@ -567,8 +575,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <label for="paginas_faltando">Tem páginas faltando?</label>
               <select id="paginas_faltando" name="paginas_faltando">
                   <option value="">Selecione</option>
-                    <option value="nao" <?= $produto['paginas_faltando']=='nao'?'selected':'' ?>>Não</option>
-                    <option value="sim" <?= $produto['paginas_faltando']=='sim'?'selected':'' ?>>Sim</option>
+                    <option value="nao" <?= $produto['paginas_faltando']=='Não'?'selected':'' ?>>Não</option>
+                    <option value="sim" <?= $produto['paginas_faltando']=='Sim'?'selected':'' ?>>Sim</option>
               </select>
           </div>
 
@@ -576,8 +584,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <label for="paginas_rasgadas">Possui páginas rasgadas?</label>
               <select id="paginas_rasgadas" name="paginas_rasgadas">
                   <option value="">Selecione</option>
-                    <option value="nao" <?= $produto['paginas_faltando']=='nao'?'selected':'' ?>>Não</option>
-                    <option value="sim" <?= $produto['paginas_faltando']=='sim'?'selected':'' ?>>Sim</option>
+                    <option value="nao" <?= $produto['paginas_faltando']=='Não'?'selected':'' ?>>Não</option>
+                    <option value="sim" <?= $produto['paginas_faltando']=='Sim'?'selected':'' ?>>Sim</option>
               </select>
           </div>
 
@@ -585,8 +593,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <label for="folhas_amareladas">As páginas estão amareladas?</label>
               <select id="folhas_amareladas" name="folhas_amareladas">
                   <option value="">Selecione</option>
-                    <option value="nao" <?= $produto['paginas_faltando']=='nao'?'selected':'' ?>>Não</option>
-                    <option value="sim" <?= $produto['paginas_faltando']=='sim'?'selected':'' ?>>Sim</option>
+                    <option value="nao" <?= $produto['paginas_faltando']=='Não'?'selected':'' ?>>Não</option>
+                    <option value="sim" <?= $produto['paginas_faltando']=='Sim'?'selected':'' ?>>Sim</option>
               </select>
           </div>
 
@@ -594,8 +602,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <label for="anotacoes">Possui anotações/rabiscos?</label>
               <select id="anotacoes" name="anotacoes">
                   <option value="">Selecione</option>
-                    <option value="nao" <?= $produto['paginas_faltando']=='nao'?'selected':'' ?>>Não</option>
-                    <option value="sim" <?= $produto['paginas_faltando']=='sim'?'selected':'' ?>>Sim</option>
+                    <option value="nao" <?= $produto['paginas_faltando']=='Não'?'selected':'' ?>>Não</option>
+                    <option value="sim" <?= $produto['paginas_faltando']=='Sim'?'selected':'' ?>>Sim</option>
               </select>
           </div>
 
@@ -603,8 +611,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <label for="lombada_danificada">A lombada está danificada?</label>
               <select id="lombada_danificada" name="lombada_danificada">
                   <option value="">Selecione</option>
-                    <option value="nao" <?= $produto['paginas_faltando']=='nao'?'selected':'' ?>>Não</option>
-                    <option value="sim" <?= $produto['paginas_faltando']=='sim'?'selected':'' ?>>Sim</option>
+                    <option value="nao" <?= $produto['paginas_faltando']=='Não'?'selected':'' ?>>Não</option>
+                    <option value="sim" <?= $produto['paginas_faltando']=='Sim'?'selected':'' ?>>Sim</option>
               </select>
           </div>
 
@@ -612,41 +620,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <label for="capa_danificada">A capa está danificada?</label>
               <select id="capa_danificada" name="capa_danificada">
                   <option value="">Selecione</option>
-                    <option value="nao" <?= $produto['paginas_faltando']=='nao'?'selected':'' ?>>Não</option>
-                    <option value="sim" <?= $produto['paginas_faltando']=='sim'?'selected':'' ?>>Sim</option>
+                    <option value="nao" <?= $produto['paginas_faltando']=='Não'?'selected':'' ?>>Não</option>
+                    <option value="sim" <?= $produto['paginas_faltando']=='Sim'?'selected':'' ?>>Sim</option>
               </select>
           </div>
       </div>
 
         <div class="form-group">
             <label for="estado_detalhado">Descrição do estado:</label>
-            <textarea id="estado_detalhado" name="estado_detalhado" rows="4" value="<?= htmlspecialchars($produto['estado_detalhado']) ?>" required></textarea>
+            <textarea id="estado_detalhado" name="estado_detalhado" rows="4" required><?= htmlspecialchars($produto['estado_detalhado']) ?></textarea>
         </div>
 
         <div class="form-group">
             <label for="imagem">Imagem do produto:</label>
-            <input type="file" id="imagem" name="imagens[]" accept="image/*" multiple required>
+            <input type="file" id="imagem" name="imagens[]" accept="image/*" multiple>
         </div>
+
+        <?php if ($imagens_existentes): ?>
+          <div id="carouselImagens" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <?php foreach ($imagens_existentes as $i => $img): ?>
+                <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
+                  <img src="data:image/jpeg;base64,<?= base64_encode($img['imagem']) ?>" class="d-block w-100" alt="Imagem <?= $i+1 ?>">
+                </div>
+              <?php endforeach; ?>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselImagens" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselImagens" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Próxima</span>
+            </button>
+          </div>
+        <?php endif; ?>
 
         <input type="submit" value="Cadastrar">
         </form>
     </main>
   </div>
   <script>
-    document.getElementsByName('estado_livro')[0].addEventListener('change', function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        var selectEstado = document.getElementsByName('estado_livro')[0];
         var usadoDiv = document.getElementById('detalhes-usado');
-        if(this.value === 'usado') {
-            usadoDiv.style.display = 'block';
-            // Se quiser tornar os campos obrigatórios somente quando 'usado':
-            usadoDiv.querySelectorAll('select').forEach(function(el) {
-                el.required = true;
-            });
-        } else {
-            usadoDiv.style.display = 'none';
-            usadoDiv.querySelectorAll('select').forEach(function(el) {
-                el.required = false;
-            });
+
+        function toggleDetalhes() {
+            if (selectEstado.value === 'usado') {
+                usadoDiv.style.display = 'block';
+                usadoDiv.querySelectorAll('select').forEach(function(el) {
+                    el.required = true;
+                });
+            } else {
+                usadoDiv.style.display = 'none';
+                usadoDiv.querySelectorAll('select').forEach(function(el) {
+                    el.required = false;
+                });
+            }
         }
+
+        selectEstado.addEventListener('change', toggleDetalhes);
+        toggleDetalhes(); // executa uma vez ao carregar
     });
   </script>
 </body>

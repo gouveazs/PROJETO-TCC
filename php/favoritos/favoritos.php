@@ -323,6 +323,19 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     .card .info .stars {
       color: #f5c518;
     }
+    
+    .card-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .card-link .card {
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .card-link .card:hover {
+      transform: scale(1.03);
+    }
 
     .footer {
       margin-left: 250px;
@@ -463,14 +476,16 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <div class="cards cards-novidades">
     <?php if(count($favoritos) > 0): ?>
       <?php foreach($favoritos as $produto): ?>
-        <div class="card">
-          <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
-          <div class="info">
-            <h3><?= htmlspecialchars($produto['nome']) ?></h3>
-            <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
-            <div class="stars">★★★★☆</div>
+        <a href="../produto/pagiproduto.php?id=<?= $produto['idproduto'] ?>" class="card-link">
+          <div class="card">
+            <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+            <div class="info">
+              <h3><?= htmlspecialchars($produto['nome']) ?></h3>
+              <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+              <div class="stars">★★★★☆</div>
+            </div>
           </div>
-        </div>
+        </a>
       <?php endforeach; ?>
     <?php else: ?>
       <p>Você ainda não adicionou nenhum produto aos favoritos.</p>

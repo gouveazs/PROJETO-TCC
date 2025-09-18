@@ -22,7 +22,7 @@ if (!$idusuario) {
 }
 
 // expurgar o usuario da terra
-$stmt = $conn->prepare("DELETE FROM cadastro_usuario WHERE idusuario = ?");
+$stmt = $conn->prepare("DELETE FROM usuario WHERE idusuario = ?");
 if ($stmt->execute([$idusuario])) {
     session_destroy();
     echo "<img src='https://media.tenor.com/URShj_JWaS8AAAAM/explos%C3%A3o-meme.gif' />";
