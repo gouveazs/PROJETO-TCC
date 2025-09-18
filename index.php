@@ -524,7 +524,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     .editora-item {
       background-color: #fff;
       border-radius: 50%;
-      padding: 20px;
+      padding: 0;
       text-align: center;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       transition: transform 0.3s, box-shadow 0.3s;
@@ -534,6 +534,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       justify-content: center;
       aspect-ratio: 1/1;
       min-height: 120px;
+      overflow: hidden;
     }
     
     .editora-item:hover {
@@ -542,12 +543,15 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       background-color: #f8f8f8;
     }
     
+    .editora-logo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    
     .editora-nome {
-      font-weight: 600;
-      color: var(--marrom);
-      font-size: 0.85rem;
-      text-align: center;
-      line-height: 1.2;
+      display: none;
     }
 
     /* Media Queries para responsividade */
@@ -595,7 +599,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       
       .editora-item {
         min-height: 110px;
-        padding: 15px;
       }
     }
 
@@ -656,11 +659,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       
       .editora-item {
         min-height: 100px;
-        padding: 15px;
-      }
-      
-      .editora-nome {
-        font-size: 0.8rem;
       }
     }
 
@@ -745,11 +743,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       
       .editora-item {
         min-height: 90px;
-        padding: 12px;
-      }
-      
-      .editora-nome {
-        font-size: 0.75rem;
       }
     }
 
@@ -768,11 +761,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       
       .editora-item {
         min-height: 80px;
-        padding: 10px;
-      }
-      
-      .editora-nome {
-        font-size: 0.7rem;
       }
     }
     
@@ -978,7 +966,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div>
         <h3 style="color: #ffffffff; font-size: 1.4rem;">Comunidades</h3>
         <p style="color: #ffffffff; font-size: 0.9rem;"> Visite nossas comunidades e participe dos chats online!</p>
-        <a href="#" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; extreme-radius: 50%; border-radius: 6px; text-decoration: none;">Clique aqui</a>
+        <a href="#" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
       </div>
       <img src="imgs/comuni.jpg" alt="Card">
     </div>
@@ -1008,7 +996,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 
   <div class="card">
-    <img src="imgs/A Menina que Roubava Livros.jpg" extreme-radius: 50%; alt="Livro 2">
+    <img src="imgs/A Menina que Roubava Livros.jpg" alt="Livro 2">
     <div class="info">
       <h3>A Menina que Roubava Livros</h3>
       <p class="price">R$ 39,50</p>
@@ -1205,28 +1193,28 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   
   <div class="editoras-grid">
     <div class="editora-item">
-      <div class="editora-nome">Record</div>
+      <img src="imgs/rocco.jpg" alt="Record" class="editora-logo">
     </div>
     <div class="editora-item">
-      <div class="editora-nome">Cia das Letras</div>
+      <img src="imgs/intrinseca.png" alt="Cia das Letras" class="editora-logo">
     </div>
     <div class="editora-item">
-      <div class="editora-nome">GRUPO COMPANHIA DAS LETRAS</div>
+      <img src="imgs/alt.jpg" alt="Rocco" class="editora-logo">
     </div>
     <div class="editora-item">
-      <div class="editora-nome">Rocco</div>
+      <img src="imgs/recordeditora.png" alt="Male" class="editora-logo">
     </div>
     <div class="editora-item">
-      <div class="editora-nome">Male</div>
+      <img src="imgs/verus.png" alt="Grupo A" class="editora-logo">
     </div>
     <div class="editora-item">
-      <div class="editora-nome">Grupo A</div>
+      <img src="imgs/companhia.jpg" alt="Panini" class="editora-logo">
     </div>
     <div class="editora-item">
-      <div class="editora-nome">Panini</div>
+      <img src="imgs/editoras/intrinseca-logo.png" alt="Intrinseca" class="editora-logo">
     </div>
-    <div class="editora-item">
-      <div class="editora-nome">Intriseca</div>
+     <div class="editora-item">
+      <img src="imgs/arqueiro.jpg" alt="Intrinseca" class="editora-logo">
     </div>
   </div>
 </div>
