@@ -398,7 +398,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 <!-- Botões organizados um embaixo do outro -->
                 <div class="produto-actions">
-                    <a href="editarProduto.php?id=<?= $produto['idproduto'] ?>" class="btn-action editar">Editar Produto</a>
+                    <a href="editar_produto.php?id=<?= $produto['idproduto'] ?>" class="btn-action editar">Editar Produto</a>
                     <a href="excluirProduto.php?id=<?= $produto['idproduto'] ?>" class="btn-action excluir" onclick="return confirm('Tem certeza que deseja excluir este produto?');">Excluir Produto</a>
                 </div>
             </div>
