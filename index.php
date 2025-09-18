@@ -17,6 +17,7 @@ $stmt = $conn->prepare("
         ORDER BY idimagens ASC
         LIMIT 1
     )
+    LIMIT 6
 ");
 $stmt->execute();
 $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -1195,7 +1196,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </a>
   <?php endforeach; ?>
 </div>
-
 
 <!-- NOVA SEÇÃO: Navegue por Editora - FORMATO REDONDO -->
 <div class="editoras-container">

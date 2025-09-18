@@ -772,6 +772,32 @@ try {
                 border-bottom: 1px solid #eee;
             }
         } 
+
+        .btn-favorito-min {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #444;
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn-favorito-min:hover {
+            background-color: #eee;
+            border-color: #ccc;
+            color: #222;
+        }
+
+        .btn-favorito-min:active {
+            background-color: #e4e4e4;
+        }
+
     </style>
 </head> 
 <body> 
@@ -1011,22 +1037,45 @@ try {
                             <a href="#"><i class="fas fa-gift"></i> Presentear</a>
                         </div>
                         <div class="buy-option">
-                        <?php
-                            if (!isset($_SESSION['idusuario'])) {
-                                echo '<p><a href="../login/login.php">Faça login para adicionar aos favoritos</a></p>';
-                            } else {
-                                if (isset($_GET['id'])) {
-                                    $idproduto = $_GET['id']; // Captura corretamente o ID da URL
-                                    echo '
-                                        <form method="post" action="../insercao/insercaoFavoritos.php">
-                                            <input type="hidden" name="idproduto" value="'.$idproduto.'">
-                                            <button type="submit" class="btn-favorito">Adicionar aos Favoritos ❤️</button>
-                                        </form>';
+                            <?php
+                                if (!isset($_SESSION['idusuario'])) {
+                                    echo '<p><a href="../login/login.php">Faça login para adicionar aos favoritos</a></p>';
                                 } else {
-                                    echo "<p>Produto não encontrado.</p>";
+                                    if (isset($_GET['id'])) {
+                                        $idproduto = (int)$_GET['id'];
+                                        $idusuario = (int)$_SESSION['idusuario'];
+
+                                        // verifica se já existe nos favoritos
+                                        include '../conexao.php'; // seu arquivo de conexão PDO
+
+                                        $stmt = $conn->prepare("SELECT COUNT(*) FROM favoritos WHERE idusuario = :idusuario AND idproduto = :idproduto");
+                                        $stmt->bindValue(':idusuario', $idusuario, PDO::PARAM_INT);
+                                        $stmt->bindValue(':idproduto', $idproduto, PDO::PARAM_INT);
+                                        $stmt->execute();
+                                        $jaFavorito = $stmt->fetchColumn();
+
+                                        if ($jaFavorito) {
+                                            echo '<p style="color: green;">Este produto já está nos seus favoritos ❤️</p>';
+                                        } else {
+                                            echo '
+                                            <form method="post" action="../insercao/insercaoFavoritos.php">
+                                                <input type="hidden" name="idproduto" value="'.$idproduto.'">
+                                                <button type="submit" class="btn-favorito-min">Adicionar aos Favoritos ❤️</button>
+                                            </form>';
+                                        }
+
+                                        // mensagem de feedback
+                                        if (isset($_GET['favorito']) && $_GET['favorito'] == 'sucesso') {
+                                            echo '<p style="color: green; margin-top: 10px;">Produto adicionado aos favoritos!</p>';
+                                        } elseif (isset($_GET['favorito']) && $_GET['favorito'] == 'erro') {
+                                            echo '<p style="color: red; margin-top: 10px;">Erro ao adicionar aos favoritos. Tente novamente.</p>';
+                                        }
+
+                                    } else {
+                                        echo "<p>Produto não encontrado.</p>";
+                                    }
                                 }
-                            }
-                        ?>
+                            ?>
                         </div>
                     </div>
                 </div>

@@ -20,6 +20,7 @@ if (!$idusuario) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nome_completo = $_POST['nome_completo'];
     $novo_nome = $_POST['nome'];
     $novo_email = $_POST['email'];
     $cep = preg_replace('/[^0-9]/', '', $_POST['cep']);
@@ -31,14 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_FILES['foto']['tmp_name'])) {
         $foto = file_get_contents($_FILES['foto']['tmp_name']);
         $stmt = $conn->prepare(
-            "UPDATE usuario SET nome = ?, email = ?, cep = ?, cidade = ?, estado = ?, rua = ?, bairro = ?, foto_de_perfil = ? WHERE idusuario = ?"
+            "UPDATE usuario SET nome_completo = ?, nome = ?, email = ?, cep = ?, cidade = ?, estado = ?, rua = ?, bairro = ?, foto_de_perfil = ? WHERE idusuario = ?"
         );
-        $stmt->execute([$novo_nome, $novo_email, $cep, $cidade, $estado, $rua, $bairro, $foto, $idusuario]);
+        $stmt->execute([$nome_completo ,$novo_nome, $novo_email, $cep, $cidade, $estado, $rua, $bairro, $foto, $idusuario]);
     } else {
         $stmt = $conn->prepare(
-            "UPDATE usuario SET nome = ?, email = ?, cep = ?, cidade = ?, estado = ?, rua = ?, bairro = ? WHERE idusuario = ?"
+            "UPDATE usuario SET nome_completo = ?, nome = ?, email = ?, cep = ?, cidade = ?, estado = ?, rua = ?, bairro = ? WHERE idusuario = ?"
         );
-        $stmt->execute([$novo_nome, $novo_email, $cep, $cidade, $estado, $rua, $bairro, $idusuario]);
+        $stmt->execute([$nome_completo, $novo_nome, $novo_email, $cep, $cidade, $estado, $rua, $bairro, $idusuario]);
     }
 
     $_SESSION['nome_usuario'] = $novo_nome;
@@ -186,7 +187,7 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
     <form method="POST" enctype="multipart/form-data">
         <div class="profile-field">
             <label>Nome completo:</label>
-            <input type="text" name="nome" value="<?= htmlspecialchars($usuario['nome']) ?>" required>
+            <input type="text" name="nome_completo" value="<?= htmlspecialchars($usuario['nome_completo'] ?? '') ?>" required>
         </div>
 
         <div class="profile-field">
@@ -196,32 +197,32 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
         <div class="profile-field">
             <label>Email:</label>
-            <input type="email" name="email" value="<?= htmlspecialchars($usuario['email']) ?>" required>
+            <input type="email" name="email" value="<?= htmlspecialchars($usuario['email'] ?? '') ?>" required>
         </div>
 
         <div class="profile-field">
             <label>CEP:</label>
-            <input type="text" name="cep" id="cep" value="<?= htmlspecialchars($usuario['cep']) ?>" required>
+            <input type="text" name="cep" id="cep" value="<?= htmlspecialchars($usuario['cep'] ?? '') ?>" required>
         </div>
 
         <div class="profile-field">
             <label>Estado:</label>
-            <input type="text" name="uf" id="uf" value="<?= htmlspecialchars($usuario['estado']) ?>" readonly>
+            <input type="text" name="uf" id="uf" value="<?= htmlspecialchars($usuario['estado'] ?? '')?>" readonly>
         </div>
 
         <div class="profile-field">
             <label>Cidade:</label>
-            <input type="text" name="cidade" id="cidade" value="<?= htmlspecialchars($usuario['cidade']) ?>" readonly>
+            <input type="text" name="cidade" id="cidade" value="<?= htmlspecialchars($usuario['cidade'] ?? '') ?>" readonly>
         </div>
 
         <div class="profile-field">
             <label>Bairro:</label>
-            <input type="text" name="bairro" id="bairro" value="<?= htmlspecialchars($usuario['bairro']) ?>" readonly>
+            <input type="text" name="bairro" id="bairro" value="<?= htmlspecialchars($usuario['bairro'] ?? '') ?>" readonly>
         </div>
 
         <div class="profile-field">
             <label>Rua:</label>
-            <input type="text" name="logradouro" id="logradouro" value="<?= htmlspecialchars($usuario['rua']) ?>" readonly>
+            <input type="text" name="logradouro" id="logradouro" value="<?= htmlspecialchars($usuario['rua'] ?? '') ?>" readonly>
         </div>
 
         <div class="file-upload-container">

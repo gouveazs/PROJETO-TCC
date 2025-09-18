@@ -3,23 +3,33 @@ session_start();
 $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
 $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
-//produtos
+if (!isset($_SESSION['nome_usuario'])) {
+    header('Location: ../login/login.php');
+    exit;
+}
+
 include '../conexao.php';
+
+$idusuario = (int)$_SESSION['idusuario'];
+
+// Busca produtos favoritados pelo usuário + uma imagem
 $stmt = $conn->prepare("
-    SELECT p.*, i.imagem
-    FROM produto p
-    LEFT JOIN imagens i 
-        ON i.idproduto = p.idproduto
-    WHERE i.idimagens = (
-        SELECT idimagens
-        FROM imagens
-        WHERE idproduto = p.idproduto
-        ORDER BY idimagens ASC
-        LIMIT 1
-    )
+    SELECT 
+        p.idproduto,
+        p.nome,
+        p.preco,
+        (SELECT i.imagem 
+           FROM imagens i 
+          WHERE i.idproduto = p.idproduto 
+          ORDER BY i.idimagens ASC 
+          LIMIT 1) AS imagem
+    FROM favoritos f
+    JOIN produto p ON f.idproduto = p.idproduto
+    WHERE f.idusuario = :idusuario
 ");
+$stmt->bindValue(':idusuario', $idusuario, PDO::PARAM_INT);
 $stmt->execute();
-$produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -444,39 +454,49 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <div style="margin-left: 250px; margin-top: 70px; padding: 30px;">
-
-  <!-- Título alterado de "Seus Livros Favoritos" para "Nossos Livros" -->
   <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-   <!-- Novidades -->
-<div class="section-header">
-  <h2>Seus Livros Favoritos</h2> 
-</div>
+    <div class="section-header">
+      <h2>Seus Livros Favoritos</h2> 
+    </div>
   </div>
 
-<!-- Botão quadrado marrom com imagem and texto -->
-<div style="margin-top: 30px; text-align: center;">
-  <a href="../destaques/destaques.php" 
-     style="display: inline-block; 
-            width: 150px; 
-            height: 150px; 
-            background-color: #5a4224; 
-            color: #fff; 
-            font-weight: bold; 
-            font-size: 0.95rem; 
-            border-radius: 10px; 
-            text-decoration: none; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 8px;">
-    <img src="../../imgs/book.png" alt="Adicionar Livro" style="width:50px; height:50px;">
-    Adicionar Livro
-  </a>
-</div>
+  <div class="cards cards-novidades">
+    <?php if(count($favoritos) > 0): ?>
+      <?php foreach($favoritos as $produto): ?>
+        <div class="card">
+          <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+          <div class="info">
+            <h3><?= htmlspecialchars($produto['nome']) ?></h3>
+            <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+            <div class="stars">★★★★☆</div>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <p>Você ainda não adicionou nenhum produto aos favoritos.</p>
+    <?php endif; ?>
 
-
-
+    <div style="margin-top: 30px; text-align: center;">
+      <a href="../destaques/destaques.php" 
+        style="display: inline-block; 
+                width: 150px; 
+                height: 150px; 
+                background-color: #5a4224; 
+                color: #fff; 
+                font-weight: bold; 
+                font-size: 0.95rem; 
+                border-radius: 10px; 
+                text-decoration: none; 
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+                justify-content: center; 
+                gap: 8px;">
+        <img src="../../imgs/book.png" alt="Adicionar Livro" style="width:50px; height:50px;">
+        Adicionar Livro
+      </a>
+    </div>
+  </div>
 
   <!-- Cards Destaques e Carrinho lado a lado -->
   <div style="display: flex; gap: 30px; flex-wrap: wrap; margin-top: 30px;">
@@ -501,26 +521,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 </div>
 
-<div class="main">
-<div class="cards cards-novidades">
-  <?php if(count($produtos) > 0): ?>
-    <?php foreach($produtos as $produto): ?>
-      <div class="card">
-        <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
-        <div class="info">
-          <h3><?= htmlspecialchars($produto['nome']) ?></h3>
-          <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
-          <div class="stars">★★★★☆</div>
-        </div>
-      </div>
-    <?php endforeach; ?>
-  <?php else: ?>
-  <?php endif; ?>
-</div>
-</div>
-
 <div class="footer">
 &copy; 2025 Entre Linhas - Todos os direitos reservados.
 </div>
+
 </body>
 </html>

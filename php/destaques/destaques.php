@@ -2,6 +2,23 @@
 session_start();
 $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
 $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
+
+include '../conexao.php';
+$stmt = $conn->prepare("
+    SELECT p.*, i.imagem
+    FROM produto p
+    LEFT JOIN imagens i 
+        ON i.idproduto = p.idproduto
+    WHERE i.idimagens = (
+        SELECT idimagens
+        FROM imagens
+        WHERE idproduto = p.idproduto
+        ORDER BY idimagens ASC
+        LIMIT 1
+    )
+");
+$stmt->execute();
+$produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -223,6 +240,65 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
 
     .categorias-barra a:hover {
       background-color: var(--marrom);
+    }
+
+    .cards {
+      display: grid;
+      gap: 20px;
+    }
+
+    .cards-novidades {
+      grid-template-columns: repeat(6, 1fr);
+    }
+
+    .cards-recomendacoes {
+      grid-template-columns: repeat(6, 1fr);
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+
+    .card .info {
+      padding: 15px;
+      text-align: center;
+    }
+
+    .card .info h3 {
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: var(--verde);
+    }
+
+    .card-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .card-link .card {
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .card-link .card:hover {
+      transform: scale(1.03);
+    }
+
+    .card .info .stars {
+      color: #f5c518;
     }
 
     .content {
@@ -508,7 +584,25 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
     <h2>Bem-vindo aos Destaques</h2>
     <p>Descubra as obras em destaque, autores renomados e as novidades que separamos especialmente para você.</p>
 
-    <!-- O conteúdo dos destaques será adicionado aqui posteriormente -->
+    <div class="cards cards-novidades">
+      <?php foreach ($produtos as $produto): ?>
+        <a href="php/produto/pagiproduto.php?id=<?= $produto['idproduto'] ?>" class="card-link">
+          <div class="card">
+            <?php if (!empty($produto['imagem'])): ?>
+              <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+            <?php else: ?>
+              <img src="imgs/usuario.jpg" alt="Foto de Perfil">
+            <?php endif; ?>
+            <div class="info">
+              <h3><?= htmlspecialchars($produto['nome']) ?></h3>
+              <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+              <div class="stars">★★★★★</div>
+            </div>
+          </div>
+        </a>
+      <?php endforeach; ?>
+    </div>
+
   </div>
 
   <div class="footer">

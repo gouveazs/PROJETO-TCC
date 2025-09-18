@@ -481,7 +481,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="content-area">
     <main class="conteudo">
         <h1>Editar informações do seu anúncio:</h1>
-        <form action="../insercao/insercaoProduto.php" method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="nome">Título:</label>
             <input type="text" name="nome" value="<?= htmlspecialchars($produto['nome']) ?>" required>
