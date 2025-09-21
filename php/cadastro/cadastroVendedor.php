@@ -2,10 +2,11 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Cadastro de Vendedor</title>
+  <title>Torne-se um vendedor hoje - Entre Linhas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Playfair Display -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="../../imgs/logotipo.png"/>
   <style>
     * {
       box-sizing: border-box;

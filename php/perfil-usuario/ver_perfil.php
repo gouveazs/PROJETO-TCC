@@ -24,7 +24,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Perfil do Usuário</title>
+  <title>Seu Perfil - Entre Linhas</title>
   <style>
     * {
       margin: 0;
@@ -152,6 +152,7 @@
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="../../imgs/logotipo.png"/>
 </head>
 <body>
   <div class="perfil-container">

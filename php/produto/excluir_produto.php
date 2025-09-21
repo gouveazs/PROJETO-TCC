@@ -14,12 +14,17 @@ if ($idproduto <= 0) {
     exit;
 }
 
+// apaga favoritos
+$stmt = $conn->prepare("DELETE FROM favoritos WHERE idproduto = ?");
+$stmt->execute([$idproduto]);
+
 // expurga as imagens primeiro
 $stmt_img = $conn->prepare("DELETE FROM imagens WHERE idproduto = ?");
 $stmt_img->execute([$idproduto]);
 
 // depois expurga o produto
 $stmt_prod = $conn->prepare("DELETE FROM produto WHERE idproduto = ?");
+
 if ($stmt_prod->execute([$idproduto])) {
     echo "<img src='https://media.tenor.com/URShj_JWaS8AAAAM/explos%C3%A3o-meme.gif' alt='Produto deletado'/>";
     echo "<br>";

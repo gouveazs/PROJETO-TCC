@@ -29,8 +29,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Entre Linhas - Livraria Moderna</title>
+  <title>Entre Linhas - Sebo Moderno</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="imgs/logotipo.png"/>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
     :root {
@@ -877,20 +878,10 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <li><a href="php/login/loginVendedor.php"><img src="imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
       <?php else: ?>
         <li><a href="php/perfil-usuario/ver_perfil.php"><img src="imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
-      <?php endif; ?>
-
-      <?php if ($nome === 'adm'): ?>
-        <li><a href="php/consulta/consulta.php"><img src="imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
-        <li><a href="php/consultaFiltro/busca.php"><img src="imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
-        <li><a href="php/cadastro/cadastroProduto.php"><img src="imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
-      <?php endif; ?>
-
-      <?php if ($nome): ?>
         <li><a href="php/login/logout.php"><img src="imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
       <?php endif; ?>
     </ul>
   </nav>
-
 </div>
 
  <div class="topbar">

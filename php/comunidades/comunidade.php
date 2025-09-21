@@ -15,6 +15,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Comunidades - Entre Linhas</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="../../imgs/logotipo.png"/>
   <style>
     :root {
       --marrom: #5a4224;
@@ -323,15 +324,6 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
           <li><a href="../login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
         <?php else: ?>
           <li><a href="../php/perfil/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
-        <?php endif; ?>
-
-        <?php if ($nome === 'adm'): ?>
-          <li><a href="../consulta/consulta.php"><img src="../../imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
-          <li><a href="../consultaFiltro/busca.php"><img src="../../imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
-          <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
-        <?php endif; ?>
-
-        <?php if ($nome): ?>
           <li><a href="../login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
         <?php endif; ?>
       </ul>
@@ -340,7 +332,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
 
   <!-- Topo -->
   <div class="topbar">
-    <h1>Entre Linhas - Chats</h1>
+    <h1>Entre Linhas - Comunidades e chats online</h1>
     <div class="search-box">
       <input type="text" placeholder="Pesquisar tags, outros...">
       <img src="../../imgs/lupa.png" alt="Buscar">

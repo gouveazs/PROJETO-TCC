@@ -47,9 +47,10 @@ try {
 <head> 
     <meta charset="UTF-8" /> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
-    <title>Entre Linhas - Livraria Moderna</title> 
+    <title><?= htmlspecialchars($produto['nome'] ?? 'Págida de Livro') ?> - Entre Linhas/</title> 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="../../imgs/logotipo.png"/>
     <style> 
         :root { 
             --marrom: #5a4224; 
@@ -830,22 +831,13 @@ try {
                     <li><a href="../login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
                 <?php else: ?>
                     <li><a href="../perfil/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
-                <?php endif; ?>
-
-                <?php if ($nome === 'adm'): ?>
-                    <li><a href="../consulta/consulta.php"><img src="../../imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
-                    <li><a href="../consultaFiltro/busca.php"><img src="../../imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
-                    <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
-                <?php endif; ?>
-
-                <?php if ($nome): ?>
                     <li><a href="../login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
                 <?php endif; ?>
             </ul> 
         </nav> 
     </div> 
     <div class="topbar"> 
-        <h1>Entre Linhas - Sebo Moderna</h1> 
+        <h1>Entre Linhas - Sebo Moderno</h1> 
         <form class="search-form" action="../consultaFiltro/consultaFiltro.php" method="POST"> 
             <input type="text" name="nome" placeholder="Pesquisar livros, autores..."> 
             <input type="submit" value="Buscar"> 

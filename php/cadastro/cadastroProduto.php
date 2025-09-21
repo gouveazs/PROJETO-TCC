@@ -22,8 +22,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastro de livro - Entre Linhas</title>
+  <title>Anuncie seu livro - Entre Linhas</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="../../imgs/logotipo.png"/>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
     :root {
@@ -399,19 +400,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     <nav>
       <ul class="menu">
         <li><a href="../painel-livreiro/painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="../painel-livreiro/anuncios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Vendas publicadas</a></li>
+        <li><a href="../painel-livreiro/anuncios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Seus Anúncios</a></li>
         <li><a href="../painel-livreiro/rendimento.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
-        <li><a href="cadastroProduto.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
+        <li><a href="cadastroProduto.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Anunciar livro</a></li>
       </ul>
 
       <h3>Conta</h3>
       <ul class="account">
-        <?php if (!$nome_vendedor): ?>
-          <li><a href="php/login/login.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
-          <li><a href="php/cadastro/cadastroUsuario.php"><img src="../../imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
-          <li><a href="php/cadastro/cadastroVendedor.php"><img src="../../imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
-          <li><a href="php/login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
-        <?php else: ?>
+        <?php if ($nome_vendedor): ?>
           <li><a href="../painel-livreiro/minhas_informacoes.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Editar informações</a></li>
           <li><a href="../login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
         <?php endif; ?>
@@ -421,7 +417,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
   <div class="content-area">
     <main class="conteudo">
-        <h1>Cadastre seu livro para venda:</h1>
+        <h1>Anúncie seu livro:</h1>
         <form action="../insercao/insercaoProduto.php" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="nome">Título:</label>

@@ -59,8 +59,9 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Editor Perfil</title>
+    <title>Edite seu Perfil - Entre Linhas</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="../../imgs/logotipo.png"/>
     <style>
         body {
             background-color: #F4F1EE;

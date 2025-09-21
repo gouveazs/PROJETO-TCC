@@ -24,7 +24,7 @@ if (!$vendedor_db) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Painel do Livreiro - Minahs informações</title>
+  <title>Minhas informações - Painel do Livreiro</title>
   <style>
     * {
       margin: 0;
@@ -152,16 +152,17 @@ if (!$vendedor_db) {
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="../../imgs/logotipo.png"/>
 </head>
 <body>
   <div class="perfil-container">
     <?php
-    if (!empty($vendedor_db['foto_de_perfil'])) {
-        $imgData = base64_encode($vendedor_db['foto_de_perfil']);
-        echo '<img src="data:image/jpeg;base64,' . $imgData . '" alt="Foto do usuário" class="perfil-foto" />';
-    } else {
-        echo '<img src="../../imgs/imagem-do-usuario-com-fundo-preto.png" alt="Sem foto" class="perfil-foto" />';
-    }
+      if (!empty($vendedor_db['foto_de_perfil'])) {
+          $imgData = base64_encode($vendedor_db['foto_de_perfil']);
+          echo '<img src="data:image/jpeg;base64,' . $imgData . '" alt="Foto do usuário" class="perfil-foto" />';
+      } else {
+          echo '<img src="../../imgs/imagem-do-usuario-com-fundo-preto.png" alt="Sem foto" class="perfil-foto" />';
+      }
     ?>
     <h1><?php echo htmlspecialchars($vendedor_db['nome_completo']); ?></h1>
 

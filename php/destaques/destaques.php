@@ -28,6 +28,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Destaques - Entre Linhas</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="../../imgs/logotipo.png"/>
   <style>
     :root {
       --marrom: #5a4224;
@@ -508,15 +509,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <li><a href="../login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
         <?php else: ?>
           <li><a href="../perfil/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
-        <?php endif; ?>
-
-        <?php if ($nome === 'adm'): ?>
-          <li><a href="../consulta/consulta.php"><img src="../../imgs/explorar.png" alt="Consulta" style="width:20px; margin-right:10px;"> Consulta</a></li>
-          <li><a href="../consultaFiltro/busca.php"><img src="../../imgs/explorar.png" alt="Consulta Nome" style="width:20px; margin-right:10px;"> Consulta por Nome</a></li>
-          <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;"> Cadastrar Produto</a></li>
-        <?php endif; ?>
-
-        <?php if ($nome): ?>
           <li><a href="../login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
         <?php endif; ?>
       </ul>
@@ -528,7 +520,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <h1>
       <div class="logo-container">
         <img src="../../imgs/logotipo.png" alt="Logo Entre Linhas" class="logo-img">
-        Entre Linhas - Destaques
+        Destaques - Entre Linhas
       </div>
     </h1>
     <form class="search-form" action="../consultaFiltro/consultaFiltro.php" method="POST">
@@ -601,6 +593,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
           </div>
         </a>
       <?php endforeach; ?>
+      <?php if (empty($produtos)): ?>
+        <p style="text-align: center;">Nenhum produto disponível no momento.</p>
+      <?php endif; ?>
     </div>
 
   </div>
