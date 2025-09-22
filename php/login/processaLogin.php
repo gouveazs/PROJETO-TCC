@@ -14,8 +14,12 @@ try {
         session_start();
         $_SESSION['idusuario'] = $usuario_db['idusuario'];
         $_SESSION['nome_usuario'] = $usuario_db['nome']; 
-        $_SESSION['foto_de_perfil'] = $usuario_db['foto_de_perfil']; 
-        header('Location: ../../index.php');
+        $_SESSION['foto_de_perfil'] = $usuario_db['foto_de_perfil'];
+            if ($usuario == 'adm') {
+                header('Location: ../pag-adm/adm.php');
+            } else {
+                header('Location: ../../index.php');
+            }
         exit();
     } else {
         header('Location: login.php?error=1');
