@@ -1,57 +1,27 @@
 <?php
-session_start();
-$adm = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
-$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
+  session_start();
+  $adm = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
+  $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
-if (!isset($_SESSION['nome_usuario'])) {
-  header('Location: ../login/login.php');
-  exit;
-}
+  if (!isset($_SESSION['nome_usuario'])) {
+    header('Location: ../login/login.php');
+    exit;
+  }
 
-include '../conexao.php';
+  include '../conexao.php';
 
-$stmt = $conn->prepare("SELECT COUNT(*) AS total FROM usuario");
-$stmt->execute();
-$result = $stmt->fetch(PDO::FETCH_ASSOC);
-$total_usuarios = $result['total'];
-
-$stmt = $conn->prepare("SELECT COUNT(*) AS total FROM vendedor");
-$stmt->execute();
-$result = $stmt->fetch(PDO::FETCH_ASSOC);
-$total_vendedores = $result['total'];
-
-$stmt = $conn->prepare("SELECT COUNT(*) AS total FROM produto");
-$stmt->execute();
-$result = $stmt->fetch(PDO::FETCH_ASSOC);
-$total_produtos = $result['total'];
-
-$sql = "
-        SELECT 
-            v.idvendedor,
-            v.nome_completo,
-            COUNT(p.idproduto) AS total_produtos
-        FROM vendedor v
-        LEFT JOIN produto p ON v.idvendedor = p.idvendedor
-        LEFT JOIN avaliacoes a ON v.idvendedor = a.idvendedor
-        GROUP BY v.idvendedor, v.nome_completo
-        ORDER BY total_produtos DESC
-        LIMIT 1
-";
-
-$stmt = $conn->prepare($sql);
-$stmt->execute();
-$vendedorTop = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if ($vendedorTop) {
-    $idVendedorTop = $vendedorTop['idvendedor'];
-    $nomeVendedorTop = $vendedorTop['nome_completo'];
-    $totalProdutosVendedorTop = $vendedorTop['total_produtos'];
-    //$avaliacoesVendedorTop = $vendedorTop['nota'];
-} else {
-    $idVendedorTop = null;
-    $nomeVendedorTop = "Nenhum vendedor";
-    $totalProdutosVendedorTop = 0;
-}
+  $stmt_produtos = $conn->query("
+        SELECT p.*, 
+            v.nome_completo AS nome_vendedor,
+            c.nome AS nome_categoria,
+            i.imagem AS imagem_produto
+        FROM produto p
+        JOIN vendedor v ON p.idvendedor = v.idvendedor
+        JOIN categoria c ON p.idcategoria = c.idcategoria
+        LEFT JOIN imagens i ON i.idproduto = p.idproduto
+        GROUP BY p.idproduto
+    ");
+    $produtos = $stmt_produtos->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -60,7 +30,7 @@ if ($vendedorTop) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Início - Painel do Adm</title>
+  <title>Consulta de Produtos - Painel do Adm</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="../../imgs/logotipo.png"/>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
@@ -309,12 +279,18 @@ if ($vendedorTop) {
       line-height: 1.5;
     }
 
-    /* Tabela */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+    }
+  
     .table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 15px;
       font-size: 14px;
+      min-width: 1200px; /* garante que colunas não fiquem muito estreitas */
+      border-collapse: collapse;
     }
 
     .table th, .table td {
@@ -330,43 +306,6 @@ if ($vendedorTop) {
 
     .table td {
       color: var(--text-muted);
-    }
-
-    .blink {
-        animation: blink 3s 1;
-    }
-
-    @keyframes blink {
-    0% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0;
-        transform: scale(2);
-    }
-    51% {
-        opacity: 0;
-        transform: scale(0);
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    }
-
-    .arrive {
-      animation: arrive 3s forwards; /* roda uma vez e mantém o estado final */
-    }
-
-    @keyframes arrive {
-      0% {
-        opacity: 0;
-        transform: scale(0); /* começa pequeno/invisível */
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1); /* termina normal */
-      }
     }
 
     /* Grid inferior */
@@ -422,12 +361,12 @@ if ($vendedorTop) {
 
     <nav>
       <ul class="menu">
-        <li><a href="adm.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
+      <li><a href="adm.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
         <li><a href="consulta-usuarios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Usuários</a></li>
         <li><a href="consulta-vendedores.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Vendedores</a></li>
         <li><a href="consulta-produtos.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Produtos</a></li>
-        <li><a href="buscador2000.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Buscador 2000</a></li>
-        <li><a href="#"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Sei la</a></li>
+        <li><a href="rendimento.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Buscador 2000</a></li>
+        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Sei la</a></li>
       </ul>
 
       <h3>Conta</h3>
@@ -446,77 +385,87 @@ if ($vendedorTop) {
     <br><br><br>
     <div class="header">
       <?php if ($foto_de_perfil): ?>
-        <img class="arrive" src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>">
+        <img src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>">
       <?php else: ?>
         <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
       <?php endif; ?>
       <div class="header-text">
-        <h1 class="arrive">Bem-vindo, <?= $adm ? htmlspecialchars($adm) : 'Adm'; ?></h1>
-        <p class="arrive">Acompanhe o desempenho do site fodão</p>
+        <h1>Bem-vindo, <?= $adm ? htmlspecialchars($adm) : 'Adm'; ?></h1>
+        <p>Acompanhe o desempenho do site fodão</p>
       </div>
     </div>
     
     <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
     
-    <div class="cards">
-      <div class="card">
-        <h2>Mudar isso aqui</h2>
-        <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
-        <div class="progress-bar">
-          <div class="progress">35%</div>
-        </div>
-        <p class="info">Ainda é só o começo, com boas avaliações, entregas no prazo e feedback dos clientes, sua reputação aumenta e consegue aumentar sua clientela!</p>
-      </div>
-      <div class="card">
-        <h2>Taxa de Crescimento</h2>
-        <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
-        <p><strong>Taxa de sucesso:</strong> 0%</p>
-        <p><strong>Total de usuários:</strong> <?php echo $total_usuarios; ?></p>
-        <p><strong>Total de vendedores:</strong> <?php echo $total_vendedores; ?></p>
-        <p><strong>Total de produtos:</strong> <?php echo $total_produtos; ?></p>
-      </div>
-    </div>
-
     <div class="card">
-      <h2>Top Vendedores do site</h2>
-      <table class="table">
-        <tr>
-          <th>#</th>
-          <th>Nome do vendedor</th>
-          <th>Total de produtos</th>
-          <th>Avaliações</th>
-        </tr>
-        <tr>
-          <td><?php echo $idVendedorTop; ?></td>
-          <td><?php echo $nomeVendedorTop; ?></td>
-          <td><?php echo $totalProdutosVendedorTop; ?></td>
-          <td>0</td>
-        </tr>
-      </table>
+    <h2>Consulta de Produtos</h2>
+        <div class="table-responsive">
+        <table class="table">
+            <tr>
+            <th>ID</th>
+            <th>Imagem</th>
+            <th>Nome Vendedor</th>
+            <th>Categoria</th>
+            <th>Nome</th>
+            <th>N° de Páginas</th>
+            <th>Editora</th>
+            <th>Class. Etária</th>
+            <th>Data Publicação</th>
+            <th>Preço</th>
+            <th>Quantidade</th>
+            <th>Autor</th>
+            <th>ISBN</th>
+            <th>Dimensões</th>
+            <th>Idioma</th>
+            <th>Estado</th>
+            <th>Descrição</th>
+            <th>Editar</th>
+            <th>Expurgar</th>
+            </tr>
+
+            <?php if ($produtos): ?>
+            <?php foreach ($produtos as $produto): ?>
+                <tr>
+                <td><?= htmlspecialchars($produto['idproduto']) ?></td>
+                <td>
+                    <?php if (!empty($produto['imagem_produto'])): ?>
+                        <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem_produto']) ?>" width="50" height="50" alt="Produto">
+                    <?php else: ?>
+                        Sem imagem
+                    <?php endif; ?>
+                </td>
+                <td><?= htmlspecialchars($produto['nome_vendedor']) ?></td>
+                <td><?= htmlspecialchars($produto['nome_categoria']) ?></td>
+                <td><?= htmlspecialchars($produto['nome'] ?? 'Vazio') ?></td>
+                <td><?= htmlspecialchars($produto['numero_paginas'] ?? 'Vazio') ?></td>
+                <td><?= htmlspecialchars($produto['editora'] ?? 'Vazio') ?></td>
+                <td><?= htmlspecialchars($produto['classificacao_etaria'] ?? 'Vazio') ?></td>
+                <td><?= htmlspecialchars($produto['data_publicacao'] ?? 'Vazio') ?></td>
+                <td>R$ <?= htmlspecialchars(number_format($produto['preco'] ?? 0, 2, ',', '.')) ?></td>
+                <td><?= htmlspecialchars($produto['quantidade'] ?? 0) ?></td>
+                <td><?= htmlspecialchars($produto['autor'] ?? 'Vazio') ?></td>
+                <td><?= htmlspecialchars($produto['isbn'] ?? 'Vazio') ?></td>
+                <td><?= htmlspecialchars($produto['dimensoes'] ?? 'Vazio') ?></td>
+                <td><?= htmlspecialchars($produto['idioma'] ?? 'Vazio') ?></td>
+                <td><?= htmlspecialchars($produto['estado_livro'] ?? 'Vazio') ?></td>
+                <td><?= htmlspecialchars($produto['descricao'] ?? 'Vazio') ?></td>
+                <td>
+                    <button><a style="text-decoration: none;" href="editar_produto.php?id=<?= $produto['idproduto'] ?>">📝</a></button>
+                </td>
+                <td>
+                    <button><a style="text-decoration: none;" href="desativar_produto.php?id=<?= $produto['idproduto'] ?>">❌</a></button>
+                </td>
+                </tr>
+            <?php endforeach; ?>
+            <?php else: ?>
+            <tr>
+                <td colspan="18">Nenhum produto cadastrado.</td>
+            </tr>
+            <?php endif; ?>
+        </table>
+        </div>
     </div>
 
-    <br>
-    
-    <div class="grid">
-      <div class="card">
-        <h2>Avaliações de Clientes</h2>
-        <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
-        <p>Nenhuma avaliação recebida ainda.</p>
-      </div>
-      <div class="card">
-        <h2>Notificações</h2>
-        <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
-        <p>Nenhuma notificação no momento.</p>
-      </div>
-    </div>
   </main>
 </body>
-<script>
-  const musica = new Audio('musica.mp3');
-  musica.loop = true;
-
-  document.body.addEventListener('click', () => {
-    musica.play();
-  }, { once: true });
-</script>
 </html>

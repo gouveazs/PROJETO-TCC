@@ -10,20 +10,20 @@
 
   include '../conexao.php';
 
-  //consulta de usuarios
-  $stmt_usuarios = $conn->query("SELECT * FROM usuario");
-  $stmt_usuarios->execute();
-  $usuarios = $stmt_usuarios->fetchAll(PDO::FETCH_ASSOC);
-
-   //consulta de vendedores
   $stmt_vendedores = $conn->query("SELECT * FROM vendedor");
-  $stmt_vendedores->execute();
   $vendedores = $stmt_vendedores->fetchAll(PDO::FETCH_ASSOC);
 
-  //consulta de produtos
-  $stmt_produtos = $conn->query("SELECT * FROM produto");
-  $stmt_produtos->execute();
-  $produtos = $stmt_produtos->fetchAll(PDO::FETCH_ASSOC);
+  if (!empty($vendedores)) {
+      $idvendedor = $vendedores[0]['idvendedor'];
+
+      $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM produto WHERE idvendedor = ?");
+      $stmt->execute([$idvendedor]);
+      $result = $stmt->fetch(PDO::FETCH_ASSOC);
+      $total_produtos = $result['total'];
+  } else {
+      //echo "Não há vendedores cadastrados.";
+  }
+
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +31,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Consulta Geral - Painel do Adm</title>
+  <title>Consulta de Vendedores - Painel do Adm</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="../../imgs/logotipo.png"/>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
@@ -284,6 +284,28 @@
       width: 100%;
       overflow-x: auto;
     }
+
+    .blink {
+        animation: blink 3s 1;
+    }
+
+    @keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+        transform: scale(2);
+    }
+    51% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    }
   
     .table {
       width: 100%;
@@ -362,10 +384,12 @@
 
     <nav>
       <ul class="menu">
-        <li><a href="adm.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="consulta-geral.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Consulta Geral</a></li>
-        <li><a href="#"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Buscador 2000</a></li>
-        <li><a href="#"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Sei la</a></li>
+      <li><a href="adm.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
+        <li><a href="consulta-usuarios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Usuários</a></li>
+        <li><a href="consulta-vendedores.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Vendedores</a></li>
+        <li><a href="consulta-produtos.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Produtos</a></li>
+        <li><a href="rendimento.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Buscador 2000</a></li>
+        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Sei la</a></li>
       </ul>
 
       <h3>Conta</h3>
@@ -377,7 +401,7 @@
   </div>
 
   <div class="topbar">
-    <h1>Entre Linhas - Painel do Administrador</h1>
+    <h1 style="">Entre Linhas - Painel do Administrador</h1>
   </div>
 
   <main>
@@ -390,77 +414,12 @@
       <?php endif; ?>
       <div class="header-text">
         <h1>Bem-vindo, <?= $adm ? htmlspecialchars($adm) : 'Adm'; ?></h1>
-        <p>Acompanhe seu desempenho como vendedor</p>
+        <p>Acompanhe o desempenho do site fodão</p>
       </div>
     </div>
     
     <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
     
-    <div class="card">
-      <h2>Consulta de usuários</h2>
-      <div class="table-responsive">
-        <table class="table">
-          <tr>
-            <th>ID</th>
-            <th>Foto de Perfil</th>
-            <th>Nome de Usuário</th>
-            <th>Email</th>
-            <th>Senha</th>
-            <th>Nome Completo</th>
-            <th>CPF</th>
-            <th>Telefone</th>
-            <th>CEP</th>
-            <th>Estado</th>
-            <th>Cidade</th>
-            <th>Rua</th>
-            <th>Bairro</th>
-            <th>Status</th>
-            <th>Editar</th>
-            <th>Expurgar</th>
-          </tr>
-
-          <?php if ($usuarios): ?>
-              <?php foreach ($usuarios as $usuario): ?>
-                  <tr>
-                      <td><?= htmlspecialchars($usuario['idusuario'] ?? '') ?></td>
-                      <td>
-                          <?php if (!empty($usuario['foto_de_perfil'])): ?>
-                              <img src="data:image/jpeg;base64,<?= base64_encode($usuario['foto_de_perfil']) ?>" alt="Foto de perfil" width="50" height="50">
-                          <?php else: ?>
-                              Sem foto
-                          <?php endif; ?>
-                      </td>
-                      <td><?= htmlspecialchars($usuario['nome'] ?? 'Vazio') ?></td>
-                      <td><?= htmlspecialchars($usuario['email'] ?? '') ?></td>
-                      <td><?= htmlspecialchars($usuario['senha'] ?? '') ?></td>
-                      <td><?= htmlspecialchars($usuario['nome_completo'] ?? 'Vazio') ?></td>
-                      <td><?= htmlspecialchars($usuario['cpf'] ?? 'Vazio') ?></td>
-                      <td><?= htmlspecialchars($usuario['telefone'] ?? 'Vazio') ?></td>
-                      <td><?= htmlspecialchars($usuario['cep'] ?? 'Vazio') ?></td>
-                      <td><?= htmlspecialchars($usuario['estado'] ?? 'Vazio') ?></td>
-                      <td><?= htmlspecialchars($usuario['cidade'] ?? 'Vazio') ?></td>
-                      <td><?= htmlspecialchars($usuario['rua'] ?? 'Vazio') ?></td>
-                      <td><?= htmlspecialchars($usuario['bairro'] ?? 'Vazio') ?></td>
-                      <td><?= htmlspecialchars($usuario['status'] ?? 'Vazio') ?></td>
-                      <td>
-                        <button><a style="text-decoration: none;" href="editar_usuario.php?id=<?= $usuario['idusuario'] ?>">📝</a></button>
-                      </td>
-                      <td>
-                        <button><a style="text-decoration: none;" href="desativar_usuario.php?id=<?= $usuario['idusuario'] ?>">❌</a></button>
-                      </td>
-                  </tr>
-              <?php endforeach; ?>
-          <?php else: ?>
-              <tr>
-                  <td colspan="15">Nenhum usuário cadastrado.</td>
-              </tr>
-          <?php endif; ?>
-        </table>
-      </div>
-    </div>
-
-    <br><hr style="border: 0; height: 1px; background-color: #afafafff;"><br>
-
     <div class="card">
       <h2>Consulta de vendedores</h2>
       <div class="table-responsive">
@@ -477,6 +436,7 @@
             <th>CEP</th>
             <th>Reputação</th>
             <th>Status</th>
+            <th>Produtos</th>
             <th>Editar</th>
             <th>Expurgar</th>
           </tr>
@@ -500,18 +460,19 @@
                       <td><?= htmlspecialchars($vendedor['cnpj'] ?? 'Vazio') ?></td>
                       <td><?= htmlspecialchars($vendedor['cep'] ?? 'Vazio') ?></td>
                       <td><?= htmlspecialchars($vendedor['reputacao'] ?? 'Vazio') ?></td>
-                      <td><?= htmlspecialchars($usuario['status'] ?? 'Vazio') ?></td>
+                      <td><?= htmlspecialchars($vendedor['status'] ?? 'Vazio') ?></td>
+                      <td><?php echo $total_produtos; ?></td>
                       <td>
-                        <button><a style="text-decoration: none;" href="editar_usuario.php?id=<?= $usuario['idusuario'] ?>">📝</a></button>
+                        <button><a style="text-decoration: none;" href="editar_usuario.php?id=<?= $vendedor['idvendedor'] ?>">📝</a></button>
                       </td>
                       <td>
-                        <button><a style="text-decoration: none;" href="desativar_usuario.php?id=<?= $usuario['idusuario'] ?>">❌</a></button>
+                        <button><a style="text-decoration: none;" href="desativar_usuario.php?id=<?= $vendedor['idvendedor'] ?>">❌</a></button>
                       </td>
                   </tr>
               <?php endforeach; ?>
           <?php else: ?>
               <tr>
-                  <td colspan="15">Nenhum usuário cadastrado.</td>
+                  <td colspan="15">Nenhum vendedor cadastrado.</td>
               </tr>
           <?php endif; ?>
         </table>

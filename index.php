@@ -1147,6 +1147,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div class="stars">★★★★★</div>
     </div>
   </div>
+  
 </div>
   
 <br><br>
