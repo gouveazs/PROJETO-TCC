@@ -41,10 +41,15 @@ $stmt = $conn->prepare($sql);
 $stmt->execute();
 $vendedorTop = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// agora você tem as variáveis:
-$idVendedorTop = $vendedorTop['idvendedor'];
-$nomeVendedorTop = $vendedorTop['nome_completo'];
-$totalProdutosVendedorTop = $vendedorTop['total_produtos'];
+if ($vendedorTop) {
+    $idVendedorTop = $vendedorTop['idvendedor'];
+    $nomeVendedorTop = $vendedorTop['nome_completo'];
+    $totalProdutosVendedorTop = $vendedorTop['total_produtos'];
+} else {
+    $idVendedorTop = null;
+    $nomeVendedorTop = "Nenhum vendedor";
+    $totalProdutosVendedorTop = 0;
+}
 
 ?>
 
@@ -53,7 +58,7 @@ $totalProdutosVendedorTop = $vendedorTop['total_produtos'];
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Início - Painel do Livreiro</title>
+  <title>Início - Painel do Adm</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="../../imgs/logotipo.png"/>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
@@ -432,7 +437,7 @@ $totalProdutosVendedorTop = $vendedorTop['total_produtos'];
     </div>
 
     <div class="card">
-      <h2>Pedidos para Entregar</h2>
+      <h2>Top Vendedores do site</h2>
       <table class="table">
         <tr>
           <th>#</th>
@@ -450,7 +455,9 @@ $totalProdutosVendedorTop = $vendedorTop['total_produtos'];
         </tr>
       </table>
     </div>
-          <br>
+
+    <br>
+    
     <div class="grid">
       <div class="card">
         <h2>Avaliações de Clientes</h2>

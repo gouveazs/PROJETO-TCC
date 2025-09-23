@@ -1,18 +1,29 @@
 <?php
-session_start();
-$adm = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
-$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
+  session_start();
+  $adm = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
+  $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
-if (!isset($_SESSION['nome_usuario'])) {
-  header('Location: ../login/login.php');
-  exit;
-}
+  if (!isset($_SESSION['nome_usuario'])) {
+    header('Location: ../login/login.php');
+    exit;
+  }
 
-include '../conexao.php';
-$stmt_usuarios = $conn->query("SELECT * FROM usuario");
-$stmt_usuarios->execute();
-$Usuarios = $stmt_usuarios->fetch(PDO::FETCH_ASSOC);
+  include '../conexao.php';
 
+  //consulta de usuarios
+  $stmt_usuarios = $conn->query("SELECT * FROM usuario");
+  $stmt_usuarios->execute();
+  $usuarios = $stmt_usuarios->fetchAll(PDO::FETCH_ASSOC);
+
+   //consulta de vendedores
+  $stmt_vendedores = $conn->query("SELECT * FROM vendedor");
+  $stmt_vendedores->execute();
+  $vendedores = $stmt_vendedores->fetchAll(PDO::FETCH_ASSOC);
+
+  //consulta de produtos
+  $stmt_produtos = $conn->query("SELECT * FROM produto");
+  $stmt_produtos->execute();
+  $produtos = $stmt_produtos->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -20,7 +31,7 @@ $Usuarios = $stmt_usuarios->fetch(PDO::FETCH_ASSOC);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Início - Painel do Livreiro</title>
+  <title>Consulta Geral - Painel do Adm</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="../../imgs/logotipo.png"/>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
@@ -269,12 +280,18 @@ $Usuarios = $stmt_usuarios->fetch(PDO::FETCH_ASSOC);
       line-height: 1.5;
     }
 
-    /* Tabela */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+    }
+  
     .table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 15px;
       font-size: 14px;
+      min-width: 1200px; /* garante que colunas não fiquem muito estreitas */
+      border-collapse: collapse;
     }
 
     .table th, .table td {
@@ -379,168 +396,128 @@ $Usuarios = $stmt_usuarios->fetch(PDO::FETCH_ASSOC);
     
     <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
     
-    <h1>Consulta de usuários</h1>
-    <table class="table">
-        <tr>
+    <div class="card">
+      <h2>Consulta de usuários</h2>
+      <div class="table-responsive">
+        <table class="table">
+          <tr>
             <th>ID</th>
-            <th>País</th>
-            <th>Cidade</th>
-            <th>Estado</th>
-            <th>Nome Completo</th>
-            <th>CEP</th>
-            <th>Rua</th>
-            <th>Bairro</th>
-            <th>CPF</th>
+            <th>Foto de Perfil</th>
             <th>Nome de Usuário</th>
             <th>Email</th>
             <th>Senha</th>
+            <th>Nome Completo</th>
+            <th>CPF</th>
             <th>Telefone</th>
+            <th>CEP</th>
+            <th>Estado</th>
+            <th>Cidade</th>
+            <th>Rua</th>
+            <th>Bairro</th>
+            <th>Status</th>
+            <th>Editar</th>
+            <th>Expurgar</th>
+          </tr>
+
+          <?php if ($usuarios): ?>
+              <?php foreach ($usuarios as $usuario): ?>
+                  <tr>
+                      <td><?= htmlspecialchars($usuario['idusuario'] ?? '') ?></td>
+                      <td>
+                          <?php if (!empty($usuario['foto_de_perfil'])): ?>
+                              <img src="data:image/jpeg;base64,<?= base64_encode($usuario['foto_de_perfil']) ?>" alt="Foto de perfil" width="50" height="50">
+                          <?php else: ?>
+                              Sem foto
+                          <?php endif; ?>
+                      </td>
+                      <td><?= htmlspecialchars($usuario['nome'] ?? 'Vazio') ?></td>
+                      <td><?= htmlspecialchars($usuario['email'] ?? '') ?></td>
+                      <td><?= htmlspecialchars($usuario['senha'] ?? '') ?></td>
+                      <td><?= htmlspecialchars($usuario['nome_completo'] ?? 'Vazio') ?></td>
+                      <td><?= htmlspecialchars($usuario['cpf'] ?? 'Vazio') ?></td>
+                      <td><?= htmlspecialchars($usuario['telefone'] ?? 'Vazio') ?></td>
+                      <td><?= htmlspecialchars($usuario['cep'] ?? 'Vazio') ?></td>
+                      <td><?= htmlspecialchars($usuario['estado'] ?? 'Vazio') ?></td>
+                      <td><?= htmlspecialchars($usuario['cidade'] ?? 'Vazio') ?></td>
+                      <td><?= htmlspecialchars($usuario['rua'] ?? 'Vazio') ?></td>
+                      <td><?= htmlspecialchars($usuario['bairro'] ?? 'Vazio') ?></td>
+                      <td><?= htmlspecialchars($usuario['status'] ?? 'Vazio') ?></td>
+                      <td>
+                        <button><a style="text-decoration: none;" href="editar_usuario.php?id=<?= $usuario['idusuario'] ?>">📝</a></button>
+                      </td>
+                      <td>
+                        <button><a style="text-decoration: none;" href="desativar_usuario.php?id=<?= $usuario['idusuario'] ?>">❌</a></button>
+                      </td>
+                  </tr>
+              <?php endforeach; ?>
+          <?php else: ?>
+              <tr>
+                  <td colspan="15">Nenhum usuário cadastrado.</td>
+              </tr>
+          <?php endif; ?>
+        </table>
+      </div>
+    </div>
+
+    <br><hr style="border: 0; height: 1px; background-color: #afafafff;"><br>
+
+    <div class="card">
+      <h2>Consulta de vendedores</h2>
+      <div class="table-responsive">
+        <table class="table">
+          <tr>
+            <th>ID</th>
             <th>Foto de Perfil</th>
-        </tr>
-        <tr>
-            <td><?= htmlspecialchars($usuario['idusuario']) ?></td>
-            <td><?= htmlspecialchars($usuario['pais']) ?></td>
-            <td><?= htmlspecialchars($usuario['cidade']) ?></td>
-            <td><?= htmlspecialchars($usuario['estado']) ?></td>
-            <td><?= htmlspecialchars($usuario['nome_completo']) ?></td>
-            <td><?= htmlspecialchars($usuario['cep']) ?></td>
-            <td><?= htmlspecialchars($usuario['rua']) ?></td>
-            <td><?= htmlspecialchars($usuario['bairro']) ?></td>
-            <td><?= htmlspecialchars($usuario['cpf']) ?></td>
-            <td><?= htmlspecialchars($usuario['nome']) ?></td>
-            <td><?= htmlspecialchars($usuario['email']) ?></td>
-            <td><?= htmlspecialchars($usuario['senha']) ?></td>
-            <td><?= htmlspecialchars($usuario['telefone']) ?></td>
-            <td>
-                <?php if (!empty($usuario['foto_de_perfil'])): ?>
-                    <img src="data:image/jpeg;base64,<?= base64_encode($usuario['foto_de_perfil']) ?>" alt="Foto de perfil" width="50" height="50">
-                <?php else: ?>
-                    Sem foto
-                <?php endif; ?>
-            </td>
-        </tr>
-    </table>
-  <h1>Consulta de vendedores</h1>
-  <?php  
-      include '../conexao.php';
-      $stmt = $conn->query("SELECT * FROM vendedor");
-      echo '';
-      echo '<table border="1">';
-          echo "<tr>";
-              echo "<th>IMAGEM</th>";
-              echo "<th>Código</th>";
-              echo "<th>Nome</th>";
-              echo "<th>DATA DE NASCIMENTO</th>";
-              echo "<th>EMAIL</th>";
-              echo "<th>SENHA</th>";
-              echo "<th>CPF</th>";
-              echo "<th>CNPJ</th>";
-          echo "</tr>"; 
-      while ($row = $stmt->fetch()) {      
-          echo "<tr>";
-          if (!empty($row['foto_de_perfil'])) {
-              $imgData = base64_encode($row['foto_de_perfil']);
-              echo '<td><img src="data:image/jpeg;base64,' . $imgData . '" width="100" height="auto"/></td>';
-          } else {
-              echo "<td>Sem imagem</td>";
-          }
-              echo "<td>".$row['idvendedor']."</td>";
-              echo "<td>".$row['nome_completo']."</td>";
-              echo "<td>".$row['data_nascimento']."</td>";
-              echo "<td>".$row['email']."</td>";
-              echo "<td>".$row['senha']."</td>";
-              echo "<td>".$row['cpf']."</td>";
-              echo "<td>".$row['cnpj']."</td>";
-          echo "</tr>";          
-          }
-      echo '</table>';  
-  ?>
+            <th>Nome Completo</th>
+            <th>Email</th>
+            <th>Senha</th>
+            <th>Data de nascimento</th>
+            <th>CPF</th>
+            <th>CNPJ</th>
+            <th>CEP</th>
+            <th>Reputação</th>
+            <th>Status</th>
+            <th>Editar</th>
+            <th>Expurgar</th>
+          </tr>
 
-  <h1>Consulta de produto</h1>
-  <?php  
-    include '../conexao.php';
-    $stmt = $conn->prepare("
-      SELECT p.*,
-            (
-                  SELECT i2.imagem
-                  FROM imagens i2
-                  WHERE i2.idproduto = p.idproduto
-                  ORDER BY i2.idimagens ASC
-                  LIMIT 1
-            ) AS imagem
-      FROM produto p
-    ");
-    $stmt->execute();
-    echo '<table border="1">';
-    echo "<tr>
-      <th>IMAGEM</th>
-      <th>Código</th>
-      <th>Nome DO LIVRO</th>
-      <th>NÚMERO DE PÁGINAS</th>
-      <th>EDITORA</th>
-      <th>AUTOR</th>
-      <th>CLASSIFICAÇÃO ETÁRIA</th>
-      <th>DATA DE PUBLICAÇÃO</th>
-      <th>PREÇO</th>
-      <th>QUANTIDADE EM ESTOQUE</th>
-      <th>DESCRIÇÃO</th>
-      <th>ID VENDEDOR</th>
-    </tr>";
+          <?php if ($vendedores): ?>
+              <?php foreach ($vendedores as $vendedor): ?>
+                  <tr>
+                      <td><?= htmlspecialchars($vendedor['idvendedor'] ?? '') ?></td>
+                      <td>
+                          <?php if (!empty($usuario['foto_de_perfil'])): ?>
+                              <img src="data:image/jpeg;base64,<?= base64_encode($vendedor['foto_de_perfil']) ?>" alt="Foto de perfil" width="50" height="50">
+                          <?php else: ?>
+                              Sem foto
+                          <?php endif; ?>
+                      </td>
+                      <td><?= htmlspecialchars($vendedor['nome_completo'] ?? 'Vazio') ?></td>
+                      <td><?= htmlspecialchars($vendedor['email'] ?? '') ?></td>
+                      <td><?= htmlspecialchars($vendedor['senha'] ?? '') ?></td>
+                      <td><?= htmlspecialchars($vendedor['data_nascimento'] ?? 'Vazio') ?></td>
+                      <td><?= htmlspecialchars($vendedor['cpf'] ?? 'Vazio') ?></td>
+                      <td><?= htmlspecialchars($vendedor['cnpj'] ?? 'Vazio') ?></td>
+                      <td><?= htmlspecialchars($vendedor['cep'] ?? 'Vazio') ?></td>
+                      <td><?= htmlspecialchars($vendedor['reputacao'] ?? 'Vazio') ?></td>
+                      <td><?= htmlspecialchars($usuario['status'] ?? 'Vazio') ?></td>
+                      <td>
+                        <button><a style="text-decoration: none;" href="editar_usuario.php?id=<?= $usuario['idusuario'] ?>">📝</a></button>
+                      </td>
+                      <td>
+                        <button><a style="text-decoration: none;" href="desativar_usuario.php?id=<?= $usuario['idusuario'] ?>">❌</a></button>
+                      </td>
+                  </tr>
+              <?php endforeach; ?>
+          <?php else: ?>
+              <tr>
+                  <td colspan="15">Nenhum usuário cadastrado.</td>
+              </tr>
+          <?php endif; ?>
+        </table>
+      </div>
+    </div>
 
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      echo "<tr>";
-        if (!empty($row['imagem'])) {
-            $imgData = base64_encode($row['imagem']);
-            echo '<td><img src="data:image/jpeg;base64,' . $imgData . '" width="50"/></td>';
-        } else {
-            echo "<td>Sem imagem</td>";
-        }
-          echo "<td>{$row['idproduto']}</td>";
-          echo "<td>" . htmlspecialchars($row['nome']) . "</td>";
-          echo "<td>{$row['numero_paginas']}</td>";
-          echo "<td>" . htmlspecialchars($row['editora']) . "</td>";
-          echo "<td>" . htmlspecialchars($row['autor']) . "</td>";
-          echo "<td>{$row['classificacao_etaria']}</td>";
-          echo "<td>{$row['data_publicacao']}</td>";
-          echo "<td>R$ " . number_format($row['preco'], 2, ',', '.') . "</td>";
-          echo "<td>{$row['quantidade']}</td>";
-          echo "<td>" . htmlspecialchars($row['descricao']) . "</td>";
-          echo "<td>{$row['idvendedor']}</td>";
-        echo "</tr>";
-        }
-      echo '</table>';
-  ?>
-
-<h1>Consulta de comunidades</h1>
-  <?php  
-      include '../conexao.php';
-      $stmt = $conn->query("SELECT * FROM comunidades");
-      echo '<table border="1">';
-          echo "<tr>";
-              echo "<th>IMAGEM</th>";
-              echo "<th>Código</th>";
-              echo "<th>Nome</th>";
-              echo "<th>Descrição</th>";
-          echo "</tr>"; 
-
-      while ($row = $stmt->fetch()) {
-          echo "<tr>";
-
-          // Verifica se há imagem e converte para base64
-          if (!empty($row['imagem'])) {
-              $imgData = base64_encode($row['imagem']);
-              echo '<td><img src="data:image/jpeg;base64,' . $imgData . '" width="100" height="auto"/></td>';
-          } else {
-              echo "<td>Sem imagem</td>";
-          }
-
-              echo "<td>".$row['id']."</td>";
-              echo "<td>".htmlspecialchars($row['nome'])."</td>";
-              echo "<td>".$row['descricao']."</td>";
-          echo "</tr>";          
-      }
-      echo '</table>';
-  ?>
   </main>
 </body>
 </html>
