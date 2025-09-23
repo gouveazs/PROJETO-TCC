@@ -44,6 +44,30 @@
       padding: 20px;
     }
 
+    .navegacao-superior {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      gap: 20px;
+    }
+
+    .navegacao-superior a {
+      text-decoration: none;
+      color: #5a6b50;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      background-color: rgba(255, 255, 255, 0.7);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .navegacao-superior a:hover {
+      background-color: #5a6b50;
+      color: white;
+    }
+
     .perfil-container {
       background: #ffffff;
       padding: 40px;
@@ -53,6 +77,7 @@
       box-shadow: 0 5px 15px rgba(0,0,0,0.05);
       display: flex;
       gap: 40px;
+      margin-top: 40px;
     }
 
     .perfil-lateral {
@@ -231,6 +256,14 @@
         grid-template-columns: 1fr;
         gap: 20px;
       }
+      
+      .navegacao-superior {
+        position: relative;
+        top: 0;
+        left: 0;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -246,11 +279,21 @@
         width: 120px;
         height: 120px;
       }
+      
+      .navegacao-superior {
+        flex-direction: column;
+        gap: 10px;
+      }
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div class="navegacao-superior">
+    <a href="meus_produtos.php">Meus Produtos</a>
+    <a href="#" style="background-color: #5a6b50; color: white;">Meu Perfil</a>
+  </div>
+  
   <div class="perfil-container">
     <div class="perfil-lateral">
       <?php if ($foto_de_perfil): ?>
@@ -337,8 +380,7 @@
         </div>
       </div>
     </div>
-
-    
+  </div>
 
   <script>
     function toggleSenha() {
