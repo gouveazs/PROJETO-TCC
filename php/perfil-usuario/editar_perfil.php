@@ -1,3 +1,79 @@
+<?php
+session_start();
+include '../conexao.php';
+
+$nome_usuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
+$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
+
+if (!$nome_usuario) {
+    header("Location: ../login/login.php");
+    exit;
+}
+
+$stmt = $conn->prepare("SELECT idusuario FROM usuario WHERE nome = ?");
+$stmt->execute([$nome_usuario]);
+$dados_usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+$idusuario = isset($dados_usuario['idusuario']) ? $dados_usuario['idusuario'] : null;
+
+if (!$idusuario) {
+    echo "Usuário não encontrado.";
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nome_completo = $_POST['nome_completo'];
+    $novo_nome = $_POST['nome'];
+    $novo_email = $_POST['email'];
+    $cpf = preg_replace('/\D/', '', $_POST['cpf']);
+    $cep = preg_replace('/[^0-9]/', '', $_POST['cep']);
+    $cidade = $_POST['cidade'];
+    $estado = $_POST['estado'];
+    $rua = $_POST['rua'];
+    $bairro = $_POST['bairro'];
+    
+    if (!empty($_FILES['foto']['tmp_name'])) {
+        $foto_de_perfil = file_get_contents($_FILES['foto']['tmp_name']);
+        $stmt = $conn->prepare(
+            "UPDATE usuario SET nome_completo = ?, nome = ?, email = ?, cpf = ?, cep = ?, cidade = ?, estado = ?, rua = ?, bairro = ?, foto_de_perfil = ? WHERE idusuario = ?"
+        );
+        $stmt->execute([$nome_completo, $novo_nome, $novo_email, $cpf, $cep, $cidade, $estado, $rua, $bairro, $foto_de_perfil, $idusuario]);
+    } else {
+        $stmt = $conn->prepare(
+            "UPDATE usuario SET nome_completo = ?, nome = ?, email = ?, cpf = ?, cep = ?, cidade = ?, estado = ?, rua = ?, bairro = ? WHERE idusuario = ?"
+        );
+        $stmt->execute([$nome_completo, $novo_nome, $novo_email, $cpf, $cep, $cidade, $estado, $rua, $bairro, $idusuario]);
+    }
+
+    $_SESSION['nome_usuario'] = $novo_nome;
+    $_SESSION['foto_de_perfil'] = $foto_de_perfil;
+    header("Location: ver_perfil.php");
+    exit;
+}
+
+$stmt = $conn->prepare("SELECT * FROM usuario WHERE idusuario = ?");
+$stmt->execute([$idusuario]);
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Formatar dados para exibição
+$foto_perfil_src = !empty($usuario['foto_de_perfil']) ? 
+    'data:image/jpeg;base64,' . base64_encode($usuario['foto_de_perfil']) : 
+    'https://via.placeholder.com/140';
+
+// Formatar CPF se existir
+$cpf_formatado = '';
+if (!empty($usuario['cpf'])) {
+    $cpf_limpo = preg_replace('/\D/', '', $usuario['cpf']);
+    if (strlen($cpf_limpo) === 11) {
+        $cpf_formatado = substr($cpf_limpo, 0, 3) . '.' . 
+                         substr($cpf_limpo, 3, 3) . '.' . 
+                         substr($cpf_limpo, 6, 3) . '-' . 
+                         substr($cpf_limpo, 9, 2);
+    }
+}
+
+// Calcular ano de cadastro (exemplo)
+$ano_cadastro = date('Y', strtotime($usuario['data_cadastro'] ?? 'now'));
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -408,14 +484,14 @@
     <div class="perfil-container">
       <div class="perfil-lateral">
         <div class="perfil-foto-container">
-          <img src="https://via.placeholder.com/140" alt="Foto do usuário" class="perfil-foto" id="fotoPerfil" />
+          <img src="<?= $foto_perfil_src ?>" alt="Foto do usuário" class="perfil-foto" id="fotoPerfil" />
           <div class="foto-overlay" id="fotoOverlay">
             <span>Alterar<br>Foto</span>
           </div>
           <input type="file" id="fotoInput" name="foto" accept="image/*" style="display: none;">
         </div>
-        <h1><input type="text" name="nome" value="marina" style="border: none; background: transparent; text-align: center; font-size: 32px; color: #333; width: 100%; outline: none;"></h1>
-        <div class="user-role">Membro desde 2025</div>
+        <h1><input type="text" name="nome" value="<?= htmlspecialchars($usuario['nome']) ?>" style="border: none; background: transparent; text-align: center; font-size: 32px; color: #333; width: 100%; outline: none;"></h1>
+        <div class="user-role">Membro desde <?= $ano_cadastro ?></div>
         
         <div class="btn-container">
           <button type="submit" class="btn-salvar">
@@ -444,22 +520,22 @@
             <h3>INFORMAÇÕES PESSOAIS</h3>
             <div class="info-linha">
               <strong>Nome completo</strong>
-              <input type="text" name="nome_completo" value="Marina Silva">
+              <input type="text" name="nome_completo" value="<?= htmlspecialchars($usuario['nome_completo'] ?? '') ?>">
             </div>
 
             <div class="info-linha">
               <strong>Email</strong>
-              <input type="email" name="email" value="marina@marina">
+              <input type="email" name="email" value="<?= htmlspecialchars($usuario['email'] ?? '') ?>">
             </div>
 
             <div class="info-linha">
               <strong>Senha</strong>
-              <input type="password" name="senha" value="********">
+              <input type="password" name="senha" value="<?= htmlspecialchars($usuario['email'] ?? '') ?>" placeholder="Deixe em branco para manter a senha atual" readonly>
             </div>
 
             <div class="info-linha">
               <strong>CPF</strong>
-              <input type="text" name="cpf" id="cpf" value="" class="empty-field" placeholder="Digite seu CPF">
+              <input type="text" name="cpf" id="cpf" value="<?= htmlspecialchars($cpf_formatado) ?>" placeholder="Digite seu CPF">
             </div>
           </div>
 
@@ -467,27 +543,27 @@
             <h3>ENDEREÇO</h3>
             <div class="info-linha">
               <strong>CEP</strong>
-              <input type="text" name="cep" id="cep" value="" class="empty-field" placeholder="Digite seu CEP">
+              <input type="text" name="cep" id="cep" value="<?= htmlspecialchars($usuario['cep'] ?? '') ?>" placeholder="Digite seu CEP">
             </div>
 
             <div class="info-linha">
               <strong>Estado</strong>
-              <input type="text" name="estado" id="estado" value="Não informado" class="empty-field" readonly>
+              <input type="text" name="estado" id="estado" value="<?= htmlspecialchars($usuario['estado'] ?? '') ?>" readonly>
             </div>
 
             <div class="info-linha">
               <strong>Cidade</strong>
-              <input type="text" name="cidade" id="cidade" value="Não informado" class="empty-field" readonly>
+              <input type="text" name="cidade" id="cidade" value="<?= htmlspecialchars($usuario['cidade'] ?? '') ?>" readonly>
             </div>
 
             <div class="info-linha">
               <strong>Bairro</strong>
-              <input type="text" name="bairro" id="bairro" value="Não informado" class="empty-field" readonly>
+              <input type="text" name="bairro" id="bairro" value="<?= htmlspecialchars($usuario['bairro'] ?? '') ?>" readonly>
             </div>
 
             <div class="info-linha">
               <strong>Rua</strong>
-              <input type="text" name="rua" id="rua" value="Não informado" class="empty-field" readonly>
+              <input type="text" name="rua" id="rua" value="<?= htmlspecialchars($usuario['rua'] ?? '') ?>" readonly>
             </div>
           </div>
         </div>

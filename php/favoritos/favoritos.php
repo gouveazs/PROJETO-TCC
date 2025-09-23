@@ -476,7 +476,7 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </a>
       <?php endforeach; ?>
     <?php else: ?>
-      <p>Você ainda não adicionou nenhum produto aos favoritos.</p>
+      <p style="white-space: nowrap; font-size: 1rem; margin-bottom: 20px;">Você ainda não adicionou nenhum produto aos favoritos.</p>
     <?php endif; ?>
 
     <div style="margin-top: 30px; text-align: center;">
@@ -499,27 +499,34 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         Adicionar Livro
       </a>
     </div>
+
+    <div style="margin-top: 30px; text-align: center;">
+      <a href="../carrinho/carrinho.php" 
+        style="display: inline-block; 
+                width: 150px; 
+                height: 150px; 
+                background-color: #5a4224; 
+                color: #fff; 
+                font-weight: bold; 
+                font-size: 0.95rem; 
+                border-radius: 10px; 
+                text-decoration: none; 
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+                justify-content: center; 
+                gap: 8px;">
+        <img src="../../imgs/listades.png" alt="Ir Para Carrinho" style="width:50px; height:50px;">
+        Ir para Carrinho
+      </a>
+    </div>
   </div>
 
   <!-- Cards Destaques e Carrinho lado a lado -->
   <div style="display: flex; gap: 30px; flex-wrap: wrap; margin-top: 30px;">
-    
-    <div style="flex: 1; background-color: #5A6B50; border-radius: 15px; padding: 20px; display: flex; align-items: center; justify-content: space-between; min-width: 300px;">
-      <div>
-        <h3 style="color: #ffffff; font-size: 1.4rem;">Destaques</h3>
-        <p style="color: #ffffff; font-size: 0.9rem;">Veja todo nosso acervo de livros!</p>
-        <a href="../destaques/destaques.php" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
+          <div>
+        </div>
       </div>
-      <img src="../../imgs/comuni.jpg" alt="Card Destaques" style="height: 150px; border-radius: 8px;">
-    </div>
-
-    <div style="flex: 1; background-color: #5A6B50; border-radius: 15px; padding: 20px; display: flex; align-items: center; justify-content: space-between; min-width: 300px;">
-      <div>
-        <h3 style="color: #ffffff; font-size: 1.4rem;">Carrinho</h3>
-        <p style="color: #ffffff; font-size: 0.9rem;">Veja todos os itens adicionados!</p>
-        <a href="../carrinho/carrinho.php" style="margin-top: 10px; display: inline-block; background-color: #5a4224; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">Clique aqui</a>
-      </div>
-      <img src="../../imgs/comuni.jpg" alt="Card Carrinho" style="height: 150px; border-radius: 8px;">
     </div>
   </div>
 </div>
