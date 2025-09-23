@@ -10,7 +10,7 @@ if (!$nome_usuario) {
     exit;
 }
 
-$stmt = $conn->prepare("SELECT idusuario FROM cadastro_usuario WHERE nome = ?");
+$stmt = $conn->prepare("SELECT idusuario FROM usuario WHERE nome = ?");
 $stmt->execute([$nome_usuario]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 $idusuario = isset($usuario['idusuario']) ? $usuario['idusuario'] : null;
@@ -22,7 +22,7 @@ if (!$idusuario) {
 }
 
 // expurgar o usuario da terra
-$stmt = $conn->prepare("DELETE FROM usuario WHERE idusuario = ?");
+$stmt = $conn->prepare("UPDATE usuario SET status = 'desativado' WHERE idusuario = ?");
 if ($stmt->execute([$idusuario])) {
     session_destroy();
     echo "<img src='https://media.tenor.com/URShj_JWaS8AAAAM/explos%C3%A3o-meme.gif' />";
