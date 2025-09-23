@@ -472,4 +472,12 @@ if ($vendedorTop) {
     </div>
   </main>
 </body>
+<script>
+  const musica = new Audio('musica.mp3');
+  musica.loop = true;
+
+  document.body.addEventListener('click', () => {
+    musica.play();
+  }, { once: true });
+</script>
 </html>
