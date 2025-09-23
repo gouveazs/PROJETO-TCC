@@ -138,14 +138,14 @@
         <input type="submit" value="Login">
       </form>
 
-      <?php if (isset($_GET['error']) == 1): ?>
+      <?php if (isset($_GET['error']) && $_GET['error'] == 1): ?>
         <p class="erro">Usuário ou senha incorretos</p>
       <?php endif; ?>
 
-      <?php if (isset($_GET['error']) == 2): ?>
+      <?php if (isset($_GET['error']) && $_GET['error'] == 2): ?>
         <p class="erro">
             Sua conta foi desativada.
-            <a href="reativar.php?usuario=<?php echo urlencode($_GET['usuario']); ?>">
+            <a href="reativar.php?usuario=<?php echo urlencode($_GET['usuario'] ?? ''); ?>">
                 Deseja reativar?
             </a>
         </p>
@@ -153,9 +153,10 @@
 
       <?php if (isset($_GET['reativado']) && $_GET['reativado'] == 1): ?>
         <p style="color: green; text-align:center; margin-top:10px;">
-            Sua conta foi reativada com sucesso! Faça login normalmente.
+          Sua conta foi reativada com sucesso! Pode seguir com o login normalmente.
         </p>
       <?php endif; ?>
+
     </div>
   </div>
 </body>
