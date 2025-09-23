@@ -1,8 +1,24 @@
 <?php
-session_start();
-$nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
-$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
+  session_start();
 
+  if (!isset($_SESSION['nome_usuario'])) {
+      header('Location: ../../login/login.php');
+      exit;
+  }
+
+  include '../conexao.php';
+
+  $nome = $_SESSION['nome_usuario'];
+  $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
+
+  $stmt = $conn->prepare("SELECT * FROM usuario WHERE nome = ?");
+  $stmt->execute([$nome]);
+  $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  if (!$usuario) {
+      echo "Usuário não encontrado.";
+      exit;
+  }
 ?>
 
 <!DOCTYPE html>
@@ -243,7 +259,7 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
         <img src="imgs/usuario.jpg" alt="Foto de Perfil" class="perfil-foto">
       <?php endif; ?>
 
-      <h1>marina</h1>
+      <h1><?php echo htmlspecialchars($usuario['nome']); ?></h1>
       <div class="user-role">Membro desde 2025</div>
       
       <div class="btn-container">
@@ -272,51 +288,51 @@ $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil
         <div class="info-group">
           <h3>INFORMAÇÕES PESSOAIS</h3>
           <div class="info-linha">
-            <strong>Nome completo</strong>
-            <span>Marina Silva</span>
+          <strong>Nome completo:</strong>
+          <span><?php echo htmlspecialchars($usuario['nome_completo']); ?></span>
           </div>
 
           <div class="info-linha">
-            <strong>Email</strong>
-            <span>marina@marina</span>
+          <strong>Email:</strong>
+          <span><?php echo htmlspecialchars($usuario['email']); ?></span>
           </div>
 
           <div class="info-linha">
-            <strong>Senha</strong>
-            <input type="password" id="senhaInput" value="********" readonly>
+          <strong>Senha:</strong>
+          <input type="password" id="senhaInput" value="<?php echo htmlspecialchars($usuario['senha']); ?>" readonly>
           </div>
 
           <div class="info-linha">
-            <strong>CPF</strong>
-            <input type="text" name="cpf" id="cpf" value="" readonly class="empty-field">
+          <strong>CPF:</strong>
+          <input type="text" name="cpf" id="cpf" value="<?= htmlspecialchars($usuario['cpf'] ?? '') ?>" readonly>
           </div>
         </div>
 
         <div class="info-group">
           <h3>ENDEREÇO</h3>
           <div class="info-linha">
-            <strong>CEP</strong>
-            <span class="empty-field">Não informado</span>
+          <strong>CEP</strong>
+          <input type="text" name="cep" id="cep" value="<?= htmlspecialchars($usuario['cep'] ?? '') ?>" placeholder="Digite seu CEP">
           </div>
 
           <div class="info-linha">
             <strong>Estado</strong>
-            <input type="text" name="estado" id="estado" value="Não informado" readonly class="empty-field">
+            <input type="text" name="estado" id="estado" value="<?= htmlspecialchars($usuario['estado']) ?>" readonly class="empty-field">
           </div>
 
           <div class="info-linha">
             <strong>Cidade</strong>
-            <input type="text" name="cidade" id="cidade" value="Não informado" readonly class="empty-field">
+            <input type="text" name="cidade" id="cidade" value="<?= htmlspecialchars($usuario['cidade']) ?>" readonly class="empty-field">
           </div>
 
           <div class="info-linha">
             <strong>Bairro</strong>
-            <input type="text" name="bairro" id="bairro" value="Não informado" readonly class="empty-field">
+            <input type="text" name="bairro" id="bairro" value="<?= htmlspecialchars($usuario['bairro']) ?>" readonly class="empty-field">
           </div>
 
           <div class="info-linha">
             <strong>Rua</strong>
-            <input type="text" name="rua" id="rua" value="Não informado" readonly class="empty-field">
+            <input type="text" name="rua" id="rua" value="<?= htmlspecialchars($usuario['rua']) ?>" readonly class="empty-field">
           </div>
         </div>
       </div>
