@@ -24,9 +24,8 @@ CREATE TABLE IF NOT EXISTS `banco`.`usuario` (
   `senha` VARCHAR(45) NULL,
   `nome_completo` VARCHAR(145) NULL,
   `telefone` CHAR(14) NULL,
-  `cpf` VARCHAR(11) NULL,
-  `cep` VARCHAR(8) NULL,
-  `pais` VARCHAR(45) NULL,
+  `cpf` CHAR(11) NULL,
+  `cep` CHAR(8) NULL,
   `estado` CHAR(2) NULL,
   `cidade` VARCHAR(45) NULL,
   `bairro` VARCHAR(45) NULL,
@@ -67,9 +66,13 @@ CREATE TABLE IF NOT EXISTS `banco`.`vendedor` (
   `cpf` CHAR(11) NULL,
   `cnpj` CHAR(14) NULL,
   `foto_de_perfil` LONGBLOB NULL,
-  `cep` CHAR(8) NULL,
   `reputacao` DECIMAL(5,2) NULL DEFAULT 35.00,
   `status` ENUM('ativo', 'desativado') NULL DEFAULT 'ativo',
+  `cep` CHAR(8) NULL,
+  `estado` CHAR(2) NULL,
+  `cidade` VARCHAR(45) NULL,
+  `bairro` VARCHAR(45) NULL,
+  `rua` VARCHAR(45) NULL,
   PRIMARY KEY (`idvendedor`))
 ENGINE = InnoDB;
 
