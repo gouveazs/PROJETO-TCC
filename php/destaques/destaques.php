@@ -594,7 +594,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </a>
       <?php endforeach; ?>
       <?php if (empty($produtos)): ?>
-        <p style="text-align: center;">Nenhum produto disponível no momento.</p>
+        <p style="text-align: center; white-space: nowrap;">Nenhum produto disponível no momento.</p>
       <?php endif; ?>
     </div>
 
