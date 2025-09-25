@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS `banco`.`usuario` (
   `cidade` VARCHAR(45) NULL,
   `bairro` VARCHAR(45) NULL,
   `rua` VARCHAR(45) NULL,
+  `numero` VARCHAR(45) NULL,
   `foto_de_perfil` LONGBLOB NULL,
   `status` ENUM('ativo', 'desativado') NULL DEFAULT 'ativo',
   PRIMARY KEY (`idusuario`))
@@ -73,6 +74,7 @@ CREATE TABLE IF NOT EXISTS `banco`.`vendedor` (
   `cidade` VARCHAR(45) NULL,
   `bairro` VARCHAR(45) NULL,
   `rua` VARCHAR(45) NULL,
+  `numero` VARCHAR(45) NULL,
   PRIMARY KEY (`idvendedor`))
 ENGINE = InnoDB;
 
@@ -371,6 +373,7 @@ CREATE TABLE IF NOT EXISTS `banco`.`recuperacao_senha` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

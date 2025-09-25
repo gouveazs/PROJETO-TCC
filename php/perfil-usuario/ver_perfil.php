@@ -332,7 +332,7 @@
           <h3>INFORMAÇÕES PESSOAIS</h3>
           <div class="info-linha">
           <strong>Nome completo:</strong>
-          <span><?php echo htmlspecialchars($usuario['nome_completo']); ?></span>
+          <span><?php echo htmlspecialchars($usuario['nome_completo'] ?? ''); ?></span>
           </div>
 
           <div class="info-linha">
@@ -355,27 +355,32 @@
           <h3>ENDEREÇO</h3>
           <div class="info-linha">
           <strong>CEP</strong>
-          <input type="text" name="cep" id="cep" value="<?= htmlspecialchars($usuario['cep'] ?? '') ?>" placeholder="Digite seu CEP">
+          <input type="text" name="cep" id="cep" value="<?= htmlspecialchars($usuario['cep'] ?? '') ?>" readonly class="empty-field">
           </div>
 
           <div class="info-linha">
             <strong>Estado</strong>
-            <input type="text" name="estado" id="estado" value="<?= htmlspecialchars($usuario['estado']) ?>" readonly class="empty-field">
+            <input type="text" name="estado" id="estado" value="<?= htmlspecialchars($usuario['estado'] ?? '') ?>" readonly class="empty-field">
           </div>
 
           <div class="info-linha">
             <strong>Cidade</strong>
-            <input type="text" name="cidade" id="cidade" value="<?= htmlspecialchars($usuario['cidade']) ?>" readonly class="empty-field">
+            <input type="text" name="cidade" id="cidade" value="<?= htmlspecialchars($usuario['cidade'] ?? '') ?>" readonly class="empty-field">
           </div>
 
           <div class="info-linha">
             <strong>Bairro</strong>
-            <input type="text" name="bairro" id="bairro" value="<?= htmlspecialchars($usuario['bairro']) ?>" readonly class="empty-field">
+            <input type="text" name="bairro" id="bairro" value="<?= htmlspecialchars($usuario['bairro'] ?? '') ?>" readonly class="empty-field">
           </div>
 
           <div class="info-linha">
             <strong>Rua</strong>
-            <input type="text" name="rua" id="rua" value="<?= htmlspecialchars($usuario['rua']) ?>" readonly class="empty-field">
+            <input type="text" name="rua" id="rua" value="<?= htmlspecialchars($usuario['rua'] ?? '') ?>" readonly class="empty-field">
+          </div>
+
+          <div class="info-linha">
+            <strong>Número</strong>
+            <input type="text" name="numero" id="numero" value="<?= htmlspecialchars($usuario['numero'] ?? '') ?>" readonly class="empty-field">
           </div>
         </div>
       </div>

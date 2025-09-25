@@ -30,18 +30,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $estado = $_POST['estado'];
     $rua = $_POST['rua'];
     $bairro = $_POST['bairro'];
+    $numero = $_POST['numero'];
     
     if (!empty($_FILES['foto']['tmp_name'])) {
         $foto_de_perfil = file_get_contents($_FILES['foto']['tmp_name']);
         $stmt = $conn->prepare(
-            "UPDATE usuario SET nome_completo = ?, nome = ?, email = ?, cpf = ?, cep = ?, cidade = ?, estado = ?, rua = ?, bairro = ?, foto_de_perfil = ? WHERE idusuario = ?"
+            "UPDATE usuario SET nome_completo = ?, nome = ?, email = ?, cpf = ?, cep = ?, cidade = ?, estado = ?, rua = ?, bairro = ?, numero = ?, foto_de_perfil = ? WHERE idusuario = ?"
         );
-        $stmt->execute([$nome_completo, $novo_nome, $novo_email, $cpf, $cep, $cidade, $estado, $rua, $bairro, $foto_de_perfil, $idusuario]);
+        $stmt->execute([$nome_completo, $novo_nome, $novo_email, $cpf, $cep, $cidade, $estado, $rua, $bairro, $numero, $foto_de_perfil, $idusuario]);
     } else {
         $stmt = $conn->prepare(
-            "UPDATE usuario SET nome_completo = ?, nome = ?, email = ?, cpf = ?, cep = ?, cidade = ?, estado = ?, rua = ?, bairro = ? WHERE idusuario = ?"
+            "UPDATE usuario SET nome_completo = ?, nome = ?, email = ?, cpf = ?, cep = ?, cidade = ?, estado = ?, rua = ?, bairro = ?, numero = ? WHERE idusuario = ?"
         );
-        $stmt->execute([$nome_completo, $novo_nome, $novo_email, $cpf, $cep, $cidade, $estado, $rua, $bairro, $idusuario]);
+        $stmt->execute([$nome_completo, $novo_nome, $novo_email, $cpf, $cep, $cidade, $estado, $rua, $bairro, $numero, $idusuario]);
     }
 
     $_SESSION['nome_usuario'] = $novo_nome;
@@ -564,6 +565,11 @@ $ano_cadastro = date('Y', strtotime($usuario['data_cadastro'] ?? 'now'));
             <div class="info-linha">
               <strong>Rua</strong>
               <input type="text" name="rua" id="rua" value="<?= htmlspecialchars($usuario['rua'] ?? '') ?>" readonly>
+            </div>
+
+            <div class="info-linha">
+              <strong>Número</strong>
+              <input type="text" name="numero" id="numero" value="<?= htmlspecialchars($usuario['numero'] ?? '') ?>">
             </div>
           </div>
         </div>
