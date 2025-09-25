@@ -6,6 +6,8 @@ $nome = $_POST['nome'];
 $email = $_POST['email'];
 $senha = $_POST['senha'];
 
+$senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+
 // verifica se ja existe o nome ou email cadastrado
 $sqlCheck = "SELECT COUNT(*) FROM usuario WHERE nome = :nome OR email = :email";
 $stmtCheck = $conn->prepare($sqlCheck);
@@ -30,7 +32,7 @@ try {
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':nome', $nome);
     $stmt->bindParam(':email', $email);
-    $stmt->bindParam(':senha', $senha);
+    $stmt->bindParam(':senha', $senhaHash);
     $stmt->bindParam(':foto', $foto_de_perfil, PDO::PARAM_LOB);
 
     $stmt->execute();

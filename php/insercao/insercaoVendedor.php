@@ -9,6 +9,8 @@ $senha_vendedor = $_POST['senhaV'];
 $cpf = $_POST['cpf'];
 $cnpj = $_POST['cnpj'];
 
+$senhaHash = password_hash($senha_vendedor, PASSWORD_DEFAULT);
+
 // Verifica se já existe o nome ou email cadastrado
 $sqlCheck = "SELECT COUNT(*) FROM vendedor WHERE nome_completo = :nome_completo OR email = :email";
 $stmtCheck = $conn->prepare($sqlCheck);
@@ -35,7 +37,7 @@ try {
     $stmt->bindParam(':nome_completo', $nome_completo);
     $stmt->bindParam(':data_nascimento', $data_nascimento);
     $stmt->bindParam(':email', $email_vendedor);
-    $stmt->bindParam(':senha', $senha_vendedor);
+    $stmt->bindParam(':senha', $senhaHash);
     $stmt->bindParam(':cpf', $cpf);
     $stmt->bindParam(':cnpj', $cnpj);
     $stmt->bindParam(':foto_de_perfil', $foto_de_perfil, PDO::PARAM_LOB);

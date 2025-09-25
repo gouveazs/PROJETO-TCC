@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `banco`.`usuario` (
   `idusuario` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NULL,
   `email` VARCHAR(45) NULL,
-  `senha` VARCHAR(45) NULL,
+  `senha` VARCHAR(455) NULL,
   `nome_completo` VARCHAR(145) NULL,
   `telefone` CHAR(14) NULL,
   `cpf` CHAR(11) NULL,
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `banco`.`vendedor` (
   `idvendedor` INT NOT NULL AUTO_INCREMENT,
   `nome_completo` VARCHAR(45) NULL,
   `email` VARCHAR(45) NOT NULL,
-  `senha` VARCHAR(45) NULL,
+  `senha` VARCHAR(455) NULL,
   `data_nascimento` DATE NULL,
   `cpf` CHAR(11) NULL,
   `cnpj` CHAR(14) NULL,
@@ -346,6 +346,31 @@ CREATE TABLE IF NOT EXISTS `banco`.`notificacoes` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `banco`.`recuperacao_senha`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `banco`.`recuperacao_senha` (
+  `idrecuperacao_senha` INT NOT NULL AUTO_INCREMENT,
+  `token` VARCHAR(255) NOT NULL,
+  `expira_em` DATETIME NOT NULL,
+  `usado` TINYINT NULL DEFAULT 0,
+  `idusuario` INT NOT NULL,
+  `idvendedor` INT NOT NULL,
+  PRIMARY KEY (`idrecuperacao_senha`),
+  INDEX `fk_recuperacao_senha_usuario1_idx` (`idusuario` ASC) VISIBLE,
+  INDEX `fk_recuperacao_senha_vendedor1_idx` (`idvendedor` ASC) VISIBLE,
+  CONSTRAINT `fk_recuperacao_senha_usuario1`
+    FOREIGN KEY (`idusuario`)
+    REFERENCES `banco`.`usuario` (`idusuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_recuperacao_senha_vendedor1`
+    FOREIGN KEY (`idvendedor`)
+    REFERENCES `banco`.`vendedor` (`idvendedor`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

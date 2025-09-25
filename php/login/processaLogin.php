@@ -2,14 +2,15 @@
 include '../conexao.php';
 
 $usuario = htmlspecialchars($_POST['usuario']);
-$senha = htmlspecialchars($_POST['senha']);
+$senha = $_POST['senha']; // não precisa do htmlspecialchars aqui
 
 try {
-    $stmt = $conn->prepare("SELECT * FROM usuario WHERE nome = ? AND senha = ?");
-    $stmt->execute([$usuario, $senha]);
+    // busca só pelo nome, sem comparar senha direto
+    $stmt = $conn->prepare("SELECT * FROM usuario WHERE nome = ?");
+    $stmt->execute([$usuario]);
     $usuario_db = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($usuario_db) {
+    if ($usuario_db && password_verify($senha, $usuario_db['senha'])) {
         if ($usuario_db['status'] === 'desativado') {
             header('Location: login.php?error=2&usuario=' . urlencode($usuario));
             exit();
@@ -34,4 +35,3 @@ try {
     echo "Erro na consulta: " . $e->getMessage();
     die();
 }
-
