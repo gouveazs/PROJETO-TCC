@@ -1,7 +1,7 @@
 <?php
 session_start();
 $nome_vendedor = isset($_SESSION['nome_vendedor']) ? $_SESSION['nome_vendedor'] : null;
-$foto_de_perfil = isset($_SESSION['foto_de_perfil-vendedor']) ? $_SESSION['foto_de_perfil-vendedor'] : null;
+$foto_de_perfil = isset($_SESSION['foto_de_perfil_vendedor']) ? $_SESSION['foto_de_perfil_vendedor'] : null;
 
 if (!isset($_SESSION['nome_vendedor'])) {
   header('Location: ../login/loginVendedor.php');

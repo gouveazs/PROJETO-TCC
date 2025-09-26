@@ -1,7 +1,7 @@
 <?php
 session_start();
 $nome_vendedor = isset($_SESSION['nome_vendedor']) ? $_SESSION['nome_vendedor'] : null;
-$foto_de_perfil = isset($_SESSION['foto_de_perfil-vendedor']) ? $_SESSION['foto_de_perfil-vendedor'] : null;
+$foto_de_perfil = isset($_SESSION['foto_de_perfil_vendedor']) ? $_SESSION['foto_de_perfil_vendedor'] : null;
 $id_vendedor = isset($_SESSION['id_vendedor']) ? $_SESSION['id_vendedor'] : null; 
 
 if (!$nome_vendedor) {
@@ -329,10 +329,10 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <nav>
       <ul class="menu">
-        <li><a href="painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;">Início</a></li>
-        <li><a href="anuncios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;">Vendas publicadas</a></li>
-        <li><a href="rendimento.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;">Rendimento</a></li>
-        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png" alt="Cadastrar Produto" style="width:20px; margin-right:10px;">Cadastrar Produto</a></li>
+        <li><a href="painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
+        <li><a href="anuncios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Seus Anúncios</a></li>
+        <li><a href="rendimento.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
+        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Anunciar livro</a></li>
       </ul>
 
       <h3>Conta</h3>

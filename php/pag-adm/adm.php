@@ -333,39 +333,51 @@ if ($vendedorTop) {
     }
 
     .blink {
-        animation: blink 3s 1;
+      animation: blink 3s 1;
     }
 
     @keyframes blink {
-    0% {
+      0% {
         opacity: 1;
-    }
-    50% {
+        transform: scale(1);
+        color: #000; /* cor inicial */
+      }
+      50% {
         opacity: 0;
         transform: scale(2);
-    }
-    51% {
+        color: #ff0000; /* vermelho */
+      }
+      51% {
         opacity: 0;
         transform: scale(0);
-    }
-    100% {
+        color: #0000ff; /* azul */
+      }
+      100% {
         transform: scale(1);
         opacity: 1;
-    }
+        color: #000; /* volta pro normal */
+      }
     }
 
     .arrive {
-      animation: arrive 3s forwards; /* roda uma vez e mantém o estado final */
+      animation: arrive 3s forwards;
     }
 
     @keyframes arrive {
       0% {
         opacity: 0;
-        transform: scale(0); /* começa pequeno/invisível */
+        transform: translateX(100%) scale(0); /* começa fora da tela à direita */
+        color: #ff6600; /* laranja */
+      }
+      50% {
+        opacity: 0.5;
+        transform: translateX(20%) scale(1.2); /* entra com zoom e cor */
+        color: #00ccff; /* azul claro */
       }
       100% {
         opacity: 1;
-        transform: scale(1); /* termina normal */
+        transform: translateX(0) scale(1); /* posição final normal */
+        color: #000; /* preto (ou a cor padrão do texto) */
       }
     }
 
@@ -446,13 +458,13 @@ if ($vendedorTop) {
     <br><br><br>
     <div class="header">
       <?php if ($foto_de_perfil): ?>
-        <img class="arrive" src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>">
+        <img class="" src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>">
       <?php else: ?>
         <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
       <?php endif; ?>
       <div class="header-text">
-        <h1 class="arrive">Bem-vindo, <?= $adm ? htmlspecialchars($adm) : 'Adm'; ?></h1>
-        <p class="arrive">Acompanhe o desempenho do site fodão</p>
+        <h1 class="">Bem-vindo, <?= $adm ? htmlspecialchars($adm) : 'Adm'; ?></h1>
+        <p class="">Acompanhe o desempenho do seu site fodão</p>
       </div>
     </div>
     
@@ -468,7 +480,7 @@ if ($vendedorTop) {
         <p class="info">Ainda é só o começo, com boas avaliações, entregas no prazo e feedback dos clientes, sua reputação aumenta e consegue aumentar sua clientela!</p>
       </div>
       <div class="card">
-        <h2>Taxa de Crescimento</h2>
+        <h2>Taxa de crescimento do Site</h2>
         <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
         <p><strong>Taxa de sucesso:</strong> 0%</p>
         <p><strong>Total de usuários:</strong> <?php echo $total_usuarios; ?></p>
@@ -499,12 +511,12 @@ if ($vendedorTop) {
     
     <div class="grid">
       <div class="card">
-        <h2>Avaliações de Clientes</h2>
+        <h2>Mudar Isso</h2>
         <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
         <p>Nenhuma avaliação recebida ainda.</p>
       </div>
       <div class="card">
-        <h2>Notificações</h2>
+        <h2>Mudar isso</h2>
         <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
         <p>Nenhuma notificação no momento.</p>
       </div>
@@ -512,7 +524,7 @@ if ($vendedorTop) {
   </main>
 </body>
 <script>
-  const musica = new Audio('musica.mp3');
+  const musica = new Audio('bem-vindo-moreno.mp3');
   musica.loop = true;
 
   document.body.addEventListener('click', () => {

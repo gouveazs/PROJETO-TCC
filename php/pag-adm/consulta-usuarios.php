@@ -358,7 +358,7 @@
         <li><a href="consulta-vendedores.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Vendedores</a></li>
         <li><a href="consulta-produtos.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Produtos</a></li>
         <li><a href="rendimento.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Buscador 2000</a></li>
-        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Sei la</a></li>
+        <li><a href="#"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Sei la</a></li>
       </ul>
 
       <h3>Conta</h3>
@@ -398,7 +398,6 @@
             <th>Foto de Perfil</th>
             <th>Nome de Usuário</th>
             <th>Email</th>
-            <th>Senha</th>
             <th>Nome Completo</th>
             <th>CPF</th>
             <th>Telefone</th>
@@ -425,7 +424,6 @@
                       </td>
                       <td><?= htmlspecialchars($usuario['nome'] ?? 'Vazio') ?></td>
                       <td><?= htmlspecialchars($usuario['email'] ?? '') ?></td>
-                      <td><?= htmlspecialchars($usuario['senha'] ?? '') ?></td>
                       <td><?= htmlspecialchars($usuario['nome_completo'] ?? 'Vazio') ?></td>
                       <td><?= htmlspecialchars($usuario['cpf'] ?? 'Vazio') ?></td>
                       <td><?= htmlspecialchars($usuario['telefone'] ?? 'Vazio') ?></td>

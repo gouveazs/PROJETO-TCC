@@ -389,7 +389,7 @@
         <li><a href="consulta-vendedores.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Vendedores</a></li>
         <li><a href="consulta-produtos.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Produtos</a></li>
         <li><a href="rendimento.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Buscador 2000</a></li>
-        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Sei la</a></li>
+        <li><a href="#"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Sei la</a></li>
       </ul>
 
       <h3>Conta</h3>
@@ -429,7 +429,6 @@
             <th>Foto de Perfil</th>
             <th>Nome Completo</th>
             <th>Email</th>
-            <th>Senha</th>
             <th>Data de nascimento</th>
             <th>CPF</th>
             <th>CNPJ</th>
@@ -446,7 +445,7 @@
                   <tr>
                       <td><?= htmlspecialchars($vendedor['idvendedor'] ?? '') ?></td>
                       <td>
-                          <?php if (!empty($usuario['foto_de_perfil'])): ?>
+                          <?php if (!empty($vendedor['foto_de_perfil'])): ?>
                               <img src="data:image/jpeg;base64,<?= base64_encode($vendedor['foto_de_perfil']) ?>" alt="Foto de perfil" width="50" height="50">
                           <?php else: ?>
                               Sem foto
@@ -454,7 +453,6 @@
                       </td>
                       <td><?= htmlspecialchars($vendedor['nome_completo'] ?? 'Vazio') ?></td>
                       <td><?= htmlspecialchars($vendedor['email'] ?? '') ?></td>
-                      <td><?= htmlspecialchars($vendedor['senha'] ?? '') ?></td>
                       <td><?= htmlspecialchars($vendedor['data_nascimento'] ?? 'Vazio') ?></td>
                       <td><?= htmlspecialchars($vendedor['cpf'] ?? 'Vazio') ?></td>
                       <td><?= htmlspecialchars($vendedor['cnpj'] ?? 'Vazio') ?></td>

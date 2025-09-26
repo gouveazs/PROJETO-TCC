@@ -342,7 +342,7 @@
 
           <div class="info-linha">
           <strong>Senha:</strong>
-          <input type="password" id="senhaInput" value="<?php echo htmlspecialchars($usuario['senha']); ?>" readonly>
+          <input type="password" id="senhaInput" value="123456789" readonly>
           </div>
 
           <div class="info-linha">

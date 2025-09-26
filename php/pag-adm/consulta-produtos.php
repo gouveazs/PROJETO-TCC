@@ -12,14 +12,15 @@
 
   $stmt_produtos = $conn->query("
         SELECT p.*, 
-            v.nome_completo AS nome_vendedor,
-            c.nome AS nome_categoria,
-            i.imagem AS imagem_produto
+        v.nome_completo AS nome_vendedor,
+        c.nome AS nome_categoria,
+        (SELECT i.imagem
+          FROM imagens i 
+         WHERE i.idproduto = p.idproduto 
+         LIMIT 1) AS imagem_produto
         FROM produto p
         JOIN vendedor v ON p.idvendedor = v.idvendedor
-        JOIN categoria c ON p.idcategoria = c.idcategoria
-        LEFT JOIN imagens i ON i.idproduto = p.idproduto
-        GROUP BY p.idproduto
+        JOIN categoria c ON p.idcategoria = c.idcategoria;
     ");
     $produtos = $stmt_produtos->fetchAll(PDO::FETCH_ASSOC);
 
@@ -366,7 +367,7 @@
         <li><a href="consulta-vendedores.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Vendedores</a></li>
         <li><a href="consulta-produtos.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Produtos</a></li>
         <li><a href="rendimento.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Buscador 2000</a></li>
-        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Sei la</a></li>
+        <li><a href="#"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Sei la</a></li>
       </ul>
 
       <h3>Conta</h3>
@@ -421,11 +422,11 @@
             <th>Descrição</th>
             <th>Editar</th>
             <th>Expurgar</th>
-            </tr>
+          </tr>
 
             <?php if ($produtos): ?>
             <?php foreach ($produtos as $produto): ?>
-                <tr>
+              <tr>
                 <td><?= htmlspecialchars($produto['idproduto']) ?></td>
                 <td>
                     <?php if (!empty($produto['imagem_produto'])): ?>
@@ -455,11 +456,11 @@
                 <td>
                     <button><a style="text-decoration: none;" href="desativar_produto.php?id=<?= $produto['idproduto'] ?>">❌</a></button>
                 </td>
-                </tr>
+              </tr>
             <?php endforeach; ?>
             <?php else: ?>
             <tr>
-                <td colspan="18">Nenhum produto cadastrado.</td>
+                <td colspan="19">Nenhum produto cadastrado.</td>
             </tr>
             <?php endif; ?>
         </table>
