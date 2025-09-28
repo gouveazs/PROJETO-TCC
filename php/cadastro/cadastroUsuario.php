@@ -157,6 +157,120 @@
       margin-top: 10px;
       text-align: center;
     }
+
+    /* Modal para upload de foto */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+      color: #333;
+      font-size: 24px;
+    }
+
+    .close-modal {
+      font-size: 28px;
+      cursor: pointer;
+      color: #999;
+    }
+
+    .close-modal:hover {
+      color: #333;
+    }
+
+    .upload-area {
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      padding: 40px 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .upload-area:hover {
+      border-color: #5a6b50;
+      background-color: #f9f9f9;
+    }
+
+    .upload-area p {
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .btn-upload {
+      background-color: #5a6b50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-upload:hover {
+      background-color: #4a5a40;
+    }
+
+    .preview-container {
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .preview-img {
+      max-width: 200px;
+      max-height: 200px;
+      border-radius: 50%;
+      margin-bottom: 15px;
+    }
+
+    .btn-confirmar {
+      background-color: #5a6b50;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .btn-confirmar:hover {
+      background-color: #4a5a40;
+    }
+
+    .btn-confirmar:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body>
@@ -176,7 +290,7 @@
         <!-- INPUT DE FOTO DE PERFIL -->
         <div class="custom-file">
           <input type="file" id="foto" name="foto_de_perfil" accept="image/*" required>
-          <label for="foto">Adicione foto de perfil</label>
+          <label for="foto" id="fotoLabel">Adicione foto de perfil</label>
           <div class="file-name" id="file-name">Nenhum arquivo escolhido</div>
         </div>
 
@@ -188,18 +302,144 @@
     </div>
   </div>
 
-  <script>
-    // Mostra o nome do arquivo selecionado
-    const inputFile = document.getElementById("foto");
-    const fileName = document.getElementById("file-name");
+  <!-- Modal para upload de foto -->
+  <div class="modal" id="modalUpload">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Alterar Foto de Perfil</h2>
+        <span class="close-modal" id="closeModal">&times;</span>
+      </div>
+      <div class="upload-area" id="uploadArea">
+        <p>Arraste uma imagem aqui ou clique para selecionar</p>
+        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+        <button type="button" class="btn-upload" id="btnSelecionar">Selecionar Arquivo</button>
+      </div>
+      <div class="preview-container" id="previewContainer">
+        <img id="previewImg" class="preview-img" src="" alt="Pré-visualização">
+        <button type="button" class="btn-confirmar" id="btnConfirmar">Confirma</button>
+      </div>
+    </div>
+  </div>
 
-    inputFile.addEventListener("change", () => {
-      if (inputFile.files.length > 0) {
-        fileName.textContent = inputFile.files[0].name;
+  <script>
+    // Elementos DOM
+    const fotoInput = document.getElementById("foto");
+    const fileName = document.getElementById("file-name");
+    const fotoLabel = document.getElementById("fotoLabel");
+    const modalUpload = document.getElementById('modalUpload');
+    const closeModal = document.getElementById('closeModal');
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const btnSelecionar = document.getElementById('btnSelecionar');
+    const previewContainer = document.getElementById('previewContainer');
+    const previewImg = document.getElementById('previewImg');
+    const btnConfirmar = document.getElementById('btnConfirmar');
+
+    // Mostra o nome do arquivo selecionado
+    fotoInput.addEventListener("change", () => {
+      if (fotoInput.files.length > 0) {
+        fileName.textContent = fotoInput.files[0].name;
       } else {
         fileName.textContent = "Nenhum arquivo escolhido";
       }
     });
+
+    // Abrir modal ao clicar no botão de adicionar foto
+    fotoLabel.addEventListener('click', (e) => {
+      e.preventDefault();
+      abrirModal();
+    });
+
+    // Fechar modal
+    closeModal.addEventListener('click', fecharModal);
+    window.addEventListener('click', (event) => {
+      if (event.target === modalUpload) {
+        fecharModal();
+      }
+    });
+
+    // Selecionar arquivo
+    btnSelecionar.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    // Arrastar e soltar arquivo
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.style.borderColor = '#5a6b50';
+      uploadArea.style.backgroundColor = '#f9f9f9';
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.style.borderColor = '#ddd';
+      uploadArea.style.backgroundColor = 'transparent';
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.style.borderColor = '#ddd';
+      uploadArea.style.backgroundColor = 'transparent';
+      
+      if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        processarImagem(e.dataTransfer.files[0]);
+      }
+    });
+
+    // Processar imagem selecionada
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length) {
+        processarImagem(e.target.files[0]);
+      }
+    });
+
+    // Confirmar alteração da foto
+    btnConfirmar.addEventListener('click', confirmarAlteracao);
+
+    // Funções
+    function abrirModal() {
+      modalUpload.style.display = 'flex';
+      previewContainer.style.display = 'none';
+      fileInput.value = '';
+    }
+
+    function fecharModal() {
+      modalUpload.style.display = 'none';
+    }
+
+    function processarImagem(file) {
+      // Verificar se é uma imagem
+      if (!file.type.match('image.*')) {
+        alert('Por favor, selecione apenas arquivos de imagem.');
+        return;
+      }
+
+      // Verificar tamanho do arquivo (máximo 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('A imagem deve ter no máximo 5MB.');
+        return;
+      }
+
+      // Criar pré-visualização
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImg.src = e.target.result;
+        previewContainer.style.display = 'block';
+        btnConfirmar.disabled = false;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function confirmarAlteracao() {
+      // Atualizar o input de arquivo com a nova imagem
+      fotoInput.files = fileInput.files;
+      
+      // Atualizar o nome do arquivo exibido
+      if (fotoInput.files.length > 0) {
+        fileName.textContent = fotoInput.files[0].name;
+      }
+      
+      fecharModal();
+    }
   </script>
 </body>
 </html>
