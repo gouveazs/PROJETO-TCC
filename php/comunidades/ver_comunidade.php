@@ -25,9 +25,9 @@ if (!$id_comunidade) {
 }
 
 // Verifica se já é membro da comunidade
-$sql = "SELECT * FROM membros_comunidade WHERE idcomunidades = :id_comunidade AND idusuario = :id_usuario";
+$sql = "SELECT * FROM membros_comunidade WHERE idcomunidades = :idcomunidades AND idusuario = :idusuario";
 $stmt = $conn->prepare($sql);
-$stmt->execute([':id_comunidade' => $id_comunidade, ':id_usuario' => $id_usuario]);
+$stmt->execute([':idcomunidades' => $id_comunidade, ':idusuario' => $id_usuario]);
 $ja_membro = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Se enviou formulário e ainda não é membro, insere

@@ -11,7 +11,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema banco
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `banco` DEFAULT CHARACTER SET utf8 ;
+CREATE DATABASE IF NOT EXISTS `banco` DEFAULT CHARACTER SET utf8 ;
 USE `banco` ;
 
 -- -----------------------------------------------------
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `banco`.`login_usuario` (
   `senha` VARCHAR(45) NULL,
   `usuario_idusuario` INT NOT NULL,
   PRIMARY KEY (`idlogin`),
-  INDEX `fk_login_usuario_usuario1_idx` (`usuario_idusuario` ASC) VISIBLE,
+  INDEX `fk_login_usuario_usuario1_idx` (`usuario_idusuario` ASC),
   CONSTRAINT `fk_login_usuario_usuario1`
     FOREIGN KEY (`usuario_idusuario`)
     REFERENCES `banco`.`usuario` (`idusuario`)
@@ -118,8 +118,8 @@ CREATE TABLE IF NOT EXISTS `banco`.`produto` (
   `estado_detalhado` TEXT NULL,
   `status` ENUM('Disponivel', 'Vendido') NULL DEFAULT 'Disponivel',
   PRIMARY KEY (`idproduto`),
-  INDEX `fk_produto_cadastro_vendedor1_idx` (`idvendedor` ASC) VISIBLE,
-  INDEX `fk_produto_categoria1_idx` (`idcategoria` ASC) VISIBLE,
+  INDEX `fk_produto_cadastro_vendedor1_idx` (`idvendedor` ASC),
+  INDEX `fk_produto_categoria1_idx` (`idcategoria` ASC),
   CONSTRAINT `fk_produto_cadastro_vendedor1`
     FOREIGN KEY (`idvendedor`)
     REFERENCES `banco`.`vendedor` (`idvendedor`)
@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `banco`.`pedido` (
   `idusuario` INT NOT NULL,
   `status` ENUM('pendente', 'concluido', 'cancelado') NULL,
   PRIMARY KEY (`idpedido`),
-  INDEX `fk_pedido_usuario1_idx` (`idusuario` ASC) VISIBLE,
+  INDEX `fk_pedido_usuario1_idx` (`idusuario` ASC),
   CONSTRAINT `fk_pedido_usuario1`
     FOREIGN KEY (`idusuario`)
     REFERENCES `banco`.`usuario` (`idusuario`)
@@ -161,8 +161,8 @@ CREATE TABLE IF NOT EXISTS `banco`.`item_pedido` (
   `idproduto` INT NOT NULL,
   `idpedido` INT NOT NULL,
   PRIMARY KEY (`iditem_pedido`, `idpedido`),
-  INDEX `fk_item_pedido_produto1_idx` (`idproduto` ASC) VISIBLE,
-  INDEX `fk_item_pedido_pedido1_idx` (`idpedido` ASC) VISIBLE,
+  INDEX `fk_item_pedido_produto1_idx` (`idproduto` ASC),
+  INDEX `fk_item_pedido_pedido1_idx` (`idpedido` ASC),
   CONSTRAINT `fk_item_pedido_produto1`
     FOREIGN KEY (`idproduto`)
     REFERENCES `banco`.`produto` (`idproduto`)
@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `banco`.`comunidades` (
   `quantidade_usuarios` INT NULL,
   `idusuario` INT NOT NULL,
   PRIMARY KEY (`idcomunidades`),
-  INDEX `fk_comunidades_usuario1_idx` (`idusuario` ASC) VISIBLE,
+  INDEX `fk_comunidades_usuario1_idx` (`idusuario` ASC),
   CONSTRAINT `fk_comunidades_usuario1`
     FOREIGN KEY (`idusuario`)
     REFERENCES `banco`.`usuario` (`idusuario`)
@@ -205,7 +205,7 @@ CREATE TABLE IF NOT EXISTS `banco`.`membros_comunidade` (
   `entrou_em` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `idcomunidades` INT NOT NULL,
   PRIMARY KEY (`idmembros_comunidade`, `idcomunidades`),
-  INDEX `fk_membros_comunidade_comunidades1_idx` (`idcomunidades` ASC) VISIBLE,
+  INDEX `fk_membros_comunidade_comunidades1_idx` (`idcomunidades` ASC),
   CONSTRAINT `fk_membros_comunidade_comunidades1`
     FOREIGN KEY (`idcomunidades`)
     REFERENCES `banco`.`comunidades` (`idcomunidades`)
@@ -223,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `banco`.`mensagens_chat` (
   `enviada_em` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `idcomunidades` INT NOT NULL,
   PRIMARY KEY (`idmensagens_chat`),
-  INDEX `fk_mensagens_chat_comunidades1_idx` (`idcomunidades` ASC) VISIBLE,
+  INDEX `fk_mensagens_chat_comunidades1_idx` (`idcomunidades` ASC),
   CONSTRAINT `fk_mensagens_chat_comunidades1`
     FOREIGN KEY (`idcomunidades`)
     REFERENCES `banco`.`comunidades` (`idcomunidades`)
@@ -240,7 +240,7 @@ CREATE TABLE IF NOT EXISTS `banco`.`imagens` (
   `imagem` LONGBLOB NULL,
   `idproduto` INT NOT NULL,
   PRIMARY KEY (`idimagens`),
-  INDEX `fk_imagens_produto1_idx` (`idproduto` ASC) VISIBLE,
+  INDEX `fk_imagens_produto1_idx` (`idproduto` ASC),
   CONSTRAINT `fk_imagens_produto1`
     FOREIGN KEY (`idproduto`)
     REFERENCES `banco`.`produto` (`idproduto`)
@@ -258,8 +258,8 @@ CREATE TABLE IF NOT EXISTS `banco`.`carrinho` (
   `idproduto` INT NOT NULL,
   `idusuario` INT NOT NULL,
   PRIMARY KEY (`idcarrinho`),
-  INDEX `fk_carrinho_produto1_idx` (`idproduto` ASC) VISIBLE,
-  INDEX `fk_carrinho_usuario1_idx` (`idusuario` ASC) VISIBLE,
+  INDEX `fk_carrinho_produto1_idx` (`idproduto` ASC),
+  INDEX `fk_carrinho_usuario1_idx` (`idusuario` ASC),
   CONSTRAINT `fk_carrinho_produto1`
     FOREIGN KEY (`idproduto`)
     REFERENCES `banco`.`produto` (`idproduto`)
@@ -281,8 +281,8 @@ CREATE TABLE IF NOT EXISTS `banco`.`favoritos` (
   `idproduto` INT NOT NULL,
   `idusuario` INT NOT NULL,
   PRIMARY KEY (`idfavoritos`),
-  INDEX `fk_favoritos_produto1_idx` (`idproduto` ASC) VISIBLE,
-  INDEX `fk_favoritos_usuario1_idx` (`idusuario` ASC) VISIBLE,
+  INDEX `fk_favoritos_produto1_idx` (`idproduto` ASC),
+  INDEX `fk_favoritos_usuario1_idx` (`idusuario` ASC),
   CONSTRAINT `fk_favoritos_produto1`
     FOREIGN KEY (`idproduto`)
     REFERENCES `banco`.`produto` (`idproduto`)
@@ -307,8 +307,8 @@ CREATE TABLE IF NOT EXISTS `banco`.`avaliacoes` (
   `idusuario` INT NOT NULL,
   `idvendedor` INT NOT NULL,
   PRIMARY KEY (`idavaliacoes`),
-  INDEX `fk_avaliacoes_usuario1_idx` (`idusuario` ASC) VISIBLE,
-  INDEX `fk_avaliacoes_vendedor1_idx` (`idvendedor` ASC) VISIBLE,
+  INDEX `fk_avaliacoes_usuario1_idx` (`idusuario` ASC),
+  INDEX `fk_avaliacoes_vendedor1_idx` (`idvendedor` ASC),
   CONSTRAINT `fk_avaliacoes_usuario1`
     FOREIGN KEY (`idusuario`)
     REFERENCES `banco`.`usuario` (`idusuario`)
@@ -334,8 +334,8 @@ CREATE TABLE IF NOT EXISTS `banco`.`notificacoes` (
   `idvendedor` INT NOT NULL,
   `tipo` ENUM('avaliação', 'compra') NULL,
   PRIMARY KEY (`idnotificacoes`),
-  INDEX `fk_notificacoes_usuario1_idx` (`idusuario` ASC) VISIBLE,
-  INDEX `fk_notificacoes_vendedor1_idx` (`idvendedor` ASC) VISIBLE,
+  INDEX `fk_notificacoes_usuario1_idx` (`idusuario` ASC),
+  INDEX `fk_notificacoes_vendedor1_idx` (`idvendedor` ASC),
   CONSTRAINT `fk_notificacoes_usuario1`
     FOREIGN KEY (`idusuario`)
     REFERENCES `banco`.`usuario` (`idusuario`)
@@ -360,8 +360,8 @@ CREATE TABLE IF NOT EXISTS `banco`.`recuperacao_senha` (
   `idusuario` INT NULL,
   `idvendedor` INT NULL,
   PRIMARY KEY (`idrecuperacao_senha`),
-  INDEX `fk_recuperacao_senha_usuario1_idx` (`idusuario` ASC) VISIBLE,
-  INDEX `fk_recuperacao_senha_vendedor1_idx` (`idvendedor` ASC) VISIBLE,
+  INDEX `fk_recuperacao_senha_usuario1_idx` (`idusuario` ASC),
+  INDEX `fk_recuperacao_senha_vendedor1_idx` (`idvendedor` ASC),
   CONSTRAINT `fk_recuperacao_senha_usuario1`
     FOREIGN KEY (`idusuario`)
     REFERENCES `banco`.`usuario` (`idusuario`)

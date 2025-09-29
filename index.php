@@ -264,7 +264,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     .cards {
       display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 20px;
+      align-items: stretch; /* força mesma altura */
     }
 
     .cards-novidades {
@@ -281,6 +283,11 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       overflow: hidden;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       transition: transform 0.3s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%; /* obrigatório para stretch funcionar */
+      box-sizing: border-box;
     }
 
     .card:hover {
@@ -302,6 +309,10 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       margin-bottom: 10px;
       font-size: 1rem;
       color: var(--verde);
+      display: -webkit-box;
+      -webkit-line-clamp: 2; /* no máximo 2 linhas */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .card-link {
