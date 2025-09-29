@@ -180,10 +180,12 @@
               $stmt = $conn->prepare("INSERT INTO recuperacao_senha (token, expira_em, idvendedor) VALUES (?, ?, ?)");
               $stmt->execute([$token, $expira, $vendedor['idvendedor']]);
           }
-
-          $link = "https://projetosetim.com.br/2025/php3/php/perfil-usuario/protocolo-senha/resetar_senha.php?token=$token";
+          
+         
+          $link = "http://localhost/PROJETO-TCC/php/perfil-usuario/protocolo-senha/resetar_senha.php?token=$token";
 
           mail($email, "Recuperação de senha", "Clique aqui para redefinir sua senha: $link");
+          echo $link;
 
           $mensagem = "Um link de recuperação foi enviado para seu email.";
           $tipoMensagem = "success";
