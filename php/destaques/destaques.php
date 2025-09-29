@@ -402,7 +402,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     .footer {
       margin-left: 250px;
       background-color: var(--marrom);
-      color: white;
+      color: #fff;
       text-align: center;
       padding: 15px;
     }
