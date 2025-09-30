@@ -238,34 +238,127 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       overflow: hidden;
     }
 
-    .produto-img img {
-      max-height: 100%;
-      max-width: 100%;
-      object-fit: cover;
-      border-radius: 8px;
-    }
+    .detalhes-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.detalhes-card h3 {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+}
+
+.detalhes-card hr {
+  border: 0;
+  height: 1px;
+  background-color: #ddd;
+  margin: 6px 0 12px;
+}
+
+.detalhes-card p {
+  font-size: 14px;
+  margin: 4px 0;
+  color: var(--text-dark);
+}
+
+.produto-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.produto-detalhes {
+    flex: 1;
+  display: none;
+}
+
+.produto-detalhes.ativo {
+  display: block;
+}
+
+.produto-img {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.produto-img img {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.produto-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.detalhes-img {
+  display: none; 
+}
+
+.detalhes-img img {
+  width: 200px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.detalhes-info {
+  flex: 1;
+}
 
     .sem-imagem {
       color: #999;
       font-size: 14px;
     }
 
-    .btn-toggle {
-      background: #556B2F;
-      color: #fff;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      padding: 8px 12px;
-      margin-top: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-      width: 100%;
-    }
+.detalhes-colunas {
+  display: flex;
+  gap: 30px;
+}
 
-    .btn-toggle:hover {
-      background: #445522;
-    }
+.coluna {
+  flex: 1;
+  min-width: 150px;
+}
+
+.coluna p {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+
+.btn-toggle {
+  background: var(--verde);
+  color: #fff;
+  font-size: 16px;        /* mesmo tamanho dos outros */
+  font-weight: bold;      /* deixa em negrito igual */
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+  width: 100%;
+  text-align: center;
+}
+.btn-toggle:hover {
+  background: #4e5c43;
+}
 
     .btn-cadastrar {
   background-color: var(--verde);
@@ -291,16 +384,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   gap: 30px; /* espaçamento entre o texto e o botão */
   margin-top: 0px;
 }
-
-
-    .produto-detalhes {
-      display: none;
-      margin-top: 10px;
-      border-top: 1px solid #ddd;
-      padding-top: 8px;
-      font-size: 14px;
-      text-align: left;
-    }
 
     .produto-actions {
       display: flex;
@@ -338,12 +421,12 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     .btn-action.excluir {
-        background-color: var(--marrom); /* Cor da barra de título "Entre Linhas" */
+        background-color: #c44; /* Cor da barra de título "Entre Linhas" */
         color: white;
     }
 
     .btn-action.excluir:hover {
-        background-color: #6f4f28; /* Cor mais escura */
+        background-color: #c44; /* Cor mais escura */
     }
   </style>
 </head>
@@ -414,14 +497,45 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     Mostrar detalhes
                 </button>
 
-                <div id="detalhes-<?= $index ?>" class="produto-detalhes">
-                    <p><strong>Título:</strong> <?= htmlspecialchars($produto['nome']) ?></p>
-                    <p><strong>Editora:</strong> <?= htmlspecialchars($produto['editora']) ?></p>
-                    <p><strong>Autor:</strong> <?= htmlspecialchars($produto['autor']) ?></p>
-                    <p><strong>Preço:</strong> R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
-                    <p><strong>Quantidade:</strong> <?= (int)$produto['quantidade'] ?></p>
-                    <p><strong>Descrição:</strong> <?= nl2br(htmlspecialchars($produto['descricao'])) ?></p>
-                </div>
+  <div id="detalhes-<?= $index ?>" class="produto-detalhes">
+  <div class="detalhes-img">
+    <?php if (!empty($produto['imagem'])): ?>
+      <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+    <?php else: ?>
+      <img src="../../imgs/usuario.jpg" alt="Sem imagem">
+    <?php endif; ?>
+  </div>
+
+ <div class="detalhes-info">
+    <div class="detalhes-card">
+      <h3>Detalhes do Produto</h3>
+      <hr>
+      <div class="detalhes-colunas">
+        <div class="coluna">
+          <p><strong>Título:</strong> <?= htmlspecialchars($produto['nome']) ?></p>
+          <p><strong>Autor:</strong> <?= htmlspecialchars($produto['autor']) ?></p>
+          <p><strong>Editora:</strong> <?= htmlspecialchars($produto['editora']) ?></p>
+          <p><strong>Nº páginas:</strong> <?= (int)$produto['numero_paginas'] ?></p>
+          <p><strong>Categoria:</strong> <?= htmlspecialchars($produto['idcategoria']) ?></p>
+        </div>
+        <div class="coluna">
+          <p><strong>Publicação:</strong> <?= date('d/m/Y', strtotime($produto['data_publicacao'])) ?></p>
+          <p><strong>Idioma:</strong> <?= htmlspecialchars($produto['idioma']) ?></p>
+          <p><strong>Classificação:</strong> <?= htmlspecialchars($produto['classificacao_etaria']) ?> anos</p>
+          <p><strong>Dimensões:</strong> <?= htmlspecialchars($produto['dimensoes']) ?></p>
+          <p><strong>Preço:</strong> R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+        </div>
+        <div class="coluna">
+          <p><strong>Quantidade:</strong> <?= (int)$produto['quantidade'] ?></p>
+          <p><strong>ISBN:</strong> <?= htmlspecialchars($produto['isbn']) ?></p>
+          <p><strong>Estado:</strong> <?= ucfirst(htmlspecialchars($produto['estado_livro'])) ?></p>
+          <p><strong>Desc. estado:</strong> <?= nl2br(htmlspecialchars($produto['estado_detalhado'])) ?></p>
+          <p><strong>Descrição:</strong> <?= nl2br(htmlspecialchars($produto['descricao'])) ?></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
                 <!-- Botões organizados um embaixo do outro -->
                 <div class="produto-actions">
@@ -442,12 +556,8 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
 function toggleDetalhes(id) {
-    const detalhes = document.getElementById(id);
-    if (detalhes.style.display === 'none' || detalhes.style.display === '') {
-        detalhes.style.display = 'block';
-    } else {
-        detalhes.style.display = 'none';
-    }
+  const detalhes = document.getElementById(id);
+  detalhes.classList.toggle("ativo");
 }
 </script>
 
