@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$ja_membro) {
     $stmtInsert = $conn->prepare($sqlInsert);
     $stmtInsert->execute([':id_comunidade' => $id_comunidade, ':id_usuario' => $id_usuario]);
 
-    header("Location: chat.php?id_comunidade=$id_comunidade");
+    header("Location: chat/chat.php?id_comunidade=$id_comunidade");
     exit;
 }
 
@@ -68,7 +68,7 @@ if (!$com) {
     </form>
 <?php else: ?>
     <p>Você já participa desta comunidade.</p>
-    <a href="chat.php?id_comunidade=<?= $id_comunidade ?>">Ir para o Chat</a>
+    <a href="chat/chat.php?id_comunidade=<?= $id_comunidade ?>">Ir para o Chat</a>
 <?php endif; ?>
 
 </body>

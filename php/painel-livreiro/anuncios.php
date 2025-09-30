@@ -118,6 +118,13 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       padding: 0 20px;
     }
 
+    .sidebar nav h3 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: #ddd;
+    }
+
     .sidebar nav ul {
       list-style: none;
       padding: 0;
