@@ -1,42 +1,31 @@
 <?php
 session_start();
-$nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
+
+$nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null; 
 $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
-// Dados de exemplo para o carrinho
-$carrinho_itens = [
-    [
-        'id' => 1,
-        'imagem' => '../../imgs/Extraordinário.jpg',
-        'titulo' => 'Extraordinário',
-        'descricao' => 'Capa comum - Edição padrão, 3/janeiro 2013',
-        'preco' => 42.29,
-        'quantidade' => 1
-    ],
-    [
-        'id' => 2,
-        'imagem' => '../../imgs/A Menina que Roubava Livros.jpg',
-        'titulo' => 'A Menina que Roubava Livros',
-        'descricao' => 'Capa comum - Edição padrão, 10 junho 2013',
-        'preco' => 42.29,
-        'quantidade' => 1
-    ],
-    [
-        'id' => 3,
-        'imagem' => '../../imgs/alice.jpg',
-        'titulo' => 'Alice no País das Maravilhas (Classic Edition)',
-        'descricao' => 'Capa dura - 4 outubro 2019',
-        'preco' => 48.93,
-        'quantidade' => 1
-    ]
-];
-
-$subtotal = 0;
-foreach ($carrinho_itens as $item) {
-    $subtotal += $item['preco'] * $item['quantidade'];
+if (!isset($_SESSION['carrinho'])) {
+    $_SESSION['carrinho'] = [];
 }
-$frete = 0; // Frete grátis
-$total = $subtotal + $frete;
+
+$id = $_GET['id'] ?? null;
+$nome = $_GET['nome'] ?? null;
+$preco = $_GET['preco'] ?? null;
+//$imagem = $_GET['imagem'] ?? 'sem-imagem.png';
+//$descricao = $_GET['descricao'] ?? '';
+
+if ($id && $nome && $preco) {
+  if (!isset($_SESSION['carrinho'][$id])) {
+      $_SESSION['carrinho'][$id] = [
+          'id'        => $id,
+          'nome'      => $nome,
+          'preco'     => (float)$preco,
+          'imagem'    => $_GET['imagem'] ?? '../../imgs/capa.jpg', // se não vier, usa padrão
+          'descricao' => $_GET['descricao'] ?? ''
+      ];
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -178,53 +167,53 @@ $total = $subtotal + $frete;
     z-index: 1000;
     }
 
-.topbar-left {
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .topbar-left .logo {
+      height: 50px;
+    }
+
+    .topbar-left h1 {
+      font-size: 22px;
+      color: #fff;
+      margin: 0;
+      font-weight: bold;
+    }
+
+    .search-form {
     display: flex;
     align-items: center;
-    gap: 15px;
-}
+    }
 
-.topbar-left .logo {
-    height: 50px;
-}
-
-.topbar-left h1 {
-    font-size: 22px;
-    color: #fff;
+    .search-form input[type="text"] {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 30px 0 0 30px; /* arredondado à esquerda */
+    outline: none;
+    width: 300px; /* campo maior */
+    font-size: 0.9rem;
     margin: 0;
-    font-weight: bold;
-}
+    }
 
-.search-form {
-  display: flex;
-  align-items: center;
-}
+    .search-form input[type="submit"] {
+    padding: 10px 15px;
+    border: none;
+    background-color: #6f8562; /* verde escuro */
+    color: #fff;
+    font-weight: none;
+    border-radius: 0 30px 30px 0; /* arredondado à direita */
+    cursor: pointer;S
+    margin: 0;
+    width: 90px; /* botão mais estreito */
+    }
 
-.search-form input[type="text"] {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 30px 0 0 30px; /* arredondado à esquerda */
-  outline: none;
-  width: 300px; /* campo maior */
-  font-size: 0.9rem;
-  margin: 0;
-}
-
-.search-form input[type="submit"] {
-  padding: 10px 15px;
-  border: none;
-  background-color: #6f8562; /* verde escuro */
-  color: #fff;
-  font-weight: none;
-  border-radius: 0 30px 30px 0; /* arredondado à direita */
-  cursor: pointer;
-  margin: 0;
-  width: 90px; /* botão mais estreito */
-}
-
-.search-form input[type="submit"]:hover {
-  background-color: #6f8562;
-}
+    .search-form input[type="submit"]:hover {
+    background-color: #6f8562;
+    }
 
     .topbar input[type="text"] {
       padding: 10px 15px;
@@ -569,26 +558,21 @@ $total = $subtotal + $frete;
 
   <div class="cart-container">
     <div class="cart-items">
-      <?php foreach ($carrinho_itens as $item): ?>
-        <div class="cart-item">
-          <img src="<?= $item['imagem'] ?>" alt="<?= $item['titulo'] ?>" class="cart-item-image">
-          <div class="cart-item-details">
-            <h3 class="cart-item-title"><?= $item['titulo'] ?></h3>
-            <p class="cart-item-desc"><?= $item['descricao'] ?></p>
-            <p class="cart-item-price">R$ <?= number_format($item['preco'], 2, ',', '.') ?></p>
-            <div class="cart-item-actions">
-              <div class="quantity-control">
-                <button class="quantity-btn" onclick="updateQuantity(<?= $item['id'] ?>, -1)">-</button>
-                <input type="number" class="quantity-input" value="<?= $item['quantidade'] ?>" min="1" id="quantity-<?= $item['id'] ?>">
-                <button class="quantity-btn" onclick="updateQuantity(<?= $item['id'] ?>, 1)">+</button>
-              </div>
-              <button class="remove-btn" onclick="removeItem(<?= $item['id'] ?>)">
-                Remover
-              </button>
-            </div>
+    <?php foreach ($_SESSION['carrinho'] as $item): ?>
+      <div class="cart-item">
+        <img src="<?= htmlspecialchars($item['imagem']) ?>" class="cart-item-image">
+        <div class="cart-item-details">
+          <h3 class="cart-item-title"><?= htmlspecialchars($item['nome']) ?></h3>
+          <p class="cart-item-desc"><?= htmlspecialchars($item['descricao']) ?></p>
+          <p class="cart-item-price">R$ <?= number_format($item['preco'], 2, ',', '.') ?></p>
+          <div class="cart-item-actions">
+            <button class="remove-btn" onclick="removeItem(<?= $item['id'] ?>)">Remover</button>
           </div>
         </div>
-      <?php endforeach; ?>
+      </div>
+    <?php endforeach; ?>
+
+
       
       <a href="../../index.php" class="continue-shopping">
         ← Continuar comprando
@@ -600,7 +584,7 @@ $total = $subtotal + $frete;
       
       <div class="summary-row">
         <span class="summary-label">Subtotal</span>
-        <span class="summary-value">R$ <?= number_format($subtotal, 2, ',', '.') ?></span>
+        <span class="summary-value">R$ 0</span>
       </div>
       
       <div class="summary-row">
@@ -610,7 +594,7 @@ $total = $subtotal + $frete;
       
       <div class="summary-row summary-total">
         <span class="summary-label">Total</span>
-        <span class="summary-value">R$ <?= number_format($total, 2, ',', '.') ?></span>
+        <span class="summary-value">R$ 0</span>
       </div>
       
       <button class="checkout-btn" onclick="window.location.href='checkout.php'">

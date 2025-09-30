@@ -12,7 +12,6 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 $idproduto = (int) $_GET['id'];
 
 try {
-    // 1. Buscar o produto principal
     $stmt = $conn->prepare("
         SELECT p.*, i.imagem, v.nome_completo, v.email, c.nome AS nome_categoria
         FROM produto p
@@ -1011,7 +1010,9 @@ try {
                         </div>
                     </div>
                     
-                    <button class="buy-button">COMPRAR AGORA</button>
+                    <button class="buy-button">
+                        <a href="../carrinho/carrinho.php?id=<?= $produto['idproduto'] ?>&nome=<?= $produto['nome'] ?>&preco=<?= $produto['preco'] ?>" class="card-link">COMPRAR</a>
+                    </button>
                     
                     <div class="secure-transaction">
                         <i class="fas fa-lock"></i> Transação segura

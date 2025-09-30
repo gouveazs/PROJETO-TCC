@@ -1171,7 +1171,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="cards cards-novidades">
   <?php foreach ($produtos as $produto): ?>
-    <a href="php/produto/pagiproduto.php?id=<?= $produto['idproduto'] ?>" class="card-link">
+    <a href="php/produto/pagiproduto.php?id=<?=$produto['idproduto']?>&nome=<?=$produto['nome']?>&preco=<?=$produto['preco']?>" class="card-link">
       <div class="card">
         <?php if (!empty($produto['imagem'])): ?>
           <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
