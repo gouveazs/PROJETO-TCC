@@ -267,6 +267,32 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       background: #445522;
     }
 
+    .btn-cadastrar {
+  background-color: var(--verde);
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.3s;
+}
+
+.btn-cadastrar:hover {
+  background-color: #445c3a;
+}
+
+.sem-produto {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* deixa alinhado à esquerda */
+  gap: 30px; /* espaçamento entre o texto e o botão */
+  margin-top: 0px;
+}
+
+
     .produto-detalhes {
       display: none;
       margin-top: 10px;
@@ -405,9 +431,11 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         <?php endforeach; ?>
     <?php else: ?>
-        <p>Nenhum produto cadastrado.</p>
-        <a href="../cadastro/cadastroProduto.php" class="btn-toggle">Cadastrar Novo Produto</a>
-    <?php endif; ?>
+  <div class="sem-produto">
+    <p>Nenhum produto cadastrado.</p>
+    <a href="../cadastro/cadastroProduto.php" class="btn-cadastrar">Cadastrar novo produto</a>
+  </div>
+<?php endif; ?>
 </div>
 
 </main>
