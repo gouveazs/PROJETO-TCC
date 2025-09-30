@@ -1192,35 +1192,66 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="editoras-container">
   <div class="section-header">
     <h2>Editoras</h2>
+    <button id="toggle-editoras" style="background: #5a6b50; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold;">
+      Ver todas
+    </button>
   </div>
   
-  <div class="editoras-grid">
-    <div class="editora-item">
-      <img src="imgs/rocco.png" alt="Record" class="editora-logo">
-    </div>
-    <div class="editora-item">
-      <img src="imgs/intrinsecaa.png" alt="Cia das Letras" class="editora-logo">
-    </div>
-    <div class="editora-item">
-      <img src="imgs/alt.jpg" alt="Rocco" class="editora-logo">
-    </div>
-    <div class="editora-item">
-      <img src="imgs/ger.png" alt="Male" class="editora-logo">
-    </div>
-    <div class="editora-item">
-      <img src="imgs/verused.png" alt="Grupo A" class="editora-logo">
-    </div>
-    <div class="editora-item">
-      <img src="imgs/gcdl.png" alt="Panini" class="editora-logo">
-    </div>
-    <div class="editora-item">
-      <img src="imgs/editoras/intrinseca-logo.png" alt="Intrinseca" class="editora-logo">
-    </div>
-     <div class="editora-item">
-      <img src="imgs/arqueiro.png" alt="Intrinseca" class="editora-logo">
-    </div>
+  <div class="editoras-grid" id="editoras-grid">
+    <div class="editora-item"><img src="imgs/edlogos/1.png" alt="Rocco" class="editora-logo"></div>
+    <div class="editora-item"><img src="imgs/edlogos/2.png" alt="Intrínseca" class="editora-logo"></div>
+    <div class="editora-item"><img src="imgs/edlogos/3.png" alt="Grupo Editorial Record" class="editora-logo"></div>
+    <div class="editora-item"><img src="imgs/edlogos/4.png" alt="Verus Editora" class="editora-logo"></div>
+    <div class="editora-item"><img src="imgs/edlogos/5.png" alt="Grupo A" class="editora-logo"></div>
+    <div class="editora-item"><img src="imgs/edlogos/6.png" alt="Panini" class="editora-logo"></div>
+    <div class="editora-item"><img src="imgs/edlogos/7.png" alt="Intrinseca" class="editora-logo"></div>
+    <div class="editora-item"><img src="imgs/edlogos/8.png" alt="Intrinseca" class="editora-logo"></div>
+    
+    <!-- OS QUE VÃO FICAR ESCONDIDOS -->
+    <div class="editora-item hidden"><img src="imgs/edlogos/9.png" alt="Rocco" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/10.png" alt="Intrínseca" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/11.png" alt="Grupo Editorial Record" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/12.png" alt="Verus Editora" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/13.png" alt="Grupo A" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/14.png" alt="Panini" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/15.png" alt="Intrinseca" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/16.png" alt="Intrinseca" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/17.png" alt="Rocco" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/18.png" alt="Intrínseca" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/19.png" alt="Grupo Editorial Record" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/20.png" alt="Verus Editora" class="editora-logo"></div>
+    <div class="editora-item hidden"> <img src="imgs/edlogos/21.png" alt="Grupo A" class="editora-logo"> </div> 
+    <div class="editora-item hidden"> <img src="imgs/edlogos/22.png" alt="Panini" class="editora-logo"> </div> 
+    <div class="editora-item hidden"> <img src="imgs/edlogos/23.png" alt="Intrinseca" class="editora-logo"> </div> 
+    <div class="editora-item hidden"> <img src="imgs/edlogos/24.png" alt="Intrinseca" class="editora-logo"> </div> 
+    <div class="editora-item hidden"> <img src="imgs/edlogos/25.png" alt="Rocco" class="editora-logo"> </div> 
+    <div class="editora-item hidden"> <img src="imgs/edlogos/26.png" alt="Intrínseca" class="editora-logo"> </div> 
+    <div class="editora-item hidden"> <img src="imgs/edlogos/27.png" alt="Grupo Editorial Record" class="editora-logo"> </div> 
+    <div class="editora-item hidden"> <img src="imgs/edlogos/28.png" alt="Verus Editora" class="editora-logo"> </div> 
+    <div class="editora-item hidden"> <img src="imgs/edlogos/29.png" alt="Grupo A" class="editora-logo"> </div>
   </div>
 </div>
+
+<style>
+  /* Esconde os itens extras */
+  .editora-item.hidden {
+    display: none;
+  }
+</style>
+
+<script>
+  document.getElementById("toggle-editoras").addEventListener("click", function() {
+    const hiddenItems = document.querySelectorAll(".editora-item.hidden");
+    const isHidden = hiddenItems[0].style.display === "" || hiddenItems[0].style.display === "none";
+
+    hiddenItems.forEach(item => {
+      item.style.display = isHidden ? "flex" : "none";
+    });
+
+    this.textContent = isHidden ? "Ver menos" : "Ver todas";
+  });
+</script>
+
 
 <div class="mais-destaque-container">
   <div class="mais-destaque-card">
