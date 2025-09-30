@@ -187,29 +187,37 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     font-weight: bold;
 }
 
-    .search-form {
-    display: flex;
-    align-items: center;
+.search-form {
+  display: flex;
+  align-items: center;
 }
 
-.search-form input {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 20px 0 0 20px;
-    outline: none;
-    width: 220px;
+.search-form input[type="text"] {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 30px 0 0 30px; /* arredondado à esquerda */
+  outline: none;
+  width: 300px; /* campo maior */
+  font-size: 0.9rem;
+  margin: 0;
 }
 
-.search-form button {
-    padding: 8px 16px;
-    border: none;
-    background-color: #465b3a; /* verde escuro */
-    color: #fff;
-    font-weight: bold;
-    border-radius: 0 20px 20px 0;
-    cursor: pointer;
+.search-form input[type="submit"] {
+  padding: 10px 15px;
+  border: none;
+  background-color: #6f8562; /* verde escuro */
+  color: #fff;
+  font-weight: none;
+  border-radius: 0 30px 30px 0; /* arredondado à direita */
+  cursor: pointer;
+  margin: 0;
+  width: 90px; /* botão mais estreito */
 }
-    
+
+.search-form input[type="submit"]:hover {
+  background-color: #6f8562;
+}
+
     .topbar input[type="text"] {
       padding: 10px 15px;
       border: none;
@@ -317,8 +325,8 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <li><a href="../cadastro/cadastroVendedor.php">Quero vender</a></li>
         <li><a href="../login/loginVendedor.php">Painel do Livreiro</a></li>
       <?php else: ?>
-        <li><a href="../perfil_usuario/ver_perfil.php"><img src="../../imgs/criarconta.png" style="width:20px;">Ver perfil</a></li>
-        <li><a href="../login/logout.php"><img src="../../imgs/sair.png" style="width:20px;">Sair</a></li>
+        <li><a href="../../php/perfil-usuario/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
+        <li><a href="../../php/login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
       <?php endif; ?>
     </ul>
   </nav>
@@ -329,9 +337,9 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <img src="../../imgs/logotipo.png" alt="Entre Linhas" class="logo">
         <h1>Entre Linhas - Favoritos</h1>
     </div>
-    <form class="search-form">
-        <input type="text" placeholder="Pesquisar livros, autores...">
-        <button type="submit">Buscar</button>
+    <form class="search-form" action="../consultaFiltro/consultaFiltro.php" method="POST">
+      <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
+      <input type="submit" value="Buscar">
     </form>
 </div>
 
@@ -356,6 +364,7 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </a>
       <?php endforeach; ?>
     <?php else: ?>
+
       <!-- Só mensagem + botões, SEM repetir o título -->
       <p style="margin: 10px 0 20px; font-size: 1rem; color: #333;">
         Você ainda não adicionou nenhum produto aos favoritos.

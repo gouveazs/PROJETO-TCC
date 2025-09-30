@@ -47,7 +47,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       background-color: var(--background);
     }
 
-    .sidebar {
+       .sidebar {
       position: fixed;
       top: 0; left: 0;
       width: 250px;
@@ -61,7 +61,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       overflow-y: auto;
       scrollbar-width: thin;
       scrollbar-color: #ccc transparent;
-      z-index: 1000;
     }
 
     .sidebar::-webkit-scrollbar {
@@ -71,10 +70,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     .sidebar::-webkit-scrollbar-thumb {
       background-color: #ccc;
       border-radius: 4px;
-    }
-
-    .sidebar::-webkit-scrollbar-track {
-      background: transparent;
     }
 
     .sidebar .logo {
@@ -104,15 +99,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       font-weight: bold;
       font-size: 0.95rem; 
       color: #fff;
-    }
-
-    .sidebar .user-info .tipo-usuario {
-      font-size: 0.8rem;
-      color: #ddd;
-    }
-
-    .sidebar .logo p {
-      font-weight: bold;
     }
 
     .sidebar nav {
@@ -149,7 +135,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       transition: background 0.3s;
     }
 
-    .sidebar nav ul li a i {
+    .sidebar nav ul li a img {
       margin-right: 10px;
     }
 
@@ -158,42 +144,100 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     .topbar {
-      position: fixed;
-      top: 0;
-      left: 250px;
-      right: 0;
-      height: 70px;
-      background-color: var(--marrom);
-      color: white;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 40px;
-      z-index: 1001;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #5a4226; /* marrom */
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 250px; /* respeita a sidebar */
+    right: 0;
+    height: 70px;
+    z-index: 1000;
     }
 
-    .search-form {
-      display: flex;
-      align-items: center;
-    }
-    
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.topbar-left .logo {
+    height: 50px;
+}
+
+.topbar-left h1 {
+    font-size: 22px;
+    color: #fff;
+    margin: 0;
+    font-weight: bold;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+}
+
+.search-form input[type="text"] {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 30px 0 0 30px; /* arredondado à esquerda */
+  outline: none;
+  width: 300px; /* campo maior */
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.search-form input[type="submit"] {
+  padding: 10px 15px;
+  border: none;
+  background-color: #6f8562; /* verde escuro */
+  color: #fff;
+  font-weight: none;
+  border-radius: 0 30px 30px 0; /* arredondado à direita */
+  cursor: pointer;
+  margin: 0;
+  width: 90px; /* botão mais estreito */
+}
+
+.search-form input[type="submit"]:hover {
+  background-color: #6f8562;
+}
+
     .topbar input[type="text"] {
-      padding: 8px 12px;
+      padding: 10px 15px;
       border: none;
       border-radius: 20px 0 0 20px;
       width: 250px;
-      font-size: 1rem;
-      background-color: var(--background);
+      font-size: 0.9rem;
     }
     
     .topbar input[type="submit"] {
-      padding: 8px 12px;
+      padding: 10px 15px;
       background: var(--verde);
       color: white;
       border: none;
       border-radius: 0 20px 20px 0;
       cursor: pointer;
-      font-size: 1rem;
+    }
+
+    .topbar h1 {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .main {
+      flex: 1;
+      margin-left: 250px;
+      padding: 30px;
+      margin-top: 70px;
+    }
+
+    .section-header h2 {
+      color: var(--verde);
     }
 
     /* NOVOS ESTILOS PARA A LOGO */
@@ -515,19 +559,16 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </nav>
   </div>
 
-  <!-- Topo -->
   <div class="topbar">
-    <h1>
-      <div class="logo-container">
-        <img src="../../imgs/logotipo.png" alt="Logo Entre Linhas" class="logo-img">
-        Destaques - Entre Linhas
-      </div>
-    </h1>
+    <div class="topbar-left">
+    <img src="../../imgs/logotipo.png" alt="Entre Linhas" class="logo">
+        <h1>Entre Linhas - Destaques</h1>
+    </div>
     <form class="search-form" action="../consultaFiltro/consultaFiltro.php" method="POST">
       <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
       <input type="submit" value="Buscar">
     </form>
-  </div>
+</div>
 
   <!-- Barra de categorias -->
   <div class="categorias-barra">

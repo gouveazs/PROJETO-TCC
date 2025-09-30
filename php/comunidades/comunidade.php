@@ -34,7 +34,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
       background-color: var(--background);
     }
 
-    .sidebar {
+       .sidebar {
       position: fixed;
       top: 0; left: 0;
       width: 250px;
@@ -45,7 +45,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
       flex-direction: column;
       align-items: flex-start;
       padding-top: 20px;
-      overflow-y: auto; /* SCROLL HABILITADO */
+      overflow-y: auto;
       scrollbar-width: thin;
       scrollbar-color: #ccc transparent;
     }
@@ -57,10 +57,6 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
     .sidebar::-webkit-scrollbar-thumb {
       background-color: #ccc;
       border-radius: 4px;
-    }
-
-    .sidebar::-webkit-scrollbar-track {
-      background: transparent;
     }
 
     .sidebar .logo {
@@ -90,16 +86,6 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
       font-weight: bold;
       font-size: 0.95rem; 
       color: #fff;
-    }
-
-    .sidebar .user-info .tipo-usuario {
-      font-size: 0.8rem;
-      color: #ddd;
-    }
-
-
-    .sidebar .logo p {
-      font-weight: bold;
     }
 
     .sidebar nav {
@@ -136,7 +122,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
       transition: background 0.3s;
     }
 
-    .sidebar nav ul li a i {
+    .sidebar nav ul li a img {
       margin-right: 10px;
     }
 
@@ -145,52 +131,100 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
     }
 
     .topbar {
-      position: fixed;
-      top: 0;
-      left: 250px;
-      right: 0;
-      height: 70px;
-      background-color: var(--marrom);
-      color: white;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 40px;
-      z-index: 1001;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #5a4226; /* marrom */
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 250px; /* respeita a sidebar */
+    right: 0;
+    height: 70px;
+    z-index: 1000;
+    }
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.topbar-left .logo {
+    height: 50px;
+}
+
+.topbar-left h1 {
+    font-size: 22px;
+    color: #fff;
+    margin: 0;
+    font-weight: bold;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+}
+
+.search-form input[type="text"] {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 30px 0 0 30px; /* arredondado à esquerda */
+  outline: none;
+  width: 300px; /* campo maior */
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.search-form input[type="submit"] {
+  padding: 10px 15px;
+  border: none;
+  background-color: #6f8562; /* verde escuro */
+  color: #fff;
+  font-weight: none;
+  border-radius: 0 30px 30px 0; /* arredondado à direita */
+  cursor: pointer;
+  margin: 0;
+  width: 90px; /* botão mais estreito */
+}
+
+.search-form input[type="submit"]:hover {
+  background-color: #6f8562;
+}
+
+    .topbar input[type="text"] {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 20px 0 0 20px;
+      width: 250px;
+      font-size: 0.9rem;
+    }
+    
+    .topbar input[type="submit"] {
+      padding: 10px 15px;
+      background: var(--verde);
+      color: white;
+      border: none;
+      border-radius: 0 20px 20px 0;
+      cursor: pointer;
     }
 
     .topbar h1 {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 15px;
     }
 
-    .topbar h1 img {
-      width: 30px;
-      height: 30px;
+    .main {
+      flex: 1;
+      margin-left: 250px;
+      padding: 30px;
+      margin-top: 70px;
     }
 
-    .topbar .search-box {
-      background-color: var(--background);
-      border-radius: 30px;
-      display: flex;
-      align-items: center;
-      padding: 5px 15px;
-    }
-
-    .topbar .search-box input {
-      border: none;
-      outline: none;
-      background: transparent;
-      font-size: 1rem;
-      width: 250px;
-      color: #3b3b3b;
-    }
-
-    .topbar .search-box img {
-      width: 18px;
-      height: 18px;
+    .section-header h2 {
+      color: var(--verde);
     }
 
     .categorias-barra {
@@ -332,13 +366,15 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
 
   <!-- Topo -->
   <div class="topbar">
-    <h1>Entre Linhas - Comunidades e chats online</h1>
-    <div class="search-box">
-      <input type="text" placeholder="Pesquisar tags, outros...">
-      <img src="../../imgs/lupa.png" alt="Buscar">
+    <div class="topbar-left">
+    <img src="../../imgs/logotipo.png" alt="Entre Linhas" class="logo">
+        <h1>Entre Linhas - Comunidades e Chats Online</h1>
     </div>
-  </div>
-
+    <form class="search-form" action="../consultaFiltro/consultaFiltro.php" method="POST">
+      <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
+      <input type="submit" value="Buscar">
+    </form>
+</div>
   <!-- Barra de categorias -->
   <div class="categorias-barra">
     <a href="#">Ficção Científica</a>

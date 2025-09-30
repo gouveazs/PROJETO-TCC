@@ -68,7 +68,7 @@ $total = $subtotal + $frete;
       flex-direction: column;
     }
 
-    .sidebar {
+        .sidebar {
       position: fixed;
       top: 0; left: 0;
       width: 250px;
@@ -80,7 +80,17 @@ $total = $subtotal + $frete;
       align-items: flex-start;
       padding-top: 20px;
       overflow-y: auto;
-      z-index: 1000;
+      scrollbar-width: thin;
+      scrollbar-color: #ccc transparent;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 4px;
     }
 
     .sidebar .logo {
@@ -147,7 +157,6 @@ $total = $subtotal + $frete;
     }
 
     .sidebar nav ul li a img {
-      width: 20px;
       margin-right: 10px;
     }
 
@@ -156,27 +165,67 @@ $total = $subtotal + $frete;
     }
 
     .topbar {
-      position: fixed;
-      top: 0; left: 250px; right: 0;
-      height: 70px;
-      background-color: var(--marrom);
-      color: #fff;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 30px;
-      z-index: 1001;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #5a4226; /* marrom */
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 250px; /* respeita a sidebar */
+    right: 0;
+    height: 70px;
+    z-index: 1000;
     }
 
-    .topbar h1 {
-      font-size: 1.5rem;
-    }
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 
-    .search-form {
-      display: flex;
-      align-items: center;
-    }
-    
+.topbar-left .logo {
+    height: 50px;
+}
+
+.topbar-left h1 {
+    font-size: 22px;
+    color: #fff;
+    margin: 0;
+    font-weight: bold;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+}
+
+.search-form input[type="text"] {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 30px 0 0 30px; /* arredondado à esquerda */
+  outline: none;
+  width: 300px; /* campo maior */
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.search-form input[type="submit"] {
+  padding: 10px 15px;
+  border: none;
+  background-color: #6f8562; /* verde escuro */
+  color: #fff;
+  font-weight: none;
+  border-radius: 0 30px 30px 0; /* arredondado à direita */
+  cursor: pointer;
+  margin: 0;
+  width: 90px; /* botão mais estreito */
+}
+
+.search-form input[type="submit"]:hover {
+  background-color: #6f8562;
+}
+
     .topbar input[type="text"] {
       padding: 10px 15px;
       border: none;
@@ -194,11 +243,22 @@ $total = $subtotal + $frete;
       cursor: pointer;
     }
 
+    .topbar h1 {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
     .main {
       flex: 1;
       margin-left: 250px;
       padding: 30px;
       margin-top: 70px;
+    }
+
+    .section-header h2 {
+      color: var(--verde);
     }
 
     .breadcrumb {
@@ -479,11 +539,14 @@ $total = $subtotal + $frete;
 </div>
 
 <div class="topbar">
-  <h1>Seu carrinho - Entre Linhas</h1>
-  <form class="search-form" action="../consultaFiltro/consultaFiltro.php" method="POST">
-    <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
-    <input type="submit" value="Buscar">
-  </form>
+    <div class="topbar-left">
+    <img src="../../imgs/logotipo.png" alt="Entre Linhas" class="logo">
+        <h1>Entre Linhas - Carrinho</h1>
+    </div>
+    <form class="search-form" action="../consultaFiltro/consultaFiltro.php" method="POST">
+      <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
+      <input type="submit" value="Buscar">
+    </form>
 </div>
 
 <div class="main">
