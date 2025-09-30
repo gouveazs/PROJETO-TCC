@@ -20,13 +20,26 @@ $isbn = $_POST['isbn'];
 $dimensoes = $_POST['dimensoes'];
 $idioma = $_POST['idioma'];
 $estado_livro = $_POST['estado_livro'];
-$paginas_faltando = $_POST['paginas_faltando'];
-$folhas_amareladas = $_POST['folhas_amareladas'];
-$paginas_rasgadas = $_POST['paginas_rasgadas'];
-$anotacoes = $_POST['anotacoes'];
-$lombada_danificada = $_POST['lombada_danificada'];
-$capa_danificada = $_POST['capa_danificada'];
 $estado_detalhado = $_POST['estado_detalhado'];
+
+// Se for novo, seta todas as especificações como "Não"
+if (strtolower($estado_livro) === 'novo') {
+    $paginas_faltando = "Não";
+    $folhas_amareladas = "Não";
+    $paginas_rasgadas = "Não";
+    $anotacoes = "Não";
+    $lombada_danificada = "Não";
+    $capa_danificada = "Não";
+    $estado_detalhado = "Novo";
+} else {
+    $paginas_faltando = $_POST['paginas_faltando'] ?? "Não";
+    $folhas_amareladas = $_POST['folhas_amareladas'] ?? "Não";
+    $paginas_rasgadas = $_POST['paginas_rasgadas'] ?? "Não";
+    $anotacoes = $_POST['anotacoes'] ?? "Não";
+    $lombada_danificada = $_POST['lombada_danificada'] ?? "Não";
+    $capa_danificada = $_POST['capa_danificada'] ?? "Não";
+    $estado_detalhado = $estado_detalhado ?: "Usado";
+}
 
 try {
     $sql = "INSERT INTO produto 
