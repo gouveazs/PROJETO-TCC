@@ -8,23 +8,32 @@ if (!$idusuario) {
     die("Erro: usuário não autenticado. Faça login novamente.");
 }
 
+$categorias = [];
+    $stmt = $conn->query("SELECT * FROM categoria");
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $categorias[] = $row;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];
     $descricao = $_POST['descricao'];
+    $idcategoria = $_POST['idcategoria'];
 
     $imagem = null;
     if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] == 0) {
         $imagem = file_get_contents($_FILES['imagem']['tmp_name']);
     }
 
-    $sql = "INSERT INTO comunidades (nome, descricao, imagem, idusuario)
-            VALUES (:nome, :descricao, :imagem, :idusuario)";
+    $sql = "INSERT INTO comunidades (nome, descricao, imagem, idusuario, idcategoria)
+        VALUES (:nome, :descricao, :imagem, :idusuario, :idcategoria)";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':nome', $nome);
     $stmt->bindParam(':descricao', $descricao);
     $stmt->bindParam(':imagem', $imagem, PDO::PARAM_LOB);
     $stmt->bindParam(':idusuario', $idusuario, PDO::PARAM_INT);
+    $stmt->bindParam(':idcategoria', $idcategoria, PDO::PARAM_INT);
     $stmt->execute();
+
 
     header("Location: comunidade.php");
     exit;
@@ -48,6 +57,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <label>Foto de perfil da comunidade:</label><br>
         <input type="file" name="imagem" accept="image/*"><br><br>
+
+        <label for="categoria">Categoria:</label>
+        <select name="idcategoria" id="categoria" required>
+        <option value="">Selecione a categoria</option>
+            <?php foreach($categorias as $categoria): ?>
+            <option value="<?= $categoria['idcategoria'] ?>"><?= htmlspecialchars($categoria['nome']) ?></option>
+            <?php endforeach; ?>
+        </select><br><br>
 
         <button type="submit">Criar Comunidade</button>
     </form>

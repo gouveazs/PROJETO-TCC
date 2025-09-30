@@ -158,65 +158,65 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     .topbar {
       display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #5a4226; /* marrom */
-    padding: 10px 20px;
-    position: fixed;
-    top: 0;
-    left: 250px; /* respeita a sidebar */
-    right: 0;
-    height: 70px;
-    z-index: 1000;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #5a4226; /* marrom */
+      padding: 10px 20px;
+      position: fixed;
+      top: 0;
+      left: 250px; /* respeita a sidebar */
+      right: 0;
+      height: 70px;
+      z-index: 1000;
     }
 
-.topbar-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
 
-.topbar-left .logo {
-    height: 50px;
-}
+    .topbar-left .logo {
+      height: 50px;
+    }
 
-.topbar-left h1 {
-    font-size: 22px;
-    color: #fff;
-    margin: 0;
-    font-weight: bold;
-}
+    .topbar-left h1 {
+      font-size: 22px;
+      color: #fff;
+      margin: 0;
+      font-weight: bold;
+    }
 
-.search-form {
-  display: flex;
-  align-items: center;
-}
+    .search-form {
+      display: flex;
+      align-items: center;
+    }
 
-.search-form input[type="text"] {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 30px 0 0 30px; /* arredondado à esquerda */
-  outline: none;
-  width: 300px; /* campo maior */
-  font-size: 0.9rem;
-  margin: 0;
-}
+    .search-form input[type="text"] {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 30px 0 0 30px; /* arredondado à esquerda */
+      outline: none;
+      width: 300px; /* campo maior */
+      font-size: 0.9rem;
+      margin: 0;
+    }
 
-.search-form input[type="submit"] {
-  padding: 10px 15px;
-  border: none;
-  background-color: #6f8562; /* verde escuro */
-  color: #fff;
-  font-weight: none;
-  border-radius: 0 30px 30px 0; /* arredondado à direita */
-  cursor: pointer;
-  margin: 0;
-  width: 90px; /* botão mais estreito */
-}
+    .search-form input[type="submit"] {
+      padding: 10px 15px;
+      border: none;
+      background-color: #6f8562; /* verde escuro */
+      color: #fff;
+      font-weight: none;
+      border-radius: 0 30px 30px 0; /* arredondado à direita */
+      cursor: pointer;
+      margin: 0;
+      width: 90px; /* botão mais estreito */
+    }
 
-.search-form input[type="submit"]:hover {
-  background-color: #6f8562;
-}
+    .search-form input[type="submit"]:hover {
+      background-color: #6f8562;
+    }
 
     .topbar input[type="text"] {
       padding: 10px 15px;
@@ -293,6 +293,7 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       text-align: center;
       padding: 15px;
     }
+    
   </style>
 </head>
 <body>
@@ -362,11 +363,15 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
           </div>
         </a>
+        <h4>
+          <a href="remover_favorito.php?idproduto=<?= $produto['idproduto'] ?>" onclick="return confirm('Tem certeza que deseja remover este produto dos favoritos?')">Remover dos favoritos</a>
+          <a href="#">Adicionar ao carrinho</a>
+        </h4>
       <?php endforeach; ?>
     <?php else: ?>
 
       <!-- Só mensagem + botões, SEM repetir o título -->
-      <p style="margin: 10px 0 20px; font-size: 1rem; color: #333;">
+      <p style="margin: 10px 0 20px; font-size: 1rem; color: #333;\">
         Você ainda não adicionou nenhum produto aos favoritos.
       </p>
 
