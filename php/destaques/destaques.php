@@ -597,6 +597,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <img src="../../imgs/Banner3.png" alt="Ofertas Especiais">
         </div>
         <div class="carousel-item">
+          <img src="../../imgs/Banner4.png" alt="Ofertas Especiais">
+        </div>
+        <div class="carousel-item">
           <img src="https://placehold.co/1200x350/5a6b50/FFFFFF/png?text=Autores+Em+Destaque" alt="Autores em Destaque">
         </div>
         <div class="carousel-item">
@@ -607,6 +610,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <button class="carousel-btn next">&#10095;</button>
       <div class="carousel-indicators">
         <span class="carousel-indicator active"></span>
+        <span class="carousel-indicator"></span>
         <span class="carousel-indicator"></span>
         <span class="carousel-indicator"></span>
         <span class="carousel-indicator"></span>
