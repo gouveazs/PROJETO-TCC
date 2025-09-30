@@ -1196,28 +1196,28 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   
   <div class="editoras-grid">
     <div class="editora-item">
-      <img src="imgs/rocco.jpg" alt="Record" class="editora-logo">
+      <img src="imgs/rocco.png" alt="Record" class="editora-logo">
     </div>
     <div class="editora-item">
-      <img src="imgs/intrinseca.png" alt="Cia das Letras" class="editora-logo">
+      <img src="imgs/intrinsecaa.png" alt="Cia das Letras" class="editora-logo">
     </div>
     <div class="editora-item">
       <img src="imgs/alt.jpg" alt="Rocco" class="editora-logo">
     </div>
     <div class="editora-item">
-      <img src="imgs/recordeditora.png" alt="Male" class="editora-logo">
+      <img src="imgs/ger.png" alt="Male" class="editora-logo">
     </div>
     <div class="editora-item">
-      <img src="imgs/verus.png" alt="Grupo A" class="editora-logo">
+      <img src="imgs/verused.png" alt="Grupo A" class="editora-logo">
     </div>
     <div class="editora-item">
-      <img src="imgs/companhia.jpg" alt="Panini" class="editora-logo">
+      <img src="imgs/gcdl.png" alt="Panini" class="editora-logo">
     </div>
     <div class="editora-item">
       <img src="imgs/editoras/intrinseca-logo.png" alt="Intrinseca" class="editora-logo">
     </div>
      <div class="editora-item">
-      <img src="imgs/arqueiro.jpg" alt="Intrinseca" class="editora-logo">
+      <img src="imgs/arqueiro.png" alt="Intrinseca" class="editora-logo">
     </div>
   </div>
 </div>

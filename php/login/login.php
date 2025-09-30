@@ -116,6 +116,22 @@
       background-color: #3f4e39;
     }
 
+form a {
+  font-size: 14px;
+  font-family: 'Playfair Display', serif;
+  color: #5a6b50;
+  text-decoration: none;
+  text-align: center;
+  margin-top: 10px;
+  display: block;
+  transition: color 0.3s;
+}
+
+form a:hover {
+  color: #3f4e39;
+  text-decoration: underline;
+}
+
     .erro {
       color: red;
       margin-top: 10px;
