@@ -40,260 +40,205 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <link rel="icon" type="image/png" href="../../imgs/logotipo.png"/>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
-    :root {
-      --marrom: #5a4224;
-      --verde: #5a6b50;
-      --background: #F4F1EE;
-    }
+  :root {
+    --marrom: #5a4224;
+    --verde: #5a6b50;
+    --background: #F4F1EE;
+  }
 
-    * {
-      margin: 0; 
-      padding: 0; 
-      box-sizing: border-box;
-      font-family: 'Playfair Display', serif;
-    }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Playfair Display', serif;
+  }
 
-    body {
-      background-color: var(--background);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+  body {
+    background-color: var(--background);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-    .sidebar {
-      position: fixed;
-      top: 0; left: 0;
-      width: 250px;
-      height: 100vh;
-      background-color: var(--verde);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding-top: 20px;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: #ccc transparent;
-    }
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: var(--verde);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 20px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+    z-index: 1100;
+  }
 
-    .sidebar::-webkit-scrollbar {
-      width: 6px;
-    }
+  .sidebar::-webkit-scrollbar { width: 6px; }
+  .sidebar::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 4px; }
 
-    .sidebar::-webkit-scrollbar-thumb {
-      background-color: #ccc;
-      border-radius: 4px;
-    }
+  .sidebar .logo { display: flex; align-items: center; justify-content: flex-start; width: 100%; padding: 0 20px; margin-bottom: 20px; }
+  .sidebar .logo img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-right: 15px; }
+  .sidebar .user-info { display: flex; flex-direction: column; line-height: 1.2; }
+  .sidebar .user-info .nome-usuario { font-weight: bold; font-size: 0.95rem; color: #fff; }
 
-    .sidebar .logo {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      width: 100%;
-      padding: 0 20px;
-      margin-bottom: 20px;
-    }
+  .sidebar nav { width: 100%; padding: 0 20px; }
+  .sidebar nav h3 { margin-top: 20px; margin-bottom: 10px; font-size: 1rem; color: #ddd; }
+  .sidebar nav ul { list-style: none; padding: 0; margin: 0 0 10px 0; width: 100%; }
+  .sidebar nav ul li { width: 100%; margin-bottom: 10px; }
+  .sidebar nav ul li a { color: #fff; text-decoration: none; display: flex; align-items: center; padding: 10px; border-radius: 8px; transition: background 0.3s; }
+  .sidebar nav ul li a img { margin-right: 10px; }
+  .sidebar nav ul li a:hover { background-color: #6f8562; }
 
-    .sidebar .logo img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-right: 15px;
-    }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #5a4226; /* marrom */
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 250px; /* respeita a sidebar */
+    right: 0;
+    height: 70px;
+    z-index: 1200;
+  }
 
-    .sidebar .user-info {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.2;
-    }
+  .topbar-left { display: flex; align-items: center; gap: 15px; }
+  .topbar-left .logo { height: 50px; }
+  .topbar-left h1 { font-size: 22px; color: #fff; margin: 0; font-weight: bold; }
 
-    .sidebar .user-info .nome-usuario {
-      font-weight: bold;
-      font-size: 0.95rem; 
-      color: #fff;
-    }
+  .search-form { display: flex; align-items: center; }
+  .search-form input[type="text"] { padding: 10px 15px; border: none; border-radius: 30px 0 0 30px; outline: none; width: 300px; font-size: 0.9rem; }
+  .search-form input[type="submit"] { padding: 10px 15px; border: none; background-color: #6f8562; color: #fff; border-radius: 0 30px 30px 0; cursor: pointer; width: 90px; }
 
-    .sidebar nav {
-      width: 100%;
-      padding: 0 20px;
-    }
+  .main {
+    flex: 1;
+    margin-left: 250px;
+    padding: 30px;
+    margin-top: 70px;
+    padding-bottom: 100px; /* espaço para o rodapé fixo */
+  }
 
-    .sidebar nav h3 {
-      margin-top: 20px;
-      margin-bottom: 10px;
-      font-size: 1rem;
-      color: #ddd;
-    }
+  .section-header h2 { color: var(--verde); }
 
-    .sidebar nav ul {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 10px 0;
-      width: 100%;
-    }
+  /* GRID e CARDS */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+    align-items: start;
+  }
 
-    .sidebar nav ul li {
-      width: 100%;
-      margin-bottom: 10px;
-    }
+  .card {
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 
-    .sidebar nav ul li a {
-      color: #fff;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      padding: 10px;
-      border-radius: 8px;
-      transition: background 0.3s;
-    }
+  .card:hover { transform: translateY(-5px); }
 
-    .sidebar nav ul li a img {
-      margin-right: 10px;
-    }
+  .card img { width: 100%; height: 250px; object-fit: cover; display: block; }
 
-    .sidebar nav ul li a:hover {
-      background-color: #6f8562;
-    }
+  .card .info { padding: 15px; text-align: center; }
+  .card .info h3 {
+  margin-bottom: 10px;
+  font-size: 1rem;
+  color: var(--verde); /* título verde */
+  font-weight: bold;   /* dá mais destaque */
+}
 
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background-color: #5a4226; /* marrom */
-      padding: 10px 20px;
-      position: fixed;
-      top: 0;
-      left: 250px; /* respeita a sidebar */
-      right: 0;
-      height: 70px;
-      z-index: 1000;
-    }
+.card .info .price {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: var(--verde); /* preço verde também */
+}
 
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
+.card .stars {
+  color: #ffcc00;   /* amarelo forte */
+  font-size: 1.1rem; /* estrelas maiores */
+}
 
-    .topbar-left .logo {
-      height: 50px;
-    }
+  /* === REMOVER SUBLINHADOS DOS LINKS DENTRO DOS CARDS / ÁREA PRINCIPAL ===
+     Aplica-se apenas aos links dentro da área principal (.main / .cards)
+     para não afetar o menu lateral. */
+  .main .cards a,
+  .main .cards a:link,
+  .main .cards a:visited,
+  .main .cards a:hover,
+  .main .cards a:active {
+    text-decoration: none !important; /* garante que não fique sublinhado */
+    color: inherit !important;        /* evita cor roxa de visited */
+  }
 
-    .topbar-left h1 {
-      font-size: 22px;
-      color: #fff;
-      margin: 0;
-      font-weight: bold;
-    }
+  /* garantir também pra classe card-link */
+  .card-link,
+  .card-link:link,
+  .card-link:visited,
+  .card-link:hover,
+  .card-link:active {
+    text-decoration: none !important;
+    color: inherit !important;
+    display: block;
+  }
 
-    .search-form {
-      display: flex;
-      align-items: center;
-    }
+  /* prevenir sublinhado em elementos internos do card */
+  .card-link * { text-decoration: none !important; color: inherit !important; }
 
-    .search-form input[type="text"] {
-      padding: 10px 15px;
-      border: none;
-      border-radius: 30px 0 0 30px; /* arredondado à esquerda */
-      outline: none;
-      width: 300px; /* campo maior */
-      font-size: 0.9rem;
-      margin: 0;
-    }
+  /* Ações do card (botões Remover / Adicionar) */
+  .card-actions {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    border-top: 1px solid #eee;
+    background: #fff;
+  }
 
-    .search-form input[type="submit"] {
-      padding: 10px 15px;
-      border: none;
-      background-color: #6f8562; /* verde escuro */
-      color: #fff;
-      font-weight: none;
-      border-radius: 0 30px 30px 0; /* arredondado à direita */
-      cursor: pointer;
-      margin: 0;
-      width: 90px; /* botão mais estreito */
-    }
+  .card-actions a {
+    font-size: 0.95rem;
+    color: var(--verde);
+    text-decoration: none !important; /* remove sublinhado */
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.18s;
+  }
 
-    .search-form input[type="submit"]:hover {
-      background-color: #6f8562;
-    }
+  .card-actions a:hover {
+    color: #fff;
+    background: var(--verde);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
 
-    .topbar input[type="text"] {
-      padding: 10px 15px;
-      border: none;
-      border-radius: 20px 0 0 20px;
-      width: 250px;
-      font-size: 0.9rem;
-    }
-    
-    .topbar input[type="submit"] {
-      padding: 10px 15px;
-      background: var(--verde);
-      color: white;
-      border: none;
-      border-radius: 0 20px 20px 0;
-      cursor: pointer;
-    }
+  /* RODAPÉ (mantive como estava) */
+  .footer {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    background-color: var(--marrom);
+    color: #fff;
+    text-align: center;
+    padding: 15px;
+    margin-top: auto;
+  }
 
-    .topbar h1 {
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
+  /* responsivo */
+  @media (max-width: 900px) {
+    .cards-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    .topbar { left: 0; }
+    .sidebar { transform: translateX(-100%); position: fixed; z-index: 1300; }
+    .footer { left: 0; width: 100%; margin-left: 0; }
+    .main { margin-left: 0; padding-bottom: 120px; }
+  }
 
-    .main {
-      flex: 1;
-      margin-left: 250px;
-      padding: 30px;
-      margin-top: 70px;
-    }
-
-    .section-header h2 {
-      color: var(--verde);
-    }
-
-    .card {
-      background-color: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      transition: transform 0.3s;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-    }
-
-    .card img {
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
-    }
-
-    .card .info {
-      padding: 15px;
-      text-align: center;
-    }
-
-    .card .info h3 {
-      margin-bottom: 10px;
-      font-size: 1rem;
-      color: var(--verde);
-    }
-
-    .card .info .stars {
-      color: #f5c518;
-    }
-
-    .footer {
-      margin-left: 250px;
-      background-color: var(--marrom);
-      color: #fff;
-      text-align: center;
-      padding: 15px;
-    }
-    
   </style>
 </head>
 <body>
@@ -350,28 +295,31 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <h2>Seus Livros Favoritos</h2> 
   </div>
 
-  <div class="cards">
-    <?php if(count($favoritos) > 0): ?>
+<div class="cards">
+  <?php if(count($favoritos) > 0): ?>
+    <div class="cards-grid">
       <?php foreach($favoritos as $produto): ?>
-        <a href="../produto/pagiproduto.php?id=<?= $produto['idproduto'] ?>" class="card-link">
-          <div class="card">
+        <div class="card">
+          <a href="../produto/pagiproduto.php?id=<?= $produto['idproduto'] ?>" class="card-link">
             <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
             <div class="info">
               <h3><?= htmlspecialchars($produto['nome']) ?></h3>
               <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
               <div class="stars">★★★★☆</div>
             </div>
+          </a>
+          <div class="card-actions">
+            <a href="remover_favorito.php?idproduto=<?= $produto['idproduto'] ?>" 
+               onclick="return confirm('Tem certeza que deseja remover este produto dos favoritos?')">Remover</a>
+            <a href="#">Adicionar ao carrinho</a>
           </div>
-        </a>
-        <h4>
-          <a href="remover_favorito.php?idproduto=<?= $produto['idproduto'] ?>" onclick="return confirm('Tem certeza que deseja remover este produto dos favoritos?')">Remover dos favoritos</a>
-          <a href="#">Adicionar ao carrinho</a>
-        </h4>
+        </div>
       <?php endforeach; ?>
-    <?php else: ?>
-
-      <!-- Só mensagem + botões, SEM repetir o título -->
-      <p style="margin: 10px 0 20px; font-size: 1rem; color: #333;\">
+    </div>
+  
+  <?php else: ?>
+      <!-- Mensagem e botões só aparecem quando NÃO há favoritos -->
+      <p style="margin: 10px 0 20px; font-size: 1rem; color: #333;">
         Você ainda não adicionou nenhum produto aos favoritos.
       </p>
 
@@ -394,10 +342,8 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
           Ir para Carrinho
         </a>
       </div>
-    <?php endif; ?>
-  </div>
+  <?php endif; ?>
 </div>
-
 
 <div class="footer">
 &copy; 2025 Entre Linhas - Todos os direitos reservados.
