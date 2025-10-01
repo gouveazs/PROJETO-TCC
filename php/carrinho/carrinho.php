@@ -1,7 +1,8 @@
 <?php
-session_start();
+include '../conexao.php';
 
-$nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null; 
+session_start();
+$nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
 $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
 if (!isset($_SESSION['carrinho'])) {
@@ -9,24 +10,20 @@ if (!isset($_SESSION['carrinho'])) {
 }
 
 $id = $_GET['id'] ?? null;
-$nome = $_GET['nome'] ?? null;
+$nome_livro  = $_GET['nome'] ?? null;
 $preco = $_GET['preco'] ?? null;
-//$imagem = $_GET['imagem'] ?? 'sem-imagem.png';
-//$descricao = $_GET['descricao'] ?? '';
 
 if ($id && $nome && $preco) {
-  if (!isset($_SESSION['carrinho'][$id])) {
-      $_SESSION['carrinho'][$id] = [
-          'id'        => $id,
-          'nome'      => $nome,
-          'preco'     => (float)$preco,
-          'imagem'    => $_GET['imagem'] ?? '../../imgs/capa.jpg', // se não vier, usa padrão
-          'descricao' => $_GET['descricao'] ?? ''
-      ];
-  }
+    if (!isset($_SESSION['carrinho'][$id])) {
+        $_SESSION['carrinho'][$id] = [
+            'id'    => $id,
+            'nome'  => $nome_livro,
+            'preco' => (float)$preco,
+        ];
+    }
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -559,14 +556,29 @@ if ($id && $nome && $preco) {
   <div class="cart-container">
     <div class="cart-items">
     <?php foreach ($_SESSION['carrinho'] as $item): ?>
+      <?php
+        // buscar imagem no banco
+        $stmt = $conn->prepare("SELECT imagem FROM imagens WHERE idproduto = ?");
+        $stmt->execute([$item['id']]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row && !empty($row['imagem'])) {
+            $src = "data:image/jpeg;base64," . base64_encode($row['imagem']);
+        } else {
+            $src = "../../imgs/capa.jpg"; // imagem padrão
+        }
+      ?>
+
       <div class="cart-item">
-        <img src="<?= htmlspecialchars($item['imagem']) ?>" class="cart-item-image">
+        <img src="<?= $src ?>" class="cart-item-image">
         <div class="cart-item-details">
           <h3 class="cart-item-title"><?= htmlspecialchars($item['nome']) ?></h3>
-          <p class="cart-item-desc"><?= htmlspecialchars($item['descricao']) ?></p>
           <p class="cart-item-price">R$ <?= number_format($item['preco'], 2, ',', '.') ?></p>
           <div class="cart-item-actions">
-            <button class="remove-btn" onclick="removeItem(<?= $item['id'] ?>)">Remover</button>
+            <button class="remove-btn">
+              <a href="../produto/pagiproduto.php?id=<?=$id?>&nome=<?=$nome?>&preco=<?=$preco?>">Ver pagina do produto</a>
+            </button>
+            <button class="remove-btn">Remover</button>
           </div>
         </div>
       </div>
@@ -607,23 +619,5 @@ if ($id && $nome && $preco) {
 <div class="footer">
   &copy; 2025 Entre Linhas - Todos os direitos reservados.
 </div>
-
-<script>
-  function updateQuantity(itemId, change) {
-    const input = document.getElementById('quantity-' + itemId);
-    let newValue = parseInt(input.value) + change;
-    
-    if (newValue < 1) newValue = 1;
-    
-    input.value = newValue;
-    console.log('Quantidade atualizada:', newValue);
-  }
-  
-  function removeItem(itemId) {
-    if (confirm('Tem certeza que deseja remover este item do carrinho?')) {
-      console.log('Item removido:', itemId);
-    }
-  }
-</script>
 </body>
 </html>
