@@ -434,10 +434,10 @@
                       <td><?= htmlspecialchars($usuario['bairro'] ?? 'Vazio') ?></td>
                       <td><?= htmlspecialchars($usuario['status'] ?? 'Vazio') ?></td>
                       <td>
-                        <button><a style="text-decoration: none;" href="editar_usuario.php?id=<?= $usuario['idusuario'] ?>">📝</a></button>
+                        <button><a style="text-decoration: none;" href="poderes/editar.php?tipo=usuario&id=<?= $usuario['idusuario'] ?>">📝</a></button>
                       </td>
                       <td>
-                        <button><a style="text-decoration: none;" href="desativar_usuario.php?id=<?= $usuario['idusuario'] ?>">❌</a></button>
+                        <button><a style="text-decoration: none;" href="poderes/expurgar.php?tipo=usuario&id=<?= $usuario['idusuario'] ?>">❌</a></button>
                       </td>
                   </tr>
               <?php endforeach; ?>

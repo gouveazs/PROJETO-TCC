@@ -524,9 +524,8 @@ if ($vendedorTop) {
   </main>
 </body>
 <script>
-  const musica = new Audio('bem-vindo-moreno.mp3');
-  musica.loop = true;
-
+  const musica = new Audio('music/bem-vindo-moreno.mp3');
+  
   document.body.addEventListener('click', () => {
     musica.play();
   }, { once: true });
