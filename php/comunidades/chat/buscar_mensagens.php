@@ -4,9 +4,10 @@ include '../../conexao.php';
 $id_comunidade = $_GET['id_comunidade'];
 
 $stmt = $conn->prepare("
-    SELECT m.mensagem, m.enviada_em, u.nome, u.foto_de_perfil
-    FROM mensagens_chat m
+    SELECT m.mensagem, m.enviada_em, u.nome, u.foto_de_perfil, mc.papel
+    FROM mensagens_comunidade m
     JOIN usuario u ON m.idusuario = u.idusuario
+    JOIN membros_comunidade mc ON mc.idusuario = u.idusuario AND mc.idcomunidades = m.idcomunidades
     WHERE m.idcomunidades = :id
     ORDER BY m.enviada_em ASC
 ");

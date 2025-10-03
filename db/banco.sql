@@ -100,7 +100,6 @@ CREATE TABLE comunidades (
   quantidade_usuarios INT,
   idusuario INT NOT NULL,
   idcategoria INT NOT NULL,
-  regras TEXT,
   status ENUM('ativa','desativada') DEFAULT 'ativa',
   PRIMARY KEY (idcomunidades),
   FOREIGN KEY (idusuario) REFERENCES usuario(idusuario),
@@ -113,6 +112,7 @@ CREATE TABLE comunidades (
 CREATE TABLE membros_comunidade (
   idmembros_comunidade INT NOT NULL AUTO_INCREMENT,
   entrou_em DATETIME DEFAULT CURRENT_TIMESTAMP,
+  papel ENUM('dono','moderador','membro') DEFAULT 'membro',
   idcomunidades INT NOT NULL,
   idusuario INT NOT NULL,
   PRIMARY KEY (idmembros_comunidade, idcomunidades),
@@ -123,7 +123,7 @@ CREATE TABLE membros_comunidade (
 -- ========================================
 -- Mensagens da comunidade
 -- ========================================
-CREATE TABLE mensagens_chat (
+CREATE TABLE mensagens_comunidade (
   idmensagens_chat INT NOT NULL AUTO_INCREMENT,
   mensagem TEXT,
   enviada_em DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -133,6 +133,17 @@ CREATE TABLE mensagens_chat (
   FOREIGN KEY (idcomunidades) REFERENCES comunidades(idcomunidades),
   FOREIGN KEY (idusuario) REFERENCES usuario(idusuario)
 ) ENGINE=InnoDB;
+
+-- ========================================
+-- Regras da comunidade
+-- ========================================
+CREATE TABLE regras_comunidade (
+  idregras INT NOT NULL AUTO_INCREMENT,
+  regra TEXT NOT NULL,
+  idcomunidades INT NOT NULL,
+  PRIMARY KEY (idregras),
+  FOREIGN KEY (idcomunidades) REFERENCES comunidades(idcomunidades)
+);
 
 -- ========================================
 -- Pedido

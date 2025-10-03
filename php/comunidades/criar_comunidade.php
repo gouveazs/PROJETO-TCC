@@ -1,72 +1,99 @@
 <?php
-include '../conexao.php';
 session_start();
+include '../conexao.php';
 
 $idusuario = $_SESSION['idusuario'] ?? null;
+$nome_usuario = $_SESSION['nome_usuario'] ?? null;
 
 if (!$idusuario) {
-    die("Erro: usuário não autenticado. Faça login novamente.");
+    header("Location: ../login/login.php");
 }
 
 $categorias = [];
-    $stmt = $conn->query("SELECT * FROM categoria");
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $categorias[] = $row;
+$stmt = $conn->query("SELECT * FROM categoria");
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $categorias[] = $row;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nome = $_POST['nome'];
-    $descricao = $_POST['descricao'];
-    $idcategoria = $_POST['idcategoria'];
+    $nome = trim($_POST['nome']);
+    $descricao = trim($_POST['descricao']);
+    $idcategoria = (int)$_POST['idcategoria'];
+    $regras = trim($_POST['regras'] ?? '');
 
     $imagem = null;
-    if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] == 0) {
+    if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === 0) {
         $imagem = file_get_contents($_FILES['imagem']['tmp_name']);
     }
 
-    $sql = "INSERT INTO comunidades (nome, descricao, imagem, idusuario, idcategoria)
-        VALUES (:nome, :descricao, :imagem, :idusuario, :idcategoria)";
+    $sql = "INSERT INTO comunidades (nome, descricao, imagem, idusuario, idcategoria, status)
+            VALUES (:nome, :descricao, :imagem, :idusuario, :idcategoria, 'ativa')";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':nome', $nome);
     $stmt->bindParam(':descricao', $descricao);
     $stmt->bindParam(':imagem', $imagem, PDO::PARAM_LOB);
-    $stmt->bindParam(':idusuario', $idusuario, PDO::PARAM_INT);
-    $stmt->bindParam(':idcategoria', $idcategoria, PDO::PARAM_INT);
+    $stmt->bindParam(':idusuario', $idusuario);
+    $stmt->bindParam(':idcategoria', $idcategoria);
     $stmt->execute();
 
+    $idcomunidade = $conn->lastInsertId();
 
-    header("Location: comunidade.php");
+    $stmt = $conn->prepare("
+        INSERT INTO membros_comunidade (idcomunidades, idusuario, papel)
+        VALUES (:idcomunidade, :idusuario, 'dono')
+    ");
+    $stmt->execute([':idcomunidade' => $idcomunidade, ':idusuario' => $idusuario]);
+
+    if (!empty($regras)) {
+        $regras_array = explode("\n", $regras);
+        $stmtRegras = $conn->prepare("
+            INSERT INTO regras_comunidade (idcomunidades, regra)
+            VALUES (:idcomunidade, :regra)
+        ");
+        foreach ($regras_array as $r) {
+            $r = trim($r);
+            if ($r !== '') {
+                $stmtRegras->execute([':idcomunidade' => $idcomunidade, ':regra' => $r]);
+            }
+        }
+    }
+
+    header("Location: ver_comunidade.php?id=$idcomunidade");
     exit;
 }
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <title>Criar Comunidade</title>
 </head>
 <body>
-    <h2>Criar Nova Comunidade</h2>
-    <form method="POST" enctype="multipart/form-data">
-        <label>Nome:</label><br>
-        <input type="text" name="nome" required><br><br>
+<h2>Criar Nova Comunidade</h2>
 
-        <label>Descrição:</label><br>
-        <textarea name="descricao" rows="4" cols="50"></textarea><br><br>
+<form method="POST" enctype="multipart/form-data">
+    <label>Nome:</label><br>
+    <input type="text" name="nome" required><br><br>
 
-        <label>Foto de perfil da comunidade:</label><br>
-        <input type="file" name="imagem" accept="image/*"><br><br>
+    <label>Descrição:</label><br>
+    <textarea name="descricao" rows="4" cols="50"></textarea><br><br>
 
-        <label for="categoria">Categoria:</label>
-        <select name="idcategoria" id="categoria" required>
+    <label>Foto de perfil da comunidade:</label><br>
+    <input type="file" name="imagem" accept="image/*"><br><br>
+
+    <label>Categoria:</label><br>
+    <select name="idcategoria" required>
         <option value="">Selecione a categoria</option>
-            <?php foreach($categorias as $categoria): ?>
-            <option value="<?= $categoria['idcategoria'] ?>"><?= htmlspecialchars($categoria['nome']) ?></option>
-            <?php endforeach; ?>
-        </select><br><br>
+        <?php foreach($categorias as $c): ?>
+            <option value="<?= $c['idcategoria'] ?>"><?= htmlspecialchars($c['nome']) ?></option>
+        <?php endforeach; ?>
+    </select><br><br>
 
-        <button type="submit">Criar Comunidade</button>
-    </form>
+    <label>Regras iniciais (uma por linha, opcional):</label><br>
+    <textarea name="regras" rows="4" cols="50" placeholder="Ex: Respeitar os membros&#10;Proibido spam"></textarea><br><br>
+
+    <button type="submit">Criar Comunidade</button>
+</form>
 </body>
 </html>
