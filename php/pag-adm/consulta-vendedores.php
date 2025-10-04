@@ -461,10 +461,10 @@
                       <td><?= htmlspecialchars($vendedor['status'] ?? 'Vazio') ?></td>
                       <td><?php echo $total_produtos; ?></td>
                       <td>
-                        <button><a style="text-decoration: none;" href="editar_usuario.php?id=<?= $vendedor['idvendedor'] ?>">📝</a></button>
+                        <button><a style="text-decoration: none;" href="poderes/editar.php?tipo=vendedor&id=<?= $vendedor['idvendedor'] ?>">📝</a></button>
                       </td>
                       <td>
-                        <button><a style="text-decoration: none;" href="desativar_usuario.php?id=<?= $vendedor['idvendedor'] ?>">❌</a></button>
+                        <button><a style="text-decoration: none;" href="poderes/expurgar.php?tipo=vendedor&id=<?= $vendedor['idvendedor'] ?>">❌</a></button>
                       </td>
                   </tr>
               <?php endforeach; ?>

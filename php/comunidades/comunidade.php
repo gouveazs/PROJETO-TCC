@@ -34,7 +34,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
       background-color: var(--background);
     }
 
-       .sidebar {
+    .sidebar {
       position: fixed;
       top: 0; left: 0;
       width: 250px;
@@ -132,65 +132,65 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
 
     .topbar {
       display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #5a4226; /* marrom */
-    padding: 10px 20px;
-    position: fixed;
-    top: 0;
-    left: 250px; /* respeita a sidebar */
-    right: 0;
-    height: 70px;
-    z-index: 1000;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #5a4226; /* marrom */
+      padding: 10px 20px;
+      position: fixed;
+      top: 0;
+      left: 250px; /* respeita a sidebar */
+      right: 0;
+      height: 70px;
+      z-index: 1000;
     }
 
-.topbar-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+    .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
 
-.topbar-left .logo {
-    height: 50px;
-}
+    .topbar-left .logo {
+        height: 50px;
+    }
 
-.topbar-left h1 {
-    font-size: 22px;
-    color: #fff;
-    margin: 0;
-    font-weight: bold;
-}
+    .topbar-left h1 {
+        font-size: 22px;
+        color: #fff;
+        margin: 0;
+        font-weight: bold;
+    }
 
-.search-form {
-  display: flex;
-  align-items: center;
-}
+    .search-form {
+      display: flex;
+      align-items: center;
+    }
 
-.search-form input[type="text"] {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 30px 0 0 30px; /* arredondado à esquerda */
-  outline: none;
-  width: 300px; /* campo maior */
-  font-size: 0.9rem;
-  margin: 0;
-}
+    .search-form input[type="text"] {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 30px 0 0 30px; /* arredondado à esquerda */
+      outline: none;
+      width: 300px; /* campo maior */
+      font-size: 0.9rem;
+      margin: 0;
+    }
 
-.search-form input[type="submit"] {
-  padding: 10px 15px;
-  border: none;
-  background-color: #6f8562; /* verde escuro */
-  color: #fff;
-  font-weight: none;
-  border-radius: 0 30px 30px 0; /* arredondado à direita */
-  cursor: pointer;
-  margin: 0;
-  width: 90px; /* botão mais estreito */
-}
+    .search-form input[type="submit"] {
+      padding: 10px 15px;
+      border: none;
+      background-color: #6f8562; /* verde escuro */
+      color: #fff;
+      font-weight: none;
+      border-radius: 0 30px 30px 0; /* arredondado à direita */
+      cursor: pointer;
+      margin: 0;
+      width: 90px; /* botão mais estreito */
+    }
 
-.search-form input[type="submit"]:hover {
-  background-color: #6f8562;
-}
+    .search-form input[type="submit"]:hover {
+      background-color: #6f8562;
+    }
 
     .topbar input[type="text"] {
       padding: 10px 15px;
@@ -377,14 +377,14 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
 </div>
   <!-- Barra de categorias -->
   <div class="categorias-barra">
-    <a href="#">Ficção Científica</a>
-    <a href="#">Romance</a>
-    <a href="#">Aventura</a>
-    <a href="#">Fantasia</a>
     <a href="#">Terror</a>
-    <a href="#">Mistério</a>
-    <a href="#">Drama</a>
-    <a href="#">Não Ficção</a>
+    <a href="#">Suspense</a>
+    <a href="#">Romance</a>
+    <a href="#">Fantasia</a>
+    <a href="#">Biográfico</a>
+    <a href="#">Ficção Científica</a>
+    <a href="#">Infantil</a>
+    <a href="#">Ficção Literária</a>
 
     <a href="criar_comunidade.php">Criar Comunidades</a>
   </div>
@@ -392,26 +392,22 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
   <!-- Conteúdo -->
   <div class="content">
      <!-- Conteúdo Principal -->
-  <div class="main-content">
-    <div class="welcome-section">
-      <h2>Bem-vindo às Comunidades</h2>
-      <p>Conecte-se com outros leitores, compartilhe suas opiniões e descubra novos livros através das nossas comunidades temáticas.</p>
+    <div class="main-content">
+      <div class="welcome-section">
+        <h2>Bem-vindo às Comunidades</h2>
+        <p>Conecte-se com outros leitores, compartilhe suas opiniões e descubra novos livros através das nossas comunidades temáticas.</p>
+      </div>
+      
+      <div class="comunidade-box">
+      <img src="../../imgs/iconromance.jpg" alt="Ficção Científica">
+      <div class="descricao">
+        <h3>Descrição</h3>
+        <p>
+          Neste canto digital onde o tempo dobra e as realidades se entrelaçam, mentes inquietas se reúnem para tecer o futuro com palavras. <br><br>
+          Entre mensagens que viajam mais rápido que a luz, exploramos juntos os enigmas dos multiversos, os segredos das civilizações estelares e os dilemas éticos das inteligências artificiais.
+        </p>
+      </div>
     </div>
-    
-    <!-- O conteúdo das comunidades será adicionado aqui posteriormente -->
-  </div>
-
-  <div class="comunidade-box">
-  <img src="../../imgs/iconromance.jpg" alt="Ficção Científica">
-  <div class="descricao">
-    <h3>Descrição</h3>
-    <p>
-      Neste canto digital onde o tempo dobra e as realidades se entrelaçam, mentes inquietas se reúnem para tecer o futuro com palavras. <br><br>
-      Entre mensagens que viajam mais rápido que a luz, exploramos juntos os enigmas dos multiversos, os segredos das civilizações estelares e os dilemas éticos das inteligências artificiais.
-    </p>
-  </div>
-</div>
-
 
     <?php while ($com = $result->fetch(PDO::FETCH_ASSOC)): ?>
       <div class="comunidade-box">
@@ -425,7 +421,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
         </div>
       </div>
     <?php endwhile; ?>
-
+    </div>
   </div>
 
   <div class="footer">
