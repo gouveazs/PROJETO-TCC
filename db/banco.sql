@@ -4,7 +4,7 @@ USE banco;
 -- ========================================
 -- Usuário
 -- ========================================
-CREATE TABLE usuario (
+CREATE TABLE IF NOT EXISTS usuario (
   idusuario INT NOT NULL AUTO_INCREMENT,
   nome VARCHAR(45),
   email VARCHAR(45),
@@ -26,7 +26,7 @@ CREATE TABLE usuario (
 -- ========================================
 -- Vendedor
 -- ========================================
-CREATE TABLE vendedor (
+CREATE TABLE IF NOT EXISTS vendedor (
   idvendedor INT NOT NULL AUTO_INCREMENT,
   nome_completo VARCHAR(45),
   email VARCHAR(45) NOT NULL,
@@ -49,16 +49,26 @@ CREATE TABLE vendedor (
 -- ========================================
 -- Categoria
 -- ========================================
-CREATE TABLE categoria (
+CREATE TABLE IF NOT EXISTS categoria (
   idcategoria INT NOT NULL AUTO_INCREMENT,
   nome VARCHAR(450),
   PRIMARY KEY (idcategoria)
 ) ENGINE=InnoDB;
 
+INSERT IGNORE INTO categoria (idcategoria, nome) VALUES
+(1, 'Terror'),
+(2, 'Suspense'),
+(3, 'Romance'),
+(4, 'Fantasia'),
+(5, 'Biográfico'),
+(6, 'Ficção científica'),
+(7, 'Infantil'),
+(8, 'Ficção literária');
+
 -- ========================================
 -- Produto
 -- ========================================
-CREATE TABLE produto (
+CREATE TABLE IF NOT EXISTS produto (
   idproduto INT NOT NULL AUTO_INCREMENT,
   idvendedor INT NOT NULL,
   idcategoria INT NOT NULL,
@@ -91,7 +101,7 @@ CREATE TABLE produto (
 -- ========================================
 -- Comunidades
 -- ========================================
-CREATE TABLE comunidades (
+CREATE TABLE IF NOT EXISTS comunidades (
   idcomunidades INT NOT NULL AUTO_INCREMENT,
   nome VARCHAR(45) NOT NULL,
   descricao TEXT,
@@ -109,7 +119,7 @@ CREATE TABLE comunidades (
 -- ========================================
 -- Membros da comunidade
 -- ========================================
-CREATE TABLE membros_comunidade (
+CREATE TABLE IF NOT EXISTS membros_comunidade (
   idmembros_comunidade INT NOT NULL AUTO_INCREMENT,
   entrou_em DATETIME DEFAULT CURRENT_TIMESTAMP,
   papel ENUM('dono','moderador','membro') DEFAULT 'membro',
@@ -123,7 +133,7 @@ CREATE TABLE membros_comunidade (
 -- ========================================
 -- Mensagens da comunidade
 -- ========================================
-CREATE TABLE mensagens_comunidade (
+CREATE TABLE IF NOT EXISTS mensagens_comunidade (
   idmensagens_chat INT NOT NULL AUTO_INCREMENT,
   mensagem TEXT,
   enviada_em DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -137,7 +147,7 @@ CREATE TABLE mensagens_comunidade (
 -- ========================================
 -- Regras da comunidade
 -- ========================================
-CREATE TABLE regras_comunidade (
+CREATE TABLE IF NOT EXISTS regras_comunidade (
   idregras INT NOT NULL AUTO_INCREMENT,
   regra TEXT NOT NULL,
   idcomunidades INT NOT NULL,
@@ -148,7 +158,7 @@ CREATE TABLE regras_comunidade (
 -- ========================================
 -- Banimentos da comunidade
 -- ========================================
-CREATE TABLE banimentos_comunidade (
+CREATE TABLE IF NOT EXISTS banimentos_comunidade (
     idbanimento INT AUTO_INCREMENT PRIMARY KEY,
     idcomunidades INT NOT NULL,
     idusuario INT NOT NULL,
@@ -161,7 +171,7 @@ CREATE TABLE banimentos_comunidade (
 -- ========================================
 -- Pedido
 -- ========================================
-CREATE TABLE pedido (
+CREATE TABLE IF NOT EXISTS pedido (
   idpedido INT NOT NULL AUTO_INCREMENT,
   valor_total FLOAT,
   data_pedido DATE,
@@ -174,7 +184,7 @@ CREATE TABLE pedido (
 -- ========================================
 -- Item do pedido
 -- ========================================
-CREATE TABLE item_pedido (
+CREATE TABLE IF NOT EXISTS item_pedido (
   iditem_pedido INT NOT NULL AUTO_INCREMENT,
   quantidade INT,
   idproduto INT NOT NULL,
@@ -187,7 +197,7 @@ CREATE TABLE item_pedido (
 -- ========================================
 -- Carrinho
 -- ========================================
-CREATE TABLE carrinho (
+CREATE TABLE IF NOT EXISTS carrinho (
   idcarrinho INT NOT NULL AUTO_INCREMENT,
   preco_unitario DOUBLE(10,2),
   idproduto INT NOT NULL,
@@ -200,7 +210,7 @@ CREATE TABLE carrinho (
 -- ========================================
 -- Favoritos
 -- ========================================
-CREATE TABLE favoritos (
+CREATE TABLE IF NOT EXISTS favoritos (
   idfavoritos INT NOT NULL AUTO_INCREMENT,
   idproduto INT NOT NULL,
   idusuario INT NOT NULL,
@@ -212,7 +222,7 @@ CREATE TABLE favoritos (
 -- ========================================
 -- Avaliações
 -- ========================================
-CREATE TABLE avaliacoes (
+CREATE TABLE IF NOT EXISTS avaliacoes (
   idavaliacoes INT NOT NULL AUTO_INCREMENT,
   nota INT,
   comentario TEXT,
@@ -227,7 +237,7 @@ CREATE TABLE avaliacoes (
 -- ========================================
 -- Notificações
 -- ========================================
-CREATE TABLE notificacoes (
+CREATE TABLE IF NOT EXISTS notificacoes (
   idnotificacoes INT NOT NULL AUTO_INCREMENT,
   mensagem TEXT,
   lida TINYINT,
@@ -243,7 +253,7 @@ CREATE TABLE notificacoes (
 -- ========================================
 -- Recuperação de senha
 -- ========================================
-CREATE TABLE recuperacao_senha (
+CREATE TABLE IF NOT EXISTS recuperacao_senha (
   idrecuperacao_senha INT NOT NULL AUTO_INCREMENT,
   token VARCHAR(255) NOT NULL,
   expira_em DATETIME NOT NULL,
@@ -258,7 +268,7 @@ CREATE TABLE recuperacao_senha (
 -- ========================================
 -- Conversa direta (usuário <-> vendedor)
 -- ========================================
-CREATE TABLE conversa (
+CREATE TABLE IF NOT EXISTS conversa (
   idconversa INT NOT NULL AUTO_INCREMENT,
   criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
   status ENUM('ativada', 'finalizada'),
@@ -272,7 +282,7 @@ CREATE TABLE conversa (
 -- ========================================
 -- Mensagens diretas
 -- ========================================
-CREATE TABLE mensagens_chat (
+CREATE TABLE IF NOT EXISTS mensagens_chat (
   idmensagens INT NOT NULL AUTO_INCREMENT,
   idconversa INT NOT NULL,
   remetente_tipo ENUM('usuario', 'vendedor'),
@@ -287,7 +297,7 @@ CREATE TABLE mensagens_chat (
 -- ========================================
 -- Imagens adicionais de produtos
 -- ========================================
-CREATE TABLE imagens (
+CREATE TABLE IF NOT EXISTS imagens (
   idimagens INT NOT NULL AUTO_INCREMENT,
   imagem LONGBLOB,
   idproduto INT NOT NULL,

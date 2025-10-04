@@ -55,6 +55,16 @@ CREATE TABLE IF NOT EXISTS categoria (
   PRIMARY KEY (idcategoria)
 ) ENGINE=InnoDB;
 
+INSERT IGNORE INTO categoria (idcategoria, nome) VALUES
+(1, 'Terror'),
+(2, 'Suspense'),
+(3, 'Romance'),
+(4, 'Fantasia'),
+(5, 'Biográfico'),
+(6, 'Ficção científica'),
+(7, 'Infantil'),
+(8, 'Ficção literária');
+
 -- ========================================
 -- Produto
 -- ========================================
@@ -100,7 +110,6 @@ CREATE TABLE IF NOT EXISTS comunidades (
   quantidade_usuarios INT,
   idusuario INT NOT NULL,
   idcategoria INT NOT NULL,
-  regras TEXT,
   status ENUM('ativa','desativada') DEFAULT 'ativa',
   PRIMARY KEY (idcomunidades),
   FOREIGN KEY (idusuario) REFERENCES usuario(idusuario),
@@ -113,6 +122,7 @@ CREATE TABLE IF NOT EXISTS comunidades (
 CREATE TABLE IF NOT EXISTS membros_comunidade (
   idmembros_comunidade INT NOT NULL AUTO_INCREMENT,
   entrou_em DATETIME DEFAULT CURRENT_TIMESTAMP,
+  papel ENUM('dono','moderador','membro') DEFAULT 'membro',
   idcomunidades INT NOT NULL,
   idusuario INT NOT NULL,
   PRIMARY KEY (idmembros_comunidade, idcomunidades),
@@ -123,7 +133,7 @@ CREATE TABLE IF NOT EXISTS membros_comunidade (
 -- ========================================
 -- Mensagens da comunidade
 -- ========================================
-CREATE TABLE IF NOT EXISTS mensagens_chat (
+CREATE TABLE IF NOT EXISTS mensagens_comunidade (
   idmensagens_chat INT NOT NULL AUTO_INCREMENT,
   mensagem TEXT,
   enviada_em DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -133,6 +143,30 @@ CREATE TABLE IF NOT EXISTS mensagens_chat (
   FOREIGN KEY (idcomunidades) REFERENCES comunidades(idcomunidades),
   FOREIGN KEY (idusuario) REFERENCES usuario(idusuario)
 ) ENGINE=InnoDB;
+
+-- ========================================
+-- Regras da comunidade
+-- ========================================
+CREATE TABLE IF NOT EXISTS regras_comunidade (
+  idregras INT NOT NULL AUTO_INCREMENT,
+  regra TEXT NOT NULL,
+  idcomunidades INT NOT NULL,
+  PRIMARY KEY (idregras),
+  FOREIGN KEY (idcomunidades) REFERENCES comunidades(idcomunidades)
+);
+
+-- ========================================
+-- Banimentos da comunidade
+-- ========================================
+CREATE TABLE IF NOT EXISTS banimentos_comunidade (
+    idbanimento INT AUTO_INCREMENT PRIMARY KEY,
+    idcomunidades INT NOT NULL,
+    idusuario INT NOT NULL,
+    motivo TEXT,
+    data_ban DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idcomunidades) REFERENCES comunidades(idcomunidades),
+    FOREIGN KEY (idusuario) REFERENCES usuario(idusuario)
+);
 
 -- ========================================
 -- Pedido
@@ -248,7 +282,7 @@ CREATE TABLE IF NOT EXISTS conversa (
 -- ========================================
 -- Mensagens diretas
 -- ========================================
-CREATE TABLE IF NOT EXISTS mensagens (
+CREATE TABLE IF NOT EXISTS mensagens_chat (
   idmensagens INT NOT NULL AUTO_INCREMENT,
   idconversa INT NOT NULL,
   remetente_tipo ENUM('usuario', 'vendedor'),
