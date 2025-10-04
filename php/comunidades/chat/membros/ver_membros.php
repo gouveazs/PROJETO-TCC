@@ -38,15 +38,22 @@ $membros = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <span style="color:gray;">(<?= $m['papel'] ?>)</span> - Entrou em <?= $m['entrou_em'] ?>
 
         <?php if ($m['idusuario'] != $com['id_criador']): ?>
-            <a href="banir_usuario.php?id_usuario=<?= $m['idusuario'] ?>&id_comunidade=<?= $id_comunidade ?>" 
+            <a href="banir_membro.php?id_usuario=<?= $m['idusuario'] ?>&id_comunidade=<?= $id_comunidade ?>" 
                 style="margin-left:10px; background:red; color:white; padding:5px 10px; border-radius:5px; text-decoration:none;">
                 Banir
             </a>
 
-            <a href="promover_membro.php?id_usuario=<?= $m['idusuario'] ?>&id_comunidade=<?= $id_comunidade ?>" 
-                style="margin-left:5px; background:green; color:white; padding:5px 10px; border-radius:5px; text-decoration:none;">
-                Promover
-            </a>
+            <?php if ($m['papel'] == 'membro'): ?>
+                <a href="promover_membro.php?id_usuario=<?= $m['idusuario'] ?>&id_comunidade=<?= $id_comunidade ?>" 
+                    style="margin-left:5px; background:green; color:white; padding:5px 10px; border-radius:5px; text-decoration:none;">
+                    Promover
+                </a>
+            <?php elseif ($m['papel'] == 'moderador'): ?>
+                <a href="demover_membro.php?id_usuario=<?= $m['idusuario'] ?>&id_comunidade=<?= $id_comunidade ?>" 
+                    style="margin-left:5px; background:orange; color:white; padding:5px 10px; border-radius:5px; text-decoration:none;">
+                    Demover
+                </a>
+            <?php endif; ?>
         <?php endif; ?>
 
     </li>

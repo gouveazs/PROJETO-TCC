@@ -146,6 +146,19 @@ CREATE TABLE regras_comunidade (
 );
 
 -- ========================================
+-- Banimentos da comunidade
+-- ========================================
+CREATE TABLE banimentos_comunidade (
+    idbanimento INT AUTO_INCREMENT PRIMARY KEY,
+    idcomunidades INT NOT NULL,
+    idusuario INT NOT NULL,
+    motivo TEXT,
+    data_ban DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idcomunidades) REFERENCES comunidades(idcomunidades),
+    FOREIGN KEY (idusuario) REFERENCES usuario(idusuario)
+);
+
+-- ========================================
 -- Pedido
 -- ========================================
 CREATE TABLE pedido (
@@ -259,7 +272,7 @@ CREATE TABLE conversa (
 -- ========================================
 -- Mensagens diretas
 -- ========================================
-CREATE TABLE mensagens (
+CREATE TABLE mensagens_chat (
   idmensagens INT NOT NULL AUTO_INCREMENT,
   idconversa INT NOT NULL,
   remetente_tipo ENUM('usuario', 'vendedor'),
