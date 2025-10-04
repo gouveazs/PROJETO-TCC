@@ -174,14 +174,21 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     .card .info h3 {
-      margin-bottom: 10px;
-      font-size: 1rem;
-      color: var(--verde);
-      display: -webkit-box;
-      -webkit-line-clamp: 2; /* no máximo 2 linhas */
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
+  margin-bottom: 10px;
+  font-size: 1rem;
+  color: #4a5a40;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; 
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card .info .price {
+  color: black;
+  font-weight: none;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
 
     .card-link {
       text-decoration: none;
@@ -196,9 +203,10 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       transform: scale(1.03);
     }
 
-    .card .info .stars {
-      color: #f5c518;
-    }
+   .card .info .stars {
+  color: #f5c518; /* amarelo dourado */
+  font-size: 1rem;
+}
 
   /* === REMOVER SUBLINHADOS DOS LINKS DENTRO DOS CARDS / ÁREA PRINCIPAL ===
      Aplica-se apenas aos links dentro da área principal (.main / .cards)
@@ -224,7 +232,7 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
   /* prevenir sublinhado em elementos internos do card */
-  .card-link * { text-decoration: none !important; color: inherit !important; }
+  .card-link * { text-decoration: none !important }
 
   /* Ações do card (botões Remover / Adicionar) */
   /* Ações do card (botões Remover / Adicionar) */
