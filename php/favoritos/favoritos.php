@@ -135,39 +135,70 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
   .card {
-    background-color: #fff;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
+      background-color: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%; /* obrigatório para stretch funcionar */
+      box-sizing: border-box;
+    }
 
-  .card:hover { transform: translateY(-5px); }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      align-items: stretch; /* força mesma altura */
+    }
 
-  .card img { width: 100%; height: 250px; object-fit: cover; display: block; }
+     .cards-novidades {
+      grid-template-columns: repeat(6, 1fr);
+    }
 
-  .card .info { padding: 15px; text-align: center; }
-  .card .info h3 {
-  margin-bottom: 10px;
-  font-size: 1rem;
-  color: var(--verde); /* título verde */
-  font-weight: bold;   /* dá mais destaque */
-}
+    .card:hover {
+      transform: translateY(-5px);
+    }
 
-.card .info .price {
-  font-size: 1rem;
-  font-weight: bold;
-  margin-bottom: 8px;
-  color: var(--verde); /* preço verde também */
-}
+    .card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
 
-.card .stars {
-  color: #ffcc00;   /* amarelo forte */
-  font-size: 1.1rem; /* estrelas maiores */
-}
+    .card .info {
+      padding: 15px;
+      text-align: center;
+    }
+
+    .card .info h3 {
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: var(--verde);
+      display: -webkit-box;
+      -webkit-line-clamp: 2; /* no máximo 2 linhas */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .card-link .card {
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .card-link .card:hover {
+      transform: scale(1.03);
+    }
+
+    .card .info .stars {
+      color: #f5c518;
+    }
 
   /* === REMOVER SUBLINHADOS DOS LINKS DENTRO DOS CARDS / ÁREA PRINCIPAL ===
      Aplica-se apenas aos links dentro da área principal (.main / .cards)
@@ -196,28 +227,38 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   .card-link * { text-decoration: none !important; color: inherit !important; }
 
   /* Ações do card (botões Remover / Adicionar) */
-  .card-actions {
-    display: flex;
-    justify-content: space-around;
-    padding: 10px;
-    border-top: 1px solid #eee;
-    background: #fff;
-  }
+  /* Ações do card (botões Remover / Adicionar) */
+.card-actions {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+  padding: 10px;
+  color: #eee;
+  border-top: 1px solid #eee;
+  background: #fff;
+}
 
-  .card-actions a {
-    font-size: 0.95rem;
-    color: var(--verde);
-    text-decoration: none !important; /* remove sublinhado */
-    padding: 6px 12px;
-    border-radius: 6px;
-    transition: all 0.18s;
-  }
+.card-actions a {
+  flex: 1;
+  text-align: center;
+  background-color: var(--verde) !important;
+  color: #fff !important;   /* força branco */
+  text-decoration: none !important;
+  padding: 10px 0;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 0.80rem;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .card-actions a:hover {
-    color: #fff;
-    background: var(--verde);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  }
+.card-actions a:hover {
+  background-color: #4a5a42 !important;
+  color: #fff !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
 
   /* RODAPÉ (mantive como estava) */
   .footer {
@@ -295,17 +336,19 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <h2>Seus Livros Favoritos</h2> 
   </div>
 
+<div class="cards cards-novidades">
 <div class="cards">
   <?php if(count($favoritos) > 0): ?>
     <div class="cards-grid">
       <?php foreach($favoritos as $produto): ?>
         <div class="card">
           <a href="../produto/pagiproduto.php?id=<?= $produto['idproduto'] ?>" class="card-link">
-            <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+            <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" 
+                 alt="<?= htmlspecialchars($produto['nome']) ?>">
             <div class="info">
               <h3><?= htmlspecialchars($produto['nome']) ?></h3>
               <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
-              <div class="stars">★★★★☆</div>
+              <div class="stars">★★★★★</div>
             </div>
           </a>
           <div class="card-actions">
@@ -314,11 +357,10 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <a href="#">Adicionar ao carrinho</a>
           </div>
         </div>
+      </div>
       <?php endforeach; ?>
     </div>
-  
   <?php else: ?>
-      <!-- Mensagem e botões só aparecem quando NÃO há favoritos -->
       <p style="margin: 10px 0 20px; font-size: 1rem; color: #333;">
         Você ainda não adicionou nenhum produto aos favoritos.
       </p>
