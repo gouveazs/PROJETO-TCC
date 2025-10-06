@@ -239,151 +239,151 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     .detalhes-card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
+      background: #fff;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
 
-.detalhes-card h3 {
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--text-dark);
-  margin-bottom: 8px;
-}
+    .detalhes-card h3 {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
 
-.detalhes-card hr {
-  border: 0;
-  height: 1px;
-  background-color: #ddd;
-  margin: 6px 0 12px;
-}
+    .detalhes-card hr {
+      border: 0;
+      height: 1px;
+      background-color: #ddd;
+      margin: 6px 0 12px;
+    }
 
-.detalhes-card p {
-  font-size: 14px;
-  margin: 4px 0;
-  color: var(--text-dark);
-}
+    .detalhes-card p {
+      font-size: 14px;
+      margin: 4px 0;
+      color: var(--text-dark);
+    }
 
-.produto-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  background: #fff;
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  width: 100%;
-  margin-bottom: 20px;
-}
+    .produto-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: 100%;
+      margin-bottom: 20px;
+    }
 
-.produto-detalhes {
-    flex: 1;
-  display: none;
-}
+    .produto-detalhes {
+        flex: 1;
+      display: none;
+    }
 
-.produto-detalhes.ativo {
-  display: block;
-}
+    .produto-detalhes.ativo {
+      display: block;
+    }
 
-.produto-img {
-  flex: 0 0 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+    .produto-img {
+      flex: 0 0 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-.produto-img img {
-  width: 100%;
-  border-radius: 8px;
-  object-fit: cover;
-  margin-bottom: 10px;
-}
+    .produto-img img {
+      width: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
 
-.produto-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-}
+    .produto-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
 
-.detalhes-img {
-  display: none; 
-}
+    .detalhes-img {
+      display: none; 
+    }
 
-.detalhes-img img {
-  width: 200px;
-  border-radius: 8px;
-  object-fit: cover;
-}
+    .detalhes-img img {
+      width: 200px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
 
-.detalhes-info {
-  flex: 1;
-}
+    .detalhes-info {
+      flex: 1;
+    }
 
-    .sem-imagem {
-      color: #999;
+        .sem-imagem {
+          color: #999;
+          font-size: 14px;
+        }
+
+    .detalhes-colunas {
+      display: flex;
+      gap: 30px;
+    }
+
+    .coluna {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .coluna p {
+      margin-bottom: 6px;
       font-size: 14px;
     }
 
-.detalhes-colunas {
-  display: flex;
-  gap: 30px;
-}
 
-.coluna {
-  flex: 1;
-  min-width: 150px;
-}
+    .btn-toggle {
+      background: var(--verde);
+      color: #fff;
+      font-size: 16px;        /* mesmo tamanho dos outros */
+      font-weight: bold;      /* deixa em negrito igual */
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      margin-top: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+      width: 100%;
+      text-align: center;
+    }
+    .btn-toggle:hover {
+      background: #4e5c43;
+    }
 
-.coluna p {
-  margin-bottom: 6px;
-  font-size: 14px;
-}
+        .btn-cadastrar {
+      background-color: var(--verde);
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 18px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.3s;
+    }
 
+    .btn-cadastrar:hover {
+      background-color: #445c3a;
+    }
 
-.btn-toggle {
-  background: var(--verde);
-  color: #fff;
-  font-size: 16px;        /* mesmo tamanho dos outros */
-  font-weight: bold;      /* deixa em negrito igual */
-  border: none;
-  border-radius: 8px;
-  padding: 10px 15px;
-  margin-top: 8px;
-  cursor: pointer;
-  transition: background 0.3s;
-  width: 100%;
-  text-align: center;
-}
-.btn-toggle:hover {
-  background: #4e5c43;
-}
-
-    .btn-cadastrar {
-  background-color: var(--verde);
-  color: #fff;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 18px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-block;
-  transition: background 0.3s;
-}
-
-.btn-cadastrar:hover {
-  background-color: #445c3a;
-}
-
-.sem-produto {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; /* deixa alinhado à esquerda */
-  gap: 30px; /* espaçamento entre o texto e o botão */
-  margin-top: 0px;
-}
+    .sem-produto {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; /* deixa alinhado à esquerda */
+      gap: 30px; /* espaçamento entre o texto e o botão */
+      margin-top: 0px;
+    }
 
     .produto-actions {
       display: flex;
@@ -479,7 +479,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <hr style="border: 0; height: 1px; background-color: #afafafff; margin-bottom: 20px;">
 
-  <h2><b>Vendas publicadas</b></h2>
+  <h2><b>Seus Anúncios</b></h2>
 
   <div class="produtos-container">
     <?php if (!empty($produtos)): ?>
@@ -540,7 +540,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <!-- Botões organizados um embaixo do outro -->
                 <div class="produto-actions">
                     <a href="../produto/editar_produto.php?id=<?= $produto['idproduto'] ?>" class="btn-action editar">Editar Produto</a>
-                    <a href="../produto/excluir_produto.php?id=<?= $produto['idproduto'] ?>" class="btn-action excluir" onclick="return confirm('Tem certeza que deseja excluir este produto?');">Excluir Produto</a>
+                    <a href="../produto/excluir_produto.php?id=<?= $produto['idproduto'] ?>" class="btn-action excluir" onclick="return confirm('Tem certeza que deseja excluir esse anúncio?');">Excluir Produto</a>
                 </div>
             </div>
         <?php endforeach; ?>

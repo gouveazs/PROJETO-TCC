@@ -14,8 +14,14 @@ include '../conexao.php';
 $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM produto WHERE idvendedor = ?");
 $stmt->execute([$id_vendedor]);
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
 $anuncios_publicadas = $result['total'];
+
+// Buscar reputação do vendedor
+$stmt = $conn->prepare("SELECT reputacao FROM vendedor WHERE idvendedor = ?");
+$stmt->execute([$id_vendedor]);
+$dados_vendedor = $stmt->fetch(PDO::FETCH_ASSOC);
+$reputacao = $dados_vendedor ? $dados_vendedor['reputacao'] : 0;
+
 ?>
 
 <!DOCTYPE html>
@@ -387,7 +393,9 @@ $anuncios_publicadas = $result['total'];
         <h2>Reputação</h2>
         <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
         <div class="progress-bar">
-          <div class="progress">35%</div>
+          <div class="progress" style="width: <?= $reputacao ?>%;">
+            <?= $reputacao ?>%
+          </div>
         </div>
         <p class="info">Ainda é só o começo, com boas avaliações, entregas no prazo e feedback dos clientes, sua reputação aumenta e consegue aumentar sua clientela!</p>
       </div>
