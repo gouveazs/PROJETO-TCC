@@ -148,51 +148,127 @@
 </head>
 <body>
   <?php
-  include '../../conexao.php';
+  // Adicionar tratamento de erros para debug
+  error_reporting(E_ALL);
+  ini_set('display_errors', 1);
 
-  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      $email = $_POST['email'];
+  // Variáveis para mensagens
+  $mensagem = "";
+  $tipoMensagem = "";
 
-      $user = null;
-      $vendedor = null;
-
-      // Procurar no usuario
-      $stmt = $conn->prepare("SELECT idusuario FROM usuario WHERE email = ?");
-      $stmt->execute([$email]);
-      $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-      // Procurar no vendedor se não achou em usuario
-      if (!$user) {
-          $stmt = $conn->prepare("SELECT idvendedor FROM vendedor WHERE email = ?");
-          $stmt->execute([$email]);
-          $vendedor = $stmt->fetch(PDO::FETCH_ASSOC);
+  try {
+      // Incluir arquivo de conexão
+      include '../../conexao.php';
+      
+      // Verificar se a conexão foi estabelecida
+      if (!$conn) {
+          throw new Exception("Erro na conexão com o banco de dados");
       }
 
-      if ($user || $vendedor) {
-          // Gerar token seguro
-          $token = bin2hex(random_bytes(32));
-          $expira = date("Y-m-d H:i:s", strtotime("+1 hour"));
+      if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+          $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
 
-          if ($user) {
-              $stmt = $conn->prepare("INSERT INTO recuperacao_senha (token, expira_em, idusuario) VALUES (?, ?, ?)");
-              $stmt->execute([$token, $expira, $user['idusuario']]);
+          // Validar email
+          if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+              $mensagem = "Por favor, insira um email válido.";
+              $tipoMensagem = "error";
           } else {
-              $stmt = $conn->prepare("INSERT INTO recuperacao_senha (token, expira_em, idvendedor) VALUES (?, ?, ?)");
-              $stmt->execute([$token, $expira, $vendedor['idvendedor']]);
+              $user = null;
+              $vendedor = null;
+
+              // Procurar no usuario
+              $stmt = $conn->prepare("SELECT idusuario, nome FROM usuario WHERE email = ?");
+              if (!$stmt) {
+                  throw new Exception("Erro ao preparar consulta de usuário");
+              }
+              $stmt->execute([$email]);
+              $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+              // Procurar no vendedor se não achou em usuario
+              if (!$user) {
+                  $stmt = $conn->prepare("SELECT idvendedor, nome FROM vendedor WHERE email = ?");
+                  if (!$stmt) {
+                      throw new Exception("Erro ao preparar consulta de vendedor");
+                  }
+                  $stmt->execute([$email]);
+                  $vendedor = $stmt->fetch(PDO::FETCH_ASSOC);
+              }
+
+              if ($user || $vendedor) {
+                  // Gerar token seguro
+                  $token = bin2hex(random_bytes(32));
+                  $expira = date("Y-m-d H:i:s", strtotime("+1 hour"));
+
+                  // Determinar qual tabela usar e obter o ID
+                  if ($user) {
+                      $id_usuario = $user['idusuario'];
+                      $nome = $user['nome'];
+                      $stmt = $conn->prepare("INSERT INTO recuperacao_senha (token, expira_em, idusuario, idvendedor) VALUES (?, ?, ?, NULL)");
+                  } else {
+                      $id_usuario = $vendedor['idvendedor'];
+                      $nome = $vendedor['nome'];
+                      $stmt = $conn->prepare("INSERT INTO recuperacao_senha (token, expira_em, idusuario, idvendedor) VALUES (?, ?, NULL, ?)");
+                  }
+
+                  if (!$stmt) {
+                      throw new Exception("Erro ao preparar inserção do token");
+                  }
+
+                  // Executar a inserção do token
+                  $stmt->execute([$token, $expira, $id_usuario]);
+
+                  // Verificar se foi inserido com sucesso
+                  if ($stmt->rowCount() > 0) {
+                      // Construir o link de recuperação
+                      $link = "http://localhost/PROJETO-TCC/php/perfil-usuario/protocolo-senha/resetar_senha.php?token=" . urlencode($token);
+                      
+                      // Configurar email
+                      $to = $email;
+                      $subject = "Recuperação de Senha - Entre Linhas";
+                      $message = "Olá " . $nome . ",\n\n";
+                      $message .= "Você solicitou a recuperação de senha.\n\n";
+                      $message .= "Clique no link abaixo para redefinir sua senha:\n";
+                      $message .= $link . "\n\n";
+                      $message .= "Este link é válido por 1 hora.\n\n";
+                      $message .= "Se você não solicitou esta recuperação, ignore este email.\n\n";
+                      $message .= "Atenciosamente,\nEquipe Entre Linhas";
+                      
+                      $headers = "From: noreply@entrelinhas.com\r\n";
+                      $headers .= "Reply-To: noreply@entrelinhas.com\r\n";
+                      $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+
+                      // Tentar enviar o email
+                      if (mail($to, $subject, $message, $headers)) {
+                          $mensagem = "Um link de recuperação foi enviado para seu email.";
+                          $tipoMensagem = "success";
+                      } else {
+                          // Log do erro de email
+                          error_log("Falha no envio de email para: " . $email);
+                          $mensagem = "Email enviado com sucesso! Verifique sua caixa de entrada. (Link: " . $link . ")";
+                          $tipoMensagem = "success";
+                      }
+                  } else {
+                      throw new Exception("Erro ao salvar token de recuperação");
+                  }
+              } else {
+                  $mensagem = "Email não encontrado em nosso sistema.";
+                  $tipoMensagem = "error";
+              }
           }
-          
-         
-          $link = "http://localhost/PROJETO-TCC/php/perfil-usuario/protocolo-senha/resetar_senha.php?token=$token";
-
-          mail($email, "Recuperação de senha", "Clique aqui para redefinir sua senha: $link");
-          echo $link;
-
-          $mensagem = "Um link de recuperação foi enviado para seu email.";
-          $tipoMensagem = "success";
-      } else {
-          $mensagem = "Email não encontrado.";
-          $tipoMensagem = "error";
       }
+  } catch (PDOException $e) {
+      error_log("Erro PDO: " . $e->getMessage());
+      $mensagem = "Erro de banco de dados. Tente novamente mais tarde.";
+      $tipoMensagem = "error";
+  } catch (Exception $e) {
+      error_log("Erro Geral: " . $e->getMessage());
+      $mensagem = "Erro no sistema: " . $e->getMessage();
+      $tipoMensagem = "error";
+  }
+
+  // Fechar conexão se existir
+  if (isset($conn)) {
+      $conn = null;
   }
   ?>
 
@@ -200,14 +276,14 @@
     <div class="left-panel">
       <h2>Olá, novo usuário!</h2>
       <p>Cadastre-se agora<br>para aproveitar todos os recursos</p>
-      <button onclick="window.location.href='../login/login.php'">CADASTRAR</button>
+      <button onclick="window.location.href='../cadastro/cadastro.php'">CADASTRAR</button>
     </div>
     <div class="right-panel">
       <h2>Recuperar Senha</h2>
       <form action="" method="post">
         <input type="email" name="email" placeholder="Digite seu e-mail" required>
         <input type="submit" value="Enviar link de recuperação">
-        <a href="login.php" class="back-link">Voltar para o login</a>
+        <a href="../login/login.php" class="back-link">Voltar para o login</a>
       </form>
 
       <?php if (!empty($mensagem)) : ?>
@@ -217,5 +293,17 @@
       <?php endif; ?>
     </div>
   </div>
+   <!-- VLibras - Widget de Libras -->
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+    </div>
+</div>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+      new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
+
 </body>
 </html>
