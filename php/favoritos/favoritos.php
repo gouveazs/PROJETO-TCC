@@ -55,11 +55,9 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     flex-direction: column;
   }
 
-  .content-wrapper {
-    flex: 1;
-    display: flex;
-  }
+  .content-wrapper { flex: 1; display: flex; }
 
+  /* ===== SIDEBAR ===== */
   .sidebar {
     position: fixed;
     top: 0; left: 0;
@@ -89,6 +87,7 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   .sidebar nav ul li a { color: #fff; text-decoration: none; display: flex; align-items: center; padding: 10px; border-radius: 8px; transition: background 0.3s; }
   .sidebar nav ul li a:hover { background-color: #6f8562; }
 
+  /* ===== TOPBAR ===== */
   .topbar {
     display: flex;
     align-items: center;
@@ -111,6 +110,7 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   .search-form input[type="text"] { padding: 10px 15px; border: none; border-radius: 30px 0 0 30px; outline: none; width: 300px; font-size: 0.9rem; }
   .search-form input[type="submit"] { padding: 10px 15px; border: none; background-color: #6f8562; color: #fff; border-radius: 0 30px 30px 0; cursor: pointer; width: 90px; }
 
+  /* ===== MAIN CONTENT ===== */
   .main {
     flex: 1;
     margin-left: 250px;
@@ -120,6 +120,41 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   .section-header h2 { color: var(--verde); }
 
+  .title-with-icons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-icons {
+    display: flex;
+    gap: 15px;
+  }
+
+  .icon-btn {
+    width: 45px;
+    height: 45px;
+    background-color: var(--marrom);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: background-color 0.3s;
+  }
+
+  .icon-btn img {
+    width: 25px;
+    height: 25px;
+  }
+
+  .icon-btn:hover {
+    background-color: #4a351e;
+  }
+
+  /* ===== CARDS ===== */
   .cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -148,52 +183,40 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   .card .info .price { color: black; font-size: 0.95rem; margin-bottom: 8px; }
   .card .info .stars { color: #f5c518; }
 
- .card-actions {
-  display: flex;
-  justify-content: space-around;
-  padding: 10px;
-  background: #fff;
-}
+  .card-actions {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    background: #fff;
+  }
 
-.card-link {
-  text-decoration: none; /* remove sublinhado */
-  color: inherit; /* mantém a cor original do texto */
-}
+  .card-link {
+    text-decoration: none;
+    color: inherit;
+  }
 
-.card-link h3,
-.card-link p,
-.card-link .price {
-  text-decoration: none; /* garante que nada fique sublinhado */
-  color: inherit;
-}
+  .card-actions a {
+    flex: 1;
+    text-align: center;
+    background-color: var(--verde);
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 0;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    transition: 0.2s;
+    margin: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-.card-link:hover h3 {
-  text-decoration: none; /* sem sublinhado mesmo no hover */
-}
+  .card-actions a:hover {
+    background-color: #4a5a42;
+  }
 
-.card-actions a {
-  flex: 1;
-  text-align: center;
-  background-color: var(--verde);
-  color: #fff;
-  text-decoration: none; /* remove sublinhado */
-  padding: 10px 0;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 0.8rem;
-  transition: 0.2s;
-  margin: 0 5px;
-
-  /* centralização vertical e horizontal do texto */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.card-actions a:hover {
-  background-color: #4a5a42;
-}
-
+  /* ===== FOOTER ===== */
   .footer {
     margin-left: 250px;
     background-color: var(--marrom);
@@ -202,6 +225,7 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     padding: 15px;
   }
 
+  /* ===== RESPONSIVE ===== */
   @media (max-width: 900px) {
     .topbar { left: 0; }
     .sidebar { display: none; }
@@ -259,48 +283,58 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 
   <div class="content-wrapper">
-  <div class="main">
-    <div class="section-header">
-      <h2>Seus Livros Favoritos</h2> 
-    </div>
+    <div class="main">
+      <div class="section-header">
+        <div class="title-with-icons">
+          <h2>Seus Livros Favoritos</h2>
 
-    <!-- Botões de ação permanentes, sempre visíveis -->
-    <div style="display: flex; gap: 30px; margin-top: 20px; flex-wrap: wrap;">
-      <a href="../destaques/destaques.php" style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:150px;height:150px;background-color:#5a4224;color:#fff;font-weight:bold;font-size:0.95rem;border-radius:10px;text-decoration:none;gap:8px;">
-        <img src="../../imgs/book.png" style="width:50px;height:50px;">Adicionar Livro
-      </a>
-      <a href="../carrinho/carrinho.php" style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:150px;height:150px;background-color:#5a4224;color:#fff;font-weight:bold;font-size:0.95rem;border-radius:10px;text-decoration:none;gap:8px;">
-        <img src="../../imgs/listades.png" style="width:50px;height:50px;">Ir para Carrinho
-      </a>
-    </div>
-
-    <?php if(count($favoritos) > 0): ?>
-      <div class="cards">
-        <?php foreach($favoritos as $produto): ?>
-          <div class="card">
-            <a href="../produto/pagiproduto.php?id=<?= $produto['idproduto'] ?>" class="card-link">
-              <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
-              <div class="info">
-                <h3><?= htmlspecialchars($produto['nome']) ?></h3>
-                <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
-                <div class="stars">★★★★★</div>
-              </div>
-            </a>
-            <div class="card-actions">
-              <a href="remover_favorito.php?idproduto=<?= $produto['idproduto'] ?>" onclick="return confirm('Tem certeza que deseja remover este produto dos favoritos?')">Remover</a>
-              <a href="#">Adicionar ao carrinho</a>
+          <?php if (count($favoritos) > 0): ?>
+            <div class="header-icons">
+              <a href="../destaques/destaques.php" class="icon-btn" title="Adicionar Livro">
+                <img src="../../imgs/book.png" alt="Adicionar Livro">
+              </a>
+              <a href="../carrinho/carrinho.php" class="icon-btn" title="Ir para Carrinho">
+                <img src="../../imgs/listades.png" alt="Ir para Carrinho">
+              </a>
             </div>
-          </div>
-        <?php endforeach; ?>
+          <?php endif; ?>
+        </div>
       </div>
-    <?php else: ?>
-      <p style="margin: 10px 0 20px; font-size: 1rem; color: #333;">
-        Você ainda não adicionou nenhum produto aos favoritos.
-      </p>
-    <?php endif; ?>
-  </div>
-</div>
-  </div>
+
+      <?php if(count($favoritos) > 0): ?>
+        <div class="cards">
+          <?php foreach($favoritos as $produto): ?>
+            <div class="card">
+              <a href="../produto/pagiproduto.php?id=<?= $produto['idproduto'] ?>" class="card-link">
+                <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+                <div class="info">
+                  <h3><?= htmlspecialchars($produto['nome']) ?></h3>
+                  <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+                  <div class="stars">★★★★★</div>
+                </div>
+              </a>
+              <div class="card-actions">
+                <a href="remover_favorito.php?idproduto=<?= $produto['idproduto'] ?>" onclick="return confirm('Tem certeza que deseja remover este produto dos favoritos?')">Remover</a>
+                <a href="#">Adicionar ao carrinho</a>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      <?php else: ?>
+        <p style="margin: 10px 0 20px; font-size: 1rem; color: #333;">
+          Você ainda não adicionou nenhum produto aos favoritos.
+        </p>
+
+        <div style="display: flex; gap: 30px; margin-top: 20px; flex-wrap: wrap;">
+          <a href="../destaques/destaques.php" style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:150px;height:150px;background-color:#5a4224;color:#fff;font-weight:bold;font-size:0.95rem;border-radius:10px;text-decoration:none;gap:8px;">
+            <img src="../../imgs/book.png" style="width:50px;height:50px;">Adicionar Livro
+          </a>
+          <a href="../carrinho/carrinho.php" style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:150px;height:150px;background-color:#5a4224;color:#fff;font-weight:bold;font-size:0.95rem;border-radius:10px;text-decoration:none;gap:8px;">
+            <img src="../../imgs/listades.png" style="width:50px;height:50px;">Ir para Carrinho
+          </a>
+        </div>
+      <?php endif; ?>
+    </div>
   </div>
 
   <footer class="footer">
