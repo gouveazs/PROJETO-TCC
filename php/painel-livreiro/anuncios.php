@@ -479,7 +479,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <hr style="border: 0; height: 1px; background-color: #afafafff; margin-bottom: 20px;">
 
-  <h2><b>Seus Anúncios</b></h2>
+<h2><b>Seus Anúncios</b></h2>
 
   <div class="produtos-container">
     <?php if (!empty($produtos)): ?>
