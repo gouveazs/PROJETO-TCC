@@ -83,9 +83,32 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   .sidebar nav { width: 100%; padding: 0 20px; }
   .sidebar nav h3 { margin-top: 20px; margin-bottom: 10px; font-size: 1rem; color: #ddd; }
   .sidebar nav ul { list-style: none; padding: 0; margin: 0 0 10px 0; width: 100%; }
-  .sidebar nav ul li { width: 100%; margin-bottom: 10px; }
-  .sidebar nav ul li a { color: #fff; text-decoration: none; display: flex; align-items: center; padding: 10px; border-radius: 8px; transition: background 0.3s; }
-  .sidebar nav ul li a:hover { background-color: #6f8562; }
+  .sidebar nav ul li {
+  width: 100%;
+  margin-bottom: 10px; /* 🔹 Reduzido de 18px para 10px */
+}
+
+.sidebar nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 8px 5px; /* 🔹 Reduzido de 10px para 8px */
+  border-radius: 8px;
+  transition: background 0.3s;
+  gap: 8px; /* 🔹 Ajuste fino entre ícone e texto */
+}
+
+.sidebar nav ul li a img {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.sidebar nav ul li a:hover {
+  background-color: #6f8562;
+}
+
 
   /* ===== TOPBAR ===== */
   .topbar {
