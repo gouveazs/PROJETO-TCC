@@ -1277,6 +1277,18 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     &copy; 2025 Entre Linhas - Todos os direitos reservados.
   </div>
 
+  <!-- VLibras - Widget de Libras -->
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+    </div>
+</div>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+      new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
+
   <script>
     // Menu toggle para dispositivos móveis
     document.querySelector('.menu-toggle').addEventListener('click', function() {
