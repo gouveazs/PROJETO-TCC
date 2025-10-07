@@ -403,7 +403,6 @@ if (isset($_GET['excluir_id'])) {
         <li><a href="consulta-produtos.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Produtos</a></li>
         <li><a href="consulta-comunidades.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Comunidades</a></li>
         <li><a href="buscador2000.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Buscador 2000</a></li>
-        <li><a href="apis/consumir_apis.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Apis do masqueto</a></li>
       </ul>
 
       <h3>Conta</h3>
@@ -437,68 +436,80 @@ if (isset($_GET['excluir_id'])) {
     <div class="card">
     <h2>Consulta de Produtos</h2>
         <div class="table-responsive">
-        <table class="table">
+    <table class="table" id="tabelaProdutos">
+        <thead>
             <tr>
-            <th>ID</th>
-            <th>Imagem</th>
-            <th>Nome Vendedor</th>
-            <th>Categoria</th>
-            <th>Nome</th>
-            <th>N° de Páginas</th>
-            <th>Editora</th>
-            <th>Class. Etária</th>
-            <th>Data Publicação</th>
-            <th>Preço</th>
-            <th>Quantidade</th>
-            <th>Autor</th>
-            <th>ISBN</th>
-            <th>Dimensões</th>
-            <th>Idioma</th>
-            <th>Estado</th>
-            <th>Descrição</th>
-            <th>Expurgar</th>
-          </tr>
-
-            <?php if ($produtos): ?>
-            <?php foreach ($produtos as $produto): ?>
-              <tr>
-                <td><?= htmlspecialchars($produto['idproduto']) ?></td>
-                <td>
-                    <?php if (!empty($produto['imagem_produto'])): ?>
-                        <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem_produto']) ?>" width="50" height="50" alt="Produto">
-                    <?php else: ?>
-                        Sem imagem
-                    <?php endif; ?>
-                </td>
-                <td><?= htmlspecialchars($produto['nome_vendedor']) ?></td>
-                <td><?= htmlspecialchars($produto['nome_categoria']) ?></td>
-                <td><?= htmlspecialchars($produto['nome'] ?? 'Vazio') ?></td>
-                <td><?= htmlspecialchars($produto['numero_paginas'] ?? 'Vazio') ?></td>
-                <td><?= htmlspecialchars($produto['editora'] ?? 'Vazio') ?></td>
-                <td><?= htmlspecialchars($produto['classificacao_etaria'] ?? 'Vazio') ?></td>
-                <td><?= htmlspecialchars($produto['data_publicacao'] ?? 'Vazio') ?></td>
-                <td>R$ <?= htmlspecialchars(number_format($produto['preco'] ?? 0, 2, ',', '.')) ?></td>
-                <td><?= htmlspecialchars($produto['quantidade'] ?? 0) ?></td>
-                <td><?= htmlspecialchars($produto['autor'] ?? 'Vazio') ?></td>
-                <td><?= htmlspecialchars($produto['isbn'] ?? 'Vazio') ?></td>
-                <td><?= htmlspecialchars($produto['dimensoes'] ?? 'Vazio') ?></td>
-                <td><?= htmlspecialchars($produto['idioma'] ?? 'Vazio') ?></td>
-                <td><?= htmlspecialchars($produto['estado_livro'] ?? 'Vazio') ?></td>
-                <td><?= htmlspecialchars($produto['descricao'] ?? 'Vazio') ?></td>
-                <td>
-                  <button onclick="return confirm('Tem certeza que quer excluir este produto de todas as tabelas?');">
-                      <a style="text-decoration: none; color: red;" href="?excluir_id=<?= $produto['idproduto'] ?>">❌</a>
-                  </button>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-            <?php else: ?>
-            <tr>
-                <td colspan="19">Nenhum produto cadastrado.</td>
+                <th>ID</th>
+                <th>Nome Vendedor</th>
+                <th>Categoria</th>
+                <th>Nome</th>
+                <th>N° de Páginas</th>
+                <th>Editora</th>
+                <th>Class. Etária</th>
+                <th>Data Publicação</th>
+                <th>Preço</th>
+                <th>Quantidade</th>
+                <th>Autor</th>
+                <th>ISBN</th>
+                <th>Dimensões</th>
+                <th>Idioma</th>
+                <th>Estado</th>
+                <th>Descrição</th>
+                <th>Expurgar</th>
             </tr>
-            <?php endif; ?>
-        </table>
-        </div>
+        </thead>
+        <tbody>
+            <!-- Linhas serão preenchidas pelo JS -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+    const tbody = document.querySelector("#tabelaProdutos tbody");
+
+    try {
+        const res = await fetch("http://localhost/PROJETO-TCC/php/pag-adm/apis/api-produtos.php");
+        const produtos = await res.json();
+
+        if (!produtos.length) {
+            tbody.innerHTML = `<tr><td colspan="18">Nenhum produto cadastrado.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = produtos.map(p => `
+            <tr>
+                <td>${p.idproduto ?? ''}</td>
+                <td>${p.idvendedor ?? 'Vazio'}</td>
+                <td>${p.idcategoria ?? 'Vazio'}</td>
+                <td>${p.nome ?? 'Vazio'}</td>
+                <td>${p.numero_paginas ?? 'Vazio'}</td>
+                <td>${p.editora ?? 'Vazio'}</td>
+                <td>${p.classificacao_etaria ?? 'Vazio'}</td>
+                <td>${p.data_publicacao ?? 'Vazio'}</td>
+                <td>R$ ${p.preco ? p.preco.toFixed(2).replace('.', ',') : '0,00'}</td>
+                <td>${p.quantidade ?? 0}</td>
+                <td>${p.autor ?? 'Vazio'}</td>
+                <td>${p.isbn ?? 'Vazio'}</td>
+                <td>${p.dimensoes ?? 'Vazio'}</td>
+                <td>${p.idioma ?? 'Vazio'}</td>
+                <td>${p.estado_livro ?? 'Vazio'}</td>
+                <td>${p.descricao ?? 'Vazio'}</td>
+                <td>
+                    <button onclick="if(confirm('Tem certeza que quer excluir este produto de todas as tabelas?')) window.location='?excluir_id=${p.idproduto}'">
+                        <span style="color:red;">❌</span>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+
+    } catch (err) {
+        console.error(err);
+        tbody.innerHTML = `<tr><td colspan="18">Erro ao carregar os produtos.</td></tr>`;
+    }
+});
+</script>
+
     </div>
 
   </main>
