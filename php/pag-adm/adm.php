@@ -25,6 +25,11 @@ $stmt->execute();
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 $total_produtos = $result['total'];
 
+$stmt = $conn->prepare("SELECT COUNT(*) AS total FROM comunidades");
+$stmt->execute();
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+$total_comunidades = $result['total'];
+
 $sql = "
         SELECT 
             v.idvendedor,
@@ -438,8 +443,9 @@ if ($vendedorTop) {
         <li><a href="consulta-usuarios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Usuários</a></li>
         <li><a href="consulta-vendedores.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Vendedores</a></li>
         <li><a href="consulta-produtos.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Produtos</a></li>
+        <li><a href="consulta-comunidades.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Comunidades</a></li>
         <li><a href="buscador2000.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Buscador 2000</a></li>
-        <li><a href="apis/consumir_apis.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Sei la</a></li>
+        <li><a href="apis/consumir_apis.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Apis do masqueto</a></li>
       </ul>
 
       <h3>Conta</h3>
@@ -485,6 +491,7 @@ if ($vendedorTop) {
         <p><strong>Taxa de sucesso:</strong> 0%</p>
         <p><strong>Total de usuários:</strong> <?php echo $total_usuarios; ?></p>
         <p><strong>Total de vendedores:</strong> <?php echo $total_vendedores; ?></p>
+        <p><strong>Total de comunidades:</strong> <?php echo $total_comunidades; ?></p>
         <p><strong>Total de produtos:</strong> <?php echo $total_produtos; ?></p>
       </div>
     </div>
