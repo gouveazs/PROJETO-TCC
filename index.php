@@ -1202,33 +1202,33 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="editora-item"><img src="imgs/edlogos/2.png" alt="Intrínseca" class="editora-logo"></div>
     <div class="editora-item"><img src="imgs/edlogos/3.png" alt="Grupo Editorial Record" class="editora-logo"></div>
     <div class="editora-item"><img src="imgs/edlogos/4.png" alt="Verus Editora" class="editora-logo"></div>
-    <div class="editora-item"><img src="imgs/edlogos/5.png" alt="Grupo A" class="editora-logo"></div>
-    <div class="editora-item"><img src="imgs/edlogos/6.png" alt="Panini" class="editora-logo"></div>
-    <div class="editora-item"><img src="imgs/edlogos/7.png" alt="Intrinseca" class="editora-logo"></div>
-    <div class="editora-item"><img src="imgs/edlogos/8.png" alt="Intrinseca" class="editora-logo"></div>
+    <div class="editora-item"><img src="imgs/edlogos/5.png" alt="Companhia das Letras" class="editora-logo"></div>
+    <div class="editora-item"><img src="imgs/edlogos/6.png" alt="Arqueiro" class="editora-logo"></div>
+    <div class="editora-item"><img src="imgs/edlogos/7.png" alt="Alt" class="editora-logo"></div>
+    <div class="editora-item"><img src="imgs/edlogos/8.png" alt="Planeta Minotauro" class="editora-logo"></div>
     
     <!-- OS QUE VÃO FICAR ESCONDIDOS -->
-    <div class="editora-item hidden"><img src="imgs/edlogos/9.png" alt="Rocco" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/10.png" alt="Intrínseca" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/11.png" alt="Grupo Editorial Record" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/12.png" alt="Verus Editora" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/13.png" alt="Grupo A" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/14.png" alt="Panini" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/15.png" alt="Intrinseca" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/16.png" alt="Intrinseca" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/17.png" alt="Rocco" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/18.png" alt="Intrínseca" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/19.png" alt="Grupo Editorial Record" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/20.png" alt="Verus Editora" class="editora-logo"></div>
-    <div class="editora-item hidden"> <img src="imgs/edlogos/21.png" alt="Grupo A" class="editora-logo"> </div> 
-    <div class="editora-item hidden"> <img src="imgs/edlogos/22.png" alt="Panini" class="editora-logo"> </div> 
-    <div class="editora-item hidden"> <img src="imgs/edlogos/23.png" alt="Intrinseca" class="editora-logo"> </div> 
-    <div class="editora-item hidden"> <img src="imgs/edlogos/24.png" alt="Intrinseca" class="editora-logo"> </div> 
-    <div class="editora-item hidden"> <img src="imgs/edlogos/25.png" alt="Rocco" class="editora-logo"> </div> 
-    <div class="editora-item hidden"> <img src="imgs/edlogos/26.png" alt="Intrínseca" class="editora-logo"> </div> 
-    <div class="editora-item hidden"> <img src="imgs/edlogos/27.png" alt="Grupo Editorial Record" class="editora-logo"> </div> 
-    <div class="editora-item hidden"> <img src="imgs/edlogos/28.png" alt="Verus Editora" class="editora-logo"> </div> 
-    <div class="editora-item hidden"> <img src="imgs/edlogos/29.png" alt="Grupo A" class="editora-logo"> </div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/9.png" alt="Boitempo Editorial" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/10.png" alt="Galera" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/11.png" alt="Gutenberg" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/12.png" alt="Darkside" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/13.png" alt="Panda Books" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/14.png" alt="L&PM" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/15.png" alt="Alfaguara" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/16.png" alt="Estação Liberdade" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/17.png" alt="Editora 34" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/18.png" alt="Principis" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/19.png" alt="Harper Collins" class="editora-logo"></div>
+    <div class="editora-item hidden"><img src="imgs/edlogos/20.png" alt="Companhia das Letrinhas" class="editora-logo"></div>
+    <div class="editora-item hidden"> <img src="imgs/edlogos/21.png" alt="Casa Lygia Bojunga" class="editora-logo"> </div> 
+    <div class="editora-item hidden"> <img src="imgs/edlogos/22.png" alt="Brinquebook" class="editora-logo"> </div> 
+    <div class="editora-item hidden"> <img src="imgs/edlogos/23.png" alt="Todolivro" class="editora-logo"> </div> 
+    <div class="editora-item hidden"> <img src="imgs/edlogos/24.png" alt="Editora Melhoramentos" class="editora-logo"> </div> 
+    <div class="editora-item hidden"> <img src="imgs/edlogos/25.png" alt="Leya" class="editora-logo"> </div> 
+    <div class="editora-item hidden"> <img src="imgs/edlogos/26.png" alt="Aleph" class="editora-logo"> </div> 
+    <div class="editora-item hidden"> <img src="imgs/edlogos/27.png" alt="Edipro Grupo Editorial" class="editora-logo"> </div> 
+    <div class="editora-item hidden"> <img src="imgs/edlogos/28.png" alt="Bestseller" class="editora-logo"> </div> 
+    <div class="editora-item hidden"> <img src="imgs/edlogos/29.png" alt="Globolivros" class="editora-logo"> </div>
   </div>
 </div>
 
