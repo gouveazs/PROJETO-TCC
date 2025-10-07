@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS vendedor (
   email VARCHAR(45) NOT NULL,
   senha VARCHAR(455),
   data_nascimento DATE,
+  telefone CHAR(14),
   cpf CHAR(11),
   cnpj CHAR(14),
   foto_de_perfil LONGBLOB,
@@ -175,6 +176,7 @@ CREATE TABLE IF NOT EXISTS pedido (
   idpedido INT NOT NULL AUTO_INCREMENT,
   valor_total FLOAT,
   data_pedido DATE,
+  frete DOUBLE(10,2),
   idusuario INT NOT NULL,
   status ENUM('pendente', 'concluido', 'cancelado'),
   PRIMARY KEY (idpedido),
@@ -195,16 +197,30 @@ CREATE TABLE IF NOT EXISTS item_pedido (
 ) ENGINE=InnoDB;
 
 -- ========================================
--- Carrinho
+-- Carrinho e pagamento
 -- ========================================
 CREATE TABLE IF NOT EXISTS carrinho (
   idcarrinho INT NOT NULL AUTO_INCREMENT,
   preco_unitario DOUBLE(10,2),
+  frete DOUBLE(10,2),
   idproduto INT NOT NULL,
   idusuario INT NOT NULL,
   PRIMARY KEY (idcarrinho),
   FOREIGN KEY (idproduto) REFERENCES produto(idproduto),
   FOREIGN KEY (idusuario) REFERENCES usuario(idusuario)
+) ENGINE=InnoDB;
+
+CREATE TABLE pagamento (
+    idpagamento INT AUTO_INCREMENT PRIMARY KEY,
+    idpedido INT,
+    idusuario INT NOT NULL,          -- opcional se quiser acesso direto
+    metodo ENUM('cartao','boleto','pix','paypal') NOT NULL,
+    status ENUM('pendente','aprovado','rejeitado') NOT NULL,
+    valor_pago FLOAT NOT NULL,
+    data_pagamento DATETIME DEFAULT CURRENT_TIMESTAMP,
+    codigo_transacao VARCHAR(100),
+    FOREIGN KEY (idpedido) REFERENCES pedido(idpedido),
+    FOREIGN KEY (idusuario) REFERENCES usuario(idusuario)
 ) ENGINE=InnoDB;
 
 -- ========================================
