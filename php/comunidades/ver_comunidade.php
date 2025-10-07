@@ -140,7 +140,7 @@ if ($banido) {
 /* ===== ENTRE LINHAS - estilo Orkut-like com fundo bege texturizado ===== */
 :root{
   --marrom:#5a4224;
-  --verde:#5a6b50;
+  --verde:#a8c4a8; /* VERDE CLARINHO */
   --bege:#f5efe3;
   --offwhite:#fffdf9;
   --border:#e0d7c8;
@@ -151,7 +151,7 @@ if ($banido) {
 body{
   margin:0;
   font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background-color: var(--bege);
+  background-color: #F4F1EE;
   background-image:
     linear-gradient(transparent 0.5px, rgba(0,0,0,0.01) 0.5px),
     linear-gradient(90deg, transparent 0.5px, rgba(0,0,0,0.01) 0.5px);
@@ -192,22 +192,25 @@ body{
   box-shadow: 0 6px 18px var(--shadow);
 }
 
-/* ESQUERDA: menu (foto + links) */
+/* ESQUERDA: menu (foto + links) - AJUSTADO PARA CENTRALIZAR */
 .left .profile-pic{
-  display:flex;
-  gap:12px;
-  align-items:flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
 }
 
 .left img.avatar{
-  width:120px;
-  height:120px;
-  object-fit:cover;
-  border-radius:6px;
-  border:3px solid #cfc2a8;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 3px solid #cfc2a8;
   box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  margin: 0 auto; /* Centraliza horizontalmente */
+  display: block; /* Necessário para margin auto funcionar */
 }
-
 .left .menu{
   margin-top:12px;
 }
@@ -252,37 +255,39 @@ body{
   margin-top:8px;
 }
 
-/* tabela de infos estilo orkut: linhas alternadas */
+/* tabela de infos estilo orkut: COM FUNDO VERDE CLARINHO */
 .info-table{
   width:100%;
   border-collapse:collapse;
   margin-top:12px;
   border-radius:6px;
   overflow:hidden;
-  border:1px solid #e9e4d9;
+  border:1px solid #9bb59b; /* borda verde */
 }
 
-.info-table tr:nth-child(odd) td{ background: linear-gradient(#fbf9f6,#f6f2ea); }
-.info-table tr:nth-child(even) td{ background: linear-gradient(#fff,#f9f6ef); }
+.info-table tr:nth-child(odd) td{ 
+  background: linear-gradient(#e8f3e8, #dceddc); /* verde clarinho mais claro */
+}
+.info-table tr:nth-child(even) td{ 
+  background: linear-gradient(#f0f7f0, #e8f3e8); /* verde clarinho mais suave */
+}
 
 .info-table td{
   padding:10px 12px;
-  border-bottom:1px solid #efe8db;
+  border-bottom:1px solid #cde0cd; /* borda entre linhas em verde */
   font-size:14px;
 }
 
 /* imagem grande da comunidade como na foto */
 .community-img{
-  width:100%;
-  max-width:520px;
-  height:220px;
-  object-fit:cover;
-  border-radius:6px;
-  border:1px solid #d9d0bf;
-  margin:14px 0;
+  width: 100%; /* Ocupa toda a largura disponível */
+  height: 280px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #d9d0bf;
+  margin: 14px 0;
   box-shadow: 0 6px 12px rgba(0,0,0,0.06);
 }
-
 /* AÇÕES (participar/chat/sair) */
 .actions{
   margin-top:12px;
