@@ -166,28 +166,67 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     .topbar {
-      position: fixed;
-      top: 0; left: 250px; right: 0;
-      height: 70px;
-      background-color: var(--marrom);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 30px;
-      z-index: 1001;
-      transition: left 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #5a4226; /* marrom */
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 250px; /* respeita a sidebar */
+    right: 0;
+    height: 70px;
+    z-index: 1000;
     }
 
-    .topbar h1 {
-      font-size: 1.5rem;
-    }
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 
-    .search-form {
-      display: flex;
-      align-items: center;
-    }
-    
+.topbar-left .logo {
+    height: 50px;
+}
+
+.topbar-left h1 {
+    font-size: 22px;
+    color: #ffff;
+    margin: 0;
+    font-weight: bold;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+}
+
+.search-form input[type="text"] {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 30px 0 0 30px; /* arredondado à esquerda */
+  outline: none;
+  width: 300px; /* campo maior */
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.search-form input[type="submit"] {
+  padding: 10px 15px;
+  border: none;
+  background-color: #6f8562; /* verde escuro */
+  color: #fff;
+  font-weight: none;
+  border-radius: 0 30px 30px 0; /* arredondado à direita */
+  cursor: pointer;
+  margin: 0;
+  width: 90px; /* botão mais estreito */
+}
+
+.search-form input[type="submit"]:hover {
+  background-color: #6f8562;
+}
+
     .topbar input[type="text"] {
       padding: 10px 15px;
       border: none;
@@ -204,6 +243,14 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       border-radius: 0 20px 20px 0;
       cursor: pointer;
     }
+
+    .topbar h1 {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
 
     .menu-toggle {
       display: none;
