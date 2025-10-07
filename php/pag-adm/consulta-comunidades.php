@@ -407,60 +407,60 @@ $comunidades = $stmt_comunidades->fetchAll(PDO::FETCH_ASSOC);
     <div class="card">
       <h2>Consulta de usuários</h2>
         <div class="table-responsive">
-            <table class="table">
-                <tr>
-                    <th>Imagem</th>
-                    <th>ID</th>
-                    <th>Nome da Comunidade</th>
-                    <th>Descrição</th>
-                    <th>Criada Em</th>
-                    <th>Quantidade de Usuários</th>
-                    <th>Dono</th>
-                    <th>Categoria</th>
-                    <th>Status</th>
-                    <th>Editar</th>
-                    <th>Expurgar</th>
-                </tr>
-
-                <?php if ($comunidades): ?>
-                    <?php foreach ($comunidades as $comunidade): ?>
-                        <tr>
-                            <td>
-                                <?php if (!empty($comunidade['imagem'])): ?>
-                                    <img src="data:image/jpeg;base64,<?= base64_encode($comunidade['imagem']) ?>" alt="Imagem da comunidade" width="50" height="50">
-                                <?php else: ?>
-                                    Sem imagem
-                                <?php endif; ?>
-                            </td>
-                            <td><?= htmlspecialchars($comunidade['idcomunidades'] ?? '') ?></td>
-                            <td><?= htmlspecialchars($comunidade['comunidade_nome'] ?? '') ?></td>
-                            <td><?= htmlspecialchars($comunidade['descricao'] ?? '') ?></td>
-                            <td><?= htmlspecialchars($comunidade['criada_em'] ?? '') ?></td>
-                            <td><?= htmlspecialchars($comunidade['quantidade_usuarios'] ?? '0') ?></td>
-                            <td><?= htmlspecialchars($comunidade['dono_nome'] ?? '') ?></td>
-                            <td><?= htmlspecialchars($comunidade['categoria_nome'] ?? '') ?></td>
-                            <td><?= htmlspecialchars($comunidade['status'] ?? '') ?></td>
-                            <td>
-                                <button>
-                                    <a style="text-decoration: none;" href="poderes/editar.php?tipo=comunidade&id=<?= $comunidade['idcomunidades'] ?>">📝</a>
-                                </button>
-                            </td>
-                            <td>
-                                <button>
-                                    <a style="text-decoration: none;" href="poderes/expurgar.php?tipo=comunidade&id=<?= $comunidade['idcomunidades'] ?>">❌</a>
-                                </button>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="11">Nenhuma comunidade cadastrada.</td>
-                    </tr>
-                <?php endif; ?>
-            </table>
+          <table class="table" id="tabelaUsuarios">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Imagem</th>
+                <th>Nome da Comunidade</th>
+                <th>Descrição</th>
+                <th>Criada Em</th>
+                <th>Quantidade de Usuários</th>
+                <th>Status</th>
+                <th>Editar</th>
+                <th>Expurgar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="7">Carregando usuários...</td></tr>
+            </tbody>
+          </table>
         </div>
     </div>
   </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const tbody = document.querySelector("#tabelaUsuarios tbody");
+
+      try {
+        const res = await fetch("http://localhost/PROJETO-TCC/php/pag-adm/apis/api-comunidades.php");
+        const usuarios = await res.json();
+
+        if (!usuarios.length) {
+          tbody.innerHTML = "<tr><td colspan='7'>Nenhum usuário encontrado.</td></tr>";
+          return;
+        }
+
+        tbody.innerHTML = usuarios.map(u => `
+        <tr>
+          <td>${c.idusuario ?? ''}</td>
+          <td>${c.foto_de_perfil ? `<img src="data:image/jpeg;base64,${u.foto_de_perfil}" style="width:40px; height:40px; border-radius:50%">` : ''}</td>
+          <td>${c.nome ?? ''}</td>
+          <td>${c.email ?? ''}</td>
+          <td>${c.nome_completo ?? ''}</td>
+          <td>${u.cpf ?? ''}</td>
+          <td>${u.telefone ?? ''}</td>
+          <td><a href="poderes/editar.php?tipo=usuario&id=${u.idusuario}">📝</a></td>
+          <td><a href="poderes/expurgar.php?tipo=usuario&id=${u.idusuario}">❌</a></td>
+        </tr>
+      `).join('');
+      } catch (e) {
+        console.error("Erro:", e);
+        tbody.innerHTML = "<tr><td colspan='7'>Erro ao carregar dados.</td></tr>";
+      }
+    });
+  </script>
   <!-- VLibras - Widget de Libras -->
 <div vw class="enabled">
     <div vw-access-button class="active"></div>

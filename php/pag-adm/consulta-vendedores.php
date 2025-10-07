@@ -424,7 +424,8 @@
     <div class="card">
       <h2>Consulta de vendedores</h2>
       <div class="table-responsive">
-        <table class="table">
+      <table class="table" id="tabelaVendedores">
+        <thead>
           <tr>
             <th>ID</th>
             <th>Foto de Perfil</th>
@@ -434,51 +435,66 @@
             <th>CPF</th>
             <th>CNPJ</th>
             <th>CEP</th>
+            <th>Estado</th>
+            <th>Cidade</th>
+            <th>Rua</th>
+            <th>Bairro</th>
+            <th>Número</th>
             <th>Reputação</th>
             <th>Status</th>
-            <th>Produtos</th>
             <th>Editar</th>
             <th>Expurgar</th>
           </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="17">Carregando vendedores...</td></tr>
+        </tbody>
+      </table>
 
-          <?php if ($vendedores): ?>
-              <?php foreach ($vendedores as $vendedor): ?>
-                  <tr>
-                      <td><?= htmlspecialchars($vendedor['idvendedor'] ?? '') ?></td>
-                      <td>
-                          <?php if (!empty($vendedor['foto_de_perfil'])): ?>
-                              <img src="data:image/jpeg;base64,<?= base64_encode($vendedor['foto_de_perfil']) ?>" alt="Foto de perfil" width="50" height="50">
-                          <?php else: ?>
-                              Sem foto
-                          <?php endif; ?>
-                      </td>
-                      <td><?= htmlspecialchars($vendedor['nome_completo'] ?? 'Vazio') ?></td>
-                      <td><?= htmlspecialchars($vendedor['email'] ?? '') ?></td>
-                      <td><?= htmlspecialchars($vendedor['data_nascimento'] ?? 'Vazio') ?></td>
-                      <td><?= htmlspecialchars($vendedor['cpf'] ?? 'Vazio') ?></td>
-                      <td><?= htmlspecialchars($vendedor['cnpj'] ?? 'Vazio') ?></td>
-                      <td><?= htmlspecialchars($vendedor['cep'] ?? 'Vazio') ?></td>
-                      <td><?= htmlspecialchars($vendedor['reputacao'] ?? 'Vazio') ?></td>
-                      <td><?= htmlspecialchars($vendedor['status'] ?? 'Vazio') ?></td>
-                      <td><?php echo $total_produtos; ?></td>
-                      <td>
-                        <button><a style="text-decoration: none;" href="poderes/editar.php?tipo=vendedor&id=<?= $vendedor['idvendedor'] ?>">📝</a></button>
-                      </td>
-                      <td>
-                        <button><a style="text-decoration: none;" href="poderes/expurgar.php?tipo=vendedor&id=<?= $vendedor['idvendedor'] ?>">❌</a></button>
-                      </td>
-                  </tr>
-              <?php endforeach; ?>
-          <?php else: ?>
-              <tr>
-                  <td colspan="15">Nenhum vendedor cadastrado.</td>
-              </tr>
-          <?php endif; ?>
-        </table>
       </div>
     </div>
-
   </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const tbody = document.querySelector("#tabelaVendedores tbody");
+
+      try {
+        const res = await fetch("http://localhost/PROJETO-TCC/php/pag-adm/apis/api-vendedor.php");
+        const vendedores = await res.json();
+
+        if (!vendedores.length) {
+          tbody.innerHTML = "<tr><td colspan='7'>Nenhum vendedor encontrado.</td></tr>";
+          return;
+        }
+
+        tbody.innerHTML = vendedores.map(v => `
+        <tr>
+          <td>${v.idvendedor ?? ''}</td>
+          <td>${v.foto_de_perfil ? `<img src="data:image/jpeg;base64,${v.foto_de_perfil}" style="width:40px; height:40px; border-radius:50%">` : ''}</td>
+          <td>${v.nome_completo ?? ''}</td>
+          <td>${v.email ?? ''}</td>
+          <td>${v.data_nascimento ?? ''}</td>
+          <td>${v.cpf ?? ''}</td>
+          <td>${v.cnpj ?? ''}</td>
+          <td>${v.cep ?? ''}</td>
+          <td>${v.estado ?? ''}</td>
+          <td>${v.cidade ?? ''}</td>
+          <td>${v.rua ?? ''}</td>
+          <td>${v.bairro ?? ''}</td>
+          <td>${v.numero ?? ''}</td>
+          <td>${v.reputacao ?? ''}</td>
+          <td>${v.status ?? ''}</td>
+          <td><a href="poderes/editar.php?tipo=vendedor&id=${v.idvendedor}">📝</a></td>
+          <td><a href="poderes/expurgar.php?tipo=vendedor&id=${v.idvendedor}">❌</a></td>
+        </tr>
+      `).join('');
+      } catch (e) {
+        console.error("Erro:", e);
+        tbody.innerHTML = "<tr><td colspan='7'>Erro ao carregar dados.</td></tr>";
+      }
+    });
+  </script>
   <!-- VLibras - Widget de Libras -->
 <div vw class="enabled">
     <div vw-access-button class="active"></div>
