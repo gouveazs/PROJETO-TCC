@@ -1,29 +1,64 @@
 <?php
-  session_start();
-  $adm = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
-  $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
+session_start();
+$adm = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
+$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
-  if (!isset($_SESSION['nome_usuario'])) {
+if (!$adm) {
     header('Location: ../login/login.php');
     exit;
-  }
+}
 
-  include '../conexao.php';
+include '../conexao.php';
 
-  $stmt_produtos = $conn->query("
-        SELECT p.*, 
-        v.nome_completo AS nome_vendedor,
-        c.nome AS nome_categoria,
-        (SELECT i.imagem
-          FROM imagens i 
-         WHERE i.idproduto = p.idproduto 
-         LIMIT 1) AS imagem_produto
-        FROM produto p
-        JOIN vendedor v ON p.idvendedor = v.idvendedor
-        JOIN categoria c ON p.idcategoria = c.idcategoria;
-    ");
-    $produtos = $stmt_produtos->fetchAll(PDO::FETCH_ASSOC);
+// PROCESSAR EXCLUSÃO DIRETA
+if (isset($_GET['excluir_id'])) {
+    $idproduto = (int) $_GET['excluir_id'];
 
+    // Busca produto
+    $stmt = $conn->prepare("SELECT * FROM produto WHERE idproduto = ?");
+    $stmt->execute([$idproduto]);
+    $produto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($produto) {
+        // Apenas admin ou vendedor dono do produto pode excluir
+        if ($adm || $produto['idvendedor'] == $_SESSION['id_vendedor']) {
+            
+            // Começa a transação para garantir consistência
+            $conn->beginTransaction();
+            try {
+                // Excluir imagens
+                $conn->prepare("DELETE FROM imagens WHERE idproduto = ?")->execute([$idproduto]);
+                
+                // Excluir do carrinho
+                $conn->prepare("DELETE FROM carrinho WHERE idproduto = ?")->execute([$idproduto]);
+                
+                // Excluir dos favoritos
+                $conn->prepare("DELETE FROM favoritos WHERE idproduto = ?")->execute([$idproduto]);
+                
+                // Se tiver mais tabelas relacionadas, adicione aqui
+                // ex: $conn->prepare("DELETE FROM outra_tabela WHERE idproduto = ?")->execute([$idproduto]);
+
+                // Excluir produto
+                $conn->prepare("DELETE FROM produto WHERE idproduto = ?")->execute([$idproduto]);
+
+                // Confirma transação
+                $conn->commit();
+
+                echo "<script>alert('Produto excluído de todas as tabelas com sucesso!'); window.location='consulta-produtos.php';</script>";
+                exit;
+
+            } catch (Exception $e) {
+                $conn->rollBack();
+                die("Erro ao excluir produto: " . $e->getMessage());
+            }
+
+        } else {
+            die("Você não tem permissão para excluir este produto.");
+        }
+    } else {
+        die("Produto não encontrado.");
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -362,12 +397,13 @@
 
     <nav>
       <ul class="menu">
-      <li><a href="adm.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
+        <li><a href="adm.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
         <li><a href="consulta-usuarios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Usuários</a></li>
         <li><a href="consulta-vendedores.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Vendedores</a></li>
         <li><a href="consulta-produtos.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Produtos</a></li>
-        <li><a href="rendimento.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Buscador 2000</a></li>
-        <li><a href="#"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Sei la</a></li>
+        <li><a href="consulta-comunidades.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Comunidades</a></li>
+        <li><a href="buscador2000.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Buscador 2000</a></li>
+        <li><a href="apis/consumir_apis.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Apis do masqueto</a></li>
       </ul>
 
       <h3>Conta</h3>
@@ -420,7 +456,6 @@
             <th>Idioma</th>
             <th>Estado</th>
             <th>Descrição</th>
-            <th>Editar</th>
             <th>Expurgar</th>
           </tr>
 
@@ -451,10 +486,9 @@
                 <td><?= htmlspecialchars($produto['estado_livro'] ?? 'Vazio') ?></td>
                 <td><?= htmlspecialchars($produto['descricao'] ?? 'Vazio') ?></td>
                 <td>
-                    <button><a style="text-decoration: none;" href="editar_produto.php?id=<?= $produto['idproduto'] ?>">📝</a></button>
-                </td>
-                <td>
-                    <button><a style="text-decoration: none;" href="desativar_produto.php?id=<?= $produto['idproduto'] ?>">❌</a></button>
+                  <button onclick="return confirm('Tem certeza que quer excluir este produto de todas as tabelas?');">
+                      <a style="text-decoration: none; color: red;" href="?excluir_id=<?= $produto['idproduto'] ?>">❌</a>
+                  </button>
                 </td>
               </tr>
             <?php endforeach; ?>
