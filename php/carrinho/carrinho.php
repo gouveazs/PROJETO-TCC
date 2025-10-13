@@ -1,19 +1,30 @@
 <?php
 include '../conexao.php';
-
 session_start();
-$nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
-$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
+
+$nome = $_SESSION['nome_usuario'] ?? null;
+$foto_de_perfil = $_SESSION['foto_de_perfil'] ?? null;
 
 if (!isset($_SESSION['carrinho'])) {
     $_SESSION['carrinho'] = [];
+}
+
+// Remover item do carrinho
+if (isset($_GET['remover_id'])) {
+    $remover_id = $_GET['remover_id'];
+    if (isset($_SESSION['carrinho'][$remover_id])) {
+        unset($_SESSION['carrinho'][$remover_id]);
+    }
+    // Redireciona para atualizar a página sem o parâmetro na URL
+    header('Location: carrinho.php');
+    exit;
 }
 
 $id = $_GET['id'] ?? null;
 $nome_livro  = $_GET['nome'] ?? null;
 $preco = $_GET['preco'] ?? null;
 
-if ($id && $nome && $preco) {
+if ($id && $nome_livro && $preco) {
     if (!isset($_SESSION['carrinho'][$id])) {
         $_SESSION['carrinho'][$id] = [
             'id'    => $id,
@@ -23,7 +34,6 @@ if ($id && $nome && $preco) {
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -555,48 +565,60 @@ if ($id && $nome && $preco) {
 
   <div class="cart-container">
     <div class="cart-items">
-    <?php foreach ($_SESSION['carrinho'] as $item): ?>
-      <?php
-        // buscar imagem no banco
-        $stmt = $conn->prepare("SELECT imagem FROM imagens WHERE idproduto = ?");
-        $stmt->execute([$item['id']]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+      <?php if (empty($_SESSION['carrinho'])): ?>
+          <p style="color: #777; font-size: 1.1rem; margin-bottom: 20px;">
+              Seu carrinho está vazio 😔. Que tal <a href="../../index.php" style="color: var(--marrom); text-decoration: underline;">continuar comprando</a>?
+          </p>
+      <?php else: ?>
+          <?php foreach ($_SESSION['carrinho'] as $item): ?>
+              <?php
+              // buscar imagem no banco
+              $stmt = $conn->prepare("SELECT imagem FROM imagens WHERE idproduto = ?");
+              $stmt->execute([$item['id']]);
+              $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($row && !empty($row['imagem'])) {
-            $src = "data:image/jpeg;base64," . base64_encode($row['imagem']);
-        } else {
-            $src = "../../imgs/capa.jpg"; // imagem padrão
-        }
-      ?>
+              if ($row && !empty($row['imagem'])) {
+                  $src = "data:image/jpeg;base64," . base64_encode($row['imagem']);
+              } else {
+                  $src = "../../imgs/capa.jpg"; // imagem padrão
+              }
+              ?>
 
-      <div class="cart-item">
-        <img src="<?= $src ?>" class="cart-item-image">
-        <div class="cart-item-details">
-          <h3 class="cart-item-title"><?= htmlspecialchars($item['nome']) ?></h3>
-          <p class="cart-item-price">R$ <?= number_format($item['preco'], 2, ',', '.') ?></p>
-          <div class="cart-item-actions">
-            <button class="remove-btn">
-              <a href="../produto/pagiproduto.php?id=<?=$id?>&nome=<?=$nome?>&preco=<?=$preco?>">Ver pagina do produto</a>
-            </button>
-            <button class="remove-btn">Remover</button>
-          </div>
-        </div>
-      </div>
-    <?php endforeach; ?>
+              <div class="cart-item">
+                  <img src="<?= $src ?>" class="cart-item-image">
+                  <div class="cart-item-details">
+                      <h3 class="cart-item-title"><?= htmlspecialchars($item['nome']) ?></h3>
+                      <p class="cart-item-price">R$ <?= number_format($item['preco'], 2, ',', '.') ?></p>
+                      <div class="cart-item-actions">
+                          <button class="remove-btn">
+                              <a href="../produto/pagiproduto.php?id=<?= $id ?>&nome=<?= $nome ?>&preco=<?= $preco ?>">Ver página do produto</a>
+                          </button>
+                          <button class="remove-btn">
+                              <a href="carrinho.php?remover_id=<?= $item['id'] ?>">Remover</a>
+                          </button>
+                      </div>
+                  </div>
+              </div>
+          <?php endforeach; ?>
+      <?php endif; ?>
 
-
-      
-      <a href="../../index.php" class="continue-shopping">
-        ← Continuar comprando
-      </a>
-    </div>
+    <a href="../../index.php" class="continue-shopping">
+      ← Continuar comprando
+    </a>
+  </div>
     
     <div class="cart-summary">
+      <?php
+        $subtotal = 0;
+        foreach ($_SESSION['carrinho'] as $item) {
+            $subtotal += $item['preco'];
+        }
+      ?>
       <h2 class="summary-title">Resumo do Pedido</h2>
       
       <div class="summary-row">
         <span class="summary-label">Subtotal</span>
-        <span class="summary-value">R$ 0</span>
+        <span class="summary-value">R$ <?= number_format($subtotal, 2, ',', '.') ?></span>
       </div>
       
       <div class="summary-row">
@@ -606,10 +628,10 @@ if ($id && $nome && $preco) {
       
       <div class="summary-row summary-total">
         <span class="summary-label">Total</span>
-        <span class="summary-value">R$ 0</span>
+        <span class="summary-value">R$ <?= number_format($subtotal, 2, ',', '.') ?></span>
       </div>
-      
-      <button class="checkout-btn" onclick="window.location.href='checkout.php'">
+
+      <button class="checkout-btn" onclick="window.location.href='finalizarcompra.php'">
         Finalizar Compra
       </button>
     </div>

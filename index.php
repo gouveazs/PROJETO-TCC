@@ -166,66 +166,66 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     .topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #5a4226; /* marrom */
-    padding: 10px 20px;
-    position: fixed;
-    top: 0;
-    left: 250px; /* respeita a sidebar */
-    right: 0;
-    height: 70px;
-    z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #5a4226; /* marrom */
+      padding: 10px 20px;
+      position: fixed;
+      top: 0;
+      left: 250px; /* respeita a sidebar */
+      right: 0;
+      height: 70px;
+      z-index: 1000;
     }
 
-.topbar-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+    .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
 
-.topbar-left .logo {
-    height: 50px;
-}
+    .topbar-left .logo {
+        height: 50px;
+    }
 
-.topbar-left h1 {
-    font-size: 22px;
-    color: #ffff;
-    margin: 0;
-    font-weight: bold;
-}
+    .topbar-left h1 {
+        font-size: 22px;
+        color: #ffff;
+        margin: 0;
+        font-weight: bold;
+    }
 
-.search-form {
-  display: flex;
-  align-items: center;
-}
+    .search-form {
+      display: flex;
+      align-items: center;
+    }
 
-.search-form input[type="text"] {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 30px 0 0 30px; /* arredondado à esquerda */
-  outline: none;
-  width: 300px; /* campo maior */
-  font-size: 0.9rem;
-  margin: 0;
-}
+    .search-form input[type="text"] {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 30px 0 0 30px; /* arredondado à esquerda */
+      outline: none;
+      width: 300px; /* campo maior */
+      font-size: 0.9rem;
+      margin: 0;
+    }
 
-.search-form input[type="submit"] {
-  padding: 10px 15px;
-  border: none;
-  background-color: #6f8562; /* verde escuro */
-  color: #fff;
-  font-weight: none;
-  border-radius: 0 30px 30px 0; /* arredondado à direita */
-  cursor: pointer;
-  margin: 0;
-  width: 90px; /* botão mais estreito */
-}
+    .search-form input[type="submit"] {
+      padding: 10px 15px;
+      border: none;
+      background-color: #6f8562; /* verde escuro */
+      color: #fff;
+      font-weight: none;
+      border-radius: 0 30px 30px 0; /* arredondado à direita */
+      cursor: pointer;
+      margin: 0;
+      width: 90px; /* botão mais estreito */
+    }
 
-.search-form input[type="submit"]:hover {
-  background-color: #6f8562;
-}
+    .search-form input[type="submit"]:hover {
+      background-color: #6f8562;
+    }
 
     .topbar input[type="text"] {
       padding: 10px 15px;
