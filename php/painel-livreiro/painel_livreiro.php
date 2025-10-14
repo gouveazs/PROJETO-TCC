@@ -434,13 +434,48 @@ $reputacao = $dados_vendedor ? $dados_vendedor['reputacao'] : 0;
         <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
         <p>Nenhuma avaliação recebida ainda.</p>
       </div>
+      <?php
+        include '../conexao.php';
+
+        $id_vendedor = $_SESSION['id_vendedor'] ?? null;
+
+        $notificacoes = [];
+
+        if ($id_vendedor) {
+            // Buscar informações do vendedor
+            $sql = "SELECT nome_completo, email, telefone, cep, estado, cidade, bairro, rua, numero, cpf 
+                    FROM vendedor 
+                    WHERE idvendedor = :id";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([':id' => $id_vendedor]);
+            $vendedor = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($vendedor) {
+                // Verifica se algum campo está vazio
+                foreach ($vendedor as $campo => $valor) {
+                    if (empty($valor)) {
+                        $notificacoes[] = "Seu campo <b>$campo</b> ainda não foi preenchido.";
+                    }
+                }
+            }
+        }
+      ?>
+
       <div class="card">
         <h2>Notificações</h2>
         <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
-        <p>Nenhuma notificação no momento.</p>
+
+        <?php if (!empty($notificacoes)): ?>
+            <?php foreach ($notificacoes as $msg): ?>
+                <p style="color: #b14c2d; margin-bottom: 8px;">⚠️ <?= $msg ?></p>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Nenhuma notificação no momento.</p>
+        <?php endif; ?>
       </div>
     </div>
   </main>
+  
   <!-- VLibras - Widget de Libras -->
 <div vw class="enabled">
     <div vw-access-button class="active"></div>

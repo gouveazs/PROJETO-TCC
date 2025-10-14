@@ -1,38 +1,120 @@
 <?php
-include '../conexao.php';
 session_start();
+include '../conexao.php';
 
-$nome = $_SESSION['nome_usuario'] ?? null;
-$foto_de_perfil = $_SESSION['foto_de_perfil'] ?? null;
+$nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
+$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
-if (!isset($_SESSION['carrinho'])) {
-    $_SESSION['carrinho'] = [];
+if (!$nome) {
+    die("Usuário não logado.");
 }
 
-// Remover item do carrinho
-if (isset($_GET['remover_id'])) {
-    $remover_id = $_GET['remover_id'];
-    if (isset($_SESSION['carrinho'][$remover_id])) {
-        unset($_SESSION['carrinho'][$remover_id]);
-    }
-    // Redireciona para atualizar a página sem o parâmetro na URL
-    header('Location: carrinho.php');
-    exit;
+// Buscar endereço do usuário
+$stmt = $conn->prepare("SELECT cep, cidade, estado FROM usuario WHERE nome = ?");
+$stmt->execute([$nome]);
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($usuario) {
+    $cep_destino = preg_replace('/[^0-9]/', '', $usuario['cep']);
+} else {
+    die("Endereço do usuário não encontrado.");
 }
 
-$id = $_GET['id'] ?? null;
-$nome_livro  = $_GET['nome'] ?? null;
-$preco = $_GET['preco'] ?? null;
 
-if ($id && $nome_livro && $preco) {
-    if (!isset($_SESSION['carrinho'][$id])) {
-        $_SESSION['carrinho'][$id] = [
-            'id'    => $id,
-            'nome'  => $nome_livro,
-            'preco' => (float)$preco,
-        ];
-    }
+// Buscar endereço do vendedor (exemplo: primeiro produto do carrinho)
+$firstProductId = $_SESSION['carrinho'][0]['id'] ?? null;
+$vendedorStmt = $conn->prepare("
+    SELECT v.cep, v.cidade, v.estado 
+    FROM vendedor v
+    JOIN produto p ON v.idvendedor = p.idvendedor
+    WHERE p.idproduto = ?
+");
+$vendedorStmt->execute([$firstProductId]);
+$vendedor = $vendedorStmt->fetch(PDO::FETCH_ASSOC);
+
+if ($vendedor) {
+    $cep_origem = preg_replace('/[^0-9]/', '', $vendedor['cep']);
+} else {
+    $cep_origem = ''; // ou algum valor padrão, ou mostrar mensagem de erro
 }
+
+$peso_total = 1.0; // kg
+$valor_total = 50.0; // valor simbólico da compra
+
+// ======== API CORREIOS ========
+function calcularFreteCorreios($cep_origem, $cep_destino, $peso, $valor) {
+  $cep_origem = preg_replace('/[^0-9]/', '', $cep_origem);
+  $cep_destino = preg_replace('/[^0-9]/', '', $cep_destino);
+
+  $tipos_frete = [
+      'PAC' => '41106',
+      'SEDEX' => '40010'
+  ];
+
+  $resultado = [];
+
+  foreach ($tipos_frete as $nome => $codigo) {
+      $url = "http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?" .
+          "nCdEmpresa=&sDsSenha=&sCepOrigem={$cep_origem}&sCepDestino={$cep_destino}" .
+          "&nVlPeso={$peso}&nCdFormato=1&nVlComprimento=20&nVlAltura=5&nVlLargura=15" .
+          "&sCdMaoPropria=n&nVlValorDeclarado={$valor}&sCdAvisoRecebimento=n&nCdServico={$codigo}&StrRetorno=xml";
+
+      // Usando cURL para capturar erros
+      $ch = curl_init($url);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      $xmlStr = curl_exec($ch);
+      $curlError = curl_error($ch);
+      curl_close($ch);
+
+      if ($curlError) {
+          $resultado[] = [
+              'nome' => $nome,
+              'error' => true,
+              'message' => "Erro na requisição cURL: $curlError"
+          ];
+          continue;
+      }
+
+      // Tenta carregar o XML
+      libxml_use_internal_errors(true);
+      $xml = simplexml_load_string($xmlStr);
+      if ($xml === false) {
+          $errors = [];
+          foreach (libxml_get_errors() as $error) {
+              $errors[] = trim($error->message);
+          }
+          $resultado[] = [
+              'nome' => $nome,
+              'error' => true,
+              'message' => "Erro ao ler XML: " . implode("; ", $errors) . " | Resposta: $xmlStr"
+          ];
+          libxml_clear_errors();
+          continue;
+      }
+
+      // Verifica se retornou o serviço corretamente
+      if (isset($xml->cServico->Erro) && intval($xml->cServico->Erro) !== 0) {
+          $resultado[] = [
+              'nome' => $nome,
+              'error' => true,
+              'message' => "Código de erro Correios: " . $xml->cServico->Erro . " | Mensagem: " . $xml->cServico->MsgErro
+          ];
+      } else {
+          $servico = $xml->cServico;
+          $resultado[] = [
+              'nome' => $nome,
+              'preco' => floatval(str_replace(',', '.', $servico->Valor)),
+              'prazo' => intval($servico->PrazoEntrega)
+          ];
+      }
+  }
+
+  return $resultado;
+}
+
+// Calcular
+$opcoesFrete = calcularFreteCorreios($cep_origem, $cep_destino, $peso_total, $valor_total);
+
 ?>
 
 <!DOCTYPE html>
@@ -549,108 +631,105 @@ if ($id && $nome_livro && $preco) {
   <h1 class="page-title">Meu Carrinho</h1>
 
   <div class="checkout-steps">
-    <div class="step active">
-      <div class="step-number">1</div>
-      <div class="step-label">CARRINHO</div>
-    </div>
-    <div class="step">
-      <div class="step-number">2</div>
-      <div class="step-label">CHECKOUT</div>
-    </div>
-    <div class="step">
-      <div class="step-number">3</div>
-      <div class="step-label">PEDIDO FINALIZADO</div>
-    </div>
+    <div class="step active"><div class="step-number">1</div><div class="step-label">CARRINHO</div></div>
+    <div class="step"><div class="step-number">2</div><div class="step-label">CHECKOUT</div></div>
+    <div class="step"><div class="step-number">3</div><div class="step-label">PEDIDO FINALIZADO</div></div>
   </div>
 
   <div class="cart-container">
     <div class="cart-items">
       <?php if (empty($_SESSION['carrinho'])): ?>
-          <p style="color: #777; font-size: 1.1rem; margin-bottom: 20px;">
-              Seu carrinho está vazio 😔. Que tal <a href="../../index.php" style="color: var(--marrom); text-decoration: underline;">continuar comprando</a>?
-          </p>
+        <p style="color: #777; font-size: 1.1rem; margin-bottom: 20px;">
+          Seu carrinho está vazio 😔. <a href="../../index.php" style="color: var(--marrom); text-decoration: underline;">Continuar comprando</a>
+        </p>
       <?php else: ?>
-          <?php foreach ($_SESSION['carrinho'] as $item): ?>
-              <?php
-              // buscar imagem no banco
-              $stmt = $conn->prepare("SELECT imagem FROM imagens WHERE idproduto = ?");
-              $stmt->execute([$item['id']]);
-              $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-              if ($row && !empty($row['imagem'])) {
-                  $src = "data:image/jpeg;base64," . base64_encode($row['imagem']);
-              } else {
-                  $src = "../../imgs/capa.jpg"; // imagem padrão
-              }
-              ?>
-
-              <div class="cart-item">
-                  <img src="<?= $src ?>" class="cart-item-image">
-                  <div class="cart-item-details">
-                      <h3 class="cart-item-title"><?= htmlspecialchars($item['nome']) ?></h3>
-                      <p class="cart-item-price">R$ <?= number_format($item['preco'], 2, ',', '.') ?></p>
-                      <div class="cart-item-actions">
-                          <button class="remove-btn">
-                              <a href="../produto/pagiproduto.php?id=<?= $id ?>&nome=<?= $nome ?>&preco=<?= $preco ?>">Ver página do produto</a>
-                          </button>
-                          <button class="remove-btn">
-                              <a href="carrinho.php?remover_id=<?= $item['id'] ?>">Remover</a>
-                          </button>
-                      </div>
-                  </div>
+        <?php foreach ($_SESSION['carrinho'] as $item): ?>
+          <?php
+          $stmt = $conn->prepare("SELECT imagem FROM imagens WHERE idproduto = ?");
+          $stmt->execute([$item['id']]);
+          $row = $stmt->fetch(PDO::FETCH_ASSOC);
+          $src = ($row && !empty($row['imagem'])) ? "data:image/jpeg;base64," . base64_encode($row['imagem']) : "../../imgs/capa.jpg";
+          ?>
+          <div class="cart-item">
+            <img src="<?= $src ?>" class="cart-item-image">
+            <div class="cart-item-details">
+              <h3 class="cart-item-title"><?= htmlspecialchars($item['nome']) ?></h3>
+              <p class="cart-item-price">R$ <?= number_format($item['preco'], 2, ',', '.') ?></p>
+              <div class="cart-item-actions">
+                <button class="remove-btn">
+                  <a href="carrinho.php?remover_id=<?= $item['id'] ?>">Remover</a>
+                </button>
               </div>
-          <?php endforeach; ?>
+            </div>
+          </div>
+        <?php endforeach; ?>
       <?php endif; ?>
 
-    <a href="../../index.php" class="continue-shopping">
-      ← Continuar comprando
-    </a>
-  </div>
-    
+      <a href="../../index.php" class="continue-shopping">← Continuar comprando</a>
+    </div>
+
+    <?php
+    $subtotal = array_sum(array_column($_SESSION['carrinho'], 'preco'));
+    $valor_frete = isset($_POST['frete']) ? floatval($_POST['frete']) : 0;
+    $total = $subtotal + $valor_frete;
+
+    ?>
     <div class="cart-summary">
-      <?php
-        $subtotal = 0;
-        foreach ($_SESSION['carrinho'] as $item) {
-            $subtotal += $item['preco'];
-        }
-      ?>
       <h2 class="summary-title">Resumo do Pedido</h2>
-      
-      <div class="summary-row">
-        <span class="summary-label">Subtotal</span>
-        <span class="summary-value">R$ <?= number_format($subtotal, 2, ',', '.') ?></span>
+      <div class="summary-row"><span class="summary-label">Subtotal</span><span class="summary-value">R$ <?= number_format($subtotal, 2, ',', '.') ?></span></div>
+      <!-- FRETE MELHOR ENVIO -->
+      <div class="summary-row" style="flex-direction: column; align-items: flex-start;">
+        <span class="summary-label" style="margin-bottom: 10px;">Selecione o frete:</span>
+
+        <?php if (isset($opcoesFrete[0]['error'])): ?>
+            <span style="color: #e74c3c;">
+                Erro ao calcular frete: <?= htmlspecialchars($opcoesFrete[0]['message']) ?>
+            </span>
+        <?php elseif (is_array($opcoesFrete)): ?>
+            <form method="POST" id="formFrete">
+              <?php foreach ($opcoesFrete as $i => $frete): ?>
+                <?php if (!isset($frete['error'])): ?>
+                    <label style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 8px; cursor: pointer;">
+                        <input type="radio" name="frete" value="<?= htmlspecialchars($frete['preco']) ?>" <?= $i === 0 ? 'checked' : '' ?>>
+                        <span><?= htmlspecialchars($frete['nome']) ?> (<?= $frete['prazo'] ?> dias)</span>
+                        <strong>R$ <?= number_format($frete['preco'], 2, ',', '.') ?></strong>
+                    </label>
+                <?php else: ?>
+                    <span style="color: #e74c3c;"><?= htmlspecialchars($frete['message']) ?></span>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            </form>
+        <?php else: ?>
+            <span style="color: #e74c3c;">Erro desconhecido ao calcular frete.</span>
+        <?php endif; ?>
+
       </div>
-      
+
       <div class="summary-row">
         <span class="summary-label">Frete</span>
-        <span class="summary-value">Grátis</span>
+        <span class="summary-value">
+          <?= $valor_frete > 0 ? 'R$ ' . number_format($valor_frete, 2, ',', '.') : 'Selecione o frete' ?>
+        </span>
       </div>
-      
       <div class="summary-row summary-total">
         <span class="summary-label">Total</span>
-        <span class="summary-value">R$ <?= number_format($subtotal, 2, ',', '.') ?></span>
+        <span class="summary-value">R$ <?= number_format($total, 2, ',', '.') ?></span>
       </div>
 
-      <button class="checkout-btn" onclick="window.location.href='finalizarcompra.php'">
-        Finalizar Compra
-      </button>
+
+      <button class="checkout-btn" onclick="window.location.href='finalizarcompra.php'">Finalizar Compra</button>
     </div>
   </div>
-</div>  
-
-<div class="footer">
-  &copy; 2025 Entre Linhas - Todos os direitos reservados.
 </div>
-<!-- VLibras - Widget de Libras -->
+
+<div class="footer">&copy; 2025 Entre Linhas - Todos os direitos reservados.</div>
+
+<!-- VLibras -->
 <div vw class="enabled">
-    <div vw-access-button class="active"></div>
-    <div vw-plugin-wrapper>
-        <div class="vw-plugin-top-wrapper"></div>
-    </div>
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
 </div>
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>
-    new window.VLibras.Widget('https://vlibras.gov.br/app');
-</script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
 </body>
 </html>
