@@ -470,6 +470,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <li><a href="../painel-livreiro/painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
         <li><a href="../painel-livreiro/anuncios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Seus Anúncios</a></li>
         <li><a href="../painel-livreiro/rendimento.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
+        <li><a href="../painel-livreiro/chats.php"><img src="../../imgs/explorar.png.png" alt="Chats" style="width:20px; margin-right:10px;"> Chats</a></li>
         <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Anunciar livro</a></li>
       </ul>
 
