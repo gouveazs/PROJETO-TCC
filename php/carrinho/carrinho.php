@@ -8,11 +8,15 @@ if (isset($_GET['id']) && isset($_GET['nome']) && isset($_GET['preco'])) {
     $nome = htmlspecialchars($_GET['nome']);
     $preco = floatval($_GET['preco']);
 
+    // Pega frete se houver
+    $frete = isset($_GET['frete']) ? json_decode(base64_decode($_GET['frete']), true) : null;
+
     // Cria o item
     $item = [
         'id' => $id,
         'nome' => $nome,
-        'preco' => $preco
+        'preco' => $preco,
+        'frete' => $frete // adiciona info do frete
     ];
 
     // Verifica se o produto já está no carrinho
@@ -28,15 +32,14 @@ if (isset($_GET['id']) && isset($_GET['nome']) && isset($_GET['preco'])) {
         }
     }
 
-    // Só adiciona se ainda não estiver
     if (!$existe) {
         $_SESSION['carrinho'][] = $item;
     }
 
-    // Redireciona para limpar a URL
     header("Location: carrinho.php");
     exit;
 }
+
 
 // Remover produto
 if (isset($_GET['remover_id'])) {
@@ -488,6 +491,15 @@ $total = $subtotal;
               </button>
             </div>
           </div>
+
+          <?php if (!empty($item['frete'])): ?>
+          <p style="margin-top:5px; color:#555;">
+              Frete: <strong><?= htmlspecialchars($item['frete']['nome'] ?? '-') ?></strong> — 
+              R$ <?= number_format($item['frete']['preco'] ?? 0, 2, ',', '.') ?> — 
+              Prazo: <?= htmlspecialchars($item['frete']['prazo'] ?? '-') ?> dias úteis
+          </p>
+          <?php endif; ?>
+
         <?php endforeach; ?>
       <?php endif; ?>
 

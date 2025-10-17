@@ -1005,25 +1005,28 @@ if (isset($_SESSION['idusuario'])) {
                     
                     </div>
 
-                    <div class="shipping-info">
+                  <div class="shipping-info">
                     <?php
-                        include 'calcularFrete.php';
+                        include 'calcularFrete.php'; 
+
+                        $cepVendedor = $cep_vendedor;
+                        $cepUsuario = $cep_usuario;
 
                         // Dados do produto
-                        $pesoKg = ($produto['peso'] ?? 1000) / 1000;
+                        $peso = ($produto['peso'] ?? 1000) / 1000; // kg
                         $altura = $produto['altura'] ?? 10;
                         $largura = $produto['largura'] ?? 15;
                         $comprimento = $produto['comprimento'] ?? 20;
 
-                        // Token Melhor Envio
-                        $tokenMelhorEnvio = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMTkyOTE5YTAzMGE4M2Y3NDhkOTA5NjZkYjYwOTdmZmUwNzA1ZDUyMzViZWVlYjc3MWU5NjI1MmJhYzc0OTMzYTE5MWMzYjZhNTM1MTQwODUiLCJpYXQiOjE3NjA2NTk1NjMuNDg4MzIxLCJuYmYiOjE3NjA2NTk1NjMuNDg4MzIyLCJleHAiOjE3OTIxOTU1NjMuNDc3NjI1LCJzdWIiOiI5ZmQ4MDdjNS02NWFjLTQxMDYtYWI2OS0yZTRkOGVmYTk5NzUiLCJzY29wZXMiOlsiY2FydC1yZWFkIiwiY2FydC13cml0ZSIsImNvbXBhbmllcy1yZWFkIiwiY29tcGFuaWVzLXdyaXRlIiwiY291cG9ucy1yZWFkIiwiY291cG9ucy13cml0ZSIsIm5vdGlmaWNhdGlvbnMtcmVhZCIsIm9yZGVycy1yZWFkIiwicHJvZHVjdHMtcmVhZCIsInByb2R1Y3RzLWRlc3Ryb3kiLCJwcm9kdWN0cy13cml0ZSIsInB1cmNoYXNlcy1yZWFkIiwic2hpcHBpbmctY2FsY3VsYXRlIiwic2hpcHBpbmctY2FuY2VsIiwic2hpcHBpbmctY2hlY2tvdXQiLCJzaGlwcGluZy1jb21wYW5pZXMiLCJzaGlwcGluZy1nZW5lcmF0ZSIsInNoaXBwaW5nLXByZXZpZXciLCJzaGlwcGluZy1wcmludCIsInNoaXBwaW5nLXNoYXJlIiwic2hpcHBpbmctdHJhY2tpbmciLCJlY29tbWVyY2Utc2hpcHBpbmciLCJ0cmFuc2FjdGlvbnMtcmVhZCIsInVzZXJzLXJlYWQiLCJ1c2Vycy13cml0ZSIsIndlYmhvb2tzLXJlYWQiLCJ3ZWJob29rcy13cml0ZSIsIndlYmhvb2tzLWRlbGV0ZSIsInRkZWFsZXItd2ViaG9vayJdfQ.hUSozN2-5UMausZBsvInK7Aj4CnxtsnOYPUd2PkxucOenvreW6PpvKfurv1pdyzxyIFjJz3tQNA-8v4RpgS8eOyhfAOOmeRcXAEzjfrKpJH5zuqVi3vBlHsT4O3iuTGXst-QylRwaH65Uef8a_faAfnCvS4W-wSE_bVyRocUP9Lesf1HqixgLzJA2nwLtlgpJnhOx3kfZ05HNyEkFjlhrn7DZCAx9Ai-WZycbGgUi0TSEhy3wv_HcVsoSq7TiAEtQ4pRF1mhSt6Pb8Gf6ppZZYPFHnmMsW5NpTT9pCMmHnxramHllXbUCRzydhSgi_FJkSDfJcTeLGnTJHQsq4j85p0pbr4PhnjMm5G1j9RlTaCwgDDsxHdrwvHcoAgUx6x1oaYHX6ZUqk4v9amgdhZzgRp5yB-wATouyF9gMeUno56W1vwwYSwULavBa3X4x7gVkXk64CbjQqAM15FwDObFtc5ZlEGSts70V9XYkl8R3wpr-sIE95k9m-yXQzceM_Db31x42THnOS6eLObojV9SqeL_toHQ4T_pQNnFoi7PpXxdJQ3JqMsuzkXDHeuA1Jn1c27UzBidP0K2xc93BygdOwLRmKjrqcgxmsTMA6wRDC8HH1ZS3gR7Qh13pzSdUHcpVvW4OIo-SNoA0jVYLW_AyOvYD3L8Y2cN43qVdgDEKCw";
+                        // Token do Melhor Envio
+                        $tokenMelhorEnvio = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5NTYiLCJqdGkiOiI1Yzk5OGE3MTAzYmQ1YmFmN2E4M2E3ZTZlMDNmZTljMjBlMzM2NzFmM2UxNTg4ZjJjZDFmMjBkYTc2ZGZhZTgzZGIyMzMzYTU2ZmE2YWE2ZiIsImlhdCI6MTc2MDczNDk3OS41MDA4MzUsIm5iZiI6MTc2MDczNDk3OS41MDA4MzgsImV4cCI6MTc5MjI3MDk3OS40OTE5MDksInN1YiI6ImEwMjM0ZGE4LTM5YmUtNGEzNS04MmRlLTU1N2ViZWYwNjFlOSIsInNjb3BlcyI6WyJzaGlwcGluZy1jYWxjdWxhdGUiXX0.pz7RG3El6bSCnyeB2ItjAuW80erggbMSL5RVcOfvZz3u93dDpS4inndljPiCoTNzJ0u2pFxPFPm8gICClcb4Yz9pVn2jpPXJQqQw5Z_xFkHri_g6FF-3nFfw57FJ7g3HyEKna0TN3auLpVfO1km6QOlHftsITGe8k3x2KjaV2XgjbvDWvIPBubc1lF0lRsPdKihvfigW2KpihOLVbOSNkVGG3omSOgb5E3FPwykyDHIeV9rdoefzmiKVV5W2yc9C2Y5mRiPeyJIcL2-OnJLjXtDtrT2UY4-1mLIEWqpL-2Di1NFeKIcaqbIsZ6YpwZsBQeGh9ySti0Lgn-dpyuQBlNc2m0_MHRN2BA-Hsr_owmXykrZDsjQuIyt-ijtNluzfhvahYaoJ7GjagurOowoLMeecEoQNNhuRIQ_IarQ0EsDYTh5hl-gFT7VtlNmDv6Fv7Ut8CfEkAcus2v8PEt9shKxONQxd9hZVq9QR0lFZVRNYvwmd_9VUn_aAYhJ9LJnlwcSJC4XV67nKXg5_qe28bouktyrZ4mrjCNdcjWmKBHHAj4ShSQmydmJ9_iNg6Ud8OMDc8dVwWwWwdfFbVj4wMJIuO6lA9T6TczMlORfz-mjqZAdqZ3422JuEhnZWwsPa7V4xZgTFGVezIPAo0rADfPg6ycJWsocl3kz0cfuKjIE";
                         $usarSandbox = true;
 
-                        if (!empty($cep_usuario)) {
+                        if (!empty($cepUsuario)) {
                             $fretes = calcularFreteMelhorEnvio(
-                                $cep_vendedor,
-                                $cep_usuario,
-                                $pesoKg,
+                                $cepVendedor,
+                                $cepUsuario,
+                                $peso,
                                 $comprimento,
                                 $altura,
                                 $largura,
@@ -1031,25 +1034,67 @@ if (isset($_SESSION['idusuario'])) {
                                 $usarSandbox
                             );
 
-                            if (!is_array($fretes) || isset($fretes['erro'])) {
-                                echo '<p>Não foi possível calcular o frete.</p>';
-                                if (isset($fretes['erro'])) {
-                                    echo "<small>Detalhe técnico: {$fretes['erro']}</small>";
-                                }
-                            } elseif (empty($fretes)) {
-                                echo '<p>Nenhum serviço de frete retornado.</p>';
-                            } else {
-                                foreach ($fretes as $info) {
-                                    echo '<div class="frete-item">';
-                                    echo "<p><strong>{$info['nome']}</strong> — Valor: R$ {$info['valor_str']} — Prazo: {$info['prazo']} dias úteis</p>";
+                            if (isset($fretes['erro'])) {
+                                echo "Erro ao calcular frete: {$fretes['erro']}<br>";
+                                echo "Detalhe técnico: {$fretes['detalhe']}";
+                            } elseif (!empty($fretes)) {
+                                echo '<h4>Escolha o tipo de frete:</h4>';
+                                echo '<div id="frete-options">';
+                                foreach ($fretes as $f) {
+                                    $preco = $f['packages'][0]['price'] ?? '-';
+                                    $prazo = $f['delivery_time'] ?? '-';
+                                    $logo = $f['company']['picture'] ?? '';
+                                    $nome = $f['name'];
+
+                                    $value = base64_encode(json_encode([
+                                        'nome' => $nome,
+                                        'preco' => $preco,
+                                        'prazo' => $prazo
+                                    ]));
+
+                                    echo '<div style="margin-bottom:5px;">';
+                                    echo "<label>";
+                                    echo "<input type='radio' name='frete' value='$value'> ";
+                                    if ($logo) {
+                                        echo "<img src='$logo' width='40' style='vertical-align:middle;'> ";
+                                    }
+                                    echo "<strong>$nome</strong> — R$ $preco — Prazo: $prazo dias úteis";
+                                    echo "</label>";
                                     echo '</div>';
                                 }
+                                echo '</div>';
+                            } else {
+                                echo '<p>Nenhum serviço de frete retornado.</p>';
                             }
                         } else {
-                            echo '<p>Informe seu CEP para calcular o frete.</p>';
+                            echo '<p>Informe seu CEP para calcular o frete:</p>';
+                            echo '<form method="post" action="">';
+                            echo '  <input type="text" name="cep_usuario" placeholder="Digite seu CEP" maxlength="9" required>';
+                            echo '  <button type="submit">Calcular Frete</button>';
+                            echo '</form>';
+
+                            if (!empty($_POST['cep_usuario'])) {
+                                $_SESSION['cep_usuario'] = preg_replace('/[^0-9]/', '', $_POST['cep_usuario']);
+                                header("Refresh:0");
+                                exit;
+                            }
                         }
-                    ?>
+                        ?>
                     </div>
+
+                    <script>
+                        const radios = document.querySelectorAll('input[name="frete"]');
+                        const comprarLink = document.getElementById('comprar-link');
+
+                        radios.forEach(radio => {
+                            radio.addEventListener('change', () => {
+                                const freteData = radio.value; // base64 JSON
+                                const url = new URL(comprarLink.href);
+                                url.searchParams.set('frete', freteData);
+                                comprarLink.href = url.toString();
+                            });
+                        });
+                    </script>
 
                     <div class="product-description">
                         <p><?= htmlspecialchars($produto['estado_livro']) ?></p>
@@ -1072,7 +1117,7 @@ if (isset($_SESSION['idusuario'])) {
                     </div>
                     
                     <button class="buy-button">
-                        <a href="../carrinho/carrinho.php?id=<?= $produto['idproduto'] ?>&nome=<?= $produto['nome'] ?>&preco=<?= $produto['preco'] ?>" class="card-link">COMPRAR</a>
+                       <a id="comprar-link" href="../carrinho/carrinho.php?id=<?= $produto['idproduto'] ?>&nome=<?= $produto['nome'] ?>&preco=<?= $produto['preco'] ?>" class="card-link">COMPRAR</a>
                     </button>
                     
                     <div class="secure-transaction">
