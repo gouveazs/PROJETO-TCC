@@ -2,6 +2,55 @@
 session_start();
 include '../conexao.php';
 
+// Adicionar produto ao carrinho (pela URL)
+if (isset($_GET['id']) && isset($_GET['nome']) && isset($_GET['preco'])) {
+    $id = intval($_GET['id']);
+    $nome = htmlspecialchars($_GET['nome']);
+    $preco = floatval($_GET['preco']);
+
+    // Cria o item
+    $item = [
+        'id' => $id,
+        'nome' => $nome,
+        'preco' => $preco
+    ];
+
+    // Verifica se o produto já está no carrinho
+    $existe = false;
+    if (!isset($_SESSION['carrinho'])) {
+        $_SESSION['carrinho'] = [];
+    }
+
+    foreach ($_SESSION['carrinho'] as $p) {
+        if ($p['id'] == $id) {
+            $existe = true;
+            break;
+        }
+    }
+
+    // Só adiciona se ainda não estiver
+    if (!$existe) {
+        $_SESSION['carrinho'][] = $item;
+    }
+
+    // Redireciona para limpar a URL
+    header("Location: carrinho.php");
+    exit;
+}
+
+// Remover produto
+if (isset($_GET['remover_id'])) {
+    $idRemover = intval($_GET['remover_id']);
+    $_SESSION['carrinho'] = array_filter($_SESSION['carrinho'], fn($p) => $p['id'] != $idRemover);
+    header("Location: carrinho.php");
+    exit;
+}
+
+// Garante que o carrinho exista
+if (!isset($_SESSION['carrinho'])) {
+    $_SESSION['carrinho'] = [];
+}
+
 $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
 $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
@@ -9,112 +58,9 @@ if (!$nome) {
     die("Usuário não logado.");
 }
 
-// Buscar endereço do usuário
-$stmt = $conn->prepare("SELECT cep, cidade, estado FROM usuario WHERE nome = ?");
-$stmt->execute([$nome]);
-$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if ($usuario) {
-    $cep_destino = preg_replace('/[^0-9]/', '', $usuario['cep']);
-} else {
-    die("Endereço do usuário não encontrado.");
-}
-
-
-// Buscar endereço do vendedor (exemplo: primeiro produto do carrinho)
-$firstProductId = $_SESSION['carrinho'][0]['id'] ?? null;
-$vendedorStmt = $conn->prepare("
-    SELECT v.cep, v.cidade, v.estado 
-    FROM vendedor v
-    JOIN produto p ON v.idvendedor = p.idvendedor
-    WHERE p.idproduto = ?
-");
-$vendedorStmt->execute([$firstProductId]);
-$vendedor = $vendedorStmt->fetch(PDO::FETCH_ASSOC);
-
-if ($vendedor) {
-    $cep_origem = preg_replace('/[^0-9]/', '', $vendedor['cep']);
-} else {
-    $cep_origem = ''; // ou algum valor padrão, ou mostrar mensagem de erro
-}
-
-$peso_total = 1.0; // kg
-$valor_total = 50.0; // valor simbólico da compra
-
-// ======== API CORREIOS ========
-function calcularFreteCorreios($cep_origem, $cep_destino, $peso, $valor) {
-  $cep_origem = preg_replace('/[^0-9]/', '', $cep_origem);
-  $cep_destino = preg_replace('/[^0-9]/', '', $cep_destino);
-
-  $tipos_frete = [
-      'PAC' => '41106',
-      'SEDEX' => '40010'
-  ];
-
-  $resultado = [];
-
-  foreach ($tipos_frete as $nome => $codigo) {
-      $url = "http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?" .
-          "nCdEmpresa=&sDsSenha=&sCepOrigem={$cep_origem}&sCepDestino={$cep_destino}" .
-          "&nVlPeso={$peso}&nCdFormato=1&nVlComprimento=20&nVlAltura=5&nVlLargura=15" .
-          "&sCdMaoPropria=n&nVlValorDeclarado={$valor}&sCdAvisoRecebimento=n&nCdServico={$codigo}&StrRetorno=xml";
-
-      // Usando cURL para capturar erros
-      $ch = curl_init($url);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      $xmlStr = curl_exec($ch);
-      $curlError = curl_error($ch);
-      curl_close($ch);
-
-      if ($curlError) {
-          $resultado[] = [
-              'nome' => $nome,
-              'error' => true,
-              'message' => "Erro na requisição cURL: $curlError"
-          ];
-          continue;
-      }
-
-      // Tenta carregar o XML
-      libxml_use_internal_errors(true);
-      $xml = simplexml_load_string($xmlStr);
-      if ($xml === false) {
-          $errors = [];
-          foreach (libxml_get_errors() as $error) {
-              $errors[] = trim($error->message);
-          }
-          $resultado[] = [
-              'nome' => $nome,
-              'error' => true,
-              'message' => "Erro ao ler XML: " . implode("; ", $errors) . " | Resposta: $xmlStr"
-          ];
-          libxml_clear_errors();
-          continue;
-      }
-
-      // Verifica se retornou o serviço corretamente
-      if (isset($xml->cServico->Erro) && intval($xml->cServico->Erro) !== 0) {
-          $resultado[] = [
-              'nome' => $nome,
-              'error' => true,
-              'message' => "Código de erro Correios: " . $xml->cServico->Erro . " | Mensagem: " . $xml->cServico->MsgErro
-          ];
-      } else {
-          $servico = $xml->cServico;
-          $resultado[] = [
-              'nome' => $nome,
-              'preco' => floatval(str_replace(',', '.', $servico->Valor)),
-              'prazo' => intval($servico->PrazoEntrega)
-          ];
-      }
-  }
-
-  return $resultado;
-}
-
-// Calcular
-$opcoesFrete = calcularFreteCorreios($cep_origem, $cep_destino, $peso_total, $valor_total);
-
+// Calcular subtotal
+$subtotal = array_sum(array_column($_SESSION['carrinho'], 'preco'));
+$total = $subtotal;
 ?>
 
 <!DOCTYPE html>
@@ -146,7 +92,7 @@ $opcoesFrete = calcularFreteCorreios($cep_origem, $cep_destino, $peso_total, $va
       flex-direction: column;
     }
 
-        .sidebar {
+    .sidebar {
       position: fixed;
       top: 0; left: 0;
       width: 250px;
@@ -244,16 +190,16 @@ $opcoesFrete = calcularFreteCorreios($cep_origem, $cep_destino, $peso_total, $va
 
     .topbar {
       display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #5a4226; /* marrom */
-    padding: 10px 20px;
-    position: fixed;
-    top: 0;
-    left: 250px; /* respeita a sidebar */
-    right: 0;
-    height: 70px;
-    z-index: 1000;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #5a4226;
+      padding: 10px 20px;
+      position: fixed;
+      top: 0;
+      left: 250px;
+      right: 0;
+      height: 70px;
+      z-index: 1000;
     }
 
     .topbar-left {
@@ -274,58 +220,27 @@ $opcoesFrete = calcularFreteCorreios($cep_origem, $cep_destino, $peso_total, $va
     }
 
     .search-form {
-    display: flex;
-    align-items: center;
+      display: flex;
+      align-items: center;
     }
 
     .search-form input[type="text"] {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 30px 0 0 30px; /* arredondado à esquerda */
-    outline: none;
-    width: 300px; /* campo maior */
-    font-size: 0.9rem;
-    margin: 0;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 30px 0 0 30px;
+      outline: none;
+      width: 300px;
+      font-size: 0.9rem;
     }
 
     .search-form input[type="submit"] {
-    padding: 10px 15px;
-    border: none;
-    background-color: #6f8562; /* verde escuro */
-    color: #fff;
-    font-weight: none;
-    border-radius: 0 30px 30px 0; /* arredondado à direita */
-    cursor: pointer;S
-    margin: 0;
-    width: 90px; /* botão mais estreito */
-    }
-
-    .search-form input[type="submit"]:hover {
-    background-color: #6f8562;
-    }
-
-    .topbar input[type="text"] {
       padding: 10px 15px;
       border: none;
-      border-radius: 20px 0 0 20px;
-      width: 250px;
-      font-size: 0.9rem;
-    }
-    
-    .topbar input[type="submit"] {
-      padding: 10px 15px;
-      background: var(--verde);
-      color: white;
-      border: none;
-      border-radius: 0 20px 20px 0;
+      background-color: #6f8562;
+      color: #fff;
+      border-radius: 0 30px 30px 0;
       cursor: pointer;
-    }
-
-    .topbar h1 {
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 15px;
+      width: 90px;
     }
 
     .main {
@@ -333,25 +248,6 @@ $opcoesFrete = calcularFreteCorreios($cep_origem, $cep_destino, $peso_total, $va
       margin-left: 250px;
       padding: 30px;
       margin-top: 70px;
-    }
-
-    .section-header h2 {
-      color: var(--verde);
-    }
-
-    .breadcrumb {
-      margin-bottom: 20px;
-      font-size: 0.9rem;
-      color: #777;
-    }
-
-    .breadcrumb a {
-      color: var(--marrom);
-      text-decoration: none;
-    }
-
-    .breadcrumb span {
-      margin: 0 8px;
     }
 
     .page-title {
@@ -444,46 +340,10 @@ $opcoesFrete = calcularFreteCorreios($cep_origem, $cep_destino, $peso_total, $va
       margin-bottom: 5px;
     }
 
-    .cart-item-desc {
-      font-size: 0.9rem;
-      color: #777;
-      margin-bottom: 10px;
-    }
-
     .cart-item-price {
       font-weight: bold;
       color: var(--marrom);
       margin-bottom: 10px;
-    }
-
-    .cart-item-actions {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .quantity-control {
-      display: flex;
-      align-items: center;
-    }
-
-    .quantity-btn {
-      width: 30px;
-      height: 30px;
-      background: var(--verde);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .quantity-input {
-      width: 40px;
-      height: 30px;
-      text-align: center;
-      margin: 0 5px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
     }
 
     .remove-btn {
@@ -506,14 +366,6 @@ $opcoesFrete = calcularFreteCorreios($cep_origem, $cep_destino, $peso_total, $va
       display: flex;
       justify-content: space-between;
       margin-bottom: 15px;
-    }
-
-    .summary-label {
-      color: #777;
-    }
-
-    .summary-value {
-      font-weight: bold;
     }
 
     .summary-total {
@@ -552,27 +404,10 @@ $opcoesFrete = calcularFreteCorreios($cep_origem, $cep_destino, $peso_total, $va
       text-align: center;
       padding: 15px;
     }
-
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 200px;
-      }
-      .topbar, .main, .footer {
-        margin-left: 200px;
-      }
-    }
-
-    @media (max-width: 576px) {
-      .sidebar {
-        display: none;
-      }
-      .topbar, .main, .footer {
-        margin-left: 0;
-      }
-    }
   </style>
 </head>
 <body>
+
 <div class="sidebar">
   <div class="logo">
       <?php if ($foto_de_perfil): ?>
@@ -581,25 +416,18 @@ $opcoesFrete = calcularFreteCorreios($cep_origem, $cep_destino, $peso_total, $va
         <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
       <?php endif; ?>
       <div class="user-info">
-        <?php if (!$nome): ?>
-          <a href="php/cadastro/cadastroUsuario.php" style="text-decoration: none; color: white;">
-            <p class="nome-usuario">Entre ou crie sua conta</p>
-          </a>
-        <?php else: ?>
-          <p class="nome-usuario"><?= htmlspecialchars($nome) ?></p>
-        <?php endif; ?>
+        <p class="nome-usuario"><?= htmlspecialchars($nome) ?></p>
       </div>
   </div>
 
   <nav>
     <ul class="menu">
-      <li><a href="../../index.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-      <li><a href="../comunidades/comunidade.php"><img src="../../imgs/comunidades.png" alt="Comunidades" style="width:20px; margin-right:10px;"> Comunidades</a></li>
-      <li><a href="../destaques/destaques.php"><img src="../../imgs/destaque.png" alt="Destaques" style="width:20px; margin-right:10px;"> Destaques</a></li>
-      <li><a href="../favoritos/favoritos.php"><img src="../../imgs/favoritos.png" alt="Favoritos" style="width:20px; margin-right:10px;"> Favoritos</a></li>
-      <li><a href="../carrinho/carrinho.php"><img src="../../imgs/carrinho.png" alt="Carrinho" style="width:20px; margin-right:10px;"> Carrinho</a></li>
+      <li><a href="../../index.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px;"> Início</a></li>
+      <li><a href="../comunidades/comunidade.php"><img src="../../imgs/comunidades.png" alt="Comunidades" style="width:20px;"> Comunidades</a></li>
+      <li><a href="../destaques/destaques.php"><img src="../../imgs/destaque.png" alt="Destaques" style="width:20px;"> Destaques</a></li>
+      <li><a href="../favoritos/favoritos.php"><img src="../../imgs/favoritos.png" alt="Favoritos" style="width:20px;"> Favoritos</a></li>
+      <li><a href="../carrinho/carrinho.php"><img src="../../imgs/carrinho.png" alt="Carrinho" style="width:20px;"> Carrinho</a></li>
     </ul>
-
 
     <h3>Conta</h3>
     <ul class="account">
@@ -617,14 +445,14 @@ $opcoesFrete = calcularFreteCorreios($cep_origem, $cep_destino, $peso_total, $va
 </div>
 
 <div class="topbar">
-    <div class="topbar-left">
+  <div class="topbar-left">
     <img src="../../imgs/logotipo.png" alt="Entre Linhas" class="logo">
-        <h1>Entre Linhas - Carrinho</h1>
-    </div>
-    <form class="search-form" action="../consultaFiltro/consultaFiltro.php" method="POST">
-      <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
-      <input type="submit" value="Buscar">
-    </form>
+    <h1>Entre Linhas - Carrinho</h1>
+  </div>
+  <form class="search-form" action="../consultaFiltro/consultaFiltro.php" method="POST">
+    <input type="text" name="nome" placeholder="Pesquisar livros, autores...">
+    <input type="submit" value="Buscar">
+  </form>
 </div>
 
 <div class="main">
@@ -655,11 +483,9 @@ $opcoesFrete = calcularFreteCorreios($cep_origem, $cep_destino, $peso_total, $va
             <div class="cart-item-details">
               <h3 class="cart-item-title"><?= htmlspecialchars($item['nome']) ?></h3>
               <p class="cart-item-price">R$ <?= number_format($item['preco'], 2, ',', '.') ?></p>
-              <div class="cart-item-actions">
-                <button class="remove-btn">
-                  <a href="carrinho.php?remover_id=<?= $item['id'] ?>">Remover</a>
-                </button>
-              </div>
+              <button class="remove-btn">
+                <a href="carrinho.php?remover_id=<?= $item['id'] ?>">Remover</a>
+              </button>
             </div>
           </div>
         <?php endforeach; ?>
@@ -668,54 +494,16 @@ $opcoesFrete = calcularFreteCorreios($cep_origem, $cep_destino, $peso_total, $va
       <a href="../../index.php" class="continue-shopping">← Continuar comprando</a>
     </div>
 
-    <?php
-    $subtotal = array_sum(array_column($_SESSION['carrinho'], 'preco'));
-    $valor_frete = isset($_POST['frete']) ? floatval($_POST['frete']) : 0;
-    $total = $subtotal + $valor_frete;
-
-    ?>
     <div class="cart-summary">
       <h2 class="summary-title">Resumo do Pedido</h2>
-      <div class="summary-row"><span class="summary-label">Subtotal</span><span class="summary-value">R$ <?= number_format($subtotal, 2, ',', '.') ?></span></div>
-      <!-- FRETE MELHOR ENVIO -->
-      <div class="summary-row" style="flex-direction: column; align-items: flex-start;">
-        <span class="summary-label" style="margin-bottom: 10px;">Selecione o frete:</span>
-
-        <?php if (isset($opcoesFrete[0]['error'])): ?>
-            <span style="color: #e74c3c;">
-                Erro ao calcular frete: <?= htmlspecialchars($opcoesFrete[0]['message']) ?>
-            </span>
-        <?php elseif (is_array($opcoesFrete)): ?>
-            <form method="POST" id="formFrete">
-              <?php foreach ($opcoesFrete as $i => $frete): ?>
-                <?php if (!isset($frete['error'])): ?>
-                    <label style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 8px; cursor: pointer;">
-                        <input type="radio" name="frete" value="<?= htmlspecialchars($frete['preco']) ?>" <?= $i === 0 ? 'checked' : '' ?>>
-                        <span><?= htmlspecialchars($frete['nome']) ?> (<?= $frete['prazo'] ?> dias)</span>
-                        <strong>R$ <?= number_format($frete['preco'], 2, ',', '.') ?></strong>
-                    </label>
-                <?php else: ?>
-                    <span style="color: #e74c3c;"><?= htmlspecialchars($frete['message']) ?></span>
-                <?php endif; ?>
-            <?php endforeach; ?>
-            </form>
-        <?php else: ?>
-            <span style="color: #e74c3c;">Erro desconhecido ao calcular frete.</span>
-        <?php endif; ?>
-
-      </div>
-
       <div class="summary-row">
-        <span class="summary-label">Frete</span>
-        <span class="summary-value">
-          <?= $valor_frete > 0 ? 'R$ ' . number_format($valor_frete, 2, ',', '.') : 'Selecione o frete' ?>
-        </span>
+        <span class="summary-label">Subtotal</span>
+        <span class="summary-value">R$ <?= number_format($subtotal, 2, ',', '.') ?></span>
       </div>
       <div class="summary-row summary-total">
         <span class="summary-label">Total</span>
         <span class="summary-value">R$ <?= number_format($total, 2, ',', '.') ?></span>
       </div>
-
 
       <button class="checkout-btn" onclick="window.location.href='finalizarcompra.php'">Finalizar Compra</button>
     </div>
@@ -724,12 +512,5 @@ $opcoesFrete = calcularFreteCorreios($cep_origem, $cep_destino, $peso_total, $va
 
 <div class="footer">&copy; 2025 Entre Linhas - Todos os direitos reservados.</div>
 
-<!-- VLibras -->
-<div vw class="enabled">
-  <div vw-access-button class="active"></div>
-  <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
-</div>
-<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
 </body>
 </html>

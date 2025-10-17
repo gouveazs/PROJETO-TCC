@@ -39,6 +39,24 @@ try {
 } catch (PDOException $e) {
     die("Erro de conexão: " . $e->getMessage());
 }
+
+// Buscar o CEP do vendedor
+$cep_vendedor = $produto['cep'] ?? null; // se já estiver vindo da query
+if (!$cep_vendedor) {
+    // busca caso não venha na query principal
+    $stmtV = $conn->prepare("SELECT cep FROM vendedor WHERE idvendedor = :id");
+    $stmtV->execute([':id' => $produto['idvendedor']]);
+    $cep_vendedor = $stmtV->fetchColumn();
+}
+
+// Buscar o CEP do usuário logado
+$cep_usuario = null;
+if (isset($_SESSION['idusuario'])) {
+    $stmtU = $conn->prepare("SELECT cep FROM usuario WHERE idusuario = :id");
+    $stmtU->execute([':id' => $_SESSION['idusuario']]);
+    $cep_usuario = $stmtU->fetchColumn();
+}
+
 ?>
 
 <!DOCTYPE html> 
@@ -46,7 +64,7 @@ try {
 <head> 
     <meta charset="UTF-8" /> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
-    <title><?= htmlspecialchars($produto['nome'] ?? 'Págida de Livro') ?> - Entre Linhas/</title> 
+    <title><?= htmlspecialchars($produto['nome'] ?? 'Págida de Livro') ?> - Entre Linhas</title> 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/png" href="../../imgs/logotipo.png"/>
@@ -829,7 +847,7 @@ try {
                     <li><a href="../cadastro/cadastroVendedor.php"><img src="../../imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
                     <li><a href="../login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
                 <?php else: ?>
-                    <li><a href="../perfil/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
+                    <li><a href="../perfil-usuario/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
                     <li><a href="../login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
                 <?php endif; ?>
             </ul> 
@@ -984,12 +1002,55 @@ try {
                     <div class="price-container">
                         <div class="price-label">Preço:</div>
                         <div class="product-price">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></div>
-                    </div>
                     
+                    </div>
+
                     <div class="shipping-info">
-                        <i class="fas fa-truck"></i> Entrega GRÁTIS: <strong>29 de Agosto - 2 de Setembro</strong> no seu primeiro pedido
+                    <?php
+                        include 'calcularFrete.php';
+
+                        // Dados do produto
+                        $pesoKg = ($produto['peso'] ?? 1000) / 1000;
+                        $altura = $produto['altura'] ?? 10;
+                        $largura = $produto['largura'] ?? 15;
+                        $comprimento = $produto['comprimento'] ?? 20;
+
+                        // Token Melhor Envio
+                        $tokenMelhorEnvio = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMTkyOTE5YTAzMGE4M2Y3NDhkOTA5NjZkYjYwOTdmZmUwNzA1ZDUyMzViZWVlYjc3MWU5NjI1MmJhYzc0OTMzYTE5MWMzYjZhNTM1MTQwODUiLCJpYXQiOjE3NjA2NTk1NjMuNDg4MzIxLCJuYmYiOjE3NjA2NTk1NjMuNDg4MzIyLCJleHAiOjE3OTIxOTU1NjMuNDc3NjI1LCJzdWIiOiI5ZmQ4MDdjNS02NWFjLTQxMDYtYWI2OS0yZTRkOGVmYTk5NzUiLCJzY29wZXMiOlsiY2FydC1yZWFkIiwiY2FydC13cml0ZSIsImNvbXBhbmllcy1yZWFkIiwiY29tcGFuaWVzLXdyaXRlIiwiY291cG9ucy1yZWFkIiwiY291cG9ucy13cml0ZSIsIm5vdGlmaWNhdGlvbnMtcmVhZCIsIm9yZGVycy1yZWFkIiwicHJvZHVjdHMtcmVhZCIsInByb2R1Y3RzLWRlc3Ryb3kiLCJwcm9kdWN0cy13cml0ZSIsInB1cmNoYXNlcy1yZWFkIiwic2hpcHBpbmctY2FsY3VsYXRlIiwic2hpcHBpbmctY2FuY2VsIiwic2hpcHBpbmctY2hlY2tvdXQiLCJzaGlwcGluZy1jb21wYW5pZXMiLCJzaGlwcGluZy1nZW5lcmF0ZSIsInNoaXBwaW5nLXByZXZpZXciLCJzaGlwcGluZy1wcmludCIsInNoaXBwaW5nLXNoYXJlIiwic2hpcHBpbmctdHJhY2tpbmciLCJlY29tbWVyY2Utc2hpcHBpbmciLCJ0cmFuc2FjdGlvbnMtcmVhZCIsInVzZXJzLXJlYWQiLCJ1c2Vycy13cml0ZSIsIndlYmhvb2tzLXJlYWQiLCJ3ZWJob29rcy13cml0ZSIsIndlYmhvb2tzLWRlbGV0ZSIsInRkZWFsZXItd2ViaG9vayJdfQ.hUSozN2-5UMausZBsvInK7Aj4CnxtsnOYPUd2PkxucOenvreW6PpvKfurv1pdyzxyIFjJz3tQNA-8v4RpgS8eOyhfAOOmeRcXAEzjfrKpJH5zuqVi3vBlHsT4O3iuTGXst-QylRwaH65Uef8a_faAfnCvS4W-wSE_bVyRocUP9Lesf1HqixgLzJA2nwLtlgpJnhOx3kfZ05HNyEkFjlhrn7DZCAx9Ai-WZycbGgUi0TSEhy3wv_HcVsoSq7TiAEtQ4pRF1mhSt6Pb8Gf6ppZZYPFHnmMsW5NpTT9pCMmHnxramHllXbUCRzydhSgi_FJkSDfJcTeLGnTJHQsq4j85p0pbr4PhnjMm5G1j9RlTaCwgDDsxHdrwvHcoAgUx6x1oaYHX6ZUqk4v9amgdhZzgRp5yB-wATouyF9gMeUno56W1vwwYSwULavBa3X4x7gVkXk64CbjQqAM15FwDObFtc5ZlEGSts70V9XYkl8R3wpr-sIE95k9m-yXQzceM_Db31x42THnOS6eLObojV9SqeL_toHQ4T_pQNnFoi7PpXxdJQ3JqMsuzkXDHeuA1Jn1c27UzBidP0K2xc93BygdOwLRmKjrqcgxmsTMA6wRDC8HH1ZS3gR7Qh13pzSdUHcpVvW4OIo-SNoA0jVYLW_AyOvYD3L8Y2cN43qVdgDEKCw";
+                        $usarSandbox = true;
+
+                        if (!empty($cep_usuario)) {
+                            $fretes = calcularFreteMelhorEnvio(
+                                $cep_vendedor,
+                                $cep_usuario,
+                                $pesoKg,
+                                $comprimento,
+                                $altura,
+                                $largura,
+                                $tokenMelhorEnvio,
+                                $usarSandbox
+                            );
+
+                            if (!is_array($fretes) || isset($fretes['erro'])) {
+                                echo '<p>Não foi possível calcular o frete.</p>';
+                                if (isset($fretes['erro'])) {
+                                    echo "<small>Detalhe técnico: {$fretes['erro']}</small>";
+                                }
+                            } elseif (empty($fretes)) {
+                                echo '<p>Nenhum serviço de frete retornado.</p>';
+                            } else {
+                                foreach ($fretes as $info) {
+                                    echo '<div class="frete-item">';
+                                    echo "<p><strong>{$info['nome']}</strong> — Valor: R$ {$info['valor_str']} — Prazo: {$info['prazo']} dias úteis</p>";
+                                    echo '</div>';
+                                }
+                            }
+                        } else {
+                            echo '<p>Informe seu CEP para calcular o frete.</p>';
+                        }
+                    ?>
                     </div>
-                    
+
                     <div class="product-description">
                         <p><?= htmlspecialchars($produto['estado_livro']) ?></p>
                     </div>
