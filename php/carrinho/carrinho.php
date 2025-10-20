@@ -40,7 +40,6 @@ if (isset($_GET['id']) && isset($_GET['nome']) && isset($_GET['preco'])) {
     exit;
 }
 
-
 // Remover produto
 if (isset($_GET['remover_id'])) {
     $idRemover = intval($_GET['remover_id']);
@@ -58,7 +57,7 @@ $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
 $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
 if (!$nome) {
-    die("Usuário não logado.");
+    header('Location: ../login/login.php');
 }
 
 // Calcular subtotal
@@ -471,35 +470,45 @@ $total = $subtotal;
     <div class="cart-items">
       <?php if (empty($_SESSION['carrinho'])): ?>
         <p style="color: #777; font-size: 1.1rem; margin-bottom: 20px;">
-          Seu carrinho está vazio 😔. <a href="../../index.php" style="color: var(--marrom); text-decoration: underline;">Continuar comprando</a>
+          Seu carrinho está vazio 😔. 
+          <a href="../../index.php" style="color: var(--marrom); text-decoration: underline;">Continuar comprando</a>
         </p>
       <?php else: ?>
         <?php foreach ($_SESSION['carrinho'] as $item): ?>
           <?php
-          $stmt = $conn->prepare("SELECT imagem FROM imagens WHERE idproduto = ?");
-          $stmt->execute([$item['id']]);
-          $row = $stmt->fetch(PDO::FETCH_ASSOC);
-          $src = ($row && !empty($row['imagem'])) ? "data:image/jpeg;base64," . base64_encode($row['imagem']) : "../../imgs/capa.jpg";
+            $stmt = $conn->prepare("SELECT imagem FROM imagens WHERE idproduto = ?");
+            $stmt->execute([$item['id']]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $src = ($row && !empty($row['imagem'])) 
+              ? "data:image/jpeg;base64," . base64_encode($row['imagem']) 
+              : "../../imgs/capa.jpg";
           ?>
+          
           <div class="cart-item">
             <img src="<?= $src ?>" class="cart-item-image">
+
             <div class="cart-item-details">
               <h3 class="cart-item-title"><?= htmlspecialchars($item['nome']) ?></h3>
+
               <p class="cart-item-price">R$ <?= number_format($item['preco'], 2, ',', '.') ?></p>
+              <?php if (!empty($item['frete'])): ?>
+              <p class="cart-item-frete" style="margin-top:5px; color:#555;">
+                  <strong>Frete:</strong> <?= htmlspecialchars($item['frete']['nome'] ?? '-') ?> — 
+                  R$ <?= number_format(floatval(str_replace(',', '.', $item['frete']['preco'] ?? 0)), 2, ',', '.') ?> 
+                  (<?= htmlspecialchars($item['frete']['prazo'] ?? '-') ?> dias úteis)
+              </p>
+              <?php endif; ?>
+
               <button class="remove-btn">
                 <a href="carrinho.php?remover_id=<?= $item['id'] ?>">Remover</a>
               </button>
+          
+              <button class="remove-btn">
+                <a href="../produto/pagiproduto.php?id=<?= $item['id']?>">Página do produto</a>
+              </button>
+
             </div>
           </div>
-
-          <?php if (!empty($item['frete'])): ?>
-          <p style="margin-top:5px; color:#555;">
-              Frete: <strong><?= htmlspecialchars($item['frete']['nome'] ?? '-') ?></strong> — 
-              R$ <?= number_format($item['frete']['preco'] ?? 0, 2, ',', '.') ?> — 
-              Prazo: <?= htmlspecialchars($item['frete']['prazo'] ?? '-') ?> dias úteis
-          </p>
-          <?php endif; ?>
-
         <?php endforeach; ?>
       <?php endif; ?>
 
@@ -507,18 +516,31 @@ $total = $subtotal;
     </div>
 
     <div class="cart-summary">
+      <?php
+        $subtotalLivros = array_sum(array_map(fn($p) => floatval($p['preco']), $_SESSION['carrinho']));
+        $totalFrete = array_sum(array_map(fn($p) => floatval($p['frete']['preco'] ?? 0), $_SESSION['carrinho']));
+        $totalGeral = $subtotalLivros + $totalFrete;
+      ?>
       <h2 class="summary-title">Resumo do Pedido</h2>
+
       <div class="summary-row">
-        <span class="summary-label">Subtotal</span>
-        <span class="summary-value">R$ <?= number_format($subtotal, 2, ',', '.') ?></span>
+        <span class="summary-label">Subtotal dos Livros</span>
+        <span class="summary-value">R$ <?= number_format($subtotalLivros, 2, ',', '.') ?></span>
       </div>
+
+      <div class="summary-row">
+        <span class="summary-label">Total do Frete</span>
+        <span class="summary-value">R$ <?= number_format($totalFrete, 2, ',', '.') ?></span>
+      </div>
+
       <div class="summary-row summary-total">
-        <span class="summary-label">Total</span>
-        <span class="summary-value">R$ <?= number_format($total, 2, ',', '.') ?></span>
+        <span class="summary-label">Total Geral</span>
+        <span class="summary-value">R$ <?= number_format($totalGeral, 2, ',', '.') ?></span>
       </div>
 
       <button class="checkout-btn" onclick="window.location.href='finalizarcompra.php'">Finalizar Compra</button>
     </div>
+
   </div>
 </div>
 

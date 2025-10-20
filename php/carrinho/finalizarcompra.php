@@ -1,3 +1,79 @@
+<?php
+session_start();
+include '../conexao.php';
+
+$nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
+$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
+
+if (!$nome) {
+    header('Location: ../login/login.php');
+    exit;
+}
+
+// Buscar dados do usuário no banco
+$stmt = $conn->prepare("SELECT * FROM usuario WHERE nome = ?");
+$stmt->execute([$nome]);
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+$usuario = $usuario ?: [];
+
+// Garantir que o carrinho exista
+if (!isset($_SESSION['carrinho'])) {
+    $_SESSION['carrinho'] = [];
+}
+
+// Calcular valores do carrinho
+$subtotalLivros = array_sum(array_map(fn($p) => floatval($p['preco']), $_SESSION['carrinho']));
+$totalFrete = array_sum(array_map(fn($p) => floatval($p['frete']['preco'] ?? 0), $_SESSION['carrinho']));
+$totalGeral = $subtotalLivros + $totalFrete;
+$totalItens = count($_SESSION['carrinho']);
+
+if (isset($_POST['finalizar'])) {
+    $dados = [
+        'nome_completo' => $_POST['nome_completo'],
+        'telefone' => $_POST['telefone'],
+        'email' => $_POST['email'],
+        'cep' => $_POST['cep'],
+        'estado' => $_POST['estado'],
+        'cidade' => $_POST['cidade'],
+        'bairro' => $_POST['bairro'],
+        'rua' => $_POST['rua'],
+        'numero' => $_POST['numero'],
+        'nome' => $nome
+    ];
+
+    // Verifica se o usuário já tem registro
+    $stmt = $conn->prepare("SELECT idusuario FROM usuario WHERE nome = ?");
+    $stmt->execute([$nome]);
+    $existe = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($existe) {
+        // Atualiza os dados existentes
+        $sql = "UPDATE usuario SET
+                    nome_completo = :nome_completo,
+                    telefone = :telefone,
+                    email = :email,
+                    cep = :cep,
+                    estado = :estado,
+                    cidade = :cidade,
+                    bairro = :bairro,
+                    rua = :rua,
+                    numero = :numero
+                WHERE nome = :nome";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($dados);
+    } else {
+        // Insere novo registro
+        $sql = "INSERT INTO usuario (nome_completo, telefone, email, cep, estado, cidade, bairro, rua, numero, nome)
+                VALUES (:nome_completo, :telefone, :email, :cep, :estado, :cidade, :bairro, :rua, :numero, :nome)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($dados);
+    }
+
+    header('Location: finalizarcompra.php');
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -571,11 +647,13 @@
 <body>
 <div class="sidebar">
   <div class="logo">
-      <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
+      <?php if ($foto_de_perfil): ?>
+      <img src="data:image/jpeg;base64,<?= base64_encode($foto_de_perfil) ?>">
+      <?php else: ?>
+        <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
+      <?php endif; ?>
       <div class="user-info">
-        <a href="php/cadastro/cadastroUsuario.php" style="text-decoration: none; color: white;">
-          <p class="nome-usuario">Entre ou crie sua conta</p>
-        </a>
+        <p class="nome-usuario"><?= htmlspecialchars($nome) ?></p>
       </div>
   </div>
 
@@ -590,10 +668,15 @@
 
     <h3>Conta</h3>
     <ul class="account">
-      <li><a href="../login/login.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
-      <li><a href="../cadastro/cadastroUsuario.php"><img src="../../imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
-      <li><a href="../cadastro/cadastroVendedor.php"><img src="../../imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
-      <li><a href="../login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
+      <?php if (!$nome): ?>
+        <li><a href="../login/login.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Entrar na conta</a></li>
+        <li><a href="../cadastro/cadastroUsuario.php"><img src="../../imgs/criarconta.png" alt="Criar Conta" style="width:20px; margin-right:10px;"> Criar conta</a></li>
+        <li><a href="../cadastro/cadastroVendedor.php"><img src="../../imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
+        <li><a href="../login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
+      <?php else: ?>
+        <li><a href="../perfil-usuario/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
+        <li><a href="../login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
+      <?php endif; ?>
     </ul>
   </nav>
 </div>
@@ -612,101 +695,62 @@
   <div class="checkout-container">
     <div class="checkout-form">
       <!-- Informações de Entrega -->
-      <div class="form-section">
+      <form action="finalizarcompra.php" method="POST" class="form-section">
         <h2 class="section-title">Informações de Entrega</h2>
-        
+
         <div class="form-row">
-          <div class="form-group">
-            <label for="nome">Nome completo *</label>
-            <input type="text" id="nome" placeholder="Seu nome completo" required>
-          </div>
-          <div class="form-group">
-            <label for="telefone">Telefone *</label>
-            <input type="tel" id="telefone" placeholder="(11) 99999-9999" required>
-          </div>
+            <div class="form-group">
+                <label for="nome_completo">Nome completo *</label>
+                <input type="text" name="nome_completo" value="<?= htmlspecialchars($usuario['nome_completo'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="telefone">Telefone *</label>
+                <input type="tel" name="telefone" value="<?= htmlspecialchars($usuario['telefone'] ?? '') ?>" required>
+            </div>
         </div>
-        
+
         <div class="form-group">
-          <label for="email">E-mail *</label>
-          <input type="email" id="email" placeholder="seu@email.com" required>
+            <label for="email">E-mail *</label>
+            <input type="email" name="email" value="<?= htmlspecialchars($usuario['email'] ?? '') ?>" required>
         </div>
-        
-        <div class="form-row">
-          <div class="form-group">
+
+        <div class="form-group">
             <label for="cep">CEP *</label>
-            <input type="text" id="cep" placeholder="00000-000" required>
-          </div>
-          <div class="form-group">
+            <input type="text" name="cep" id="cep" value="<?= htmlspecialchars($usuario['cep'] ?? '') ?>" required>
+        </div>
+        <div class="form-group">
             <label for="estado">Estado *</label>
-            <select id="estado" required>
-              <option value="">Selecione</option>
-              <option value="AC">Acre</option>
-              <option value="AL">Alagoas</option>
-              <option value="AP">Amapá</option>
-              <option value="AM">Amazonas</option>
-              <option value="BA">Bahia</option>
-              <option value="CE">Ceará</option>
-              <option value="DF">Distrito Federal</option>
-              <option value="ES">Espírito Santo</option>
-              <option value="GO">Goiás</option>
-              <option value="MA">Maranhão</option>
-              <option value="MT">Mato Grosso</option>
-              <option value="MS">Mato Grosso do Sul</option>
-              <option value="MG">Minas Gerais</option>
-              <option value="PA">Pará</option>
-              <option value="PB">Paraíba</option>
-              <option value="PR">Paraná</option>
-              <option value="PE">Pernambuco</option>
-              <option value="PI">Piauí</option>
-              <option value="RJ">Rio de Janeiro</option>
-              <option value="RN">Rio Grande do Norte</option>
-              <option value="RS">Rio Grande do Sul</option>
-              <option value="RO">Rondônia</option>
-              <option value="RR">Roraima</option>
-              <option value="SC">Santa Catarina</option>
-              <option value="SP">São Paulo</option>
-              <option value="SE">Sergipe</option>
-              <option value="TO">Tocantins</option>
-            </select>
-          </div>
+            <input type="text" name="estado" id="estado" value="<?= htmlspecialchars($usuario['estado'] ?? '') ?>" required>
         </div>
-        
+
         <div class="form-group">
-          <label for="cidade">Cidade *</label>
-          <input type="text" id="cidade" placeholder="Sua cidade" required>
+            <label for="cidade">Cidade *</label>
+            <input type="text" name="cidade" id="cidade" value="<?= htmlspecialchars($usuario['cidade'] ?? '') ?>" required>
         </div>
-        
+
         <div class="form-group">
-          <label for="bairro">Bairro *</label>
-          <input type="text" id="bairro" placeholder="Seu bairro" required>
+            <label for="bairro">Bairro *</label>
+            <input type="text" name="bairro" id="bairro" value="<?= htmlspecialchars($usuario['bairro'] ?? '') ?>" required>
         </div>
-        
+
         <div class="form-row">
-          <div class="form-group">
-            <label for="endereco">Endereço *</label>
-            <input type="text" id="endereco" placeholder="Nome da rua, avenida, etc." required>
-          </div>
-          <div class="form-group">
-            <label for="numero">Número *</label>
-            <input type="text" id="numero" placeholder="Nº" required>
-          </div>
+            <div class="form-group">
+                <label for="rua">Endereço *</label>
+                <input type="text" name="rua" id="rua" value="<?= htmlspecialchars($usuario['rua'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="numero">Número *</label>
+                <input type="text" name="numero" id="numero" value="<?= htmlspecialchars($usuario['numero'] ?? '') ?>" required>
+            </div>
         </div>
         
         <div class="form-group">
-          <label for="complemento">Complemento</label>
-          <input type="text" id="complemento" placeholder="Apartamento, bloco, referência, etc.">
+            <label for="pais">País</label>
+            <input type="text" name="pais" value="Brasil" readonly>
         </div>
-        
-        <div class="form-group">
-          <label for="pais">País</label>
-          <input type="text" id="pais" value="Brasil" readonly>
-        </div>
-        
-        <div class="form-group">
-          <label for="observacoes">Observações para a entrega</label>
-          <textarea id="observacoes" rows="3" placeholder="Instruções especiais para a entrega..."></textarea>
-        </div>
-      </div>
+
+        <button type="submit" name="finalizar">Completar informações</button>
+      </form>
 
       <!-- Método de Pagamento -->
       <div class="form-section">
@@ -774,370 +818,78 @@
             <p><strong>Vencimento:</strong> <span id="vencimento-boleto">DD/MM/AAAA</span></p>
           </div>
         </div>
+
       </div>
     </div>
 
     <!-- Resumo do Pedido -->
     <div class="order-summary">
       <h2 class="section-title">Resumo do Pedido</h2>
-      
-      <div class="order-items" id="order-items-container">
-        <!-- Itens serão carregados aqui via JavaScript -->
-      </div>
-      
-      <div id="empty-cart-message" class="empty-cart" style="display: none;">
-        <h3>Seu carrinho está vazio</h3>
-        <p>Adicione alguns livros incríveis ao seu carrinho!</p>
-        <a href="../../index.php" class="confirm-btn" style="text-decoration: none; display: inline-block; width: auto; padding: 10px 20px; margin-top: 15px;">
-          Continuar comprando
-        </a>
-      </div>
-      
-      <div class="coupon-section">
-        <label for="cupom">Cupom de Desconto</label>
-        <div class="coupon-input">
-          <input type="text" id="cupom" placeholder="Digite seu cupom">
-          <button onclick="aplicarCupom()">Aplicar</button>
+
+      <?php if (empty($_SESSION['carrinho'])): ?>
+        <div class="empty-cart">
+          <h3>Seu carrinho está vazio</h3>
+          <p>Adicione alguns livros incríveis ao seu carrinho!</p>
+          <a href="../../index.php" class="confirm-btn" style="text-decoration: none; display: inline-block; padding: 10px 20px;">Continuar comprando</a>
         </div>
-        <div id="cupom-mensagem" style="margin-top: 5px; font-size: 0.9rem;"></div>
-      </div>
-      
-      <div class="summary-totals">
-        <div class="total-row">
-          <span class="total-label">Subtotal (<span id="items-count">0</span> itens)</span>
-          <span class="total-value" id="subtotal-value">R$ 0,00</span>
+      <?php else: ?>
+        <div class="order-items">
+          <?php foreach ($_SESSION['carrinho'] as $item): ?>
+            <?php
+              $stmt = $conn->prepare("SELECT imagem FROM imagens WHERE idproduto = ?");
+              $stmt->execute([$item['id']]);
+              $row = $stmt->fetch(PDO::FETCH_ASSOC);
+              $src = ($row && !empty($row['imagem'])) 
+                ? "data:image/jpeg;base64," . base64_encode($row['imagem']) 
+                : "../../imgs/capa.jpg";
+            ?>
+            <div class="order-item">
+              <img src="<?= $src ?>" class="item-image">
+              <strong><?= htmlspecialchars($item['nome']) ?></strong>
+              <p>R$ <?= number_format(floatval($item['preco']), 2, ',', '.') ?></p>
+              <?php if (!empty($item['frete'])): ?>
+                <p style="color:#555;">
+                  <strong>Frete:</strong> <?= htmlspecialchars($item['frete']['nome'] ?? '-') ?> —
+                  R$ <?= number_format(floatval($item['frete']['preco'] ?? 0), 2, ',', '.') ?> 
+                  (<?= htmlspecialchars($item['frete']['prazo'] ?? '-') ?> dias úteis)
+                </p>
+              <?php endif; ?>
+            </div>
+          <?php endforeach; ?>
         </div>
-        
-        <div class="total-row">
-          <span class="total-label">Frete</span>
-          <span class="total-value">Grátis</span>
+
+        <div class="summary-totals">
+          <div class="total-row">
+            <span class="total-label">Subtotal dos Livros (<?= $totalItens ?> itens)</span>
+            <span class="total-value">R$ <?= number_format($subtotalLivros, 2, ',', '.') ?></span>
+          </div>
+
+          <div class="total-row">
+            <span class="total-label">Frete</span>
+            <span class="total-value">R$ <?= number_format($totalFrete, 2, ',', '.') ?></span>
+          </div>
+
+          <div class="total-row grand-total">
+            <span class="total-label">Total Geral</span>
+            <span class="total-value">R$ <?= number_format($totalGeral, 2, ',', '.') ?></span>
+          </div>
         </div>
-        
-        <div class="total-row">
-          <span class="total-label">Desconto</span>
-          <span class="total-value" id="desconto-valor">R$ 0,00</span>
-        </div>
-        
-        <div class="total-row grand-total">
-          <span class="total-label">Total</span>
-          <span class="total-value" id="total-final">R$ 0,00</span>
-        </div>
-      </div>
-      
-      <button class="confirm-btn" id="confirm-button" onclick="finalizarPedido()">Confirmar Pedido</button>
+
+        <form action="processar_pedido.php" method="POST">
+          <input type="hidden" name="metodo_pagamento" value="cartao">
+          <input type="hidden" name="endereco_id" value="123">
+          <button type="submit" class="confirm-btn">Confirmar Compra</button>
+        </form>
+
+      <?php endif; ?>
     </div>
+
   </div>
 </div>  
 
 <div class="footer">
   &copy; 2025 Entre Linhas - Todos os direitos reservados.
 </div>
-
-<script>
-  // Dados dos produtos
-  const produtos = [
-    {
-      id: 1,
-      nome: "Extraordinário",
-      detalhes: "Capa comum - Edição padrão",
-      preco: 42.29,
-      quantidade: 1,
-      imagem: "../../imgs/Extraordinário.jpg"
-    },
-    {
-      id: 2,
-      nome: "A Menina que Roubava Livros",
-      detalhes: "Capa comum - Edição padrão",
-      preco: 42.29,
-      quantidade: 1,
-      imagem: "../../imgs/A Menina que Roubava Livros.jpg"
-    },
-    {
-      id: 3,
-      nome: "Alice no País das Maravilhas",
-      detalhes: "Capa dura - Classic Edition",
-      preco: 48.93,
-      quantidade: 1,
-      imagem: "../../imgs/alice.jpg"
-    }
-  ];
-
-  let descontoAplicado = 0;
-  let cupomAtivo = '';
-
-  // Carregar os itens do pedido
-  function carregarItensPedido() {
-    const container = document.getElementById('order-items-container');
-    const emptyMessage = document.getElementById('empty-cart-message');
-    const confirmButton = document.getElementById('confirm-button');
-    
-    if (produtos.length === 0) {
-      container.style.display = 'none';
-      emptyMessage.style.display = 'block';
-      confirmButton.disabled = true;
-      return;
-    }
-    
-    container.style.display = 'block';
-    emptyMessage.style.display = 'none';
-    confirmButton.disabled = false;
-    
-    let html = '';
-    
-    produtos.forEach(produto => {
-      const totalItem = produto.preco * produto.quantidade;
-      html += `
-        <div class="order-item" data-id="${produto.id}">
-          <img src="${produto.imagem}" alt="${produto.nome}" class="item-image">
-          <div class="item-info">
-            <div class="item-name">${produto.nome}</div>
-            <div class="item-details">${produto.detalhes}</div>
-            <div class="item-controls">
-              <div class="quantity-control">
-                <button class="quantity-btn" onclick="alterarQuantidade(${produto.id}, -1)">-</button>
-                <input type="number" class="quantity-input" value="${produto.quantidade}" min="1" id="qty-${produto.id}">
-                <button class="quantity-btn" onclick="alterarQuantidade(${produto.id}, 1)">+</button>
-              </div>
-              <button class="remove-btn" onclick="removerItem(${produto.id})">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="2"/>
-                </svg>
-                Remover
-              </button>
-            </div>
-          </div>
-          <div class="item-price">
-            R$ ${produto.preco.toFixed(2).replace('.', ',')}
-            <div class="item-total">R$ ${totalItem.toFixed(2).replace('.', ',')}</div>
-          </div>
-        </div>
-      `;
-    });
-    
-    container.innerHTML = html;
-    atualizarResumo();
-  }
-
-  // Alterar quantidade do produto
-  function alterarQuantidade(produtoId, alteracao) {
-    const produto = produtos.find(p => p.id === produtoId);
-    if (!produto) return;
-    
-    const input = document.getElementById(`qty-${produtoId}`);
-    let novaQuantidade = parseInt(input.value) + alteracao;
-    
-    if (novaQuantidade < 1) novaQuantidade = 1;
-    
-    input.value = novaQuantidade;
-    produto.quantidade = novaQuantidade;
-    
-    atualizarResumo();
-  }
-
-  // Remover item do pedido
-  function removerItem(produtoId) {
-    if (confirm('Tem certeza que deseja remover este item do pedido?')) {
-      const index = produtos.findIndex(p => p.id === produtoId);
-      if (index !== -1) {
-        produtos.splice(index, 1);
-        carregarItensPedido();
-      }
-    }
-  }
-
-  // Atualizar resumo do pedido
-  function atualizarResumo() {
-    let subtotal = 0;
-    let totalItens = 0;
-    
-    produtos.forEach(produto => {
-      subtotal += produto.preco * produto.quantidade;
-      totalItens += produto.quantidade;
-    });
-    
-    const frete = 0; // Frete grátis
-    const desconto = (subtotal * descontoAplicado) / 100;
-    const total = subtotal + frete - desconto;
-    
-    document.getElementById('items-count').textContent = totalItens;
-    document.getElementById('subtotal-value').textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
-    document.getElementById('desconto-valor').textContent = `-R$ ${desconto.toFixed(2).replace('.', ',')}`;
-    document.getElementById('total-final').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
-    
-    // Atualizar valor do PIX
-    document.getElementById('pix-valor').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
-  }
-
-  // Aplicar cupom de desconto
-  function aplicarCupom() {
-    const cupomInput = document.getElementById('cupom');
-    const mensagem = document.getElementById('cupom-mensagem');
-    
-    const cupom = cupomInput.value.trim().toUpperCase();
-    
-    // Cupons válidos (exemplo)
-    const cuponsValidos = {
-      'ENTRELINHAS10': 10,
-      'LIVRO15': 15,
-      'PRIMEIRACOMPRA': 20
-    };
-    
-    if (cupom in cuponsValidos) {
-      descontoAplicado = cuponsValidos[cupom];
-      cupomAtivo = cupom;
-      
-      mensagem.textContent = `Cupom "${cupom}" aplicado! ${descontoAplicado}% de desconto.`;
-      mensagem.style.color = 'green';
-    } else {
-      descontoAplicado = 0;
-      cupomAtivo = '';
-      
-      mensagem.textContent = 'Cupom inválido ou expirado.';
-      mensagem.style.color = 'red';
-    }
-    
-    atualizarResumo();
-  }
-
-  // Alternar método de pagamento
-  function alternarMetodoPagamento(metodo) {
-    // Ocultar todas as informações de pagamento
-    document.getElementById('cartao-info').style.display = 'none';
-    document.getElementById('pix-info').style.display = 'none';
-    document.getElementById('boleto-info').style.display = 'none';
-    
-    // Remover classe selected de todas as opções
-    document.getElementById('cartao-option').classList.remove('selected');
-    document.getElementById('pix-option').classList.remove('selected');
-    document.getElementById('boleto-option').classList.remove('selected');
-    
-    // Mostrar informações do método selecionado
-    if (metodo === 'cartao') {
-      document.getElementById('cartao-info').style.display = 'block';
-      document.getElementById('cartao-option').classList.add('selected');
-    } else if (metodo === 'pix') {
-      document.getElementById('pix-info').style.display = 'block';
-      document.getElementById('pix-option').classList.add('selected');
-    } else if (metodo === 'boleto') {
-      document.getElementById('boleto-info').style.display = 'block';
-      document.getElementById('boleto-option').classList.add('selected');
-      
-      // Definir vencimento do boleto (3 dias úteis)
-      const hoje = new Date();
-      const vencimento = new Date(hoje);
-      vencimento.setDate(hoje.getDate() + 3);
-      
-      const dia = vencimento.getDate().toString().padStart(2, '0');
-      const mes = (vencimento.getMonth() + 1).toString().padStart(2, '0');
-      const ano = vencimento.getFullYear();
-      
-      document.getElementById('vencimento-boleto').textContent = `${dia}/${mes}/${ano}`;
-    }
-  }
-
-  // Gerar boleto
-  function gerarBoleto() {
-    // Em uma implementação real, você faria uma requisição para gerar o boleto
-    // Aqui vamos simular o download de um PDF
-    alert('Boleto gerado com sucesso! Em uma implementação real, o PDF seria baixado.');
-    
-    // Simulação de download de PDF
-    const link = document.createElement('a');
-    link.href = '#'; // URL do boleto gerado
-    link.download = 'boleto_entrelinhas.pdf';
-    link.click();
-  }
-
-  // Finalizar pedido
-  function finalizarPedido() {
-    if (produtos.length === 0) {
-      alert('Seu carrinho está vazio!');
-      return;
-    }
-    
-    // Validação básica dos campos obrigatórios
-    const camposObrigatorios = [
-      'nome', 'telefone', 'email', 'cep', 'estado', 'cidade', 
-      'bairro', 'endereco', 'numero'
-    ];
-    
-    let camposVazios = [];
-    
-    camposObrigatorios.forEach(campo => {
-      const elemento = document.getElementById(campo);
-      if (!elemento.value.trim()) {
-        camposVazios.push(campo);
-        elemento.style.borderColor = 'red';
-      } else {
-        elemento.style.borderColor = '';
-      }
-    });
-    
-    // Validação específica para cartão
-    const metodoPagamento = document.querySelector('input[name="pagamento"]:checked').value;
-    if (metodoPagamento === 'cartao') {
-      const camposCartao = ['numero-cartao', 'nome-cartao', 'validade', 'cvv'];
-      camposCartao.forEach(campo => {
-        const elemento = document.getElementById(campo);
-        if (!elemento.value.trim()) {
-          camposVazios.push(campo);
-          elemento.style.borderColor = 'red';
-        } else {
-          elemento.style.borderColor = '';
-        }
-      });
-    }
-    
-    if (camposVazios.length > 0) {
-      alert('Por favor, preencha todos os campos obrigatórios marcados com *');
-      return;
-    }
-    
-    alert('Pedido confirmado com sucesso! Redirecionando...');
-    // Aqui você pode redirecionar para a página de confirmação
-    // window.location.href = 'confirmacao.php';
-  }
-
-  // Formatação automática de campos
-  document.getElementById('telefone').addEventListener('input', function(e) {
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.length > 11) value = value.substring(0, 11);
-    
-    if (value.length > 6) {
-      value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-    } else if (value.length > 2) {
-      value = value.replace(/(\d{2})(\d{0,5})/, '($1) $2');
-    } else if (value.length > 0) {
-      value = value.replace(/(\d{0,2})/, '($1');
-    }
-    
-    e.target.value = value;
-  });
-
-  document.getElementById('cep').addEventListener('input', function(e) {
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.length > 8) value = value.substring(0, 8);
-    
-    if (value.length > 5) {
-      value = value.replace(/(\d{5})(\d{0,3})/, '$1-$2');
-    }
-    
-    e.target.value = value;
-  });
-
-  // Adicionar eventos aos métodos de pagamento
-  document.querySelectorAll('input[name="pagamento"]').forEach(radio => {
-    radio.addEventListener('change', function() {
-      alternarMetodoPagamento(this.value);
-    });
-  });
-
-  // Carregar os itens quando a página for carregada
-  document.addEventListener('DOMContentLoaded', function() {
-    carregarItensPedido();
-    alternarMetodoPagamento('cartao'); // Inicializar com cartão selecionado
-  });
-</script>
 <!-- VLibras - Widget de Libras -->
 <div vw class="enabled">
     <div vw-access-button class="active"></div>
@@ -1148,6 +900,29 @@
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
 <script>
     new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
+
+<script>
+document.getElementById('cep').addEventListener('blur', function() {
+    let cep = this.value.replace(/\D/g, ''); // Remove tudo que não é número
+    if (cep.length === 8) {
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(response => response.json())
+        .then(data => {
+            if (!data.erro) {
+                document.getElementById('estado').value = data.uf;
+                document.getElementById('cidade').value = data.localidade;
+                document.getElementById('bairro').value = data.bairro;
+                document.getElementById('rua').value = data.logradouro;
+            } else {
+                alert('CEP não encontrado.');
+            }
+        })
+        .catch(() => {
+            alert('Erro ao consultar o CEP.');
+        });
+    }
+});
 </script>
 </body>
 </html>

@@ -435,6 +435,7 @@ $reputacao = $dados_vendedor ? $dados_vendedor['reputacao'] : 0;
         <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
         <p>Nenhuma avaliação recebida ainda.</p>
       </div>
+
       <?php
         include '../conexao.php';
 
@@ -443,36 +444,34 @@ $reputacao = $dados_vendedor ? $dados_vendedor['reputacao'] : 0;
         $notificacoes = [];
 
         if ($id_vendedor) {
-            // Buscar informações do vendedor
-            $sql = "SELECT nome_completo, email, telefone, cep, estado, cidade, bairro, rua, numero, cpf 
-                    FROM vendedor 
-                    WHERE idvendedor = :id";
+            // Busca notificações reais do vendedor
+            $sql = "SELECT n.idnotificacoes, n.mensagem, n.lida, n.data_envio, u.nome_completo AS usuario_nome
+                    FROM notificacoes n
+                    JOIN usuario u ON n.idusuario = u.idusuario
+                    WHERE n.idvendedor = :id
+                    ORDER BY n.data_envio DESC";
             $stmt = $conn->prepare($sql);
             $stmt->execute([':id' => $id_vendedor]);
-            $vendedor = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($vendedor) {
-                // Verifica se algum campo está vazio
-                foreach ($vendedor as $campo => $valor) {
-                    if (empty($valor)) {
-                        $notificacoes[] = "Seu campo <b>$campo</b> ainda não foi preenchido.";
-                    }
-                }
-            }
+            $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
       ?>
 
-      <div class="card">
-        <h2>Notificações</h2>
-        <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
+      <div class="card"> 
+          <h2>Notificações</h2>
+          <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
 
-        <?php if (!empty($notificacoes)): ?>
-            <?php foreach ($notificacoes as $msg): ?>
-                <p style="color: #b14c2d; margin-bottom: 8px;">⚠️ <?= $msg ?></p>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>Nenhuma notificação no momento.</p>
-        <?php endif; ?>
+          <?php if (!empty($notificacoes)): ?>
+              <?php foreach ($notificacoes as $notif): ?>
+                  <p style="margin-bottom: 8px;">
+                      <?= $notif['lida'] == 0 ? '🔔' : '✅' ?>
+                      <?= htmlspecialchars($notif['mensagem']) ?>
+                      <br>
+                      <small style="color: #777;">De: <?= htmlspecialchars($notif['usuario_nome']) ?> | <?= date('d/m/Y H:i', strtotime($notif['data_envio'])) ?></small>
+                  </p>
+              <?php endforeach; ?>
+          <?php else: ?>
+              <p>Nenhuma notificação no momento.</p>
+          <?php endif; ?>
       </div>
     </div>
   </main>

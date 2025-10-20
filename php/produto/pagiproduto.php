@@ -1005,12 +1005,13 @@ if (isset($_SESSION['idusuario'])) {
                     
                     </div>
 
-                  <div class="shipping-info">
-                    <?php
+                    <div class="shipping-info">
+                        <?php
                         include 'calcularFrete.php'; 
 
-                        $cepVendedor = $cep_vendedor;
-                        $cepUsuario = $cep_usuario;
+                        // Se o usuário estiver logado, busca o CEP do banco ou sessão
+                        $cepVendedor = $cep_vendedor ?? null;
+                        $cepUsuario = $_SESSION['cep_usuario'] ?? ($cep_usuario ?? null);
 
                         // Dados do produto
                         $peso = ($produto['peso'] ?? 1000) / 1000; // kg
@@ -1018,9 +1019,18 @@ if (isset($_SESSION['idusuario'])) {
                         $largura = $produto['largura'] ?? 15;
                         $comprimento = $produto['comprimento'] ?? 20;
 
-                        // Token do Melhor Envio
+                        // Token Melhor Envio
                         $tokenMelhorEnvio = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5NTYiLCJqdGkiOiI1Yzk5OGE3MTAzYmQ1YmFmN2E4M2E3ZTZlMDNmZTljMjBlMzM2NzFmM2UxNTg4ZjJjZDFmMjBkYTc2ZGZhZTgzZGIyMzMzYTU2ZmE2YWE2ZiIsImlhdCI6MTc2MDczNDk3OS41MDA4MzUsIm5iZiI6MTc2MDczNDk3OS41MDA4MzgsImV4cCI6MTc5MjI3MDk3OS40OTE5MDksInN1YiI6ImEwMjM0ZGE4LTM5YmUtNGEzNS04MmRlLTU1N2ViZWYwNjFlOSIsInNjb3BlcyI6WyJzaGlwcGluZy1jYWxjdWxhdGUiXX0.pz7RG3El6bSCnyeB2ItjAuW80erggbMSL5RVcOfvZz3u93dDpS4inndljPiCoTNzJ0u2pFxPFPm8gICClcb4Yz9pVn2jpPXJQqQw5Z_xFkHri_g6FF-3nFfw57FJ7g3HyEKna0TN3auLpVfO1km6QOlHftsITGe8k3x2KjaV2XgjbvDWvIPBubc1lF0lRsPdKihvfigW2KpihOLVbOSNkVGG3omSOgb5E3FPwykyDHIeV9rdoefzmiKVV5W2yc9C2Y5mRiPeyJIcL2-OnJLjXtDtrT2UY4-1mLIEWqpL-2Di1NFeKIcaqbIsZ6YpwZsBQeGh9ySti0Lgn-dpyuQBlNc2m0_MHRN2BA-Hsr_owmXykrZDsjQuIyt-ijtNluzfhvahYaoJ7GjagurOowoLMeecEoQNNhuRIQ_IarQ0EsDYTh5hl-gFT7VtlNmDv6Fv7Ut8CfEkAcus2v8PEt9shKxONQxd9hZVq9QR0lFZVRNYvwmd_9VUn_aAYhJ9LJnlwcSJC4XV67nKXg5_qe28bouktyrZ4mrjCNdcjWmKBHHAj4ShSQmydmJ9_iNg6Ud8OMDc8dVwWwWwdfFbVj4wMJIuO6lA9T6TczMlORfz-mjqZAdqZ3422JuEhnZWwsPa7V4xZgTFGVezIPAo0rADfPg6ycJWsocl3kz0cfuKjIE";
                         $usarSandbox = true;
+
+                        // Se o formulário de CEP foi enviado manualmente
+                        if (!empty($_POST['cep_usuario'])) {
+                            $_SESSION['cep_usuario'] = preg_replace('/[^0-9]/', '', $_POST['cep_usuario']);
+                            header("Refresh:0");
+                            exit;
+                        }
+
+                        $freteSelecionado = null;
 
                         if (!empty($cepUsuario)) {
                             $fretes = calcularFreteMelhorEnvio(
@@ -1040,6 +1050,22 @@ if (isset($_SESSION['idusuario'])) {
                             } elseif (!empty($fretes)) {
                                 echo '<h4>Escolha o tipo de frete:</h4>';
                                 echo '<div id="frete-options">';
+                                
+                                // Identificar o frete mais barato
+                                $freteMaisBarato = null;
+                                foreach ($fretes as $f) {
+                                    $preco = floatval($f['packages'][0]['price'] ?? 999999);
+                                    if ($freteMaisBarato === null || $preco < $freteMaisBarato['preco']) {
+                                        $freteMaisBarato = [
+                                            'nome' => $f['name'],
+                                            'preco' => $preco,
+                                            'prazo' => $f['delivery_time'] ?? '-',
+                                            'logo' => $f['company']['picture'] ?? ''
+                                        ];
+                                    }
+                                }
+
+                                // Exibir as opções e marcar o mais barato
                                 foreach ($fretes as $f) {
                                     $preco = $f['packages'][0]['price'] ?? '-';
                                     $prazo = $f['delivery_time'] ?? '-';
@@ -1052,9 +1078,19 @@ if (isset($_SESSION['idusuario'])) {
                                         'prazo' => $prazo
                                     ]));
 
+                                    $checked = ($freteMaisBarato && $nome === $freteMaisBarato['nome']) ? "checked" : "";
+
+                                    if ($checked) {
+                                        $freteSelecionado = [
+                                            'nome' => $nome,
+                                            'preco' => $preco,
+                                            'prazo' => $prazo
+                                        ];
+                                    }
+
                                     echo '<div style="margin-bottom:5px;">';
                                     echo "<label>";
-                                    echo "<input type='radio' name='frete' value='$value'> ";
+                                    echo "<input type='radio' name='frete' value='$value' $checked> ";
                                     if ($logo) {
                                         echo "<img src='$logo' width='40' style='vertical-align:middle;'> ";
                                     }
@@ -1067,34 +1103,15 @@ if (isset($_SESSION['idusuario'])) {
                                 echo '<p>Nenhum serviço de frete retornado.</p>';
                             }
                         } else {
+                            echo '<h4>Calcular frete</h4>';
                             echo '<p>Informe seu CEP para calcular o frete:</p>';
                             echo '<form method="post" action="">';
                             echo '  <input type="text" name="cep_usuario" placeholder="Digite seu CEP" maxlength="9" required>';
                             echo '  <button type="submit">Calcular Frete</button>';
                             echo '</form>';
-
-                            if (!empty($_POST['cep_usuario'])) {
-                                $_SESSION['cep_usuario'] = preg_replace('/[^0-9]/', '', $_POST['cep_usuario']);
-                                header("Refresh:0");
-                                exit;
-                            }
                         }
                         ?>
                     </div>
-
-                    <script>
-                        const radios = document.querySelectorAll('input[name="frete"]');
-                        const comprarLink = document.getElementById('comprar-link');
-
-                        radios.forEach(radio => {
-                            radio.addEventListener('change', () => {
-                                const freteData = radio.value; // base64 JSON
-                                const url = new URL(comprarLink.href);
-                                url.searchParams.set('frete', freteData);
-                                comprarLink.href = url.toString();
-                            });
-                        });
-                    </script>
 
                     <div class="product-description">
                         <p><?= htmlspecialchars($produto['estado_livro']) ?></p>
@@ -1116,8 +1133,46 @@ if (isset($_SESSION['idusuario'])) {
                         </div>
                     </div>
                     
-                    <button class="buy-button">
-                       <a id="comprar-link" href="../carrinho/carrinho.php?id=<?= $produto['idproduto'] ?>&nome=<?= $produto['nome'] ?>&preco=<?= $produto['preco'] ?>" class="card-link">COMPRAR</a>
+                    <?php
+                        $fretePadrao = null;
+                        if (!empty($fretes) && is_array($fretes)) {
+                            $primeiroFrete = reset($fretes);
+                            $fretePadrao = base64_encode(json_encode([
+                                'nome' => $primeiroFrete['name'],
+                                'preco' => $primeiroFrete['packages'][0]['price'] ?? 0,
+                                'prazo' => $primeiroFrete['delivery_time'] ?? '-'
+                            ]));
+                        }
+                    ?>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const freteRadios = document.querySelectorAll('input[name="frete"]');
+                            const buyButton = document.querySelector('#buy-button a');
+
+                            freteRadios.forEach(radio => {
+                                radio.addEventListener('change', function() {
+                                    const selectedFrete = encodeURIComponent(this.value);
+                                    // Pega a URL base (sem frete)
+                                    let baseUrl = buyButton.href.split('&frete=')[0];
+                                    // Atualiza a URL com o frete selecionado
+                                    buyButton.href = baseUrl + '&frete=' + selectedFrete;
+                                });
+
+                                // Caso algum rádio já venha marcado (o mais barato)
+                                if (radio.checked) {
+                                    const selectedFrete = encodeURIComponent(radio.value);
+                                    let baseUrl = buyButton.href.split('&frete=')[0];
+                                    buyButton.href = baseUrl + '&frete=' + selectedFrete;
+                                }
+                            });
+                        });
+                    </script>
+
+                    <button class="buy-button" id="buy-button">
+                        <a href="../carrinho/carrinho.php?id=<?= $produto['idproduto'] ?>&nome=<?= urlencode($produto['nome']) ?>&preco=<?= $produto['preco'] ?><?php if ($fretePadrao) echo "&frete=" . urlencode($fretePadrao); ?>" class="card-link">
+                            COMPRAR
+                        </a>
                     </button>
                     
                     <div class="secure-transaction">
