@@ -32,6 +32,9 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
 
     body {
       background-color: var(--background);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
     .sidebar {
@@ -216,20 +219,9 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
       gap: 15px;
     }
 
-    .main {
-      flex: 1;
-      margin-left: 250px;
-      padding: 30px;
-      margin-top: 70px;
-    }
-
-    .section-header h2 {
-      color: var(--verde);
-    }
-
     .categorias-barra {
       margin-left: 250px;
-      margin-top: 70px;
+      margin-top: 70px; /* Ajustado para ficar logo abaixo da topbar */
       background-color: #9a8c7c;
       padding: 10px 40px;
       display: flex;
@@ -252,8 +244,9 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
 
     .content {
       margin-left: 250px;
-      margin-top: 130px;
+      margin-top: 0; /* REMOVIDO o margin-top grande */
       padding: 30px;
+      flex: 1;
     }
 
     .content h2 {
@@ -270,43 +263,73 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
 
     .comunidade-box {
       display: flex;
-      background-color: var(--marrom);
+      background-color: var(--verde);
       border-radius: 10px;
       padding: 20px;
       color: white;
       margin-bottom: 30px;
-      align-items: center;
-    }
-
-    .comunidade-box {
-      display: flex;
-      background-color: var(--marrom);
-      border-radius: 10px;
-      padding: 20px;
-      color: white; /* textos brancos */
-      margin-bottom: 30px;
-      align-items: flex-start; /* textos mais para cima */
+      align-items: flex-start;
+      position: relative;
     }
 
     .comunidade-box img {
-      width: 180px;
-      height: 130px;
+      width: 220px;
+      height: 170px;
       object-fit: cover;
       border-radius: 10px;
       margin-right: 20px;
     }
 
+    .comunidade-box .descricao {
+      flex: 1;
+    }
+
     .comunidade-box .descricao h3 {
-      font-size: 1.2rem;
-      margin-bottom: 8px;
-      color: #fff; /* título branco */
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      color: #fff;
     }
 
     .comunidade-box .descricao p {
-      font-size: 1rem;
-      line-height: 1.4;
-      color: #fff; /* descrição branca */
-      margin-top: 0; /* tira espaço extra acima */
+      font-size: 1.1rem;
+      line-height: 1.5;
+      color: #fff;
+      margin-top: 0;
+    }
+
+    .comunidade-box .entrar-btn {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--marrom);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .comunidade-box .entrar-btn:hover {
+      background-color: #4a3520;
+    }
+
+    .welcome-section {
+      margin-bottom: 30px;
+      text-align: center;
+      padding-top: 20px; /* Pequeno espaçamento no topo */
+    }
+
+    .welcome-section h2 {
+      font-size: 2.5rem;
+      color: var(--marrom);
+      margin-bottom: 15px;
+    }
+
+    .welcome-section p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      color: #555;
     }
 
     .footer {
@@ -315,6 +338,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
       color: white;
       text-align: center;
       padding: 15px;
+      margin-top: auto;
     }
 
     @media (max-width: 768px) {
@@ -324,6 +348,23 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
 
       .topbar, .categorias-barra, .content, .footer {
         margin-left: 0;
+      }
+      
+      .comunidade-box {
+        flex-direction: column;
+      }
+      
+      .comunidade-box img {
+        width: 100%;
+        height: 200px;
+        margin-right: 0;
+        margin-bottom: 15px;
+      }
+      
+      .comunidade-box .entrar-btn {
+        position: static;
+        margin-top: 15px;
+        display: inline-block;
       }
     }
   </style>
@@ -375,6 +416,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
       <input type="submit" value="Buscar">
     </form>
 </div>
+
   <!-- Barra de categorias -->
   <div class="categorias-barra">
     <a href="#">Terror</a>
@@ -385,7 +427,6 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
     <a href="#">Ficção Científica</a>
     <a href="#">Infantil</a>
     <a href="#">Ficção Literária</a>
-
     <a href="criar_comunidade.php">Criar Comunidades</a>
   </div>
 
@@ -398,17 +439,6 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
         <p>Conecte-se com outros leitores, compartilhe suas opiniões e descubra novos livros através das nossas comunidades temáticas.</p>
       </div>
       
-      <div class="comunidade-box">
-      <img src="../../imgs/iconromance.jpg" alt="Ficção Científica">
-      <div class="descricao">
-        <h3>Descrição</h3>
-        <p>
-          Neste canto digital onde o tempo dobra e as realidades se entrelaçam, mentes inquietas se reúnem para tecer o futuro com palavras. <br><br>
-          Entre mensagens que viajam mais rápido que a luz, exploramos juntos os enigmas dos multiversos, os segredos das civilizações estelares e os dilemas éticos das inteligências artificiais.
-        </p>
-      </div>
-    </div>
-
     <?php while ($com = $result->fetch(PDO::FETCH_ASSOC)): ?>
       <div class="comunidade-box">
       <img src="data:image/jpeg;base64,<?= base64_encode($com['imagem']) ?>" alt="<?= htmlspecialchars($com['nome']) ?>">
@@ -417,7 +447,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
           <p>
             <?= nl2br(htmlspecialchars($com['descricao'])) ?>
           </p>
-          <a href="ver_comunidade.php?id=<?= $com['idcomunidades'] ?>">Entrar</a>
+          <a href="ver_comunidade.php?id=<?= $com['idcomunidades'] ?>" class="entrar-btn">Entrar</a>
         </div>
       </div>
     <?php endwhile; ?>
