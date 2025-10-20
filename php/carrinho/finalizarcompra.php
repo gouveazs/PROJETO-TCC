@@ -22,8 +22,12 @@ if (!isset($_SESSION['carrinho'])) {
 }
 
 // Calcular valores do carrinho
-$subtotalLivros = array_sum(array_map(fn($p) => floatval($p['preco']), $_SESSION['carrinho']));
-$totalFrete = array_sum(array_map(fn($p) => floatval($p['frete']['preco'] ?? 0), $_SESSION['carrinho']));
+$subtotalLivros = array_sum(array_map(function($p) {
+  return floatval($p['preco']);
+}, $_SESSION['carrinho']));
+$totalFrete = array_sum(array_map(function($p) {
+  return isset($p['frete']['preco']) ? floatval($p['frete']['preco']) : 0;
+}, $_SESSION['carrinho']));
 $totalGeral = $subtotalLivros + $totalFrete;
 $totalItens = count($_SESSION['carrinho']);
 

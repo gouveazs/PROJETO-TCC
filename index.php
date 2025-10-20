@@ -3,20 +3,20 @@ session_start();
 $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
 $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
-//produtos
 include 'php/conexao.php';
 $stmt = $conn->prepare("
     SELECT p.*, i.imagem
     FROM produto p
     LEFT JOIN imagens i 
         ON i.idproduto = p.idproduto
-    WHERE i.idimagens = (
-        SELECT idimagens
-        FROM imagens
-        WHERE idproduto = p.idproduto
-        ORDER BY idimagens ASC
-        LIMIT 1
-    )
+    WHERE p.status = 'Disponivel'  -- filtra apenas produtos disponíveis
+      AND i.idimagens = (
+          SELECT idimagens
+          FROM imagens
+          WHERE idproduto = p.idproduto
+          ORDER BY idimagens ASC
+          LIMIT 1
+      )
     LIMIT 6
 ");
 $stmt->execute();

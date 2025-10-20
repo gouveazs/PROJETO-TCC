@@ -482,75 +482,112 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <h2><b>Seus Anúncios</b></h2>
 
-  <div class="produtos-container">
-    <?php if (!empty($produtos)): ?>
-        <?php foreach ($produtos as $index => $produto): ?>
-            <div class="produto-card">
-                <div class="produto-img">
-                    <?php if (!empty($produto['imagem'])): ?>
-                      <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
-                    <?php else: ?>
-                      <img src="../../imgs/usuario.jpg" alt="Foto de Perfil">
-                    <?php endif; ?>
-                </div>
+<div class="produtos-container">
 
-                <button class="btn-toggle mostrar-detalhes" onclick="toggleDetalhes('detalhes-<?= $index ?>')">
-                    Mostrar detalhes
-                </button>
+  <!-- PRODUTOS DISPONÍVEIS -->
+  <h3 style="margin-top: 20px;">📗 Produtos Disponíveis</h3>
+  <?php 
+  $produtosDisponiveis = array_filter($produtos, function($p) {
+      return $p['status'] === 'Disponivel';
+  });
+  ?>
 
-  <div id="detalhes-<?= $index ?>" class="produto-detalhes">
-  <div class="detalhes-img">
-    <?php if (!empty($produto['imagem'])): ?>
-      <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
-    <?php else: ?>
-      <img src="../../imgs/usuario.jpg" alt="Sem imagem">
-    <?php endif; ?>
-  </div>
+  <?php if (!empty($produtosDisponiveis)): ?>
+      <?php foreach ($produtosDisponiveis as $index => $produto): ?>
+          <div class="produto-card">
+              <div class="produto-img">
+                  <?php if (!empty($produto['imagem'])): ?>
+                    <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+                  <?php else: ?>
+                    <img src="../../imgs/usuario.jpg" alt="Sem imagem">
+                  <?php endif; ?>
+              </div>
 
- <div class="detalhes-info">
-    <div class="detalhes-card">
-      <h3>Detalhes do Produto</h3>
-      <hr>
-      <div class="detalhes-colunas">
-        <div class="coluna">
-          <p><strong>Título:</strong> <?= htmlspecialchars($produto['nome']) ?></p>
-          <p><strong>Autor:</strong> <?= htmlspecialchars($produto['autor']) ?></p>
-          <p><strong>Editora:</strong> <?= htmlspecialchars($produto['editora']) ?></p>
-          <p><strong>Nº páginas:</strong> <?= (int)$produto['numero_paginas'] ?></p>
-          <p><strong>Categoria:</strong> <?= htmlspecialchars($produto['idcategoria']) ?></p>
-        </div>
-        <div class="coluna">
-          <p><strong>Publicação:</strong> <?= date('d/m/Y', strtotime($produto['data_publicacao'])) ?></p>
-          <p><strong>Idioma:</strong> <?= htmlspecialchars($produto['idioma']) ?></p>
-          <p><strong>Classificação:</strong> <?= htmlspecialchars($produto['classificacao_etaria']) ?> anos</p>
-          <p><strong>Dimensões:</strong> <?= htmlspecialchars($produto['dimensoes']) ?></p>
-          <p><strong>Preço:</strong> R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
-        </div>
-        <div class="coluna">
-          <p><strong>Quantidade:</strong> <?= (int)$produto['quantidade'] ?></p>
-          <p><strong>ISBN:</strong> <?= htmlspecialchars($produto['isbn']) ?></p>
-          <p><strong>Estado:</strong> <?= ucfirst(htmlspecialchars($produto['estado_livro'])) ?></p>
-          <p><strong>Desc. estado:</strong> <?= nl2br(htmlspecialchars($produto['estado_detalhado'])) ?></p>
-          <p><strong>Descrição:</strong> <?= nl2br(htmlspecialchars($produto['descricao'])) ?></p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+              <button class="btn-toggle mostrar-detalhes" onclick="toggleDetalhes('detalhes-<?= $index ?>')">
+                  Mostrar detalhes
+              </button>
 
-                <!-- Botões organizados um embaixo do outro -->
-                <div class="produto-actions">
-                    <a href="../produto/editar_produto.php?id=<?= $produto['idproduto'] ?>" class="btn-action editar">Editar Produto</a>
-                    <a href="../produto/excluir_produto.php?id=<?= $produto['idproduto'] ?>" class="btn-action excluir" onclick="return confirm('Tem certeza que deseja excluir esse anúncio?');">Excluir Produto</a>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-  <div class="sem-produto">
-    <p>Nenhum produto cadastrado.</p>
-    <a href="../cadastro/cadastroProduto.php" class="btn-cadastrar">Cadastrar novo produto</a>
-  </div>
-<?php endif; ?>
+              <div id="detalhes-<?= $index ?>" class="produto-detalhes">
+                  <div class="detalhes-img">
+                      <?php if (!empty($produto['imagem'])): ?>
+                        <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+                      <?php else: ?>
+                        <img src="../../imgs/usuario.jpg" alt="Sem imagem">
+                      <?php endif; ?>
+                  </div>
+
+                  <div class="detalhes-info">
+                      <div class="detalhes-card">
+                          <h3>Detalhes do Produto</h3>
+                          <hr>
+                          <div class="detalhes-colunas">
+                              <div class="coluna">
+                                  <p><strong>Título:</strong> <?= htmlspecialchars($produto['nome']) ?></p>
+                                  <p><strong>Autor:</strong> <?= htmlspecialchars($produto['autor']) ?></p>
+                                  <p><strong>Editora:</strong> <?= htmlspecialchars($produto['editora']) ?></p>
+                                  <p><strong>Nº páginas:</strong> <?= (int)$produto['numero_paginas'] ?></p>
+                                  <p><strong>Categoria:</strong> <?= htmlspecialchars($produto['idcategoria']) ?></p>
+                              </div>
+                              <div class="coluna">
+                                  <p><strong>Publicação:</strong> <?= date('d/m/Y', strtotime($produto['data_publicacao'])) ?></p>
+                                  <p><strong>Idioma:</strong> <?= htmlspecialchars($produto['idioma']) ?></p>
+                                  <p><strong>Classificação:</strong> <?= htmlspecialchars($produto['classificacao_etaria']) ?> anos</p>
+                                  <p><strong>Dimensões:</strong> <?= htmlspecialchars($produto['dimensoes']) ?></p>
+                                  <p><strong>Preço:</strong> R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+                              </div>
+                              <div class="coluna">
+                                  <p><strong>Quantidade:</strong> <?= (int)$produto['quantidade'] ?></p>
+                                  <p><strong>ISBN:</strong> <?= htmlspecialchars($produto['isbn']) ?></p>
+                                  <p><strong>Estado:</strong> <?= ucfirst(htmlspecialchars($produto['estado_livro'])) ?></p>
+                                  <p><strong>Desc. estado:</strong> <?= nl2br(htmlspecialchars($produto['estado_detalhado'])) ?></p>
+                                  <p><strong>Descrição:</strong> <?= nl2br(htmlspecialchars($produto['descricao'])) ?></p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="produto-actions">
+                  <a href="../produto/editar_produto.php?id=<?= $produto['idproduto'] ?>" class="btn-action editar">Editar Produto</a>
+                  <a href="../produto/excluir_produto.php?id=<?= $produto['idproduto'] ?>" class="btn-action excluir" onclick="return confirm('Tem certeza que deseja excluir esse anúncio?');">Excluir Produto</a>
+              </div>
+          </div>
+      <?php endforeach; ?>
+  <?php else: ?>
+      <p>Nenhum produto disponível.</p>
+  <?php endif; ?>
+
+
+  <!-- PRODUTOS VENDIDOS -->
+  <h3 style="margin-top: 40px;">📕 Produtos Vendidos</h3>
+  <?php 
+  $produtosVendidos = array_filter($produtos, function($p) {
+      return $p['status'] === 'Vendido';
+  });
+  ?>
+
+  <?php if (!empty($produtosVendidos)): ?>
+      <?php foreach ($produtosVendidos as $index => $produto): ?>
+          <div class="produto-card vendido">
+              <div class="produto-img">
+                  <?php if (!empty($produto['imagem'])): ?>
+                    <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+                  <?php else: ?>
+                    <img src="../../imgs/usuario.jpg" alt="Sem imagem">
+                  <?php endif; ?>
+              </div>
+
+              <div class="produto-info">
+                  <h4><?= htmlspecialchars($produto['nome']) ?></h4>
+                  <p><strong>Preço vendido:</strong> R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+                  <p><strong>Comprador:</strong> (informar quando integrar vendas)</p>
+              </div>
+          </div>
+      <?php endforeach; ?>
+  <?php else: ?>
+      <p>Nenhum produto vendido ainda.</p>
+  <?php endif; ?>
+
 </div>
 
 </main>

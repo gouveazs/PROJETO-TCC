@@ -46,6 +46,7 @@ foreach ($carrinho as $item) {
     $subtotal = $preco * $quantidade;
     $totalProdutos += $subtotal;
     $totalFrete += $freteItem;
+
     $prazos[] = isset($item['frete']['prazo']) && is_numeric($item['frete']['prazo']) 
                  ? (int)$item['frete']['prazo'] 
                  : 0;
@@ -72,7 +73,7 @@ try {
     $idPedido = $conn->lastInsertId();
 
     // ===============================
-    // 📦 INSERE ITENS DO PEDIDO
+    // 📦 INSERE ITENS DO PEDIDO E ATUALIZA STATUS
     // ===============================
     foreach ($carrinho as $item) {
 
@@ -83,6 +84,7 @@ try {
                      : 0;
         $servicoFreteItem = $item['frete']['nome'] ?? 'Não informado';
 
+        // Inserir item no pedido
         $stmtItem = $conn->prepare("
             INSERT INTO item_pedido (quantidade, idproduto, idpedido, frete_item, servico_frete_item, prazo_item)
             VALUES (?, ?, ?, ?, ?, ?)
@@ -96,9 +98,13 @@ try {
             $prazoItem
         ]);
 
-        // ===============================
-        // 🔔 CRIA NOTIFICAÇÃO PARA O VENDEDOR
-        // ===============================
+        // Atualiza status do produto para 'Vendido'
+        $stmtUpdateStatus = $conn->prepare("
+            UPDATE produto SET status = 'Vendido' WHERE idproduto = ?
+        ");
+        $stmtUpdateStatus->execute([$item['id']]);
+
+        // Cria notificação para o vendedor
         $stmtVend = $conn->prepare("SELECT idvendedor FROM produto WHERE idproduto = ?");
         $stmtVend->execute([$item['id']]);
         $vendedor = $stmtVend->fetch(PDO::FETCH_ASSOC);
@@ -129,4 +135,3 @@ try {
     $conn->rollBack();
     die("Erro ao processar pedido: " . $e->getMessage());
 }
-?>

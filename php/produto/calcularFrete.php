@@ -44,6 +44,9 @@ function calcularFreteMelhorEnvio(
 
     $resposta = curl_exec($ch);
     $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
     curl_close($ch);
 
     if ($httpcode === 200) {

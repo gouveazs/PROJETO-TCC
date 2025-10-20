@@ -43,7 +43,10 @@ if (isset($_GET['id']) && isset($_GET['nome']) && isset($_GET['preco'])) {
 // Remover produto
 if (isset($_GET['remover_id'])) {
     $idRemover = intval($_GET['remover_id']);
-    $_SESSION['carrinho'] = array_filter($_SESSION['carrinho'], fn($p) => $p['id'] != $idRemover);
+    $_SESSION['carrinho'] = array_filter($_SESSION['carrinho'], function($p) use ($idRemover) {
+      return $p['id'] != $idRemover;
+  });
+  
     header("Location: carrinho.php");
     exit;
 }
@@ -517,8 +520,14 @@ $total = $subtotal;
 
     <div class="cart-summary">
       <?php
-        $subtotalLivros = array_sum(array_map(fn($p) => floatval($p['preco']), $_SESSION['carrinho']));
-        $totalFrete = array_sum(array_map(fn($p) => floatval($p['frete']['preco'] ?? 0), $_SESSION['carrinho']));
+        $subtotalLivros = array_sum(array_map(function($p) {
+          return floatval($p['preco']);
+        }, $_SESSION['carrinho']));
+      
+        $totalFrete = array_sum(array_map(function($p) {
+          return isset($p['frete']['preco']) ? floatval($p['frete']['preco']) : 0;
+        }, $_SESSION['carrinho']));
+      
         $totalGeral = $subtotalLivros + $totalFrete;
       ?>
       <h2 class="summary-title">Resumo do Pedido</h2>
