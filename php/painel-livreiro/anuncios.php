@@ -444,12 +444,12 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <nav>
-      <ul class="menu">
+        <ul class="menu">
         <li><a href="painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="anuncios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Seus Anúncios</a></li>
-        <li><a href="rendimento.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
-        <li><a href="chats.php"><img src="../../imgs/explorar.png.png" alt="Chats" style="width:20px; margin-right:10px;"> Chats</a></li>
-        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Anunciar livro</a></li>
+        <li><a href="anuncios.php"><img src="../../imgs/anuncio.png" alt="Vendas" style="width:20px; margin-right:10px;"> Seus Anúncios</a></li>
+        <li><a href="rendimento.php"><img src="../../imgs/rendimento.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
+        <li><a href="chats.php"><img src="../../imgs/chaat.png" alt="Chats" style="width:20px; margin-right:10px;"> Chats</a></li>
+        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/anuncialivro.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Anunciar livro</a></li>
       </ul>
 
       <h3>Conta</h3>

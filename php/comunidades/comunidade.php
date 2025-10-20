@@ -1,3 +1,14 @@
+[file name]: image.png
+[file content begin]
+Buscar
+
+==  Entre Linhas - Comunidades e Chats Online
+OO
+
+Criar Comunidades
+
+[file content end]
+
 <?php
 session_start();
 $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
@@ -221,11 +232,11 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
 
     .categorias-barra {
       margin-left: 250px;
-      margin-top: 70px; /* Ajustado para ficar logo abaixo da topbar */
+      margin-top: 70px; /* ENCOSTADA na topbar */
       background-color: #9a8c7c;
-      padding: 10px 40px;
+      padding: 5px 40px; /* REDUZIDO de 10px para 5px */
       display: flex;
-      justify-content: space-between;
+      justify-content: center; /* CENTRALIZADO */
       flex-wrap: wrap;
     }
 
@@ -233,7 +244,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
       color: white;
       text-decoration: none;
       font-size: 1rem;
-      padding: 8px 12px;
+      padding: 6px 10px; /* REDUZIDO de 8px 12px */
       border-radius: 6px;
       transition: background 0.3s;
     }
@@ -244,20 +255,20 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
 
     .content {
       margin-left: 250px;
-      margin-top: 0; /* REMOVIDO o margin-top grande */
-      padding: 30px;
+      margin-top: 0; /* SEM ESPAÇO - encostado na barra de categorias */
+      padding: 15px 30px; /* REDUZIDO de 30px para 15px no topo */
       flex: 1;
     }
 
     .content h2 {
       font-size: 2rem;
       color: var(--marrom);
-      margin-bottom: 10px;
+      margin-bottom: 8px; /* REDUZIDO de 10px */
     }
 
     .content p {
       font-size: 1.2rem;
-      margin-bottom: 30px;
+      margin-bottom: 20px; /* REDUZIDO de 30px */
       color: #333;
     }
 
@@ -265,19 +276,19 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
       display: flex;
       background-color: var(--verde);
       border-radius: 10px;
-      padding: 20px;
+      padding: 15px; /* REDUZIDO de 20px */
       color: white;
-      margin-bottom: 30px;
+      margin-bottom: 20px; /* REDUZIDO de 30px */
       align-items: flex-start;
       position: relative;
     }
 
     .comunidade-box img {
-      width: 220px;
-      height: 170px;
+      width: 200px; /* REDUZIDO de 220px */
+      height: 150px; /* REDUZIDO de 170px */
       object-fit: cover;
       border-radius: 10px;
-      margin-right: 20px;
+      margin-right: 15px; /* REDUZIDO de 20px */
     }
 
     .comunidade-box .descricao {
@@ -285,25 +296,25 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
     }
 
     .comunidade-box .descricao h3 {
-      font-size: 1.4rem;
-      margin-bottom: 12px;
+      font-size: 1.3rem; /* REDUZIDO de 1.4rem */
+      margin-bottom: 8px; /* REDUZIDO de 12px */
       color: #fff;
     }
 
     .comunidade-box .descricao p {
-      font-size: 1.1rem;
-      line-height: 1.5;
+      font-size: 1rem; /* REDUZIDO de 1.1rem */
+      line-height: 1.4; /* REDUZIDO de 1.5 */
       color: #fff;
       margin-top: 0;
     }
 
     .comunidade-box .entrar-btn {
       position: absolute;
-      bottom: 20px;
-      right: 20px;
+      bottom: 15px; /* REDUZIDO de 20px */
+      right: 15px; /* REDUZIDO de 20px */
       background-color: var(--marrom);
       color: white;
-      padding: 10px 20px;
+      padding: 8px 16px; /* REDUZIDO de 10px 20px */
       border-radius: 5px;
       text-decoration: none;
       font-weight: bold;
@@ -315,20 +326,20 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
     }
 
     .welcome-section {
-      margin-bottom: 30px;
+      margin-bottom: 20px; /* REDUZIDO de 30px */
       text-align: center;
-      padding-top: 20px; /* Pequeno espaçamento no topo */
+      padding-top: 0; /* REMOVIDO padding-top para ficar encostado */
     }
 
     .welcome-section h2 {
-      font-size: 2.5rem;
+      font-size: 2.2rem; /* REDUZIDO de 2.5rem */
       color: var(--marrom);
-      margin-bottom: 15px;
+      margin-bottom: 10px; /* REDUZIDO de 15px */
     }
 
     .welcome-section p {
-      font-size: 1.2rem;
-      line-height: 1.6;
+      font-size: 1.1rem; /* REDUZIDO de 1.2rem */
+      line-height: 1.5; /* REDUZIDO de 1.6 */
       color: #555;
     }
 
@@ -337,7 +348,7 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
       background-color: var(--marrom);
       color: white;
       text-align: center;
-      padding: 15px;
+      padding: 10px; /* REDUZIDO de 15px */
       margin-top: auto;
     }
 
@@ -417,20 +428,12 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
     </form>
 </div>
 
-  <!-- Barra de categorias -->
+  <!-- Barra de categorias - APENAS CRIAR COMUNIDADES CENTRALIZADO -->
   <div class="categorias-barra">
-    <a href="#">Terror</a>
-    <a href="#">Suspense</a>
-    <a href="#">Romance</a>
-    <a href="#">Fantasia</a>
-    <a href="#">Biográfico</a>
-    <a href="#">Ficção Científica</a>
-    <a href="#">Infantil</a>
-    <a href="#">Ficção Literária</a>
     <a href="criar_comunidade.php">Criar Comunidades</a>
   </div>
 
-  <!-- Conteúdo -->
+  <!-- Conteúdo - AGORA ENCOSTADO E COMPACTO -->
   <div class="content">
      <!-- Conteúdo Principal -->
     <div class="main-content">

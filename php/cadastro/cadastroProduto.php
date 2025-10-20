@@ -36,7 +36,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       --card-border: #ddd;
       --text-dark: #333;
       --text-muted: #666;
-      --input-bg: #F4F1EE; /* Nova cor para os inputs */
+      --input-bg: #F4F1EE;
     }
 
     * {
@@ -51,7 +51,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-left: 250px; /* espaço pro conteúdo não invadir a sidebar */
+      padding-left: 250px;
     }
 
     .sidebar {
@@ -197,7 +197,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     main.conteudo {
       width: 100%;
       max-width: 700px;
-      background-color: var(--card-bg); /* Fundo branco para o formulário */
+      background-color: var(--card-bg);
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       padding: 40px 30px;
@@ -216,7 +216,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     .form-group {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       margin-bottom: 18px;
     }
 
@@ -227,6 +227,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       text-align: right;
       margin-right: 15px;
       user-select: none;
+      padding-top: 8px;
+      flex-shrink: 0;
+    }
+
+    .form-group .input-container {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     .form-group input[type="text"],
@@ -235,14 +243,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     .form-group textarea,
     .form-group input[type="file"],
     .form-group select {
-      flex-grow: 1;
+      width: 100%;
       padding: 8px 12px;
       font-size: 1rem;
       border: 1px solid #ccc;
       border-radius: 6px;
       font-family: inherit;
       transition: border-color 0.3s ease;
-      background-color: var(--input-bg); /* Cor de fundo igual ao background da página */
+      background-color: var(--input-bg);
     }
 
     .form-group input:focus,
@@ -253,7 +261,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       box-shadow: 0 0 5px var(--verde);
     }
 
-    /* Estilização específica para selects */
     .form-group select {
       appearance: none;
       -webkit-appearance: none;
@@ -265,7 +272,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       padding-right: 35px;
     }
 
-    /* Estilização do input file com fonte correta */
     input[type="file"] {
       font-family: 'Playfair Display', serif;
       color: var(--text-dark);
@@ -324,7 +330,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       transform: scale(0.98);
     }
 
-    /* Estilo para a seção de detalhes de livro usado */
     #detalhes-usado {
       border-left: 4px solid var(--verde);
       padding-left: 15px;
@@ -335,6 +340,18 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     #detalhes-usado .form-group {
       margin-bottom: 12px;
+    }
+
+    .instrucoes-upload {
+      display: block;
+      margin-top: 8px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.4;
+      background-color: #f8f9fa;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border-left: 3px solid var(--verde);
     }
 
     @media (max-width: 768px) {
@@ -373,6 +390,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         width: 100%;
         text-align: left;
         margin-bottom: 6px;
+        padding-top: 0;
       }
       
       #detalhes-usado {
@@ -399,9 +417,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     </div>
 
     <nav>
-    <ul class="menu">
-        <li><a href="painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="anuncios.php"><img src="../../imgs/anuncio.png" alt="Vendas" style="width:20px; margin-right:10px;"> Seus Anúncios</a></li>
+      <ul class="menu">
+        <li><a href="../painel-livreiro/painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
+        <li><a href="../painel-livreiro/anuncios.php"><img src="../../imgs/anuncio.png" alt="Vendas" style="width:20px; margin-right:10px;"> Seus Anúncios</a></li>
         <li><a href="rendimento.php"><img src="../../imgs/rendimento.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
         <li><a href="chats.php"><img src="../../imgs/chaat.png" alt="Chats" style="width:20px; margin-right:10px;"> Chats</a></li>
         <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/anuncialivro.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Anunciar livro</a></li>
@@ -423,146 +441,194 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         <form action="../insercao/insercaoProduto.php" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="nome">Título:</label>
-            <input type="text" id="nome" name="nome" required>
+            <div class="input-container">
+                <input type="text" id="nome" name="nome" required>
+            </div>
         </div>
 
         <div class="form-group">
             <label for="autor">Autor:</label>
-            <input type="text" id="autor" name="autor" required>
+            <div class="input-container">
+                <input type="text" id="autor" name="autor" required>
+            </div>
         </div>
 
         <div class="form-group">
             <label for="descricao">Sinopse:</label>
-            <textarea id="descricao" name="descricao" rows="4" required></textarea>
+            <div class="input-container">
+                <textarea id="descricao" name="descricao" rows="4" required></textarea>
+            </div>
         </div>
 
         <div class="form-group">
             <label for="editora">Editora:</label>
-            <input type="text" id="editora" name="editora" required>
+            <div class="input-container">
+                <input type="text" id="editora" name="editora" required>
+            </div>
         </div>
 
         <div class="form-group">
             <label for="numero_paginas">Número de páginas:</label>
-            <input type="number" id="numero_paginas" name="numero_paginas" min="1" required>
+            <div class="input-container">
+                <input type="number" id="numero_paginas" name="numero_paginas" min="1" required>
+            </div>
         </div>
 
         <div class="form-group">
             <label for="classificacao_idade">Classificação etária:</label>
-            <input type="number" id="classificacao_idade" name="classificacao_idade" min="0" required>
+            <div class="input-container">
+                <input type="number" id="classificacao_idade" name="classificacao_idade" min="0" required>
+            </div>
         </div>
 
         <div class="form-group">
             <label for="data_publicacao">Data de publicação:</label>
-            <input type="date" id="data_publicacao" name="data_publicacao" required>
+            <div class="input-container">
+                <input type="date" id="data_publicacao" name="data_publicacao" required>
+            </div>
         </div>
 
         <div class="form-group">
             <label for="idioma">Idioma:</label>
-            <input type="text" id="idioma" name="idioma" required>
+            <div class="input-container">
+                <input type="text" id="idioma" name="idioma" required>
+            </div>
         </div>
 
         <div class="form-group">
           <label for="categoria">Categoria:</label>
-          <select name="idcategoria" id="categoria" required>
-            <option value="">Selecione a categoria</option>
-              <?php foreach($categorias as $categoria): ?>
-                <option value="<?= $categoria['idcategoria'] ?>"><?= htmlspecialchars($categoria['nome']) ?></option>
-              <?php endforeach; ?>
-          </select>
+          <div class="input-container">
+            <select name="idcategoria" id="categoria" required>
+              <option value="">Selecione a categoria</option>
+                <?php foreach($categorias as $categoria): ?>
+                  <option value="<?= $categoria['idcategoria'] ?>"><?= htmlspecialchars($categoria['nome']) ?></option>
+                <?php endforeach; ?>
+            </select>
+          </div>
         </div>
 
         <div class="form-group">
             <label for="preco">Preço de venda (R$):</label>
-            <input type="number" id="preco" name="preco" step="0.01" min="0" required>
+            <div class="input-container">
+                <input type="number" id="preco" name="preco" step="0.01" min="0" required>
+            </div>
         </div>
 
         <div class="form-group">
             <label for="quantidade">Quantidade:</label>
-            <input type="number" id="quantidade" name="quantidade" min="0" required>
+            <div class="input-container">
+                <input type="number" id="quantidade" name="quantidade" min="0" required>
+            </div>
         </div>
 
         <div class="form-group">
             <label for="isbn">ISBN:</label>
-            <input type="text" id="isbn" name="isbn" required>
+            <div class="input-container">
+                <input type="text" id="isbn" name="isbn" required>
+            </div>
         </div>
 
         <div class="form-group">
             <label for="dimensoes">Dimensões:</label>
-            <input type="text" id="dimensoes" name="dimensoes" required>
+            <div class="input-container">
+                <input type="text" id="dimensoes" name="dimensoes" required>
+            </div>
         </div>
 
         <div class="form-group">
             <label for="estado_livro">Estado do livro:</label>
-            <select name="estado_livro" id="estado_livro" required>
-              <option value="novo">Novo</option>
-              <option value="usado">Usado</option>
-            </select>
+            <div class="input-container">
+                <select name="estado_livro" id="estado_livro" required>
+                  <option value="novo">Novo</option>
+                  <option value="usado">Usado</option>
+                </select>
+            </div>
         </div>
 
         <div id="detalhes-usado" style="display:none;">
           <div class="form-group">
               <label for="paginas_faltando">Tem páginas faltando?</label>
-              <select id="paginas_faltando" name="paginas_faltando">
-                  <option value="">Selecione</option>
-                  <option value="nao">Não</option>
-                  <option value="sim">Sim</option>
-              </select>
+              <div class="input-container">
+                  <select id="paginas_faltando" name="paginas_faltando">
+                      <option value="">Selecione</option>
+                      <option value="nao">Não</option>
+                      <option value="sim">Sim</option>
+                  </select>
+              </div>
           </div>
 
           <div class="form-group">
               <label for="paginas_rasgadas">Possui páginas rasgadas?</label>
-              <select id="paginas_rasgadas" name="paginas_rasgadas">
-                  <option value="">Selecione</option>
-                  <option value="nao">Não</option>
-                  <option value="sim">Sim</option>
-              </select>
+              <div class="input-container">
+                  <select id="paginas_rasgadas" name="paginas_rasgadas">
+                      <option value="">Selecione</option>
+                      <option value="nao">Não</option>
+                      <option value="sim">Sim</option>
+                  </select>
+              </div>
           </div>
 
           <div class="form-group">
               <label for="folhas_amareladas">As páginas estão amareladas?</label>
-              <select id="folhas_amareladas" name="folhas_amareladas">
-                  <option value="">Selecione</option>
-                  <option value="nao">Não</option>
-                  <option value="sim">Sim</option>
-              </select>
+              <div class="input-container">
+                  <select id="folhas_amareladas" name="folhas_amareladas">
+                      <option value="">Selecione</option>
+                      <option value="nao">Não</option>
+                      <option value="sim">Sim</option>
+                  </select>
+              </div>
           </div>
 
           <div class="form-group">
               <label for="anotacoes">Possui anotações/rabiscos?</label>
-              <select id="anotacoes" name="anotacoes">
-                  <option value="">Selecione</option>
-                  <option value="nao">Não</option>
-                  <option value="sim">Sim</option>
-              </select>
+              <div class="input-container">
+                  <select id="anotacoes" name="anotacoes">
+                      <option value="">Selecione</option>
+                      <option value="nao">Não</option>
+                      <option value="sim">Sim</option>
+                  </select>
+              </div>
           </div>
 
           <div class="form-group">
               <label for="lombada_danificada">A lombada está danificada?</label>
-              <select id="lombada_danificada" name="lombada_danificada">
-                  <option value="">Selecione</option>
-                  <option value="nao">Não</option>
-                  <option value="sim">Sim</option>
-              </select>
+              <div class="input-container">
+                  <select id="lombada_danificada" name="lombada_danificada">
+                      <option value="">Selecione</option>
+                      <option value="nao">Não</option>
+                      <option value="sim">Sim</option>
+                  </select>
+              </div>
           </div>
 
           <div class="form-group">
               <label for="capa_danificada">A capa está danificada?</label>
-              <select id="capa_danificada" name="capa_danificada">
-                  <option value="">Selecione</option>
-                  <option value="nao">Não</option>
-                  <option value="sim">Sim</option>
-              </select>
+              <div class="input-container">
+                  <select id="capa_danificada" name="capa_danificada">
+                      <option value="">Selecione</option>
+                      <option value="nao">Não</option>
+                      <option value="sim">Sim</option>
+                  </select>
+              </div>
           </div>
       </div>
 
         <div class="form-group">
             <label for="estado_detalhado">Descrição do estado:</label>
-            <textarea id="estado_detalhado" name="estado_detalhado" rows="4" required></textarea>
+            <div class="input-container">
+                <textarea id="estado_detalhado" name="estado_detalhado" rows="4" required></textarea>
+            </div>
         </div>
 
         <div class="form-group">
             <label for="imagem">Imagem do produto:</label>
-            <input type="file" id="imagem" name="imagens[]" accept="image/*" multiple required>
+            <div class="input-container">
+                <input type="file" id="imagem" name="imagens[]" accept="image/*" multiple required>
+                <span class="instrucoes-upload">
+                    <strong>Instruções:</strong> A primeira foto obrigatoriamente deve ser a capa do livro. 
+                    As outras fotos você pode adicionar imagens mostrando o estado do livro.
+                </span>
+            </div>
         </div>
 
         <input type="submit" value="Cadastrar">
@@ -574,7 +640,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         var usadoDiv = document.getElementById('detalhes-usado');
         if(this.value === 'usado') {
             usadoDiv.style.display = 'block';
-            // Se quiser tornar os campos obrigatórios somente quando 'usado':
             usadoDiv.querySelectorAll('select').forEach(function(el) {
                 el.required = true;
             });

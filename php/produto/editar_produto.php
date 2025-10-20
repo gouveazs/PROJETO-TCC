@@ -404,6 +404,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       margin-bottom: 12px;
     }
 
+    /* ESTILOS PARA O CAROUSEL MENOR */
+    .carousel-container {
+      max-width: 250px;
+      margin: 10px auto;
+    }
+
+    .carousel-inner img {
+      max-height: 150px;
+      object-fit: contain;
+      width: 100%;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+      width: 25px;
+      height: 25px;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0,0,0,0.3);
+      border-radius: 50%;
+    }
+
+    .carousel-control-prev {
+      left: 5px;
+    }
+
+    .carousel-control-next {
+      right: 5px;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+      width: 12px;
+      height: 12px;
+    }
+
     @media (max-width: 768px) {
       .sidebar {
         width: 200px;
@@ -468,10 +504,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <nav>
       <ul class="menu">
         <li><a href="../painel-livreiro/painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="../painel-livreiro/anuncios.php"><img src="../../imgs/explorar.png.png" alt="Vendas" style="width:20px; margin-right:10px;"> Seus Anúncios</a></li>
-        <li><a href="../painel-livreiro/rendimento.php"><img src="../../imgs/explorar.png.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
-        <li><a href="../painel-livreiro/chats.php"><img src="../../imgs/explorar.png.png" alt="Chats" style="width:20px; margin-right:10px;"> Chats</a></li>
-        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/explorar.png.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Anunciar livro</a></li>
+        <li><a href="../painel-livreiro/anuncios.php"><img src="../../imgs/anuncio.png" alt="Vendas" style="width:20px; margin-right:10px;"> Seus Anúncios</a></li>
+        <li><a href="rendimento.php"><img src="../../imgs/rendimento.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
+        <li><a href="chats.php"><img src="../../imgs/chaat.png" alt="Chats" style="width:20px; margin-right:10px;"> Chats</a></li>
+        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/anuncialivro.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Anunciar livro</a></li>
       </ul>
 
       <h3>Conta</h3>
@@ -633,22 +669,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <?php if ($imagens_existentes): ?>
-          <div id="carouselImagens" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-              <?php foreach ($imagens_existentes as $i => $img): ?>
-                <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
-                  <img src="data:image/jpeg;base64,<?= base64_encode($img['imagem']) ?>" class="d-block w-100" alt="Imagem <?= $i+1 ?>">
-                </div>
-              <?php endforeach; ?>
+          <div class="carousel-container">
+            <div id="carouselImagens" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                <?php foreach ($imagens_existentes as $i => $img): ?>
+                  <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
+                    <img src="data:image/jpeg;base64,<?= base64_encode($img['imagem']) ?>" class="d-block w-100" alt="Imagem <?= $i+1 ?>">
+                  </div>
+                <?php endforeach; ?>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselImagens" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselImagens" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Próxima</span>
+              </button>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselImagens" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Anterior</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselImagens" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Próxima</span>
-            </button>
           </div>
         <?php endif; ?>
 

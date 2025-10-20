@@ -178,6 +178,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       height: 70px;
       z-index: 1000;
     }
+    .topbar h1 {
+  color: #ffffff;
+}
 
     .topbar-left {
         display: flex;
