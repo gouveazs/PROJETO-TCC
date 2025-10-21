@@ -69,6 +69,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       padding-left: 250px;
     }
 
+    /* ===== SIDEBAR ===== */
     .sidebar {
       position: fixed;
       top: 0;
@@ -151,6 +152,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       background-color: #6f8562;
     }
 
+    /* ===== TOPBAR ===== */
     .topbar {
       position: fixed;
       top: 0;
@@ -175,6 +177,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       flex: 1;
     }
 
+    /* ===== HEADER ===== */
     .header {
       display: flex;
       align-items: center;
@@ -207,6 +210,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       margin: 0;
     }
 
+    /* ===== PRODUTOS ===== */
     .produtos-container {
       display: flex;
       flex-wrap: wrap;
@@ -214,40 +218,166 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       margin-top: 15px;
     }
 
-    .produto-card {
-      width: 250px;
+/* ===== CARD ===== */
+.produto-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  width: 270px;
+  transition: all 0.4s ease;
+  overflow: hidden;
+}
+
+/* ===== ESTADO EXPANDIDO ===== */
+.produto-card.expanded {
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1000px;
+  transition: all 0.4s ease;
+  padding: 20px;
+}
+
+/* ===== IMAGEM ===== */
+.produto-img {
+  width: 230px;
+  height: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+}
+
+.produto-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ===== BOTÕES ===== */
+.produto-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+/* Botões ao lado da imagem no modo expandido */
+.produto-card.expanded .produto-actions {
+  margin-top: 0;
+  margin-left: 15px;
+  width: 230px; /* mesmo tamanho da imagem */
+}
+
+/* ===== DETALHES ===== */
+.produto-detalhes {
+  display: none;
+  flex: 1;
+  margin-top: 20px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.produto-card.expanded .produto-detalhes {
+  display: block;
+  margin-left: 40px;
+  opacity: 1;
+  margin-top: 0;
+}
+
+/* ===== DETALHES VISUAIS ===== */
+    .detalhes-card {
       background: #fff;
       border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      transition: 0.3s;
+      padding: 15px 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      border: 1px solid #eee;
     }
 
-    .produto-card:hover {
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    .detalhes-card h3 {
+      font-size: 18px;
+      color: #333;
+      margin-bottom: 8px;
     }
 
-    .produto-img {
-      height: 180px;
+    .detalhes-colunas {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #f9f9f9;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      overflow: hidden;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .coluna {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .coluna p {
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+/* ===== BOTÕES ===== */
+.btn-action {
+  padding: 10px 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  transition: background 0.3s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-toggle.mostrar-detalhes,
+.btn-action.editar {
+  background-color: #5a6b50;
+  color: white;
+}
+
+.btn-toggle.mostrar-detalhes:hover,
+.btn-action.editar:hover {
+  background-color: #4e5c43;
+}
+
+.btn-action.excluir {
+  background-color: #c44;
+  color: white;
+}
+
+.btn-action.excluir:hover {
+  background-color: #a33;
+}
+
+    .produto-detalhes {
+      display: none;
+      margin-top: 10px;
+      width: 100%;
+      transition: opacity 0.3s ease;
+    }
+
+    .produto-card.expanded .produto-detalhes {
+      display: block;
+      opacity: 1;
+      margin-left: 20px;
+      flex: 1;
     }
 
     .detalhes-card {
       background: #fff;
       border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
     .detalhes-card h3 {
       font-size: 18px;
-      font-weight: bold;
       color: var(--text-dark);
       margin-bottom: 8px;
     }
@@ -259,81 +389,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       margin: 6px 0 12px;
     }
 
-    .detalhes-card p {
-      font-size: 14px;
-      margin: 4px 0;
-      color: var(--text-dark);
-    }
-
-    .produto-card {
-      display: flex;
-      align-items: flex-start;
-      gap: 20px;
-      background: #fff;
-      border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      width: 100%;
-      margin-bottom: 20px;
-    }
-
-    .produto-detalhes {
-        flex: 1;
-      display: none;
-    }
-
-    .produto-detalhes.ativo {
-      display: block;
-    }
-
-.produto-img {
-  flex: 0 0 200px;
-  height: 280px; /* Aumenta a altura do container */
-  display: flex;
-  align-items: stretch;
-  justify-content: stretch;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.produto-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Cobre completamente o container, sem bordas */
-  border-radius: 0;
-}
-
-.detalhes-img img {
-  width: 100%;
-  height: auto;
-  max-height: 200px;
-  border-radius: 8px;
-  object-fit: contain;
-  background-color: #f0f0f0;
-}
-
-    .produto-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      width: 100%;
-    }
-
-    .detalhes-img {
-      display: none; 
-    }
-
-    .detalhes-info {
-      flex: 1;
-    }
-
-        .sem-imagem {
-          color: #999;
-          font-size: 14px;
-        }
-
     .detalhes-colunas {
       display: flex;
+      flex-wrap: wrap;
       gap: 30px;
     }
 
@@ -346,96 +404,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       margin-bottom: 6px;
       font-size: 14px;
     }
-
-
-    .btn-toggle {
-      background: var(--verde);
-      color: #fff;
-      font-size: 16px;        /* mesmo tamanho dos outros */
-      font-weight: bold;      /* deixa em negrito igual */
-      border: none;
-      border-radius: 8px;
-      padding: 10px 15px;
-      margin-top: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-      width: 100%;
-      text-align: center;
-    }
-    .btn-toggle:hover {
-      background: #4e5c43;
-    }
-
-        .btn-cadastrar {
-      background-color: var(--verde);
-      color: #fff;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 18px;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-      transition: background 0.3s;
-    }
-
-    .btn-cadastrar:hover {
-      background-color: #445c3a;
-    }
-
-    .sem-produto {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start; /* deixa alinhado à esquerda */
-      gap: 30px; /* espaçamento entre o texto e o botão */
-      margin-top: 0px;
-    }
-
-    .produto-actions {
-      display: flex;
-      flex-direction: column; /* Alinha os botões um embaixo do outro */
-      margin-top: 10px;
-      gap: 10px; /* Espaçamento entre os botões */
-    }
-
-    .btn-action {
-        padding: 10px 15px;
-        border-radius: 8px;
-        text-align: center;
-        text-decoration: none;
-        font-weight: bold;
-        transition: background 0.3s;
-        width: 100%; /* Faz os botões ocuparem toda a largura do card */
-    }
-
-    .btn-toggle.mostrar-detalhes {
-        background-color: var(--verde); /* Cor da sidebar */
-        color: white;
-    }
-
-    .btn-toggle.mostrar-detalhes:hover {
-        background-color: #4e5c43; /* Cor mais escura */
-    }
-
-    .btn-action.editar {
-        background-color: var(--verde); /* Cor da sidebar */
-        color: white;
-    }
-
-    .btn-action.editar:hover {
-        background-color: #4e5c43; /* Cor mais escura */
-    }
-
-    .btn-action.excluir {
-        background-color: #c44; /* Cor da barra de título "Entre Linhas" */
-        color: white;
-    }
-
-    .btn-action.excluir:hover {
-        background-color: #c44; /* Cor mais escura */
-    }
   </style>
 </head>
+
 <body>
   <div class="sidebar">
     <div class="logo">
@@ -450,18 +421,18 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <nav>
-        <ul class="menu">
-        <li><a href="painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
-        <li><a href="anuncios.php"><img src="../../imgs/anuncio.png" alt="Vendas" style="width:20px; margin-right:10px;"> Seus Anúncios</a></li>
-        <li><a href="rendimento.php"><img src="../../imgs/rendimento.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
-        <li><a href="chats.php"><img src="../../imgs/chaat.png" alt="Chats" style="width:20px; margin-right:10px;"> Chats</a></li>
-        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/anuncialivro.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Anunciar livro</a></li>
+      <ul class="menu">
+        <li><a href="painel_livreiro.php"><img src="../../imgs/inicio.png" style="width:20px;margin-right:10px;"> Início</a></li>
+        <li><a href="anuncios.php"><img src="../../imgs/anuncio.png" style="width:20px;margin-right:10px;"> Seus Anúncios</a></li>
+        <li><a href="rendimento.php"><img src="../../imgs/rendimento.png" style="width:20px;margin-right:10px;"> Rendimento</a></li>
+        <li><a href="chats.php"><img src="../../imgs/chaat.png" style="width:20px;margin-right:10px;"> Chats</a></li>
+        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/anuncialivro.png" style="width:20px;margin-right:10px;"> Anunciar livro</a></li>
       </ul>
 
       <h3>Conta</h3>
       <ul class="account">
-        <li><a href="../painel-livreiro/minhas_informacoes.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Editar informações</a></li>
-        <li><a href="../login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
+        <li><a href="../painel-livreiro/minhas_informacoes.php"><img src="../../imgs/criarconta.png" style="width:20px;margin-right:10px;"> Editar informações</a></li>
+        <li><a href="../login/logout.php"><img src="../../imgs/sair.png" style="width:20px;margin-right:10px;"> Sair</a></li>
       </ul>
     </nav>
   </div>
@@ -486,134 +457,84 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <hr style="border: 0; height: 1px; background-color: #afafafff; margin-bottom: 20px;">
 
-<h2><b>Seus Anúncios</b></h2>
+  <h2><b>Seus Anúncios</b></h2>
 
-<div class="produtos-container">
-
-  <!-- PRODUTOS DISPONÍVEIS -->
-  <h3 style="margin-top: 20px;">📗 Produtos Disponíveis</h3>
+  <div class="produtos-container">
   <?php 
-  $produtosDisponiveis = array_filter($produtos, function($p) {
-      return $p['status'] === 'Disponivel';
-  });
+  $produtosDisponiveis = array_filter($produtos, fn($p) => $p['status'] === 'Disponivel');
   ?>
-
   <?php if (!empty($produtosDisponiveis)): ?>
-      <?php foreach ($produtosDisponiveis as $index => $produto): ?>
-          <div class="produto-card">
-              <div class="produto-img">
-                  <?php if (!empty($produto['imagem'])): ?>
-                    <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
-                  <?php else: ?>
-                    <img src="../../imgs/usuario.jpg" alt="Sem imagem">
-                  <?php endif; ?>
+    <?php foreach ($produtosDisponiveis as $index => $produto): ?>
+      <div class="produto-card" id="card-<?= $index ?>">
+        <div class="produto-img">
+          <?php if (!empty($produto['imagem'])): ?>
+            <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+          <?php else: ?>
+            <img src="../../imgs/usuario.jpg" alt="Sem imagem">
+          <?php endif; ?>
+        </div>
+
+        <div class="produto-actions">
+          <button onclick="toggleDetalhes(<?= $index ?>)" class="btn-action btn-toggle mostrar-detalhes">Mostrar detalhes</button>
+          <a href="../produto/editar_produto.php?id=<?= $produto['idproduto'] ?>" class="btn-action editar">Editar Produto</a>
+          <a href="../produto/excluir_produto.php?id=<?= $produto['idproduto'] ?>" class="btn-action excluir" onclick="return confirm('Tem certeza que deseja excluir esse anúncio?');">Excluir Produto</a>
+        </div>
+
+        <div class="produto-detalhes" id="detalhes-<?= $index ?>">
+          <div class="detalhes-card">
+            <h3>Detalhes do Produto</h3>
+            <hr>
+            <div class="detalhes-colunas">
+              <div class="coluna">
+                <p><strong>Título:</strong> <?= htmlspecialchars($produto['nome']) ?></p>
+                <p><strong>Autor:</strong> <?= htmlspecialchars($produto['autor']) ?></p>
+                <p><strong>Editora:</strong> <?= htmlspecialchars($produto['editora']) ?></p>
+                <p><strong>Nº páginas:</strong> <?= (int)$produto['numero_paginas'] ?></p>
+                <p><strong>Categoria:</strong> <?= htmlspecialchars($produto['idcategoria']) ?></p>
               </div>
-
-              <button class="btn-toggle mostrar-detalhes" onclick="toggleDetalhes('detalhes-<?= $index ?>')">
-                  Mostrar detalhes
-              </button>
-
-              <div id="detalhes-<?= $index ?>" class="produto-detalhes">
-                  <div class="detalhes-img">
-                      <?php if (!empty($produto['imagem'])): ?>
-                        <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
-                      <?php else: ?>
-                        <img src="../../imgs/usuario.jpg" alt="Sem imagem">
-                      <?php endif; ?>
-                  </div>
-
-                  <div class="detalhes-info">
-                      <div class="detalhes-card">
-                          <h3>Detalhes do Produto</h3>
-                          <hr>
-                          <div class="detalhes-colunas">
-                              <div class="coluna">
-                                  <p><strong>Título:</strong> <?= htmlspecialchars($produto['nome']) ?></p>
-                                  <p><strong>Autor:</strong> <?= htmlspecialchars($produto['autor']) ?></p>
-                                  <p><strong>Editora:</strong> <?= htmlspecialchars($produto['editora']) ?></p>
-                                  <p><strong>Nº páginas:</strong> <?= (int)$produto['numero_paginas'] ?></p>
-                                  <p><strong>Categoria:</strong> <?= htmlspecialchars($produto['idcategoria']) ?></p>
-                              </div>
-                              <div class="coluna">
-                                  <p><strong>Publicação:</strong> <?= date('d/m/Y', strtotime($produto['data_publicacao'])) ?></p>
-                                  <p><strong>Idioma:</strong> <?= htmlspecialchars($produto['idioma']) ?></p>
-                                  <p><strong>Classificação:</strong> <?= htmlspecialchars($produto['classificacao_etaria']) ?> anos</p>
-                                  <p><strong>Dimensões:</strong> <?= htmlspecialchars($produto['dimensoes']) ?></p>
-                                  <p><strong>Preço:</strong> R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
-                              </div>
-                              <div class="coluna">
-                                  <p><strong>Quantidade:</strong> <?= (int)$produto['quantidade'] ?></p>
-                                  <p><strong>ISBN:</strong> <?= htmlspecialchars($produto['isbn']) ?></p>
-                                  <p><strong>Estado:</strong> <?= ucfirst(htmlspecialchars($produto['estado_livro'])) ?></p>
-                                  <p><strong>Desc. estado:</strong> <?= nl2br(htmlspecialchars($produto['estado_detalhado'])) ?></p>
-                                  <p><strong>Descrição:</strong> <?= nl2br(htmlspecialchars($produto['descricao'])) ?></p>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
+              <div class="coluna">
+                <p><strong>Publicação:</strong> <?= date('d/m/Y', strtotime($produto['data_publicacao'])) ?></p>
+                <p><strong>Idioma:</strong> <?= htmlspecialchars($produto['idioma']) ?></p>
+                <p><strong>Classificação:</strong> <?= htmlspecialchars($produto['classificacao_etaria']) ?> anos</p>
+                <p><strong>Dimensões:</strong> <?= htmlspecialchars($produto['dimensoes']) ?></p>
+                <p><strong>Preço:</strong> R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
               </div>
-
-              <div class="produto-actions">
-                  <a href="../produto/editar_produto.php?id=<?= $produto['idproduto'] ?>" class="btn-action editar">Editar Produto</a>
-                  <a href="../produto/excluir_produto.php?id=<?= $produto['idproduto'] ?>" class="btn-action excluir" onclick="return confirm('Tem certeza que deseja excluir esse anúncio?');">Excluir Produto</a>
+              <div class="coluna">
+                <p><strong>Quantidade:</strong> <?= (int)$produto['quantidade'] ?></p>
+                <p><strong>ISBN:</strong> <?= htmlspecialchars($produto['isbn']) ?></p>
+                <p><strong>Estado:</strong> <?= ucfirst(htmlspecialchars($produto['estado_livro'])) ?></p>
+                <p><strong>Desc. estado:</strong> <?= nl2br(htmlspecialchars($produto['estado_detalhado'])) ?></p>
+                <p><strong>Descrição:</strong> <?= nl2br(htmlspecialchars($produto['descricao'])) ?></p>
               </div>
+            </div>
           </div>
-      <?php endforeach; ?>
+        </div>
+      </div>
+    <?php endforeach; ?>
   <?php else: ?>
-      <p>Nenhum produto disponível.</p>
+    <p>Nenhum produto disponível.</p>
   <?php endif; ?>
-
-
-  <!-- PRODUTOS VENDIDOS -->
-  <h3 style="margin-top: 40px;">📕 Produtos Vendidos</h3>
-  <?php 
-  $produtosVendidos = array_filter($produtos, function($p) {
-      return $p['status'] === 'Vendido';
-  });
-  ?>
-
-  <?php if (!empty($produtosVendidos)): ?>
-      <?php foreach ($produtosVendidos as $index => $produto): ?>
-          <div class="produto-card vendido">
-              <div class="produto-img">
-                  <?php if (!empty($produto['imagem'])): ?>
-                    <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
-                  <?php else: ?>
-                    <img src="../../imgs/usuario.jpg" alt="Sem imagem">
-                  <?php endif; ?>
-              </div>
-
-              <div class="produto-info">
-                  <h4><?= htmlspecialchars($produto['nome']) ?></h4>
-                  <p><strong>Preço vendido:</strong> R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
-                  <p><strong>Comprador:</strong> (informar quando integrar vendas)</p>
-              </div>
-          </div>
-      <?php endforeach; ?>
-  <?php else: ?>
-      <p>Nenhum produto vendido ainda.</p>
-  <?php endif; ?>
-
-</div>
-
-</main>
+  </div>
+  </main>
 
 <script>
-function toggleDetalhes(id) {
-  const detalhes = document.getElementById(id);
-  detalhes.classList.toggle("ativo");
+function toggleDetalhes(index) {
+  const card = document.getElementById(`card-${index}`);
+  const btn = card.querySelector('.btn-toggle');
+  const expanded = card.classList.toggle('expanded');
+  btn.textContent = expanded ? 'Ocultar detalhes' : 'Mostrar detalhes';
 }
 </script>
-<!-- VLibras - Widget de Libras -->
+
+<!-- VLibras -->
 <div vw class="enabled">
-    <div vw-access-button class="active"></div>
-    <div vw-plugin-wrapper>
-        <div class="vw-plugin-top-wrapper"></div>
-    </div>
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+  </div>
 </div>
 <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>
-    new window.VLibras.Widget('https://vlibras.gov.br/app');
-</script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+
 </body>
 </html>
