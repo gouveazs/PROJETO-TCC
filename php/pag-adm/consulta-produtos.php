@@ -456,6 +456,7 @@ if (isset($_GET['excluir_id'])) {
                 <th>Idioma</th>
                 <th>Estado</th>
                 <th>Descrição</th>
+                <th>Status</th>
                 <th>Expurgar</th>
             </tr>
         </thead>
@@ -498,6 +499,7 @@ if (isset($_GET['excluir_id'])) {
                       <td>${p.idioma ?? 'Vazio'}</td>
                       <td>${p.estado_livro ?? 'Vazio'}</td>
                       <td>${p.descricao ? (p.descricao.length > 25 ? p.descricao.substring(0, 25) + '...' : p.descricao) : 'Vazio'}</td>
+                      <td>${p.status ?? 'Vazio'}</td>
                       <td>
                           <button onclick="if(confirm('Tem certeza que quer excluir este produto de todas as tabelas?')) window.location='?excluir_id=${p.idproduto}'">
                               <span style="color:red;">❌</span>

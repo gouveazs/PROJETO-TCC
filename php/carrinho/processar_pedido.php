@@ -128,7 +128,7 @@ try {
     // 🧹 LIMPA O CARRINHO E REDIRECIONA
     // ===============================
     unset($_SESSION['carrinho']);
-    header("Location: ../sucesso.php"); // página de sucesso
+    header("Location: sucesso.php"); // página de sucesso
     exit;
 
 } catch (Exception $e) {

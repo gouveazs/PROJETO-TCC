@@ -148,147 +148,119 @@
 </head>
 <body>
   <?php
-  // Adicionar tratamento de erros para debug
-  error_reporting(E_ALL);
-  ini_set('display_errors', 1);
+    // Exibir todos os erros e exceções de forma explícita
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
 
-  // Variáveis para mensagens
-  $mensagem = "";
-  $tipoMensagem = "";
+    $tipo = $_GET['tipo'];
 
-  try {
-      // Incluir arquivo de conexão
-      include '../../conexao.php';
-      
-      // Verificar se a conexão foi estabelecida
-      if (!$conn) {
-          throw new Exception("Erro na conexão com o banco de dados");
-      }
+    try {
+        include '../../conexao.php';
 
-      if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-          $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+        if (!$conn) {
+            throw new Exception("Erro na conexão com o banco de dados");
+        }
 
-          // Validar email
-          if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-              $mensagem = "Por favor, insira um email válido.";
-              $tipoMensagem = "error";
-          } else {
-              $user = null;
-              $vendedor = null;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
 
-              // Procurar no usuario
-              $stmt = $conn->prepare("SELECT idusuario, nome FROM usuario WHERE email = ?");
-              if (!$stmt) {
-                  throw new Exception("Erro ao preparar consulta de usuário");
-              }
-              $stmt->execute([$email]);
-              $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                die("Erro: Email inválido.");
+            }
 
-              // Procurar no vendedor se não achou em usuario
-              if (!$user) {
-                  $stmt = $conn->prepare("SELECT idvendedor, nome FROM vendedor WHERE email = ?");
-                  if (!$stmt) {
-                      throw new Exception("Erro ao preparar consulta de vendedor");
-                  }
-                  $stmt->execute([$email]);
-                  $vendedor = $stmt->fetch(PDO::FETCH_ASSOC);
-              }
+            $user = null;
+            $vendedor = null;
 
-              if ($user || $vendedor) {
-                  // Gerar token seguro
-                  $token = bin2hex(random_bytes(32));
-                  $expira = date("Y-m-d H:i:s", strtotime("+1 hour"));
+            // Procurar no usuário
+            $stmt = $conn->prepare("SELECT idusuario, nome FROM usuario WHERE email = ?");
+            $stmt->execute([$email]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                  // Determinar qual tabela usar e obter o ID
-                  if ($user) {
-                      $id_usuario = $user['idusuario'];
-                      $nome = $user['nome'];
-                      $stmt = $conn->prepare("INSERT INTO recuperacao_senha (token, expira_em, idusuario, idvendedor) VALUES (?, ?, ?, NULL)");
-                  } else {
-                      $id_usuario = $vendedor['idvendedor'];
-                      $nome = $vendedor['nome'];
-                      $stmt = $conn->prepare("INSERT INTO recuperacao_senha (token, expira_em, idusuario, idvendedor) VALUES (?, ?, NULL, ?)");
-                  }
+            // Procurar no vendedor se não achou no usuário
+            if (!$user) {
+                $stmt = $conn->prepare("SELECT idvendedor, nome_completo FROM vendedor WHERE email = ?");
+                $stmt->execute([$email]);
+                $vendedor = $stmt->fetch(PDO::FETCH_ASSOC);
+            }
 
-                  if (!$stmt) {
-                      throw new Exception("Erro ao preparar inserção do token");
-                  }
+            if ($user || $vendedor) {
+                $token = bin2hex(random_bytes(32));
+                $expira = date("Y-m-d H:i:s", strtotime("+1 hour"));
 
-                  // Executar a inserção do token
-                  $stmt->execute([$token, $expira, $id_usuario]);
+                if ($user) {
+                    $id_usuario = $user['idusuario'];
+                    $nome = $user['nome'];
+                    $stmt = $conn->prepare("INSERT INTO recuperacao_senha (token, expira_em, idusuario, idvendedor) VALUES (?, ?, ?, NULL)");
+                    $stmt->execute([$token, $expira, $id_usuario]);
+                } else {
+                    $id_vendedor = $vendedor['idvendedor'];
+                    $nome = $vendedor['nome_completo'];
+                    $stmt = $conn->prepare("INSERT INTO recuperacao_senha (token, expira_em, idusuario, idvendedor) VALUES (?, ?, NULL, ?)");
+                    $stmt->execute([$token, $expira, $id_vendedor]);
+                }
 
-                  // Verificar se foi inserido com sucesso
-                  if ($stmt->rowCount() > 0) {
-                    // Se estiver em ambiente local (db = 1), não envia e-mail, apenas mostra o link
+                if ($stmt->rowCount() > 0) {
                     if ($db == 1) {
                         $link = "http://localhost/PROJETO-TCC/php/perfil-usuario/protocolo-senha/resetar_senha.php?token=" . urlencode($token);
                         echo "<p><strong>Link de recuperação (modo local):</strong> <a href='$link'>$link</a></p>";
                     } else {
                         $link = "https://projetosetim.com.br/2025/php3/php/perfil-usuario/protocolo-senha/resetar_senha.php?token=" . urlencode($token);
 
-                        // Configurar email
                         $to = $email;
                         $subject = "Recuperação de Senha - Entre Linhas";
-                        $message = "Olá " . $nome . ",\n\n";
-                        $message .= "Você solicitou a recuperação de senha.\n\n";
-                        $message .= "Clique no link abaixo para redefinir sua senha:\n";
-                        $message .= $link . "\n\n";
-                        $message .= "Este link é válido por 1 hora.\n\n";
-                        $message .= "Se você não solicitou esta recuperação, ignore este email.\n\n";
-                        $message .= "Atenciosamente,\nEquipe Entre Linhas";
+                        $message = "Olá $nome,\n\nVocê solicitou a recuperação de senha.\n\n";
+                        $message .= "Clique no link abaixo para redefinir sua senha:\n$link\n\n";
+                        $message .= "Este link é válido por 1 hora.\n\nSe você não solicitou, ignore este email.\n\nEquipe Entre Linhas";
 
                         $headers = "From: noreply@entrelinhas.com\r\n";
                         $headers .= "Reply-To: noreply@entrelinhas.com\r\n";
                         $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 
-                        // Tentar enviar o email
                         if (mail($to, $subject, $message, $headers)) {
-                            $mensagem = "Um link de recuperação foi enviado para seu email.";
-                            $tipoMensagem = "success";
+                            echo "✅ Email de recuperação enviado para: $email";
                         } else {
-                            error_log("Falha no envio de email para: " . $email);
-                            $mensagem = "Email enviado com sucesso! Verifique sua caixa de entrada. (Link: " . $link . ")";
-                            $tipoMensagem = "success";
+                            echo "⚠️ Falha ao enviar email. Link manual: <a href='$link'>$link</a>";
                         }
                     }
                 } else {
-                    throw new Exception("Erro ao salvar token de recuperação");
+                    die("Erro: falha ao salvar token de recuperação no banco.");
                 }
-
-              } else {
-                  $mensagem = "Email não encontrado em nosso sistema.";
-                  $tipoMensagem = "error";
-              }
-          }
-      }
-  } catch (PDOException $e) {
-      error_log("Erro PDO: " . $e->getMessage());
-      $mensagem = "Erro de banco de dados. Tente novamente mais tarde.";
-      $tipoMensagem = "error";
-  } catch (Exception $e) {
-      error_log("Erro Geral: " . $e->getMessage());
-      $mensagem = "Erro no sistema: " . $e->getMessage();
-      $tipoMensagem = "error";
-  }
-
-  // Fechar conexão se existir
-  if (isset($conn)) {
-      $conn = null;
-  }
+            } else {
+                die("Erro: email não encontrado em nosso sistema.");
+            }
+        }
+    } catch (PDOException $e) {
+        // Mostra o erro PDO diretamente
+        die("ERRO PDO: " . $e->getMessage());
+    } catch (Exception $e) {
+        // Mostra o erro geral diretamente
+        die("ERRO GERAL: " . $e->getMessage());
+    }
   ?>
 
   <div class="container">
     <div class="left-panel">
-      <h2>Olá, novo usuário!</h2>
-      <p>Cadastre-se agora<br>para aproveitar todos os recursos</p>
-      <button onclick="window.location.href='../../cadastro/cadastroUsuario.php'">CADASTRAR</button>
+      <?php if ($tipo == "vendedor"): ?>
+        <h2>Olá, novo vendedor!</h2>
+        <p>Cadastre-se agora<br>e comece a vender hoje!</p>
+        <button onclick="window.location.href='../../cadastro/cadastroVendedor.php'">CADASTRAR</button>
+      <?php else: ?>
+        <h2>Olá, novo usuário!</h2>
+        <p>Cadastre-se agora<br>para aproveitar todos os recursos</p>
+        <button onclick="window.location.href='../../cadastro/cadastroUsuario.php'">CADASTRAR</button>
+      <?php endif; ?>
     </div>
     <div class="right-panel">
       <h2>Recuperar Senha</h2>
       <form action="" method="post">
         <input type="email" name="email" placeholder="Digite seu e-mail" required>
         <input type="submit" value="Enviar link de recuperação">
-        <a href="../../login/login.php" class="back-link">Voltar para o login</a>
+        <?php if ($tipo == "vendedor"): ?>
+          <a href="../../login/loginVendedor.php" class="back-link">Voltar para o login</a>
+        <?php else: ?>
+          <a href="../../login/login.php" class="back-link">Voltar para o login</a>
+        <?php endif; ?>
       </form>
 
       <?php if (!empty($mensagem)) : ?>

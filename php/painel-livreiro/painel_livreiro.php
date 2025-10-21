@@ -16,11 +16,55 @@ $stmt->execute([$id_vendedor]);
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 $anuncios_publicadas = $result['total'];
 
-// Buscar reputação do vendedor
+$stmt = $conn->prepare("
+    SELECT COUNT(*) AS total
+    FROM pedido p
+    JOIN item_pedido i ON i.idpedido = p.idpedido
+    JOIN produto pr ON pr.idproduto = i.idproduto
+    WHERE pr.idvendedor = :id_vendedor
+      AND p.status_envio = 'entregue'
+");
+$stmt->bindValue(':id_vendedor', $id_vendedor, PDO::PARAM_INT);
+$stmt->execute();
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+$vendas_concluidas = $result['total'];
+
 $stmt = $conn->prepare("SELECT reputacao FROM vendedor WHERE idvendedor = ?");
 $stmt->execute([$id_vendedor]);
 $dados_vendedor = $stmt->fetch(PDO::FETCH_ASSOC);
 $reputacao = $dados_vendedor ? $dados_vendedor['reputacao'] : 0;
+
+$stmt = $conn->prepare("
+    SELECT 
+        p.idpedido,
+        p.data_pedido,
+        p.status_envio,
+        i.idproduto,
+        pr.nome AS produto_nome,
+        u.nome_completo AS comprador_nome
+    FROM pedido p
+    JOIN item_pedido i ON i.idpedido = p.idpedido
+    JOIN produto pr ON pr.idproduto = i.idproduto
+    JOIN usuario u ON u.idusuario = p.idusuario
+    WHERE pr.idvendedor = :id_vendedor
+    ORDER BY p.data_pedido DESC
+");
+$stmt->bindValue(':id_vendedor', $id_vendedor, PDO::PARAM_INT);
+$stmt->execute();
+$pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$notificacoes = [];
+
+if ($id_vendedor) {
+  $sql = "SELECT n.idnotificacoes, n.mensagem, n.lida, n.data_envio, u.nome_completo AS usuario_nome
+          FROM notificacoes n
+          JOIN usuario u ON n.idusuario = u.idusuario
+          WHERE n.idvendedor = :id
+          ORDER BY n.data_envio DESC";
+  $stmt = $conn->prepare($sql);
+  $stmt->execute([':id' => $id_vendedor]);
+  $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 ?>
 
@@ -403,10 +447,10 @@ $reputacao = $dados_vendedor ? $dados_vendedor['reputacao'] : 0;
       <div class="card">
         <h2>Taxa de Vendas</h2>
         <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
-        <p><strong>Taxa de sucesso:</strong> 0%</p>
-        <p><strong>Vendas concluídas:</strong> 0</p>
-        <p><strong>Anúncios publicadas:</strong> <?php echo $anuncios_publicadas; ?></p>
-      </div>
+          <p><strong>Taxa de sucesso:</strong> 0%</p>
+          <p><strong>Vendas concluídas:</strong> <?php echo $vendas_concluidas; ?></p>
+          <p><strong>Anúncios publicadas:</strong> <?php echo $anuncios_publicadas; ?></p>
+        </div>
     </div>
 
     <div class="card">
@@ -419,13 +463,32 @@ $reputacao = $dados_vendedor ? $dados_vendedor['reputacao'] : 0;
           <th>Status</th>
           <th>Data de Envio</th>
         </tr>
-        <tr>
-          <td>0</td>
-          <td>Nenhum pedido realizado</td>
-          <td>x</td>
-          <td>x</td>
-          <td>xx/xx/xxxx</td>
-        </tr>
+
+        <?php if ($pedidos): ?>
+            <?php $contador = 1; ?>
+            <?php foreach ($pedidos as $pedido): ?>
+                <?php
+                    $classeStatus = match($pedido['status_envio']) {
+                        'aguardando envio' => 'status-pendente',
+                        'enviado' => 'status-enviado',
+                        'entregue' => 'status-entregue',
+                        default => 'status-pendente'
+                    };
+                ?>
+                <tr>
+                    <td><?= $contador ?></td>
+                    <td><?= htmlspecialchars($pedido['produto_nome']) ?></td>
+                    <td><?= htmlspecialchars($pedido['comprador_nome']) ?></td>
+                    <td class="<?= $classeStatus ?>"><?= strtoupper($pedido['status_envio']) ?></td>
+                    <td><?= date('d/m/Y', strtotime($pedido['data_pedido'])) ?></td>
+                </tr>
+                <?php $contador++; ?>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="5" style="text-align:center;">Nenhum pedido realizado</td>
+            </tr>
+        <?php endif; ?>
       </table>
     </div>
           <br>
@@ -435,26 +498,6 @@ $reputacao = $dados_vendedor ? $dados_vendedor['reputacao'] : 0;
         <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
         <p>Nenhuma avaliação recebida ainda.</p>
       </div>
-
-      <?php
-        include '../conexao.php';
-
-        $id_vendedor = $_SESSION['id_vendedor'] ?? null;
-
-        $notificacoes = [];
-
-        if ($id_vendedor) {
-            // Busca notificações reais do vendedor
-            $sql = "SELECT n.idnotificacoes, n.mensagem, n.lida, n.data_envio, u.nome_completo AS usuario_nome
-                    FROM notificacoes n
-                    JOIN usuario u ON n.idusuario = u.idusuario
-                    WHERE n.idvendedor = :id
-                    ORDER BY n.data_envio DESC";
-            $stmt = $conn->prepare($sql);
-            $stmt->execute([':id' => $id_vendedor]);
-            $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
-      ?>
 
       <div class="card"> 
           <h2>Notificações</h2>

@@ -512,7 +512,7 @@
   <div class="container-principal">
     <div class="navegacao-superior">
       <a href="?aba=perfil" class="<?php echo $aba_ativa === 'perfil' ? 'ativa' : ''; ?>">Meu Perfil</a>
-      <a href="?aba=compras" class="<?php echo $aba_ativa === 'compras' ? 'ativa' : ''; ?>">Minhas Compras</a>
+      <a href="?aba=pedidos" class="<?php echo $aba_ativa === 'pedidos' ? 'ativa' : ''; ?>">Meus Pedidos</a>
     </div>
     
     <div class="perfil-container">
@@ -612,96 +612,97 @@
           </div>
         <?php else: ?>
           <div class="compras-container">
-            <h3>MINHAS COMPRAS</h3>
-            
+            <h3>MEUS PEDIDOS</h3>
+
             <div class="compras-lista">
-              <!-- Exemplo de compra 1 -->
-              <div class="compra-item">
-                <div class="compra-header">
-                  <div class="compra-id">Pedido #12345</div>
-                  <div class="compra-data">15/03/2025</div>
-                  <div class="compra-status status-entregue">ENTREGUE</div>
-                </div>
-                
-                <div class="produto-item">
-                  <img src="../../imgs/capa.jpg" alt="Produto" class="produto-imagem">
-                  <div class="produto-info">
-                    <div class="produto-nome">Livro: O Nome do Vento</div>
-                    <div class="produto-detalhes">Autor: Patrick Rothfuss | Quantidade: 1</div>
-                    <div class="produto-preco">R$ 49,90</div>
-                  </div>
-                </div>
-                
-                <div class="compra-total">Total: R$ 49,90</div>
-              </div>
-              
-              <!-- Exemplo de compra 2 -->
-              <div class="compra-item">
-                <div class="compra-header">
-                  <div class="compra-id">Pedido #12344</div>
-                  <div class="compra-data">10/03/2025</div>
-                  <div class="compra-status status-pendente">EM ANDAMENTO</div>
-                </div>
-                
-                <div class="produto-item">
-                  <img src="../../imgs/capa.jpg" alt="Produto" class="produto-imagem">
-                  <div class="produto-info">
-                    <div class="produto-nome">Livro: A Guerra dos Tronos</div>
-                    <div class="produto-detalhes">Autor: George R. R. Martin | Quantidade: 1</div>
-                    <div class="produto-preco">R$ 59,90</div>
-                  </div>
-                </div>
-                
-                <div class="produto-item">
-                  <img src="../../imgs/capa.jpg" alt="Produto" class="produto-imagem">
-                  <div class="produto-info">
-                    <div class="produto-nome">Livro: O Senhor dos Anéis</div>
-                    <div class="produto-detalhes">Autor: J. R. R. Tolkien | Quantidade: 1</div>
-                    <div class="produto-preco">R$ 69,90</div>
-                  </div>
-                </div>
-                
-                <div class="compra-total">Total: R$ 129,80</div>
-              </div>
+              <?php
+                // Buscar pedidos do usuário logado
+                $stmt = $conn->prepare("
+                    SELECT 
+                        p.idpedido,
+                        p.data_pedido,
+                        p.valor_total,
+                        p.frete,
+                        p.servico_frete,
+                        p.prazo_entrega,
+                        p.codigo_rastreio,
+                        p.status,
+                        p.status_envio
+                    FROM pedido p
+                    WHERE p.idusuario = :idusuario
+                    ORDER BY p.idpedido DESC
+                ");
+                $stmt->bindValue(':idusuario', $usuario['idusuario'], PDO::PARAM_INT);
+                $stmt->execute();
+                $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-              <!-- Mais compras de exemplo para demonstrar o scroll -->
-              <div class="compra-item">
-                <div class="compra-header">
-                  <div class="compra-id">Pedido #12343</div>
-                  <div class="compra-data">05/03/2025</div>
-                  <div class="compra-status status-entregue">ENTREGUE</div>
-                </div>
-                
-                <div class="produto-item">
-                  <img src="../../imgs/capa.jpg" alt="Produto" class="produto-imagem">
-                  <div class="produto-info">
-                    <div class="produto-nome">Livro: Harry Potter e a Pedra Filosofal</div>
-                    <div class="produto-detalhes">Autor: J. K. Rowling | Quantidade: 1</div>
-                    <div class="produto-preco">R$ 39,90</div>
-                  </div>
-                </div>
-                
-                <div class="compra-total">Total: R$ 39,90</div>
-              </div>
+                if ($pedidos) {
+                    foreach ($pedidos as $pedido) {
+                        echo '<div class="compra-item">';
+                        echo '<div class="compra-header">';
+                        echo '<div class="compra-id">Pedido #' . $pedido['idpedido'] . '</div>';
+                        echo '<div class="compra-data">' . date('d/m/Y', strtotime($pedido['data_pedido'])) . '</div>';
 
-              <div class="compra-item">
-                <div class="compra-header">
-                  <div class="compra-id">Pedido #12342</div>
-                  <div class="compra-data">01/03/2025</div>
-                  <div class="compra-status status-cancelado">CANCELADO</div>
-                </div>
-                
-                <div class="produto-item">
-                  <img src="../../imgs/capa.jpg" alt="Produto" class="produto-imagem">
-                  <div class="produto-info">
-                    <div class="produto-nome">Livro: 1984</div>
-                    <div class="produto-detalhes">Autor: George Orwell | Quantidade: 1</div>
-                    <div class="produto-preco">R$ 34,90</div>
-                  </div>
-                </div>
-                
-                <div class="compra-total">Total: R$ 34,90</div>
-              </div>
+                        // Cor de status baseada no envio
+                        $classeStatus = match($pedido['status_envio']) {
+                            'entregue' => 'status-entregue',
+                            'enviado' => 'status-pendente',
+                            'aguardando envio' => 'status-pendente',
+                            'cancelado' => 'status-cancelado',
+                            default => 'status-pendente'
+                        };
+
+                        echo '<div class="compra-status ' . $classeStatus . '">' . strtoupper($pedido['status_envio']) . '</div>';
+                        echo '</div>';
+
+                        // Itens do pedido
+                        $itensStmt = $conn->prepare("
+                            SELECT 
+                                i.quantidade,
+                                pr.nome,
+                                pr.preco,
+                                (SELECT img.imagem FROM imagens img WHERE img.idproduto = pr.idproduto LIMIT 1) AS imagem
+                            FROM item_pedido i
+                            JOIN produto pr ON i.idproduto = pr.idproduto
+                            WHERE i.idpedido = :idpedido
+                        ");
+                        $itensStmt->bindValue(':idpedido', $pedido['idpedido'], PDO::PARAM_INT);
+                        $itensStmt->execute();
+                        $itens = $itensStmt->fetchAll(PDO::FETCH_ASSOC);
+
+                        foreach ($itens as $item) {
+                            $imagemBase64 = $item['imagem']
+                                ? 'data:image/jpeg;base64,' . base64_encode($item['imagem'])
+                                : '../../imgs/capa.jpg';
+
+                            echo '<div class="produto-item">';
+                            echo '<img src="' . $imagemBase64 . '" alt="Produto" class="produto-imagem">';
+                            echo '<div class="produto-info">';
+                            echo '<div class="produto-nome">' . htmlspecialchars($item['nome']) . '</div>';
+                            echo '<div class="produto-detalhes">Quantidade: ' . $item['quantidade'] . '</div>';
+                            echo '<div class="produto-preco">R$ ' . number_format($item['preco'], 2, ',', '.') . '</div>';
+                            echo '</div>';
+                            echo '</div>';
+                        }
+
+                        // Informações do frete
+                        echo '<div class="frete-detalhes">';
+                        echo '<p><strong>Frete:</strong> R$ ' . number_format($pedido['frete'], 2, ',', '.') . '</p>';
+                        echo '<p><strong>Serviço de entrega:</strong> ' . htmlspecialchars($pedido['servico_frete'] ?? 'N/A') . '</p>';
+                        echo '<p><strong>Prazo de entrega:</strong> ' . ($pedido['prazo_entrega'] ? $pedido['prazo_entrega'] . ' dias úteis' : 'Não informado') . '</p>';
+                        if (!empty($pedido['codigo_rastreio'])) {
+                            echo '<p><strong>Código de rastreio:</strong> ' . htmlspecialchars($pedido['codigo_rastreio']) . '</p>';
+                        }
+                        echo '</div>';
+
+                        // Total
+                        echo '<div class="compra-total">Total: R$ ' . number_format($pedido['valor_total'], 2, ',', '.') . '</div>';
+                        echo '</div>';
+                    }
+                } else {
+                    echo '<p>Nenhum pedido encontrado.</p>';
+                }
+              ?>
             </div>
           </div>
         <?php endif; ?>

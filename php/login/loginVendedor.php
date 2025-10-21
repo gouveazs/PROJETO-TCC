@@ -137,6 +137,7 @@
         <!-- <input type="password" name="cpf" placeholder="CPF" required> -->
         <input type="password" name="senha" placeholder="Senha" required>
         <input type="submit" value="Login">
+        <a href="../perfil-usuario/protocolo-senha/esqueci_senha.php?tipo=vendedor">Esqueci minha senha</a>
       </form>
 
       <?php if (isset($_GET['error'])): ?>

@@ -7,11 +7,12 @@ include '../conexao.php';
 
 $categoria = isset($_GET['categoria']) ? (int)$_GET['categoria'] : null;
 $sql = "
-    SELECT p.*, i.imagem
-    FROM produto p
-    LEFT JOIN imagens i 
-        ON i.idproduto = p.idproduto
-    WHERE i.idimagens = (
+  SELECT p.*, i.imagem
+  FROM produto p
+  LEFT JOIN imagens i 
+      ON i.idproduto = p.idproduto
+  WHERE p.status = 'Disponivel'  -- filtra apenas produtos disponíveis
+    AND i.idimagens = (
         SELECT idimagens
         FROM imagens
         WHERE idproduto = p.idproduto

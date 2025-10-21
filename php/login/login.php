@@ -152,7 +152,7 @@ form a:hover {
         <input type="text" name="usuario" placeholder="Usuário" required>
         <input type="password" name="senha" placeholder="Senha" required>
         <input type="submit" value="Login">
-        <a href="../perfil-usuario/protocolo-senha/esqueci_senha.php">Esqueci minha senha</a>
+        <a href="../perfil-usuario/protocolo-senha/esqueci_senha.php?tipo=usuario">Esqueci minha senha</a>
       </form>
 
       <?php if (isset($_GET['error']) && $_GET['error'] == 1): ?>
