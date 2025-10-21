@@ -219,37 +219,42 @@
 
                   // Verificar se foi inserido com sucesso
                   if ($stmt->rowCount() > 0) {
-                      // Construir o link de recuperação
-                      $link = "http://localhost/PROJETO-TCC/php/perfil-usuario/protocolo-senha/resetar_senha.php?token=" . urlencode($token);
-                      
-                      // Configurar email
-                      $to = $email;
-                      $subject = "Recuperação de Senha - Entre Linhas";
-                      $message = "Olá " . $nome . ",\n\n";
-                      $message .= "Você solicitou a recuperação de senha.\n\n";
-                      $message .= "Clique no link abaixo para redefinir sua senha:\n";
-                      $message .= $link . "\n\n";
-                      $message .= "Este link é válido por 1 hora.\n\n";
-                      $message .= "Se você não solicitou esta recuperação, ignore este email.\n\n";
-                      $message .= "Atenciosamente,\nEquipe Entre Linhas";
-                      
-                      $headers = "From: noreply@entrelinhas.com\r\n";
-                      $headers .= "Reply-To: noreply@entrelinhas.com\r\n";
-                      $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+                    // Se estiver em ambiente local (db = 1), não envia e-mail, apenas mostra o link
+                    if ($db == 1) {
+                        $link = "http://localhost/PROJETO-TCC/php/perfil-usuario/protocolo-senha/resetar_senha.php?token=" . urlencode($token);
+                        echo "<p><strong>Link de recuperação (modo local):</strong> <a href='$link'>$link</a></p>";
+                    } else {
+                        $link = "https://projetosetim.com.br/2025/php3/php/perfil-usuario/protocolo-senha/resetar_senha.php?token=" . urlencode($token);
 
-                      // Tentar enviar o email
-                      if (mail($to, $subject, $message, $headers)) {
-                          $mensagem = "Um link de recuperação foi enviado para seu email.";
-                          $tipoMensagem = "success";
-                      } else {
-                          // Log do erro de email
-                          error_log("Falha no envio de email para: " . $email);
-                          $mensagem = "Email enviado com sucesso! Verifique sua caixa de entrada. (Link: " . $link . ")";
-                          $tipoMensagem = "success";
-                      }
-                  } else {
-                      throw new Exception("Erro ao salvar token de recuperação");
-                  }
+                        // Configurar email
+                        $to = $email;
+                        $subject = "Recuperação de Senha - Entre Linhas";
+                        $message = "Olá " . $nome . ",\n\n";
+                        $message .= "Você solicitou a recuperação de senha.\n\n";
+                        $message .= "Clique no link abaixo para redefinir sua senha:\n";
+                        $message .= $link . "\n\n";
+                        $message .= "Este link é válido por 1 hora.\n\n";
+                        $message .= "Se você não solicitou esta recuperação, ignore este email.\n\n";
+                        $message .= "Atenciosamente,\nEquipe Entre Linhas";
+
+                        $headers = "From: noreply@entrelinhas.com\r\n";
+                        $headers .= "Reply-To: noreply@entrelinhas.com\r\n";
+                        $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+
+                        // Tentar enviar o email
+                        if (mail($to, $subject, $message, $headers)) {
+                            $mensagem = "Um link de recuperação foi enviado para seu email.";
+                            $tipoMensagem = "success";
+                        } else {
+                            error_log("Falha no envio de email para: " . $email);
+                            $mensagem = "Email enviado com sucesso! Verifique sua caixa de entrada. (Link: " . $link . ")";
+                            $tipoMensagem = "success";
+                        }
+                    }
+                } else {
+                    throw new Exception("Erro ao salvar token de recuperação");
+                }
+
               } else {
                   $mensagem = "Email não encontrado em nosso sistema.";
                   $tipoMensagem = "error";
@@ -276,14 +281,14 @@
     <div class="left-panel">
       <h2>Olá, novo usuário!</h2>
       <p>Cadastre-se agora<br>para aproveitar todos os recursos</p>
-      <button onclick="window.location.href='../cadastro/cadastro.php'">CADASTRAR</button>
+      <button onclick="window.location.href='../../cadastro/cadastroUsuario.php'">CADASTRAR</button>
     </div>
     <div class="right-panel">
       <h2>Recuperar Senha</h2>
       <form action="" method="post">
         <input type="email" name="email" placeholder="Digite seu e-mail" required>
         <input type="submit" value="Enviar link de recuperação">
-        <a href="../login/login.php" class="back-link">Voltar para o login</a>
+        <a href="../../login/login.php" class="back-link">Voltar para o login</a>
       </form>
 
       <?php if (!empty($mensagem)) : ?>

@@ -57,6 +57,12 @@ if (isset($_SESSION['idusuario'])) {
     $cep_usuario = $stmtU->fetchColumn();
 }
 
+if (!empty($_POST['cep_usuario'])) {
+    $_SESSION['cep_usuario'] = preg_replace('/[^0-9]/', '', $_POST['cep_usuario']);
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit;
+}
+
 ?>
 
 <!DOCTYPE html> 

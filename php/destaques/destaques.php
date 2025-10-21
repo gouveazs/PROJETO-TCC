@@ -1,10 +1,12 @@
 <?php
 session_start();
-$nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
-$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
+$nome = $_SESSION['nome_usuario'] ?? null;
+$foto_de_perfil = $_SESSION['foto_de_perfil'] ?? null;
 
 include '../conexao.php';
-$stmt = $conn->prepare("
+
+$categoria = isset($_GET['categoria']) ? (int)$_GET['categoria'] : null;
+$sql = "
     SELECT p.*, i.imagem
     FROM produto p
     LEFT JOIN imagens i 
@@ -16,7 +18,16 @@ $stmt = $conn->prepare("
         ORDER BY idimagens ASC
         LIMIT 1
     )
-");
+";
+if ($categoria) {
+    $sql .= " AND p.idcategoria = :categoria";
+}
+
+$stmt = $conn->prepare($sql);
+if ($categoria) {
+    $stmt->bindParam(':categoria', $categoria, PDO::PARAM_INT);
+}
+
 $stmt->execute();
 $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -579,14 +590,14 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <!-- Barra de categorias -->
   <div class="categorias-barra">
-    <a href="#">Terror</a>
-    <a href="#">Suspense</a>
-    <a href="#">Romance</a>
-    <a href="#">Fantasia</a>
-    <a href="#">Biográfico</a>
-    <a href="#">Ficção Científica</a>
-    <a href="#">Infantil</a>
-    <a href="#">Ficção literária</a>
+    <a href="destaques.php?categoria=1">Terror</a>
+    <a href="destaques.php?categoria=2">Suspense</a>
+    <a href="destaques.php?categoria=3">Romance</a>
+    <a href="destaques.php?categoria=4">Fantasia</a>
+    <a href="destaques.php?categoria=5">Biográfico</a>
+    <a href="destaques.php?categoria=6">Ficção Científica</a>
+    <a href="destaques.php?categoria=7">Infantil</a>
+    <a href="destaques.php?categoria=8">Ficção literária</a>
   </div>
 
   <!-- Conteúdo -->
@@ -645,8 +656,9 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
           </div>
         </a>
       <?php endforeach; ?>
+
       <?php if (empty($produtos)): ?>
-        <p style="text-align: center; white-space: nowrap;">Nenhum produto disponível no momento.</p>
+        <p style="text-align: center; white-space: nowrap;">Nenhum produto encontrado nessa categoria.</p>
       <?php endif; ?>
     </div>
 
