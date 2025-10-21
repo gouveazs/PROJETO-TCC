@@ -286,19 +286,31 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       display: block;
     }
 
-    .produto-img {
-      flex: 0 0 200px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+.produto-img {
+  flex: 0 0 200px;
+  height: 280px; /* Aumenta a altura do container */
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  border-radius: 8px;
+  overflow: hidden;
+}
 
-    .produto-img img {
-      width: 100%;
-      border-radius: 8px;
-      object-fit: cover;
-      margin-bottom: 10px;
-    }
+.produto-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Cobre completamente o container, sem bordas */
+  border-radius: 0;
+}
+
+.detalhes-img img {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  border-radius: 8px;
+  object-fit: contain;
+  background-color: #f0f0f0;
+}
 
     .produto-actions {
       display: flex;
@@ -309,12 +321,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     .detalhes-img {
       display: none; 
-    }
-
-    .detalhes-img img {
-      width: 200px;
-      border-radius: 8px;
-      object-fit: cover;
     }
 
     .detalhes-info {
