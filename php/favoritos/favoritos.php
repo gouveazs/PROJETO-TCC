@@ -23,6 +23,7 @@ $stmt = $conn->prepare("
     FROM favoritos f
     JOIN produto p ON f.idproduto = p.idproduto
     WHERE f.idusuario = :idusuario
+    ORDER BY f.idfavoritos DESC
 ");
 $stmt->bindValue(':idusuario', $idusuario, PDO::PARAM_INT);
 $stmt->execute();
@@ -38,357 +39,355 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="../../imgs/logotipo.png"/>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
   <style>
-  :root {
-    --marrom: #5a4224;
-    --verde: #5a6b50;
-    --background: #F4F1EE;
-  }
+    :root {
+      --marrom: #5a4224;
+      --verde: #5a6b50;
+      --background: #F4F1EE;
+    }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Playfair Display', serif; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Playfair Display', serif; }
 
-  body {
-    background-color: var(--background);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .content-wrapper { flex: 1; display: flex; }
-
-  /* ===== SIDEBAR ===== */
-  .sidebar {
-      position: fixed;
-      top: 0; left: 0;
-      width: 250px;
-      height: 100vh;
-      background-color: var(--verde);
-      color: #fff;
+    body {
+      background-color: var(--background);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      padding-top: 20px;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: #ccc transparent;
-      z-index: 1002;
-      transition: transform 0.3s ease;
     }
 
-    .sidebar::-webkit-scrollbar {
-      width: 6px;
+    .content-wrapper { flex: 1; display: flex; }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+        position: fixed;
+        top: 0; left: 0;
+        width: 250px;
+        height: 100vh;
+        background-color: var(--verde);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding-top: 20px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #ccc transparent;
+        z-index: 1002;
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+        border-radius: 4px;
+      }
+
+      .sidebar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      
+    .sidebar .logo {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        padding: 0 20px;
+        margin-bottom: 20px;
+      }
+
+      .sidebar .logo img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+      }
+
+      .sidebar .user-info {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+      }
+
+      .sidebar .user-info .nome-usuario {
+        font-weight: bold;
+        font-size: 0.95rem; 
+        color: #fff;
+      }
+
+      .sidebar .user-info .tipo-usuario {
+        font-size: 0.8rem;
+        color: #ddd;
+      }
+
+      .sidebar .logo p {
+        font-weight: bold;
+      }
+
+      .sidebar nav {
+        width: 100%;
+        padding: 0 20px;
+      }
+
+      .sidebar nav h3 {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-size: 1rem;
+        color: #ddd;
+      }
+
+      .sidebar nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 10px 0;
+        width: 100%;
+      }
+
+      .sidebar nav ul li {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      .sidebar nav ul li a {
+        color: #fff;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-radius: 8px;
+        transition: background 0.3s;
+      }
+
+      .sidebar nav ul li a img {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px; /* espaço entre ícone e texto */
+        vertical-align: middle;
+      }
+
+          .sidebar nav ul li a i {
+            margin-right: 10px;
+          }
+
+          .sidebar nav ul li a:hover {
+            background-color: #6f8562;
+          }
+
+
+        /* ===== TOPBAR ===== */
+        .topbar {
+            display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background-color: #5a4226; /* marrom */
+          padding: 10px 20px;
+          position: fixed;
+          top: 0;
+          left: 250px; /* respeita a sidebar */
+          right: 0;
+          height: 70px;
+          z-index: 1000;
+          }
+
+      .topbar-left {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+      }
+
+      .topbar-left .logo {
+          height: 50px;
+      }
+
+      .topbar-left h1 {
+          font-size: 22px;
+          color: #fff;
+          margin: 0;
+          font-weight: bold;
+      }
+
+      .search-form {
+        display: flex;
+        align-items: center;
+      }
+
+      .search-form input[type="text"] {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 30px 0 0 30px; /* arredondado à esquerda */
+        outline: none;
+        width: 300px; /* campo maior */
+        font-size: 0.9rem;
+        margin: 0;
+      }
+
+      .search-form input[type="submit"] {
+        padding: 10px 15px;
+        border: none;
+        background-color: #6f8562; /* verde escuro */
+        color: #fff;
+        font-weight: none;
+        border-radius: 0 30px 30px 0; /* arredondado à direita */
+        cursor: pointer;
+        margin: 0;
+        width: 90px; /* botão mais estreito */
+      }
+
+      .search-form input[type="submit"]:hover {
+        background-color: #6f8562;
+      }
+
+      .topbar input[type="text"] {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 20px 0 0 20px;
+        width: 250px;
+        font-size: 0.9rem;
+      }
+      
+      .topbar input[type="submit"] {
+        padding: 10px 15px;
+        background: var(--verde);
+        color: white;
+        border: none;
+        border-radius: 0 20px 20px 0;
+        cursor: pointer;
+      }
+
+      .topbar h1 {
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+    /* ===== MAIN CONTENT ===== */
+    .main {
+      flex: 1;
+      margin-left: 250px;
+      padding: 30px;
+      margin-top: 70px;
     }
 
-    .sidebar::-webkit-scrollbar-thumb {
-      background-color: #ccc;
-      border-radius: 4px;
-    }
+    .section-header h2 { color: var(--verde); }
 
-    .sidebar::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    
-  .sidebar .logo {
+    .title-with-icons {
       display: flex;
       align-items: center;
-      justify-content: flex-start;
-      width: 100%;
-      padding: 0 20px;
-      margin-bottom: 20px;
+      justify-content: space-between;
     }
 
-    .sidebar .logo img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-right: 15px;
-    }
-
-    .sidebar .user-info {
+    .header-icons {
       display: flex;
-      flex-direction: column;
-      line-height: 1.2;
-    }
-
-    .sidebar .user-info .nome-usuario {
-      font-weight: bold;
-      font-size: 0.95rem; 
-      color: #fff;
-    }
-
-    .sidebar .user-info .tipo-usuario {
-      font-size: 0.8rem;
-      color: #ddd;
-    }
-
-    .sidebar .logo p {
-      font-weight: bold;
-    }
-
-    .sidebar nav {
-      width: 100%;
-      padding: 0 20px;
-    }
-
-    .sidebar nav h3 {
-      margin-top: 20px;
-      margin-bottom: 10px;
-      font-size: 1rem;
-      color: #ddd;
-    }
-
-    .sidebar nav ul {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 10px 0;
-      width: 100%;
-    }
-
-    .sidebar nav ul li {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-
-    .sidebar nav ul li a {
-      color: #fff;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      padding: 10px;
-      border-radius: 8px;
-      transition: background 0.3s;
-    }
-
-    .sidebar nav ul li a img {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px; /* espaço entre ícone e texto */
-  vertical-align: middle;
-}
-
-    .sidebar nav ul li a i {
-      margin-right: 10px;
-    }
-
-    .sidebar nav ul li a:hover {
-      background-color: #6f8562;
-    }
-
-
-  /* ===== TOPBAR ===== */
-  .topbar {
-      display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #5a4226; /* marrom */
-    padding: 10px 20px;
-    position: fixed;
-    top: 0;
-    left: 250px; /* respeita a sidebar */
-    right: 0;
-    height: 70px;
-    z-index: 1000;
-    }
-
-.topbar-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.topbar-left .logo {
-    height: 50px;
-}
-
-.topbar-left h1 {
-    font-size: 22px;
-    color: #fff;
-    margin: 0;
-    font-weight: bold;
-}
-
-.search-form {
-  display: flex;
-  align-items: center;
-}
-
-.search-form input[type="text"] {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 30px 0 0 30px; /* arredondado à esquerda */
-  outline: none;
-  width: 300px; /* campo maior */
-  font-size: 0.9rem;
-  margin: 0;
-}
-
-.search-form input[type="submit"] {
-  padding: 10px 15px;
-  border: none;
-  background-color: #6f8562; /* verde escuro */
-  color: #fff;
-  font-weight: none;
-  border-radius: 0 30px 30px 0; /* arredondado à direita */
-  cursor: pointer;
-  margin: 0;
-  width: 90px; /* botão mais estreito */
-}
-
-.search-form input[type="submit"]:hover {
-  background-color: #6f8562;
-}
-
-    .topbar input[type="text"] {
-      padding: 10px 15px;
-      border: none;
-      border-radius: 20px 0 0 20px;
-      width: 250px;
-      font-size: 0.9rem;
-    }
-    
-    .topbar input[type="submit"] {
-      padding: 10px 15px;
-      background: var(--verde);
-      color: white;
-      border: none;
-      border-radius: 0 20px 20px 0;
-      cursor: pointer;
-    }
-
-    .topbar h1 {
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
       gap: 15px;
     }
 
-  /* ===== MAIN CONTENT ===== */
-  .main {
-    flex: 1;
-    margin-left: 250px;
-    padding: 30px;
-    margin-top: 70px;
-  }
+    .icon-btn {
+      width: 45px;
+      height: 45px;
+      background-color: var(--marrom);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
 
-  .section-header h2 { color: var(--verde); }
+    .icon-btn img {
+      width: 25px;
+      height: 25px;
+    }
 
-  .title-with-icons {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+    .icon-btn:hover {
+      background-color: #4a351e;
+    }
 
-  .header-icons {
-    display: flex;
-    gap: 15px;
-  }
+    /* ===== CARDS ===== */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 25px;
+      margin-top: 20px;
+    }
 
-  .icon-btn {
-    width: 45px;
-    height: 45px;
-    background-color: var(--marrom);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    font-size: 1.2rem;
-    text-decoration: none;
-    transition: background-color 0.3s;
-  }
+    .card {
+      background-color: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
 
-  .icon-btn img {
-    width: 25px;
-    height: 25px;
-  }
+    .card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
 
-  .icon-btn:hover {
-    background-color: #4a351e;
-  }
+    .card .info { padding: 15px; text-align: center; }
+    .card .info h3 { margin-bottom: 10px; font-size: 1rem; color: #4a5a40; }
+    .card .info .price { color: black; font-size: 0.95rem; margin-bottom: 8px; }
+    .card .info .stars { color: #f5c518; }
 
-  /* ===== CARDS ===== */
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 25px;
-    margin-top: 20px;
-  }
+    .card-actions {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px;
+      background: #fff;
+    }
 
-  .card {
-    background-color: #fff;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
-    display: flex;
-    flex-direction: column;
-  }
+    .card-link {
+      text-decoration: none;
+      color: inherit;
+    }
 
-  .card img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-  }
+    .card-actions a {
+      flex: 1;
+      text-align: center;
+      background-color: var(--verde);
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 0;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 0.8rem;
+      transition: 0.2s;
+      margin: 0 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-  .card .info { padding: 15px; text-align: center; }
-  .card .info h3 { margin-bottom: 10px; font-size: 1rem; color: #4a5a40; }
-  .card .info .price { color: black; font-size: 0.95rem; margin-bottom: 8px; }
-  .card .info .stars { color: #f5c518; }
+    .card-actions a:hover {
+      background-color: #4a5a42;
+    }
 
-  .card-actions {
-    display: flex;
-    justify-content: space-around;
-    padding: 10px;
-    background: #fff;
-  }
+    /* ===== FOOTER ===== */
+    .footer {
+      margin-left: 250px;
+      background-color: var(--marrom);
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+    }
 
-  .card-link {
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .card-actions a {
-    flex: 1;
-    text-align: center;
-    background-color: var(--verde);
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 0;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 0.8rem;
-    transition: 0.2s;
-    margin: 0 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .card-actions a:hover {
-    background-color: #4a5a42;
-  }
-
-  /* ===== FOOTER ===== */
-  .footer {
-    margin-left: 250px;
-    background-color: var(--marrom);
-    color: #fff;
-    text-align: center;
-    padding: 15px;
-  }
-
-  /* ===== RESPONSIVE ===== */
-  @media (max-width: 900px) {
-    .topbar { left: 0; }
-    .sidebar { display: none; }
-    .main { margin-left: 0; }
-    .footer { margin-left: 0; }
-  }
-  </style>
-</head>
-
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .topbar { left: 0; }
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .footer { margin-left: 0; }
+    }
+    </style>
+  </head>
 <body>
   <div class="sidebar">
     <div class="logo">
@@ -469,7 +468,6 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
               </a>
               <div class="card-actions">
                 <a href="remover_favorito.php?idproduto=<?= $produto['idproduto'] ?>" onclick="return confirm('Tem certeza que deseja remover este produto dos favoritos?')">Remover</a>
-                <a href="#">Adicionar ao carrinho</a>
               </div>
             </div>
           <?php endforeach; ?>
