@@ -234,12 +234,86 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 /* ===== ESTADO EXPANDIDO ===== */
 .produto-card.expanded {
+  display: flex;
   flex-direction: row;
   align-items: flex-start;
+  justify-content: flex-start;
   width: 100%;
-  max-width: 1000px;
+  max-width: 950px;
   transition: all 0.4s ease;
   padding: 20px;
+  gap: 20px; /* reduzido */
+}
+
+/* Agrupa imagem e botões à esquerda */
+.produto-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Imagem */
+.produto-img {
+  width: 230px;
+  height: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+}
+
+/* Botões */
+.produto-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+  width: 230px;
+  align-items: center;
+}
+
+/* Detalhes */
+.produto-detalhes {
+  display: none;
+  flex: 1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.produto-card.expanded .produto-detalhes {
+  display: block;
+  opacity: 1;
+  margin-left: 10px; /* aproxima da imagem */
+}
+
+/* ===== Responsividade ===== */
+@media (max-width: 1024px) {
+  .produto-card.expanded {
+    flex-direction: column; /* empilha imagem e texto */
+    align-items: center;
+    gap: 15px;
+    max-width: 90%;
+  }
+
+  .produto-detalhes {
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .produto-img {
+    width: 180px;
+    height: 240px;
+  }
+
+  .produto-actions {
+    width: 180px;
+  }
 }
 
 /* ===== IMAGEM ===== */
@@ -266,30 +340,37 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   flex-direction: column;
   gap: 10px;
   margin-top: 15px;
-  width: 230px; /* força todos os botões terem esse tamanho, igual à imagem */
+  width: 230px;
 }
 
-/* Botões ao lado da imagem no modo expandido */
+/* Agrupa imagem e botões em coluna */
+.produto-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Quando expandido, mantém os botões abaixo da imagem */
 .produto-card.expanded .produto-actions {
-  margin-top: 0;
-  margin-left: 15px;
-  width: 230px; /* mesmo tamanho da imagem */
+  margin-top: 15px;     /* espaço entre imagem e botões */
+  margin-left: 0;       /* remove o deslocamento lateral */
+  width: 230px;         /* mantém largura igual à imagem */
+  align-items: center;  /* centraliza os botões */
 }
 
 /* ===== DETALHES ===== */
 .produto-detalhes {
   display: none;
   flex: 1;
-  margin-top: 20px;
   opacity: 0;
   transition: opacity 0.4s ease;
 }
 
 .produto-card.expanded .produto-detalhes {
   display: block;
-  margin-left: 40px;
   opacity: 1;
-  margin-top: 0;
+  margin-left: 10px; /* aproxima ainda mais da imagem */
 }
 
 /* ===== DETALHES VISUAIS ===== */
@@ -477,19 +558,21 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <?php if (!empty($produtosDisponiveis)): ?>
     <?php foreach ($produtosDisponiveis as $index => $produto): ?>
       <div class="produto-card" id="card-<?= $index ?>">
-        <div class="produto-img">
-          <?php if (!empty($produto['imagem'])): ?>
-            <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
-          <?php else: ?>
-            <img src="../../imgs/usuario.jpg" alt="Sem imagem">
-          <?php endif; ?>
-        </div>
+        <div class="produto-left">
+  <div class="produto-img">
+    <?php if (!empty($produto['imagem'])): ?>
+      <img src="data:image/jpeg;base64,<?= base64_encode($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+    <?php else: ?>
+      <img src="../../imgs/usuario.jpg" alt="Sem imagem">
+    <?php endif; ?>
+  </div>
 
-        <div class="produto-actions">
-          <button onclick="toggleDetalhes(<?= $index ?>)" class="btn-action btn-toggle mostrar-detalhes">Mostrar detalhes</button>
-          <a href="../produto/editar_produto.php?id=<?= $produto['idproduto'] ?>" class="btn-action editar">Editar Produto</a>
-          <a href="../produto/excluir_produto.php?id=<?= $produto['idproduto'] ?>" class="btn-action excluir" onclick="return confirm('Tem certeza que deseja excluir esse anúncio?');">Excluir Produto</a>
-        </div>
+  <div class="produto-actions">
+    <button onclick="toggleDetalhes(<?= $index ?>)" class="btn-action btn-toggle mostrar-detalhes">Mostrar detalhes</button>
+    <a href="../produto/editar_produto.php?id=<?= $produto['idproduto'] ?>" class="btn-action editar">Editar Produto</a>
+    <a href="../produto/excluir_produto.php?id=<?= $produto['idproduto'] ?>" class="btn-action excluir" onclick="return confirm('Tem certeza que deseja excluir esse anúncio?');">Excluir Produto</a>
+  </div>
+</div>
 
         <div class="produto-detalhes" id="detalhes-<?= $index ?>">
           <div class="detalhes-card">
