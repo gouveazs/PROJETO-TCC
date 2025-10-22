@@ -81,6 +81,10 @@ $total = $subtotal;
       --marrom: #5a4224;
       --verde: #5a6b50;
       --background: #F4F1EE;
+      --branco: #ffffff;
+      --cinza-claro: #f8f8f8;
+      --cinza-medio: #e0e0e0;
+      --cinza-escuro: #777777;
     }
 
     * {
@@ -111,6 +115,7 @@ $total = $subtotal;
       overflow-y: auto;
       scrollbar-width: thin;
       scrollbar-color: #ccc transparent;
+      z-index: 1000;
     }
 
     .sidebar::-webkit-scrollbar {
@@ -204,7 +209,7 @@ $total = $subtotal;
       left: 250px;
       right: 0;
       height: 70px;
-      z-index: 1000;
+      z-index: 999;
     }
 
     .topbar-left {
@@ -261,62 +266,27 @@ $total = $subtotal;
       font-size: 1.8rem;
     }
 
-    .checkout-steps {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 40px;
-      gap: 40px;
-    }
-
-    .step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .step-number {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: var(--verde);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 10px;
-      font-weight: bold;
-    }
-
-    .step.active .step-number {
-      background-color: var(--marrom);
-    }
-
-    .step-label {
-      font-size: 0.9rem;
-      color: #777;
-    }
-
-    .step.active .step-label {
-      color: var(--marrom);
-      font-weight: bold;
-    }
-
     .cart-container {
       display: flex;
       gap: 30px;
+      flex-wrap: wrap;
     }
 
     .cart-items {
       flex: 2;
+      min-width: 300px;
     }
 
     .cart-summary {
       flex: 1;
       background: white;
-      padding: 20px;
+      padding: 25px;
       border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       height: fit-content;
+      min-width: 300px;
+      position: sticky;
+      top: 100px;
     }
 
     .cart-item {
@@ -326,6 +296,12 @@ $total = $subtotal;
       overflow: hidden;
       margin-bottom: 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .cart-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
     .cart-item-image {
@@ -337,6 +313,9 @@ $total = $subtotal;
     .cart-item-details {
       flex: 1;
       padding: 15px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .cart-item-title {
@@ -349,14 +328,43 @@ $total = $subtotal;
       font-weight: bold;
       color: var(--marrom);
       margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+
+    .cart-item-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 5px 0;
+      transition: color 0.3s;
     }
 
     .remove-btn {
-      background: none;
-      border: none;
       color: #e74c3c;
-      cursor: pointer;
-      font-size: 0.9rem;
+    }
+
+    .remove-btn:hover {
+      color: #c0392b;
+    }
+
+    .product-btn {
+      color: var(--verde);
+    }
+
+    .product-btn:hover {
+      color: var(--marrom);
+    }
+
+    .action-btn a {
+      color: inherit;
+      text-decoration: none;
     }
 
     .summary-title {
@@ -379,6 +387,7 @@ $total = $subtotal;
       margin-top: 15px;
       padding-top: 15px;
       border-top: 1px solid #eee;
+      font-weight: bold;
     }
 
     .checkout-btn {
@@ -392,6 +401,11 @@ $total = $subtotal;
       font-weight: bold;
       cursor: pointer;
       margin-top: 20px;
+      transition: background 0.3s;
+    }
+
+    .checkout-btn:hover {
+      background: #6b4d2a;
     }
 
     .continue-shopping {
@@ -400,6 +414,35 @@ $total = $subtotal;
       color: var(--marrom);
       text-decoration: none;
       font-weight: bold;
+      padding: 10px 15px;
+      border: 1px solid var(--marrom);
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+
+    .continue-shopping:hover {
+      background: var(--marrom);
+      color: white;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 40px 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .empty-cart-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: var(--cinza-escuro);
+    }
+
+    .empty-cart p {
+      color: var(--cinza-escuro);
+      font-size: 1.1rem;
+      margin-bottom: 20px;
     }
 
     .footer {
@@ -408,6 +451,43 @@ $total = $subtotal;
       color: #fff;
       text-align: center;
       padding: 15px;
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        width: 200px;
+      }
+      
+      .topbar, .main, .footer {
+        margin-left: 200px;
+      }
+      
+      .cart-container {
+        flex-direction: column;
+      }
+      
+      .cart-summary {
+        position: static;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 0;
+        overflow: hidden;
+      }
+      
+      .topbar, .main, .footer {
+        margin-left: 0;
+      }
+      
+      .topbar-left h1 {
+        font-size: 18px;
+      }
+      
+      .search-form input[type="text"] {
+        width: 200px;
+      }
     }
   </style>
 </head>
@@ -463,19 +543,14 @@ $total = $subtotal;
 <div class="main">
   <h1 class="page-title">Meu Carrinho</h1>
 
-  <div class="checkout-steps">
-    <div class="step active"><div class="step-number">1</div><div class="step-label">CARRINHO</div></div>
-    <div class="step"><div class="step-number">2</div><div class="step-label">CHECKOUT</div></div>
-    <div class="step"><div class="step-number">3</div><div class="step-label">PEDIDO FINALIZADO</div></div>
-  </div>
-
   <div class="cart-container">
     <div class="cart-items">
       <?php if (empty($_SESSION['carrinho'])): ?>
-        <p style="color: #777; font-size: 1.1rem; margin-bottom: 20px;">
-          Seu carrinho está vazio 😔. 
-          <a href="../../index.php" style="color: var(--marrom); text-decoration: underline;">Continuar comprando</a>
-        </p>
+        <div class="empty-cart">
+          <div class="empty-cart-icon">📚</div>
+          <p>Seu carrinho está vazio 😔</p>
+          <a href="../../index.php" class="continue-shopping">Continuar comprando</a>
+        </div>
       <?php else: ?>
         <?php foreach ($_SESSION['carrinho'] as $item): ?>
           <?php
@@ -488,36 +563,41 @@ $total = $subtotal;
           ?>
           
           <div class="cart-item">
-            <img src="<?= $src ?>" class="cart-item-image">
+            <img src="<?= $src ?>" class="cart-item-image" alt="<?= htmlspecialchars($item['nome']) ?>">
 
             <div class="cart-item-details">
-              <h3 class="cart-item-title"><?= htmlspecialchars($item['nome']) ?></h3>
+              <div>
+                <h3 class="cart-item-title"><?= htmlspecialchars($item['nome']) ?></h3>
 
-              <p class="cart-item-price">R$ <?= number_format($item['preco'], 2, ',', '.') ?></p>
-              <?php if (!empty($item['frete'])): ?>
-              <p class="cart-item-frete" style="margin-top:5px; color:#555;">
-                  <strong>Frete:</strong> <?= htmlspecialchars($item['frete']['nome'] ?? '-') ?> — 
-                  R$ <?= number_format(floatval(str_replace(',', '.', $item['frete']['preco'] ?? 0)), 2, ',', '.') ?> 
-                  (<?= htmlspecialchars($item['frete']['prazo'] ?? '-') ?> dias úteis)
-              </p>
-              <?php endif; ?>
-
-              <button class="remove-btn">
-                <a href="carrinho.php?remover_id=<?= $item['id'] ?>">Remover</a>
-              </button>
-          
-              <button class="remove-btn">
-                <a href="../produto/pagiproduto.php?id=<?= $item['id']?>">Página do produto</a>
-              </button>
-
+                <p class="cart-item-price">R$ <?= number_format($item['preco'], 2, ',', '.') ?></p>
+                
+                <?php if (!empty($item['frete'])): ?>
+                <p class="cart-item-frete" style="margin-top:5px; color:#555;">
+                    <strong>Frete:</strong> <?= htmlspecialchars($item['frete']['nome'] ?? '-') ?> — 
+                    R$ <?= number_format(floatval(str_replace(',', '.', $item['frete']['preco'] ?? 0)), 2, ',', '.') ?> 
+                    (<?= htmlspecialchars($item['frete']['prazo'] ?? '-') ?> dias úteis)
+                </p>
+                <?php endif; ?>
+              </div>
+              
+              <div class="cart-item-actions">
+                <button class="action-btn remove-btn">
+                  <a href="carrinho.php?remover_id=<?= $item['id'] ?>">Remover</a>
+                </button>
+            
+                <button class="action-btn product-btn">
+                  <a href="../produto/pagiproduto.php?id=<?= $item['id']?>">Ver produto</a>
+                </button>
+              </div>
             </div>
           </div>
         <?php endforeach; ?>
+        
+        <a href="../../index.php" class="continue-shopping">← Continuar comprando</a>
       <?php endif; ?>
-
-      <a href="../../index.php" class="continue-shopping">← Continuar comprando</a>
     </div>
 
+    <?php if (!empty($_SESSION['carrinho'])): ?>
     <div class="cart-summary">
       <?php
         $subtotalLivros = array_sum(array_map(function($p) {
@@ -549,7 +629,7 @@ $total = $subtotal;
 
       <button class="checkout-btn" onclick="window.location.href='finalizarcompra.php'">Finalizar Compra</button>
     </div>
-
+    <?php endif; ?>
   </div>
 </div>
 
