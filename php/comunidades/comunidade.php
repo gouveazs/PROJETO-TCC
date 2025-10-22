@@ -1,14 +1,3 @@
-[file name]: image.png
-[file content begin]
-Buscar
-
-==  Entre Linhas - Comunidades e Chats Online
-OO
-
-Criar Comunidades
-
-[file content end]
-
 <?php
 session_start();
 $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
