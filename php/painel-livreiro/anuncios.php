@@ -281,6 +281,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   flex: 1;
   opacity: 0;
   transition: opacity 0.4s ease;
+  max-width: none !important;  /* ou um valor maior ex: 100% */
 }
 
 .produto-card.expanded .produto-detalhes {
@@ -373,6 +374,8 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   margin-left: 10px; /* aproxima ainda mais da imagem */
 }
 
+
+
 /* ===== DETALHES VISUAIS ===== */
     .detalhes-card {
       background: #fff;
@@ -388,21 +391,63 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       margin-bottom: 8px;
     }
 
-    .detalhes-colunas {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 30px;
-    }
+/* === AJUSTE DAS TRÊS COLUNAS (MAIS ESPAÇO ENTRE ELAS) === */
+.detalhes-colunas {
+  display: grid !important;
+  grid-template-columns: 33% 33% 33% !important; /* proporções fixas */
+  column-gap: 60px !important; /* 🔹 mais espaçamento entre colunas */
+  row-gap: 10px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  align-items: start !important;
+  justify-content: space-between !important;
+  padding-right: 10px !important;
+}
 
-    .coluna {
-      flex: 1;
-      min-width: 180px;
-    }
+/* cada coluna */
+.coluna {
+  width: 100% !important;
+  min-width: 180px !important; /* 🔹 garante largura mínima para não quebrar texto */
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
 
-    .coluna p {
-      margin-bottom: 6px;
-      font-size: 14px;
-    }
+/* textos das colunas */
+.coluna p {
+  margin: 6px 0 !important;
+  white-space: nowrap !important; /* 🔹 impede que o texto quebre embaixo do título */
+  overflow: hidden !important;
+  text-overflow: ellipsis !important; /* se for muito longo, mostra "..." */
+}
+
+.descricao-produto {
+  grid-column: 1 / span 3 !important;
+  margin-top: 25px !important;
+  font-size: 14.5px !important;
+  text-align: left !important;
+  line-height: 1.7 !important;
+  padding-right: 10px !important;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-break: break-word !important;
+}
+
+@media (max-width: 768px) {
+  .produto-card.expanded {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .produto-detalhes {
+    width: 100%;
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .descricao-produto {
+    text-align: left;
+  }
+}
 
 /* ===== BOTÕES ===== */
 .btn-action, 
@@ -447,19 +492,26 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   background-color: #a33;
 }
 
-    .produto-detalhes {
-      display: none;
-      margin-top: 10px;
-      width: 100%;
-      transition: opacity 0.3s ease;
-    }
+.produto-card.expanded {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 720px; /* ⬅️ Novo limite horizontal (ajustável) */
+  transition: all 0.4s ease;
+  padding: 20px;
+  gap: 20px;
+}
 
-    .produto-card.expanded .produto-detalhes {
-      display: block;
-      opacity: 1;
-      margin-left: 20px;
-      flex: 1;
-    }
+.produto-detalhes {
+  display: none;
+  flex: 1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  max-width: 470px; /* ⬅️ Limita largura do bloco de detalhes */
+  overflow-wrap: break-word; /* Garante que texto não ultrapasse */
+}
 
     .detalhes-card {
       background: #fff;
@@ -579,29 +631,33 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <h3>Detalhes do Produto</h3>
             <hr>
             <div class="detalhes-colunas">
-              <div class="coluna">
-                <p><strong>Título:</strong> <?= htmlspecialchars($produto['nome']) ?></p>
-                <p><strong>Autor:</strong> <?= htmlspecialchars($produto['autor']) ?></p>
-                <p><strong>Editora:</strong> <?= htmlspecialchars($produto['editora']) ?></p>
-                <p><strong>Nº páginas:</strong> <?= (int)$produto['numero_paginas'] ?></p>
-                <p><strong>Categoria:</strong> <?= htmlspecialchars($produto['idcategoria']) ?></p>
-              </div>
-              <div class="coluna">
-                <p><strong>Publicação:</strong> <?= date('d/m/Y', strtotime($produto['data_publicacao'])) ?></p>
-                <p><strong>Idioma:</strong> <?= htmlspecialchars($produto['idioma']) ?></p>
-                <p><strong>Classificação:</strong> <?= htmlspecialchars($produto['classificacao_etaria']) ?> anos</p>
-                <p><strong>Dimensões:</strong> <?= htmlspecialchars($produto['dimensoes']) ?></p>
-                <p><strong>Preço:</strong> R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
-              </div>
-              <div class="coluna">
-                <p><strong>Quantidade:</strong> <?= (int)$produto['quantidade'] ?></p>
-                <p><strong>ISBN:</strong> <?= htmlspecialchars($produto['isbn']) ?></p>
-                <p><strong>Estado:</strong> <?= ucfirst(htmlspecialchars($produto['estado_livro'])) ?></p>
-                <p><strong>Desc. estado:</strong> <?= nl2br(htmlspecialchars($produto['estado_detalhado'])) ?></p>
-                <p><strong>Descrição:</strong> <?= nl2br(htmlspecialchars($produto['descricao'])) ?></p>
-              </div>
-            </div>
-          </div>
+  <div class="coluna">
+    <p><strong>Título:</strong> <?= htmlspecialchars($produto['nome']) ?></p>
+    <p><strong>Autor:</strong> <?= htmlspecialchars($produto['autor']) ?></p>
+    <p><strong>Editora:</strong> <?= htmlspecialchars($produto['editora']) ?></p>
+    <p><strong>Nº páginas:</strong> <?= (int)$produto['numero_paginas'] ?></p>
+    <p><strong>Categoria:</strong> <?= htmlspecialchars($produto['idcategoria']) ?></p>
+  </div>
+  <div class="coluna">
+    <p><strong>Publicação:</strong> <?= date('d/m/Y', strtotime($produto['data_publicacao'])) ?></p>
+    <p><strong>Idioma:</strong> <?= htmlspecialchars($produto['idioma']) ?></p>
+    <p><strong>Classificação:</strong> <?= htmlspecialchars($produto['classificacao_etaria']) ?> anos</p>
+    <p><strong>Dimensões:</strong> <?= htmlspecialchars($produto['dimensoes']) ?></p>
+    <p><strong>Preço:</strong> R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+  </div>
+  <div class="coluna">
+    <p><strong>Quantidade:</strong> <?= (int)$produto['quantidade'] ?></p>
+    <p><strong>ISBN:</strong> <?= htmlspecialchars($produto['isbn']) ?></p>
+    <p><strong>Estado:</strong> <?= ucfirst(htmlspecialchars($produto['estado_livro'])) ?></p>
+    <p><strong>Desc. estado:</strong> <?= nl2br(htmlspecialchars($produto['estado_detalhado'])) ?></p>
+  </div>
+</div>
+
+<!-- Descrição abaixo das colunas -->
+<div class="descricao-produto">
+  <p><strong>Descrição:</strong> <?= nl2br(htmlspecialchars($produto['descricao'])) ?></p>
+</div>
+
         </div>
       </div>
     <?php endforeach; ?>
