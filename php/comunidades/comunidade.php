@@ -1,14 +1,3 @@
-[file name]: image.png
-[file content begin]
-Buscar
-
-==  Entre Linhas - Comunidades e Chats Online
-OO
-
-Criar Comunidades
-
-[file content end]
-
 <?php
 session_start();
 $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
@@ -181,46 +170,29 @@ $result = $conn->query("SELECT idcomunidades, nome, descricao, imagem FROM comun
     }
 
     .search-form input[type="text"] {
-      padding: 10px 15px;
+      padding: 8px 12px;
       border: none;
-      border-radius: 30px 0 0 30px; /* arredondado à esquerda */
+      border-radius: 20px 0 0 20px;
       outline: none;
-      width: 300px; /* campo maior */
+      width: 200px; /* TAMANHO REDUZIDO igual ao destaque */
       font-size: 0.9rem;
       margin: 0;
     }
 
     .search-form input[type="submit"] {
-      padding: 10px 15px;
+      padding: 8px 15px;
       border: none;
       background-color: #6f8562; /* verde escuro */
       color: #fff;
       font-weight: none;
-      border-radius: 0 30px 30px 0; /* arredondado à direita */
+      border-radius: 0 20px 20px 0;
       cursor: pointer;
       margin: 0;
-      width: 90px; /* botão mais estreito */
+      width: 80px; /* BOTÃO MAIS ESTREITO */
     }
 
     .search-form input[type="submit"]:hover {
       background-color: #6f8562;
-    }
-
-    .topbar input[type="text"] {
-      padding: 10px 15px;
-      border: none;
-      border-radius: 20px 0 0 20px;
-      width: 250px;
-      font-size: 0.9rem;
-    }
-    
-    .topbar input[type="submit"] {
-      padding: 10px 15px;
-      background: var(--verde);
-      color: white;
-      border: none;
-      border-radius: 0 20px 20px 0;
-      cursor: pointer;
     }
 
     .topbar h1 {
