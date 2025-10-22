@@ -1246,14 +1246,21 @@ if (!empty($_POST['cep_usuario'])) {
                     
                     <?php
                         $fretePadrao = null;
+
                         if (!empty($fretes) && is_array($fretes)) {
                             $primeiroFrete = reset($fretes);
-                            $fretePadrao = base64_encode(json_encode([
-                                'nome' => $primeiroFrete['name'],
-                                'preco' => $primeiroFrete['packages'][0]['price'] ?? 0,
-                                'prazo' => $primeiroFrete['delivery_time'] ?? '-'
-                            ]));
-                        }
+                        
+                            if (is_array($primeiroFrete) && isset($primeiroFrete['name'])) {
+                                $fretePadrao = base64_encode(json_encode([
+                                    'nome' => $primeiroFrete['name'] ?? '',
+                                    'preco' => $primeiroFrete['packages'][0]['price'] ?? 0,
+                                    'prazo' => $primeiroFrete['delivery_time'] ?? '-'
+                                ]));
+                            } else {
+                                // debug opcional:
+                                 echo '<pre>'; var_dump($primeiroFrete); echo '</pre>';
+                            }
+                        }                        
                     ?>
 
                     <script>
