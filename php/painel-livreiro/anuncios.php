@@ -266,8 +266,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   flex-direction: column;
   gap: 10px;
   margin-top: 15px;
-  width: 100%;
-  transition: all 0.3s ease;
+  width: 230px; /* força todos os botões terem esse tamanho, igual à imagem */
 }
 
 /* Botões ao lado da imagem no modo expandido */
@@ -325,14 +324,26 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 /* ===== BOTÕES ===== */
-.btn-action {
-  padding: 10px 15px;
+.btn-action, 
+.btn-toggle.mostrar-detalhes {
+  background-color: #5a6b50;
+  color: white;
+  font-size: 16px;
+  width: 100%;
+  padding: 10px 0; /* mesmo padding vertical e horizontal consistente */
+  box-sizing: border-box;
   border-radius: 8px;
-  text-align: center;
   font-weight: bold;
-  transition: background 0.3s;
-  border: none;
+  text-align: center;
   cursor: pointer;
+  border: none;
+  text-decoration: none; /* remove underline em links */
+  display: inline-block;
+}
+
+.btn-action.editar,
+.btn-action.excluir {
+  text-decoration: none; /* remove underline */
 }
 
 .btn-toggle.mostrar-detalhes,
