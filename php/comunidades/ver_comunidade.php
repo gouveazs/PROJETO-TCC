@@ -26,13 +26,35 @@ if (!$id_comunidade) {
 }
 
 // Busca dados da comunidade
-$sqlCom = "SELECT c.*, u.nome AS dono_nome, u.foto_de_perfil AS dono_foto
-           FROM comunidades c
-           JOIN usuario u ON c.idusuario = u.idusuario
-           WHERE c.idcomunidades = :id_comunidade";
+$sqlCom = "
+  SELECT 
+    c.*, 
+    u.nome AS dono_nome, 
+    u.foto_de_perfil AS dono_foto,
+    cat.nome AS categoria_nome
+  FROM comunidades c
+  JOIN usuario u ON c.idusuario = u.idusuario
+  JOIN categoria cat ON c.idcategoria = cat.idcategoria
+  WHERE c.idcomunidades = :id_comunidade
+";
 $stmtCom = $conn->prepare($sqlCom);
 $stmtCom->execute([':id_comunidade' => $id_comunidade]);
 $com = $stmtCom->fetch(PDO::FETCH_ASSOC);
+
+// Buscar moderadores
+$sqlMods = "
+SELECT u.nome 
+FROM membros_comunidade mc
+JOIN usuario u ON mc.idusuario = u.idusuario
+WHERE mc.idcomunidades = :id_comunidade AND mc.papel = 'moderador'
+";
+$stmtMods = $conn->prepare($sqlMods);
+$stmtMods->execute([':id_comunidade' => $id_comunidade]);
+$moderadores_lista = $stmtMods->fetchAll(PDO::FETCH_COLUMN);
+
+// Formatar moderadores como uma lista separada por vírgula
+$moderadores_nomes = !empty($moderadores_lista) ? implode(', ', $moderadores_lista) : 'nenhum';
+
 
 if (!$com) {
     die("Comunidade não encontrada.");
@@ -129,259 +151,257 @@ if ($banido) {
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= htmlspecialchars($com['nome']) ?> — Comunidade</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><?= htmlspecialchars($com['nome']) ?> — Comunidade</title>
+  <!-- Fonte -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* ===== ENTRE LINHAS - estilo Orkut-like com fundo bege texturizado ===== */
+    :root{
+      --marrom:#5a4224;
+      --verde:#a8c4a8; /* VERDE CLARINHO */
+      --bege:#f5efe3;
+      --offwhite:#fffdf9;
+      --border:#e0d7c8;
+      --shadow: rgba(0,0,0,0.08);
+    }
 
-<!-- Fonte -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    /* textura leve no fundo via gradiente */
+    body{
+      margin:0;
+      font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background-color: #F4F1EE;
+      background-image:
+        linear-gradient(transparent 0.5px, rgba(0,0,0,0.01) 0.5px),
+        linear-gradient(90deg, transparent 0.5px, rgba(0,0,0,0.01) 0.5px);
+      background-size: 10px 10px, 10px 10px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      color:#333;
+      min-height:100vh;
+    }
 
-<style>
-/* ===== ENTRE LINHAS - estilo Orkut-like com fundo bege texturizado ===== */
-:root{
-  --marrom:#5a4224;
-  --verde:#a8c4a8; /* VERDE CLARINHO */
-  --bege:#f5efe3;
-  --offwhite:#fffdf9;
-  --border:#e0d7c8;
-  --shadow: rgba(0,0,0,0.08);
-}
+    /* top bar (fina, igual Orkut) */
+    .topbar{
+      background: linear-gradient(#fffdf9, #f0eadf);
+      border-bottom: 1px solid var(--border);
+      padding:10px 18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+    }
 
-/* textura leve no fundo via gradiente */
-body{
-  margin:0;
-  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background-color: #F4F1EE;
-  background-image:
-    linear-gradient(transparent 0.5px, rgba(0,0,0,0.01) 0.5px),
-    linear-gradient(90deg, transparent 0.5px, rgba(0,0,0,0.01) 0.5px);
-  background-size: 10px 10px, 10px 10px;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  color:#333;
-  min-height:100vh;
-}
+    /* container central - ocupa largura com margem */
+    .wrap{
+      width:95%;
+      max-width:1220px;
+      margin:18px auto;
+      display:grid;
+      grid-template-columns: 220px 1fr 300px; /* left sidebar, main, right members */
+      gap:18px;
+    }
 
-/* top bar (fina, igual Orkut) */
-.topbar{
-  background: linear-gradient(#fffdf9, #f0eadf);
-  border-bottom: 1px solid var(--border);
-  padding:10px 18px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
-}
+    /* caixa branca com borda arredondada como no orkut */
+    .card{
+      background:var(--offwhite);
+      border:1px solid var(--border);
+      border-radius:8px;
+      padding:14px;
+      box-shadow: 0 6px 18px var(--shadow);
+    }
 
-/* container central - ocupa largura com margem */
-.wrap{
-  width:95%;
-  max-width:1220px;
-  margin:18px auto;
-  display:grid;
-  grid-template-columns: 220px 1fr 300px; /* left sidebar, main, right members */
-  gap:18px;
-}
+    /* ESQUERDA: menu (foto + links) - AJUSTADO PARA CENTRALIZAR */
+    .left .profile-pic{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+    }
 
-/* caixa branca com borda arredondada como no orkut */
-.card{
-  background:var(--offwhite);
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:14px;
-  box-shadow: 0 6px 18px var(--shadow);
-}
+    .left img.avatar{
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 3px solid #cfc2a8;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      margin: 0 auto; /* Centraliza horizontalmente */
+      display: block; /* Necessário para margin auto funcionar */
+    }
+    .left .menu{
+      margin-top:12px;
+    }
 
-/* ESQUERDA: menu (foto + links) - AJUSTADO PARA CENTRALIZAR */
-.left .profile-pic{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  text-align: center;
-}
+    .left .menu a{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 10px;
+      color:var(--marrom);
+      text-decoration:none;
+      border-radius:6px;
+      margin-bottom:6px;
+      font-weight:600;
+      background: linear-gradient(180deg, rgba(255,255,255,0.6), transparent);
+      border:1px solid rgba(0,0,0,0.03);
+    }
 
-.left img.avatar{
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 6px;
-  border: 3px solid #cfc2a8;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-  margin: 0 auto; /* Centraliza horizontalmente */
-  display: block; /* Necessário para margin auto funcionar */
-}
-.left .menu{
-  margin-top:12px;
-}
+    .left .menu a svg{ opacity:0.9; }
+    .left .menu a:hover{
+      background: linear-gradient(180deg, rgba(90,66,36,0.06), rgba(90,66,36,0.02));
+      transform: translateX(3px);
+    }
 
-.left .menu a{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:8px 10px;
-  color:var(--marrom);
-  text-decoration:none;
-  border-radius:6px;
-  margin-bottom:6px;
-  font-weight:600;
-  background: linear-gradient(180deg, rgba(255,255,255,0.6), transparent);
-  border:1px solid rgba(0,0,0,0.03);
-}
+    /* CENTRO: main content parecido com a foto */
+    .center .community-title{
+      display:flex;
+      align-items:flex-start;
+      gap:16px;
+    }
 
-.left .menu a svg{ opacity:0.9; }
-.left .menu a:hover{
-  background: linear-gradient(180deg, rgba(90,66,36,0.06), rgba(90,66,36,0.02));
-  transform: translateX(3px);
-}
+    .center h1{
+      font-size:22px;
+      color:var(--marrom);
+      margin:0;
+      margin-top:4px;
+    }
 
-/* CENTRO: main content parecido com a foto */
-.center .community-title{
-  display:flex;
-  align-items:flex-start;
-  gap:16px;
-}
+    .center .subtitle{
+      font-size:13px;
+      color:#666;
+      margin-top:8px;
+    }
 
-.center h1{
-  font-size:22px;
-  color:var(--marrom);
-  margin:0;
-  margin-top:4px;
-}
+    /* tabela de infos estilo orkut: COM FUNDO VERDE CLARINHO */
+    .info-table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:12px;
+      border-radius:6px;
+      overflow:hidden;
+      border:1px solid #9bb59b; /* borda verde */
+    }
 
-.center .subtitle{
-  font-size:13px;
-  color:#666;
-  margin-top:8px;
-}
+    .info-table tr:nth-child(odd) td{ 
+      background: linear-gradient(#e8f3e8, #dceddc); /* verde clarinho mais claro */
+    }
+    .info-table tr:nth-child(even) td{ 
+      background: linear-gradient(#f0f7f0, #e8f3e8); /* verde clarinho mais suave */
+    }
 
-/* tabela de infos estilo orkut: COM FUNDO VERDE CLARINHO */
-.info-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:12px;
-  border-radius:6px;
-  overflow:hidden;
-  border:1px solid #9bb59b; /* borda verde */
-}
+    .info-table td{
+      padding:10px 12px;
+      border-bottom:1px solid #cde0cd; /* borda entre linhas em verde */
+      font-size:14px;
+    }
 
-.info-table tr:nth-child(odd) td{ 
-  background: linear-gradient(#e8f3e8, #dceddc); /* verde clarinho mais claro */
-}
-.info-table tr:nth-child(even) td{ 
-  background: linear-gradient(#f0f7f0, #e8f3e8); /* verde clarinho mais suave */
-}
+    /* imagem grande da comunidade como na foto */
+    .community-img{
+      width: 100%; /* Ocupa toda a largura disponível */
+      height: 280px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid #d9d0bf;
+      margin: 14px 0;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+    }
+    /* AÇÕES (participar/chat/sair) */
+    .actions{
+      margin-top:12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
 
-.info-table td{
-  padding:10px 12px;
-  border-bottom:1px solid #cde0cd; /* borda entre linhas em verde */
-  font-size:14px;
-}
+    .btn{
+      background: linear-gradient(180deg, #7a5b3b, #5a4224);
+      color:white;
+      padding:8px 14px;
+      border-radius:6px;
+      text-decoration:none;
+      border:1px solid rgba(0,0,0,0.06);
+      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
 
-/* imagem grande da comunidade como na foto */
-.community-img{
-  width: 100%; /* Ocupa toda a largura disponível */
-  height: 280px;
-  object-fit: cover;
-  border-radius: 6px;
-  border: 1px solid #d9d0bf;
-  margin: 14px 0;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.06);
-}
-/* AÇÕES (participar/chat/sair) */
-.actions{
-  margin-top:12px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
+    .btn.alt{
+      background: linear-gradient(180deg, #5a6b50, #49603f);
+    }
 
-.btn{
-  background: linear-gradient(180deg, #7a5b3b, #5a4224);
-  color:white;
-  padding:8px 14px;
-  border-radius:6px;
-  text-decoration:none;
-  border:1px solid rgba(0,0,0,0.06);
-  font-weight:600;
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-}
+    .btn.ghost{
+      background:transparent;
+      color:var(--marrom);
+      border:1px solid #d9d0bf;
+    }
 
-.btn.alt{
-  background: linear-gradient(180deg, #5a6b50, #49603f);
-}
+    /* REGRAS */
+    .rules{
+      margin-top:10px;
+      padding:10px;
+      background:linear-gradient(180deg,#fffaf0,#fbf6ec);
+      border-radius:6px;
+      border:1px solid #efe6d8;
+    }
 
-.btn.ghost{
-  background:transparent;
-  color:var(--marrom);
-  border:1px solid #d9d0bf;
-}
+    /* DIREITA: membros grid (pequenas miniaturas) */
+    .right .members-title{
+      font-weight:700;
+      color:var(--marrom);
+      font-size:14px;
+      margin-bottom:10px;
+    }
 
-/* REGRAS */
-.rules{
-  margin-top:10px;
-  padding:10px;
-  background:linear-gradient(180deg,#fffaf0,#fbf6ec);
-  border-radius:6px;
-  border:1px solid #efe6d8;
-}
+    .members-grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:8px;
+    }
 
-/* DIREITA: membros grid (pequenas miniaturas) */
-.right .members-title{
-  font-weight:700;
-  color:var(--marrom);
-  font-size:14px;
-  margin-bottom:10px;
-}
+    .member-box{
+      background:linear-gradient(180deg,#fff,#fbf8f3);
+      border:1px solid #e7dfcf;
+      border-radius:6px;
+      padding:8px;
+      text-align:center;
+    }
 
-.members-grid{
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap:8px;
-}
+    .member-box img{
+      width:62px;
+      height:62px;
+      object-fit:cover;
+      border-radius:4px;
+      border:1px solid #d7ccb6;
+      margin-bottom:6px;
+    }
 
-.member-box{
-  background:linear-gradient(180deg,#fff,#fbf8f3);
-  border:1px solid #e7dfcf;
-  border-radius:6px;
-  padding:8px;
-  text-align:center;
-}
+    .member-name{ font-size:13px; color:var(--marrom); font-weight:600; }
 
-.member-box img{
-  width:62px;
-  height:62px;
-  object-fit:cover;
-  border-radius:4px;
-  border:1px solid #d7ccb6;
-  margin-bottom:6px;
-}
+    /* rodapé pequeno */
+    .small-note{
+      font-size:12px;
+      color:#7b6a58;
+      margin-top:8px;
+    }
 
-.member-name{ font-size:13px; color:var(--marrom); font-weight:600; }
+    /* responsividade */
+    @media (max-width:1000px){
+      .wrap{ grid-template-columns: 200px 1fr; }
+      .right{ display:none; } /* esconde a coluna direita em telas médias */
+    }
 
-/* rodapé pequeno */
-.small-note{
-  font-size:12px;
-  color:#7b6a58;
-  margin-top:8px;
-}
-
-/* responsividade */
-@media (max-width:1000px){
-  .wrap{ grid-template-columns: 200px 1fr; }
-  .right{ display:none; } /* esconde a coluna direita em telas médias */
-}
-
-@media (max-width:700px){
-  .wrap{ grid-template-columns: 1fr; padding:10px; }
-  .left{ order:2; }
-  .center{ order:1; }
-  .topbar{ padding:8px; }
-  .left img.avatar{ width:96px; height:96px; }
-}
-</style>
+    @media (max-width:700px){
+      .wrap{ grid-template-columns: 1fr; padding:10px; }
+      .left{ order:2; }
+      .center{ order:1; }
+      .topbar{ padding:8px; }
+      .left img.avatar{ width:96px; height:96px; }
+    }
+  </style>
 </head>
 <body>
 
@@ -434,7 +454,7 @@ body{
 
     <div style="margin-top:12px;text-align:center;">
       <?php if ($usuario_dono): ?>
-        <a href="editar_comunidade.php?id=<?= $id_comunidade ?>" class="btn" style="display:inline-block;margin-top:8px;">Editar</a>
+        <a href="editar_comunidade.php?id_comunidade=<?= $id_comunidade ?>" class="btn" style="display:inline-block;margin-top:8px;">Editar</a>
       <?php endif; ?>
     </div>
   </div>
@@ -460,9 +480,9 @@ body{
     <table class="info-table" role="table" aria-label="Informações da comunidade">
       <tr><td style="width:40%; font-weight:700; color:var(--marrom);">descrição:</td><td><?= nl2br(htmlspecialchars($com['descricao'])) ?></td></tr>
       <tr><td style="font-weight:700; color:var(--marrom);">idioma:</td><td>Português</td></tr>
-      <tr><td style="font-weight:700; color:var(--marrom);">categoria:</td><td><?= htmlspecialchars($com['categoria'] ?? 'Outros') ?></td></tr>
+      <tr><td style="font-weight:700; color:var(--marrom);">categoria:</td><td><?= htmlspecialchars($com['categoria_nome'] ?? 'Outros') ?></td></tr>
       <tr><td style="font-weight:700; color:var(--marrom);">dono:</td><td><?= htmlspecialchars($com['dono_nome']) ?></td></tr>
-      <tr><td style="font-weight:700; color:var(--marrom);">moderadores:</td><td><?= htmlspecialchars($com['moderadores'] ?? 'nenhum') ?></td></tr>
+      <tr><td style="font-weight:700; color:var(--marrom);">moderadores:</td><td><?= htmlspecialchars($moderadores_nomes) ?></td></tr>
       <tr><td style="font-weight:700; color:var(--marrom);">tipo:</td><td><?= htmlspecialchars($com['tipo'] ?? 'pública') ?></td></tr>
       <tr><td style="font-weight:700; color:var(--marrom);">local:</td><td>Brasil</td></tr>
       <tr><td style="font-weight:700; color:var(--marrom);">membros:</td><td><?= $quantidade_usuarios ?></td></tr>

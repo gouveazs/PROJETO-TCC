@@ -1303,7 +1303,7 @@ if (!empty($_POST['cep_usuario'])) {
                             <label for="buy-later">Adicionar à lista de desejos</label>
                         </div>
                         <div class="buy-option">
-                            <a href="#"><i class="fas fa-comments"></i> Falar com vendedor</a>
+                            <a href="../chat/chat.php"><i class="fas fa-comments"></i> Falar com vendedor</a>
                         </div>
                         <div class="buy-option">
                             <a href="#"><i class="fas fa-gift"></i> Presentear</a>

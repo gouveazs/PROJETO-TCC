@@ -9,7 +9,7 @@ $stmt = $conn->prepare("
     FROM produto p
     LEFT JOIN imagens i 
         ON i.idproduto = p.idproduto
-    WHERE p.status = 'Disponivel'  -- filtra apenas produtos disponíveis
+   
       AND i.idimagens = (
           SELECT idimagens
           FROM imagens
