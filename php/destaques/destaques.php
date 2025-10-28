@@ -1,36 +1,39 @@
 <?php
-session_start();
-$nome = $_SESSION['nome_usuario'] ?? null;
-$foto_de_perfil = $_SESSION['foto_de_perfil'] ?? null;
+  session_start();
+  $nome = $_SESSION['nome_usuario'] ?? null;
+  $foto_de_perfil = $_SESSION['foto_de_perfil'] ?? null;
 
-include '../conexao.php';
+  include '../conexao.php';
 
-$categoria = isset($_GET['categoria']) ? (int)$_GET['categoria'] : null;
-$sql = "
-  SELECT p.*, i.imagem
-  FROM produto p
-  LEFT JOIN imagens i 
-      ON i.idproduto = p.idproduto
-  WHERE p.status = 'Disponivel'  -- filtra apenas produtos disponíveis
-    AND i.idimagens = (
-        SELECT idimagens
-        FROM imagens
-        WHERE idproduto = p.idproduto
-        ORDER BY idimagens ASC
-        LIMIT 1
-    )
-";
-if ($categoria) {
-    $sql .= " AND p.idcategoria = :categoria";
-}
+  $categoria = isset($_GET['categoria']) ? (int)$_GET['categoria'] : null;
 
-$stmt = $conn->prepare($sql);
-if ($categoria) {
-    $stmt->bindParam(':categoria', $categoria, PDO::PARAM_INT);
-}
+  $sql = "
+    SELECT p.*, i.imagem
+    FROM produto p
+    LEFT JOIN imagens i 
+        ON i.idproduto = p.idproduto
+    WHERE p.status = 'Disponivel'
+      AND i.idimagens = (
+          SELECT idimagens
+          FROM imagens
+          WHERE idproduto = p.idproduto
+          ORDER BY idimagens ASC
+          LIMIT 1
+      )
+  ";
 
-$stmt->execute();
-$produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  if ($categoria) {
+      $sql .= " AND p.idcategoria = :categoria";
+  }
+
+  $stmt = $conn->prepare($sql);
+
+  if ($categoria) {
+      $stmt->bindParam(':categoria', $categoria, PDO::PARAM_INT);
+  }
+
+  $stmt->execute();
+  $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>

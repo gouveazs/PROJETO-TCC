@@ -1,15 +1,20 @@
 <?php
-session_start();
-$nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
-$foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
+  session_start();
+  $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
+  $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
-include 'php/conexao.php';
-$stmt = $conn->prepare("
-    SELECT p.*, i.imagem
+  include 'php/conexao.php';
+
+  $stmt = $conn->prepare("
+    SELECT 
+      p.idproduto,
+      p.nome,
+      p.preco,
+      i.imagem
     FROM produto p
     LEFT JOIN imagens i 
-        ON i.idproduto = p.idproduto
-   
+      ON i.idproduto = p.idproduto
+    WHERE p.status = 'Disponivel'
       AND i.idimagens = (
           SELECT idimagens
           FROM imagens
@@ -17,11 +22,75 @@ $stmt = $conn->prepare("
           ORDER BY idimagens ASC
           LIMIT 1
       )
+    ORDER BY p.idproduto DESC
     LIMIT 6
-");
-$stmt->execute();
-$produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  ");
+  $stmt->execute();
+  $recem_adicionados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+  // parte das recomendações com livros igual do modelo kkkk
+  $stmt = $conn->prepare("
+    SELECT 
+      p.idproduto,
+      p.nome,
+      p.preco,
+      i.imagem
+    FROM produto p
+    LEFT JOIN imagens i 
+      ON i.idproduto = p.idproduto
+      AND i.idimagens = (
+        SELECT idimagens
+        FROM imagens
+        WHERE idproduto = p.idproduto
+        ORDER BY idimagens ASC
+        LIMIT 1
+      )
+    WHERE p.nome IN (
+      'Orgulho e Preconceito',
+      '1984',
+      'O Pequeno Príncipe',
+      'Romeu e Julieta',
+      'Senhor dos Anéis',
+      'A Culpa é das Estrelas',
+      'O Hobbit',
+      'Cem Anos de Solidão',
+      'A Revolução dos Bichos',
+      'O Conto da Aia',
+      'Amor e Azeitonas',
+      'As Vantagens de Ser Invisível'
+    ) AND p.status = 'Disponivel'
+  ");
+  $stmt->execute();
+  $recomendacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  // parte das novidades com livros igual do modelo kkkk
+  $stmt = $conn->prepare("
+    SELECT 
+      p.idproduto,
+      p.nome,
+      p.preco,
+      i.imagem
+    FROM produto p
+    LEFT JOIN imagens i 
+      ON i.idproduto = p.idproduto
+      AND i.idimagens = (
+        SELECT idimagens
+        FROM imagens
+        WHERE idproduto = p.idproduto
+        ORDER BY idimagens ASC
+        LIMIT 1
+      )
+    WHERE p.nome IN (
+      'Daisy Jone & The Six',
+      'A Menina que Roubava Livros',
+      'Extraordinário',
+      'Relatos de um Gato Viajante',
+      'Prisioneiro de Azkaban',
+      'Dom Casmurro'
+    ) AND p.status = 'Disponivel'
+  ");
+  $stmt->execute();
+  $novidades = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -1031,196 +1100,68 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <div class="main">
-
-<!-- Novidades -->
-<div class="section-header">
+  <!-- Novidades -->
+  <div class="section-header">
   <h2>Novidades</h2>
-  <a href="#" class="ver-mais">Ver mais</a>
-</div>
-
-<div class="cards cards-novidades">
-  <div class="card">
-    <img src="imgs/Daisy Jone & The Six.jpg" alt="Livro 1">
-    <div class="info">
-      <h3>Daisy Jone & The Six</h3>
-      <p class="price">R$ 44,90</p>
-      <div class="stars">★★★★☆</div>
-    </div>
+  <a href="php/destaques/destaques.php" class="ver-mais">Ver mais</a>
   </div>
 
-  <div class="card">
-    <img src="imgs/A Menina que Roubava Livros.jpg" alt="Livro 2">
-    <div class="info">
-      <h3>A Menina que Roubava Livros</h3>
-      <p class="price">R$ 39,50</p>
-      <div class="stars">★★★★★</div>
-    </div>
+  <div class="cards cards-novidades">
+  <?php foreach ($novidades as $livro): ?>
+    <a href="php/produto/pagiproduto.php?id=<?= $livro['idproduto'] ?>&nome=<?= urlencode($livro['nome']) ?>&preco=<?= $livro['preco'] ?>" class="card-link">
+      <div class="card">
+        <?php if (!empty($livro['imagem'])): ?>
+          <img src="data:image/jpeg;base64,<?= base64_encode($livro['imagem']) ?>" alt="<?= htmlspecialchars($livro['nome']) ?>">
+        <?php else: ?>
+          <img src="imgs/sem-imagem.jpg" alt="Sem imagem disponível">
+        <?php endif; ?>
+
+        <div class="info">
+          <h3><?= htmlspecialchars($livro['nome']) ?></h3>
+          <p class="price">R$ <?= number_format($livro['preco'], 2, ',', '.') ?></p>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+    </a>
+  <?php endforeach; ?>
   </div>
 
-  <div class="card">
-    <img src="imgs/Extraordinário.jpg" alt="Livro 3">
-    <div class="info">
-      <h3>Extraordinário</h3>
-      <p class="price">R$ 28,00</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="imgs/Relatos de um Gato Viajante.jpg" alt="Livro 4">
-    <div class="info">
-      <h3>Relatos de um Gato Viajante</h3>
-      <p class="price">R$ 33,90</p>
-     <div class="stars">★★★★★</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="imgs/Prisioneiro de Azkaban.jpg" alt="Livro 5">
-    <div class="info">
-      <h3>Prisioneiro de Azkaban</h3>
-      <p class="price">R$ 55,00</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="imgs/Dom Casmurro.jpg" alt="Livro 6">
-    <div class="info">
-      <h3>Dom Casmurro</h3>
-      <p class="price">R$ 22,00</p>
-      <div class="stars">★★★★☆</div>
-    </div>
-  </div>
-</div>
-
-<!-- Recomendações -->
-<div class="section-header" style="margin-top: 50px;">
+  <!-- Recomendações -->
+  <div class="section-header" style="margin-top: 50px;">
   <h2>Recomendações</h2>
-  <a href="#" class="ver-mais">Ver mais</a>
-</div>
-
-<div class="cards cards-recomendacoes">
-  <div class="card">
-    <img src="imgs/Orgulho e Preconceito.jpg" alt="Livro 7">
-    <div class="info">
-      <h3>Orgulho e Preconceito</h3>
-      <p class="price">R$ 34,90</p>
-      <div class="stars">★★★★★</div>
-    </div>
+  <a href="php/destaques/destaques.php" class="ver-mais">Ver mais</a>
   </div>
 
-  <div class="card">
-    <img src="imgs/1984.jpg" alt="Livro 8">
-    <div class="info">
-      <h3>1984</h3>
-      <p class="price">R$ 29,99</p>
-      <div class="stars">★★★★★</div>
-    </div>
+  <div class="cards cards-recomendacoes">
+  <?php foreach ($recomendacoes as $livro): ?>
+    <a href="php/produto/pagiproduto.php?id=<?= $livro['idproduto'] ?>&nome=<?= urlencode($livro['nome']) ?>&preco=<?= $livro['preco'] ?>" class="card-link">
+      <div class="card">
+        <?php if (!empty($livro['imagem'])): ?>
+          <img src="data:image/jpeg;base64,<?= base64_encode($livro['imagem']) ?>" alt="<?= htmlspecialchars($livro['nome']) ?>">
+        <?php else: ?>
+          <img src="imgs/sem-imagem.jpg" alt="Sem imagem disponível">
+        <?php endif; ?>
+
+        <div class="info">
+          <h3><?= htmlspecialchars($livro['nome']) ?></h3>
+          <p class="price">R$ <?= number_format($livro['preco'], 2, ',', '.') ?></p>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+    </a>
+  <?php endforeach; ?>
   </div>
 
-  <div class="card">
-    <img src="imgs/O Pequeno Príncipe.jpg" alt="Livro 9">
-    <div class="info">
-      <h3>O Pequeno Príncipe</h3>
-      <p class="price">R$ 19,90</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
+  <br><br>
 
-  <div class="card">
-    <img src="imgs/Romeu e Julieta.jpg" alt="Livro 10">
-    <div class="info">
-      <h3>Romeu e Julieta</h3>
-      <p class="price">R$ 24,00</p>
-      <div class="stars">★★★☆☆</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="imgs/Senhor dos Anéis.jpg" alt="Livro 11">
-    <div class="info">
-      <h3>Senhor dos Anéis</h3>
-      <p class="price">R$ 59,90</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="imgs/A Culpa é das Estrelas.jpg" alt="Livro 12">
-    <div class="info">
-      <h3>A Culpa é das Estrelas</h3>
-      <p class="price">R$ 35,00</p>
-      <div class="stars">★★★★☆</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="imgs/O Hobbit.jpg" alt="Livro 13">
-    <div class="info">
-      <h3>O Hobbit</h3>
-      <p class="price">R$ 39,90</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="imgs/Cem Anos de Solidão.jpg" alt="Livro 14">
-    <div class="info">
-      <h3>Cem Anos de Solidão</h3>
-      <p class="price">R$ 42,00</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="imgs/A Revolução dos Bichos.jpg" alt="Livro 15">
-    <div class="info">
-      <h3>A Revolução dos Bichos</h3>
-      <p class="price">R$ 27,50</p>
-      <div class="stars">★★★★☆</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="imgs/O Conto da Aia.jpg" alt="Livro 16">
-    <div class="info">
-      <h3>O Conto da Aia</h3>
-      <p class="price">R$ 36,00</p>
-      <div class="stars">★★★★☆</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="imgs/Amor e Azeitonas.jpg" alt="Livro 17">
-    <div class="info">
-      <h3>Amor e Azeitonas</h3>
-      <p class="price">R$ 22,90</p>
-      <div class="stars">★★★☆☆</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="imgs/As vantagens de ser invisivel.jpg" alt="Livro 18">
-    <div class="info">
-      <h3>As Vantagens de Ser Invisível</h3>
-      <p class="price">R$ 38,00</p>
-      <div class="stars">★★★★★</div>
-    </div>
-  </div>
-  
-</div>
-  
-<br><br>
-
-<!-- produtos do banco -->
-<div class="section-header">
+  <!-- produtos do banco -->
+  <div class="section-header">
     <h2>Ofertas Recem Adicionadas</h2>
-    <a href="#" class="ver-mais">Ver mais</a>
-</div>
+    <a href="php/destaques/destaques.php" class="ver-mais">Ver mais</a>
+  </div>
 
-<div class="cards cards-novidades">
-  <?php foreach ($produtos as $produto): ?>
+  <div class="cards cards-novidades">
+  <?php foreach ($recem_adicionados as $produto): ?>
     <a href="php/produto/pagiproduto.php?id=<?=$produto['idproduto']?>&nome=<?=$produto['nome']?>&preco=<?=$produto['preco']?>" class="card-link">
       <div class="card">
         <?php if (!empty($produto['imagem'])): ?>
@@ -1236,72 +1177,51 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </div>
     </a>
   <?php endforeach; ?>
-</div>
-
-<!-- NOVA SEÇÃO: Navegue por Editora - FORMATO REDONDO -->
-<div class="editoras-container">
-  <div class="section-header">
-    <h2>Editoras</h2>
-    <button id="toggle-editoras" style="background: #5a6b50; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold;">
-      Ver todas
-    </button>
   </div>
-  
-  <div class="editoras-grid" id="editoras-grid">
-    <div class="editora-item"><img src="imgs/edlogos/1.png" alt="Rocco" class="editora-logo"></div>
-    <div class="editora-item"><img src="imgs/edlogos/2.png" alt="Intrínseca" class="editora-logo"></div>
-    <div class="editora-item"><img src="imgs/edlogos/3.png" alt="Grupo Editorial Record" class="editora-logo"></div>
-    <div class="editora-item"><img src="imgs/edlogos/4.png" alt="Verus Editora" class="editora-logo"></div>
-    <div class="editora-item"><img src="imgs/edlogos/5.png" alt="Companhia das Letras" class="editora-logo"></div>
-    <div class="editora-item"><img src="imgs/edlogos/6.png" alt="Arqueiro" class="editora-logo"></div>
-    <div class="editora-item"><img src="imgs/edlogos/7.png" alt="Alt" class="editora-logo"></div>
-    <div class="editora-item"><img src="imgs/edlogos/8.png" alt="Planeta Minotauro" class="editora-logo"></div>
+
+  <!-- NOVA SEÇÃO: Navegue por Editora - FORMATO REDONDO -->
+  <div class="editoras-container">
+    <div class="section-header">
+      <h2>Editoras</h2>
+      <button id="toggle-editoras" style="background: #5a6b50; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold;">
+        Ver todas
+      </button>
+    </div>
     
-    <!-- OS QUE VÃO FICAR ESCONDIDOS -->
-    <div class="editora-item hidden"><img src="imgs/edlogos/9.png" alt="Boitempo Editorial" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/10.png" alt="Galera" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/11.png" alt="Gutenberg" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/12.png" alt="Darkside" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/13.png" alt="Panda Books" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/14.png" alt="L&PM" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/15.png" alt="Alfaguara" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/16.png" alt="Estação Liberdade" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/17.png" alt="Editora 34" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/18.png" alt="Principis" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/19.png" alt="Harper Collins" class="editora-logo"></div>
-    <div class="editora-item hidden"><img src="imgs/edlogos/20.png" alt="Companhia das Letrinhas" class="editora-logo"></div>
-    <div class="editora-item hidden"> <img src="imgs/edlogos/21.png" alt="Casa Lygia Bojunga" class="editora-logo"> </div> 
-    <div class="editora-item hidden"> <img src="imgs/edlogos/22.png" alt="Brinquebook" class="editora-logo"> </div> 
-    <div class="editora-item hidden"> <img src="imgs/edlogos/23.png" alt="Todolivro" class="editora-logo"> </div> 
-    <div class="editora-item hidden"> <img src="imgs/edlogos/24.png" alt="Editora Melhoramentos" class="editora-logo"> </div> 
-    <div class="editora-item hidden"> <img src="imgs/edlogos/25.png" alt="Leya" class="editora-logo"> </div> 
-    <div class="editora-item hidden"> <img src="imgs/edlogos/26.png" alt="Aleph" class="editora-logo"> </div> 
-    <div class="editora-item hidden"> <img src="imgs/edlogos/27.png" alt="Edipro Grupo Editorial" class="editora-logo"> </div> 
-    <div class="editora-item hidden"> <img src="imgs/edlogos/28.png" alt="Bestseller" class="editora-logo"> </div> 
-    <div class="editora-item hidden"> <img src="imgs/edlogos/29.png" alt="Globolivros" class="editora-logo"> </div>
-  </div>
+    <div class="editoras-grid" id="editoras-grid">
+      <div class="editora-item"><img src="imgs/edlogos/1.png" alt="Rocco" class="editora-logo"></div>
+      <div class="editora-item"><img src="imgs/edlogos/2.png" alt="Intrínseca" class="editora-logo"></div>
+      <div class="editora-item"><img src="imgs/edlogos/3.png" alt="Grupo Editorial Record" class="editora-logo"></div>
+      <div class="editora-item"><img src="imgs/edlogos/4.png" alt="Verus Editora" class="editora-logo"></div>
+      <div class="editora-item"><img src="imgs/edlogos/5.png" alt="Companhia das Letras" class="editora-logo"></div>
+      <div class="editora-item"><img src="imgs/edlogos/6.png" alt="Arqueiro" class="editora-logo"></div>
+      <div class="editora-item"><img src="imgs/edlogos/7.png" alt="Alt" class="editora-logo"></div>
+      <div class="editora-item"><img src="imgs/edlogos/8.png" alt="Planeta Minotauro" class="editora-logo"></div>
+      
+      <!-- OS QUE VÃO FICAR ESCONDIDOS -->
+      <div class="editora-item hidden"><img src="imgs/edlogos/9.png" alt="Boitempo Editorial" class="editora-logo"></div>
+      <div class="editora-item hidden"><img src="imgs/edlogos/10.png" alt="Galera" class="editora-logo"></div>
+      <div class="editora-item hidden"><img src="imgs/edlogos/11.png" alt="Gutenberg" class="editora-logo"></div>
+      <div class="editora-item hidden"><img src="imgs/edlogos/12.png" alt="Darkside" class="editora-logo"></div>
+      <div class="editora-item hidden"><img src="imgs/edlogos/13.png" alt="Panda Books" class="editora-logo"></div>
+      <div class="editora-item hidden"><img src="imgs/edlogos/14.png" alt="L&PM" class="editora-logo"></div>
+      <div class="editora-item hidden"><img src="imgs/edlogos/15.png" alt="Alfaguara" class="editora-logo"></div>
+      <div class="editora-item hidden"><img src="imgs/edlogos/16.png" alt="Estação Liberdade" class="editora-logo"></div>
+      <div class="editora-item hidden"><img src="imgs/edlogos/17.png" alt="Editora 34" class="editora-logo"></div>
+      <div class="editora-item hidden"><img src="imgs/edlogos/18.png" alt="Principis" class="editora-logo"></div>
+      <div class="editora-item hidden"><img src="imgs/edlogos/19.png" alt="Harper Collins" class="editora-logo"></div>
+      <div class="editora-item hidden"><img src="imgs/edlogos/20.png" alt="Companhia das Letrinhas" class="editora-logo"></div>
+      <div class="editora-item hidden"> <img src="imgs/edlogos/21.png" alt="Casa Lygia Bojunga" class="editora-logo"> </div> 
+      <div class="editora-item hidden"> <img src="imgs/edlogos/22.png" alt="Brinquebook" class="editora-logo"> </div> 
+      <div class="editora-item hidden"> <img src="imgs/edlogos/23.png" alt="Todolivro" class="editora-logo"> </div> 
+      <div class="editora-item hidden"> <img src="imgs/edlogos/24.png" alt="Editora Melhoramentos" class="editora-logo"> </div> 
+      <div class="editora-item hidden"> <img src="imgs/edlogos/25.png" alt="Leya" class="editora-logo"> </div> 
+      <div class="editora-item hidden"> <img src="imgs/edlogos/26.png" alt="Aleph" class="editora-logo"> </div> 
+      <div class="editora-item hidden"> <img src="imgs/edlogos/27.png" alt="Edipro Grupo Editorial" class="editora-logo"> </div> 
+      <div class="editora-item hidden"> <img src="imgs/edlogos/28.png" alt="Bestseller" class="editora-logo"> </div> 
+      <div class="editora-item hidden"> <img src="imgs/edlogos/29.png" alt="Globolivros" class="editora-logo"> </div>
+    </div>
 </div>
-
-<style>
-  /* Esconde os itens extras */
-  .editora-item.hidden {
-    display: none;
-  }
-</style>
-
-<script>
-  document.getElementById("toggle-editoras").addEventListener("click", function() {
-    const hiddenItems = document.querySelectorAll(".editora-item.hidden");
-    const isHidden = hiddenItems[0].style.display === "" || hiddenItems[0].style.display === "none";
-
-    hiddenItems.forEach(item => {
-      item.style.display = isHidden ? "flex" : "none";
-    });
-
-    this.textContent = isHidden ? "Ver menos" : "Ver todas";
-  });
-</script>
-
 
 <div class="mais-destaque-container">
   <div class="mais-destaque-card">
@@ -1323,17 +1243,19 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 </div>  
 
-  <div class="footer">
-    &copy; 2025 Entre Linhas - Todos os direitos reservados.
-  </div>
+<div class="footer">
+  &copy; 2025 Entre Linhas - Todos os direitos reservados.
+</div>
 
   <!-- VLibras - Widget de Libras -->
-<div vw class="enabled">
+  <div vw class="enabled">
     <div vw-access-button class="active"></div>
     <div vw-plugin-wrapper>
         <div class="vw-plugin-top-wrapper"></div>
     </div>
-</div>
+  </div>
+  
+  <!-- Scripts -->
   <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
   <script>
       new window.VLibras.Widget('https://vlibras.gov.br/app');
@@ -1352,6 +1274,26 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
           document.querySelector('.sidebar').classList.remove('active');
         }
       });
+    });
+  </script>
+
+  <style>
+    /* Esconde os itens extras */
+    .editora-item.hidden {
+      display: none;
+    }
+  </style>
+
+  <script>
+    document.getElementById("toggle-editoras").addEventListener("click", function() {
+      const hiddenItems = document.querySelectorAll(".editora-item.hidden");
+      const isHidden = hiddenItems[0].style.display === "" || hiddenItems[0].style.display === "none";
+
+      hiddenItems.forEach(item => {
+        item.style.display = isHidden ? "flex" : "none";
+      });
+
+      this.textContent = isHidden ? "Ver menos" : "Ver todas";
     });
   </script>
 </body>
