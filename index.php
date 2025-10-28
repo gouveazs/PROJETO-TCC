@@ -14,7 +14,7 @@
     FROM produto p
     LEFT JOIN imagens i 
       ON i.idproduto = p.idproduto
-    WHERE p.status = 'Disponivel'
+    
       AND i.idimagens = (
           SELECT idimagens
           FROM imagens

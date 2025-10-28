@@ -570,14 +570,13 @@ $total = $subtotal;
                 <h3 class="cart-item-title"><?= htmlspecialchars($item['nome']) ?></h3>
 
                 <p class="cart-item-price">R$ <?= number_format($item['preco'], 2, ',', '.') ?></p>
-                
-                <?php if (!empty($item['frete'])): ?>
+
                 <p class="cart-item-frete" style="margin-top:5px; color:#555;">
                     <strong>Frete:</strong> <?= htmlspecialchars($item['frete']['nome'] ?? '-') ?> — 
                     R$ <?= number_format(floatval(str_replace(',', '.', $item['frete']['preco'] ?? 0)), 2, ',', '.') ?> 
                     (<?= htmlspecialchars($item['frete']['prazo'] ?? '-') ?> dias úteis)
                 </p>
-                <?php endif; ?>
+
               </div>
               
               <div class="cart-item-actions">

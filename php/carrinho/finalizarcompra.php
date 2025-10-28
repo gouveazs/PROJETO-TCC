@@ -761,14 +761,14 @@ if (isset($_POST['finalizar'])) {
         <h2 class="section-title">Método de Pagamento</h2>
         
         <div class="payment-methods">
-          <label class="payment-option selected" id="cartao-option">
-            <input type="radio" name="pagamento" value="cartao" checked>
-            Cartão de Crédito/Débito
-          </label>
-          
           <label class="payment-option" id="pix-option">
             <input type="radio" name="pagamento" value="pix">
             PIX
+          </label>
+
+          <label class="payment-option selected" id="cartao-option">
+            <input type="radio" name="pagamento" value="cartao" checked>
+            Cartão de Crédito/Débito
           </label>
           
           <label class="payment-option" id="boleto-option">
@@ -776,7 +776,21 @@ if (isset($_POST['finalizar'])) {
             Boleto Bancário
           </label>
         </div>
-        
+
+        <!-- Informações do PIX -->
+        <div id="pix-info" class="payment-info" style="display: none;">
+          <div class="qr-code">
+            <img src="../../imgs/qr-code-placeholder.png" alt="QR Code PIX">
+            <p>Escaneie o QR Code com o aplicativo do seu banco</p>
+          </div>
+          <div class="pix-info">
+            <p><strong>Chave PIX:</strong> contato@entrelinhas.com.br</p>
+            <p><strong>Valor:</strong> <span id="pix-valor">R$ 0,00</span></p>
+            <p><strong>Vencimento:</strong> 30 minutos</p>
+          </div>
+        </div>
+
+
         <!-- Informações do Cartão -->
         <div id="cartao-info" class="payment-info">
           <div class="form-group">
@@ -798,19 +812,6 @@ if (isset($_POST['finalizar'])) {
               <label for="cvv">CVV *</label>
               <input type="text" id="cvv" placeholder="000" required>
             </div>
-          </div>
-        </div>
-        
-        <!-- Informações do PIX -->
-        <div id="pix-info" class="payment-info" style="display: none;">
-          <div class="qr-code">
-            <img src="../../imgs/qr-code-placeholder.png" alt="QR Code PIX">
-            <p>Escaneie o QR Code com o aplicativo do seu banco</p>
-          </div>
-          <div class="pix-info">
-            <p><strong>Chave PIX:</strong> contato@entrelinhas.com.br</p>
-            <p><strong>Valor:</strong> <span id="pix-valor">R$ 0,00</span></p>
-            <p><strong>Vencimento:</strong> 30 minutos</p>
           </div>
         </div>
         
@@ -907,26 +908,26 @@ if (isset($_POST['finalizar'])) {
 </script>
 
 <script>
-document.getElementById('cep').addEventListener('blur', function() {
-    let cep = this.value.replace(/\D/g, ''); // Remove tudo que não é número
-    if (cep.length === 8) {
-        fetch(`https://viacep.com.br/ws/${cep}/json/`)
-        .then(response => response.json())
-        .then(data => {
-            if (!data.erro) {
-                document.getElementById('estado').value = data.uf;
-                document.getElementById('cidade').value = data.localidade;
-                document.getElementById('bairro').value = data.bairro;
-                document.getElementById('rua').value = data.logradouro;
-            } else {
-                alert('CEP não encontrado.');
-            }
-        })
-        .catch(() => {
-            alert('Erro ao consultar o CEP.');
-        });
-    }
-});
+  document.getElementById('cep').addEventListener('blur', function() {
+      let cep = this.value.replace(/\D/g, ''); // Remove tudo que não é número
+      if (cep.length === 8) {
+          fetch(`https://viacep.com.br/ws/${cep}/json/`)
+          .then(response => response.json())
+          .then(data => {
+              if (!data.erro) {
+                  document.getElementById('estado').value = data.uf;
+                  document.getElementById('cidade').value = data.localidade;
+                  document.getElementById('bairro').value = data.bairro;
+                  document.getElementById('rua').value = data.logradouro;
+              } else {
+                  alert('CEP não encontrado.');
+              }
+          })
+          .catch(() => {
+              alert('Erro ao consultar o CEP.');
+          });
+      }
+  });
 </script>
 </body>
 </html>

@@ -1,39 +1,55 @@
 <?php
   session_start();
-  $nome = $_SESSION['nome_usuario'] ?? null;
-  $foto_de_perfil = $_SESSION['foto_de_perfil'] ?? null;
+  $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
+  $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
 
   include '../conexao.php';
 
-  $categoria = isset($_GET['categoria']) ? (int)$_GET['categoria'] : null;
+  $categoria = $_GET['categoria'] ?? 0;
 
-  $sql = "
-    SELECT p.*, i.imagem
-    FROM produto p
-    LEFT JOIN imagens i 
+  if ($categoria == 0) {
+    $stmt = $conn->prepare("
+      SELECT 
+        p.idproduto,
+        p.nome,
+        p.preco,
+        i.imagem
+      FROM produto p
+      LEFT JOIN imagens i 
         ON i.idproduto = p.idproduto
-    WHERE p.status = 'Disponivel'
-      AND i.idimagens = (
-          SELECT idimagens
-          FROM imagens
-          WHERE idproduto = p.idproduto
-          ORDER BY idimagens ASC
-          LIMIT 1
-      )
-  ";
-
-  if ($categoria) {
-      $sql .= " AND p.idcategoria = :categoria";
+      WHERE p.status = 'Disponivel'
+        AND i.idimagens = (
+            SELECT idimagens
+            FROM imagens
+            WHERE idproduto = p.idproduto
+            ORDER BY idimagens ASC
+            LIMIT 1
+        )
+    ");
+    $stmt->execute();
+    $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  } else {
+      $stmt = $conn->prepare("
+        SELECT 
+          p.idproduto,
+          p.nome,
+          p.preco,
+          i.imagem
+        FROM produto p
+        LEFT JOIN imagens i 
+          ON i.idproduto = p.idproduto
+          AND i.idimagens = (
+            SELECT idimagens
+            FROM imagens
+            WHERE idproduto = p.idproduto
+            ORDER BY idimagens ASC
+            LIMIT 1
+          )
+        WHERE p.idcategoria = :categoria
+      ");
+      $stmt->execute([':categoria' => $categoria]);
+      $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
-
-  $stmt = $conn->prepare($sql);
-
-  if ($categoria) {
-      $stmt->bindParam(':categoria', $categoria, PDO::PARAM_INT);
-  }
-
-  $stmt->execute();
-  $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
