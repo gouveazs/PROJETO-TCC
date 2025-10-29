@@ -81,7 +81,7 @@
         LIMIT 1
       )
     WHERE p.nome IN (
-      'Daisy Jone & The Six',
+      'Daisy Jones and The Six',
       'A Menina que Roubava Livros',
       'Extraordinário',
       'Relatos de um Gato Viajante',
