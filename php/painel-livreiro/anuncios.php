@@ -262,21 +262,21 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     /* Imagem */
     .produto-img {
-      width: 230px;
-      height: 300px;
-      border-radius: 8px;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #000;
-    }
+  width: 230px;
+  height: 340px; /* 🔹 aumentei um pouco a altura */
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+}
 
-    .produto-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+.produto-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* mantém o preenchimento total */
+}
 
     /* Botões */
     .produto-actions {

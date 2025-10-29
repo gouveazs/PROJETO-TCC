@@ -310,39 +310,60 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     /* ===== CARDS ===== */
     .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 25px;
-      margin-top: 20px;
-    }
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* cards um pouco mais compactos */
+  gap: 20px; /* espaço menor entre eles */
+  margin-top: 20px;
+}
 
-    .card {
-      background-color: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      transition: transform 0.3s;
-      display: flex;
-      flex-direction: column;
-    }
+.stars {
+  color: #FFD700; /* amarelo dourado */
+  font-size: 1rem;
+  letter-spacing: 2px;
+  margin-top: 5px;
+}
 
-    .card img {
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
-    }
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+  display: flex;
+  flex-direction: column;
+  width: 220px; /* reduzido para o padrão da segunda imagem */
+}
 
-    .card .info { padding: 15px; text-align: center; }
-    .card .info h3 { margin-bottom: 10px; font-size: 1rem; color: #4a5a40; }
-    .card .info .price { color: black; font-size: 0.95rem; margin-bottom: 8px; }
-    .card .info .stars { color: #f5c518; }
+.card img {
+  width: 100%;
+  height: 320px; /* 🔹 antes estava 370px — agora está mais proporcional */
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+}
 
-    .card-actions {
-      display: flex;
-      justify-content: space-around;
-      padding: 10px;
-      background: #fff;
-    }
+.card .info {
+  padding: 12px;
+  text-align: center;
+}
+
+.card .info h3 {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  color: #4a5a40;
+}
+
+.card .info .price {
+  color: black;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+  background: #fff;
+}
 
     .card-link {
       text-decoration: none;
