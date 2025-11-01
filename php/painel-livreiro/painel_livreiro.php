@@ -469,12 +469,16 @@ if ($id_vendedor) {
             <?php $contador = 1; ?>
             <?php foreach ($pedidos as $pedido): ?>
                 <?php
-                    $classeStatus = match($pedido['status_envio']) {
-                        'aguardando envio' => 'status-pendente',
-                        'enviado' => 'status-enviado',
-                        'entregue' => 'status-entregue',
-                        default => 'status-pendente'
-                    };
+                    $status = strtolower($pedido['status_envio']);
+                    if ($status === 'entregue') {
+                        $classeStatus = 'status-entregue';
+                    } elseif ($status === 'enviado' || $status === 'aguardando envio') {
+                        $classeStatus = 'status-pendente';
+                    } elseif ($status === 'cancelado') {
+                        $classeStatus = 'status-cancelado';
+                    } else {
+                        $classeStatus = 'status-pendente';
+                    }
                 ?>
                 <tr>
                     <td><?= $contador ?></td>

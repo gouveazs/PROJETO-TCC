@@ -14,7 +14,6 @@ if (!$nome) {
 $stmt = $conn->prepare("SELECT * FROM usuario WHERE nome = ?");
 $stmt->execute([$nome]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-$usuario = $usuario ?: [];
 
 // Garantir que o carrinho exista
 if (!isset($_SESSION['carrinho'])) {

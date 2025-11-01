@@ -1,4 +1,8 @@
 <?php
+  ini_set('display_errors',1);
+  ini_set('display_startup_errors',1);
+  error_reporting(E_ALL);
+
   session_start();
 
   if (!isset($_SESSION['nome_usuario'])) {
@@ -644,13 +648,16 @@
                         echo '<div class="compra-data">' . date('d/m/Y', strtotime($pedido['data_pedido'])) . '</div>';
 
                         // Cor de status baseada no envio
-                        $classeStatus = match($pedido['status_envio']) {
-                            'entregue' => 'status-entregue',
-                            'enviado' => 'status-pendente',
-                            'aguardando envio' => 'status-pendente',
-                            'cancelado' => 'status-cancelado',
-                            default => 'status-pendente'
-                        };
+                        $status = strtolower($pedido['status_envio']);
+                        if ($status === 'entregue') {
+                            $classeStatus = 'status-entregue';
+                        } elseif ($status === 'enviado' || $status === 'aguardando envio') {
+                            $classeStatus = 'status-pendente';
+                        } elseif ($status === 'cancelado') {
+                            $classeStatus = 'status-cancelado';
+                        } else {
+                            $classeStatus = 'status-pendente';
+                        }
 
                         echo '<div class="compra-status ' . $classeStatus . '">' . strtoupper($pedido['status_envio']) . '</div>';
                         echo '</div>';
