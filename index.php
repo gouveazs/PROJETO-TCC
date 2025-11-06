@@ -91,6 +91,31 @@
   ");
   $stmt->execute();
   $novidades = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  $stmt = $conn->prepare("
+    SELECT 
+      p.idproduto,
+      p.nome,
+      p.preco,
+      i.imagem
+    FROM produto p
+    LEFT JOIN imagens i 
+      ON i.idproduto = p.idproduto
+      AND i.idimagens = (
+        SELECT idimagens
+        FROM imagens
+        WHERE idproduto = p.idproduto
+        ORDER BY idimagens ASC
+        LIMIT 1
+      )
+    WHERE p.nome IN (
+      'Divinos Reais',
+      'Em rota de colisão',
+      'A Biblioteca da Meia-Noite'
+    ) AND p.status = 'Disponivel'
+  ");
+  $stmt->execute();
+  $produtos_laterais = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -1039,39 +1064,33 @@
       </div>
       <img src="imgs/Amor e Azeitonas.jpg" alt="Livro Amor & Azeitonas" style="max-height: 180px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
     </div>
+
     <div class="produtos-laterais">
-      <div class="produto-lateral">
-        <img src="imgs/divinosrivais.jpg" alt="Produto">
-        <div>
-          <p style="font-weight: bold; font-size: 0.9rem;">Divinos Rivais</p>
-          <p style="color: #5a6b50;">R$ 86,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 95,00</span></p>
+      <?php foreach ($produtos_laterais as $livro): ?>
+        <div class="produto-lateral">
+          <?php if (!empty($livro['imagem'])): ?>
+            <img src="data:image/jpeg;base64,<?= base64_encode($livro['imagem']) ?>" alt="<?= htmlspecialchars($livro['nome']) ?>">
+          <?php else: ?>
+            <img src="imgs/sem-imagem.jpg" alt="Sem imagem disponível">
+          <?php endif; ?>
+          <div>
+            <p style="font-weight: bold; font-size: 0.9rem;"><?= htmlspecialchars($livro['nome']) ?></p>
+            <p style="color: #5a6b50;">R$ R$ <?= number_format($livro['preco'], 2, ',', '.') ?> <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 95,00</span></p>
+          </div>
         </div>
-      </div>
-      <div class="produto-lateral">
-        <img src="imgs/emrotadecolisao.jpg" alt="Produto">
-        <div>
-          <p style="font-weight: bold; font-size: 0.9rem;">Em Rota De Colisão</p>
-          <p style="color: #5a6b50;">R$ 80,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 86,00</span></p>
-        </div>
-      </div>
-      <div class="produto-lateral">
-        <img src="imgs/bibliotecadameianoite.jpg" alt="Produto">
-        <div>
-          <p style="font-weight: bold; font-size: 0.9rem;">A Biblioteca da Meia-Noite</p>
-          <p style="color: #5a6b50;">R$ 98,00 <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 120,00</span></p>
-        </div>
-      </div>
+      <?php endforeach; ?>
     </div>
+
   </div>
 
   <div class="servicos">
     <div class="servico">
       <img src="imgs/entrega-rapida.png" alt="Frete">
-      <p>Frete grátis para pedidos <br><small>Acima de R$ 50</small></p>
+      <p>Frete grátis no seu primeiro pedidos <br><small>Acima de R$ 50</small></p>
     </div>
     <div class="servico">
       <img src="imgs/garantia-de-devolucao-de-dinheiro.png" alt="Garantia">
-      <p>Garantia de devolução do dinheiro<br><small>100% do seu dinheiro de volta</small></p>
+      <p>Garantia de devolução do dinheiro<br><small>80% do seu dinheiro de volta</small></p>
     </div>
     <div class="servico">
       <img src="imgs/pagamento-com-cartao-de-credito.png" alt="Pagamento">

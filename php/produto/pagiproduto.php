@@ -2,6 +2,7 @@
 session_start();
 $nome = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : null;
 $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
+$idusuario = isset($_SESSION['idusuario']) ? $_SESSION['idusuario'] : null;
 
 include '../conexao.php';
 
@@ -62,7 +63,6 @@ if (!empty($_POST['cep_usuario'])) {
     header("Location: " . $_SERVER['REQUEST_URI']);
     exit;
 }
-
 ?>
 
 <!DOCTYPE html> 
@@ -1288,7 +1288,7 @@ if (!empty($_POST['cep_usuario'])) {
                     </script>
 
                     <button class="buy-button" id="buy-button">
-                        <a href="../carrinho/carrinho.php?id=<?= $produto['idproduto'] ?>&nome=<?= urlencode($produto['nome']) ?>&preco=<?= $produto['preco'] ?><?php if ($fretePadrao) echo "&frete=" . urlencode($fretePadrao); ?>" class="card-link">
+                        <a href="../carrinho/carrinho.php?id=<?= $produto['idproduto'] ?>&nome=<?= urlencode($produto['nome']) ?>&preco=<?= $produto['preco'] ?>&frete=<?= $fretePadrao ?>" class="card-link">
                             COMPRAR
                         </a>
                     </button>
@@ -1303,8 +1303,10 @@ if (!empty($_POST['cep_usuario'])) {
                             <label for="buy-later">Adicionar à lista de desejos</label>
                         </div>
                         <div class="buy-option">
-                            <a href="../chat/chat.php"><i class="fas fa-comments"></i> Falar com vendedor</a>
-                        </div>
+                            <a href="../chat/chat.php?idvendedor=<?= $produto['idvendedor'] ?>&remetente_tipo=usuario">
+                                <i class="fas fa-comments"></i> Falar com vendedor
+                            </a>
+                        </div>  
                         <div class="buy-option">
                             <a href="#"><i class="fas fa-gift"></i> Presentear</a>
                         </div>

@@ -143,6 +143,15 @@
       <?php if (isset($_GET['error'])): ?>
         <p class="erro">Usuário ou senha incorretos</p>
       <?php endif; ?>
+
+      <?php if (isset($_GET['error']) && $_GET['error'] == 2): ?>
+        <p class="erro">
+            Sua conta foi desativada.
+            <a href="reativar.php?vendedor=<?php echo urlencode($_GET['vendedor'] ?? ''); ?>">
+                Deseja reativar?
+            </a>
+        </p>
+      <?php endif; ?>
     </div>
   </div>
   <!-- VLibras - Widget de Libras -->
