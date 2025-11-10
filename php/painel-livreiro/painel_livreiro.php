@@ -17,10 +17,10 @@ $result = $stmt->fetch(PDO::FETCH_ASSOC);
 $anuncios_publicadas = $result['total'];
 
 $stmt = $conn->prepare("
-    SELECT COUNT(*) AS total
+    SELECT COUNT(DISTINCT p.idpedido) AS total
     FROM pedido p
-    JOIN item_pedido i ON i.idpedido = p.idpedido
-    JOIN produto pr ON pr.idproduto = i.idproduto
+    INNER JOIN item_pedido i ON i.idpedido = p.idpedido
+    INNER JOIN produto pr ON pr.idproduto = i.idproduto
     WHERE pr.idvendedor = :id_vendedor
       AND p.status_envio = 'entregue'
 ");
@@ -28,6 +28,7 @@ $stmt->bindValue(':id_vendedor', $id_vendedor, PDO::PARAM_INT);
 $stmt->execute();
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 $vendas_concluidas = $result['total'];
+
 
 $stmt = $conn->prepare("SELECT reputacao FROM vendedor WHERE idvendedor = ?");
 $stmt->execute([$id_vendedor]);
@@ -400,9 +401,10 @@ if ($id_vendedor) {
       <ul class="menu">
         <li><a href="painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
         <li><a href="anuncios.php"><img src="../../imgs/anuncio.png" alt="Vendas" style="width:20px; margin-right:10px;"> Seus Anúncios</a></li>
+        <li><a href="pedidos.php"><img src="../../imgs/file.png" alt="Vendas" style="width:20px; margin-right:10px;"> Seus Pedidos</a></li>
         <li><a href="rendimento.php"><img src="../../imgs/rendimento.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
         <li><a href="lista-chats.php"><img src="../../imgs/chaat.png" alt="Chats" style="width:20px; margin-right:10px;"> Chats</a></li>
-        <li><a href="notificacoes.php"><img src="../../imgs/notificacao.png" alt="Chats" style="width:20px; margin-right:10px;"> Notificações</a></li>
+        <li><a href="notificacao.php"><img src="../../imgs/notificacao.png" alt="Chats" style="width:20px; margin-right:10px;"> Notificações</a></li>
         <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/anuncialivro.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Anunciar livro</a></li>
       </ul>
 
@@ -483,7 +485,7 @@ if ($id_vendedor) {
                 <tr>
                     <td><?= $contador ?></td>
                     <td><?= htmlspecialchars($pedido['produto_nome']) ?></td>
-                    <td><?= htmlspecialchars($pedido['comprador_nome']) ?></td>
+                    <td><?= htmlspecialchars($pedido['comprador_nome'] ?? '') ?></td>
                     <td class="<?= $classeStatus ?>"><?= strtoupper($pedido['status_envio']) ?></td>
                     <td><?= date('d/m/Y', strtotime($pedido['data_pedido'])) ?></td>
                 </tr>
@@ -514,7 +516,7 @@ if ($id_vendedor) {
                       <?= $notif['lida'] == 0 ? '🔔' : '✅' ?>
                       <?= htmlspecialchars($notif['mensagem']) ?>
                       <br>
-                      <small style="color: #777;">De: <?= htmlspecialchars($notif['usuario_nome']) ?> | <?= date('d/m/Y H:i', strtotime($notif['data_envio'])) ?></small>
+                      <small style="color: #777;">De: <?= htmlspecialchars($notif['usuario_nome'] ?? '  ') ?> | <?= date('d/m/Y H:i', strtotime($notif['data_envio'])) ?></small>
                   </p>
               <?php endforeach; ?>
           <?php else: ?>

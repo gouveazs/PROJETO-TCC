@@ -32,7 +32,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title><?php echo $aba_ativa === 'compras' ? 'Minhas Compras' : 'Seu Perfil'; ?> - Entre Linhas</title>
+  <title><?php echo $aba_ativa; ?> - Entre Linhas</title>
   <style>
     * {
       margin: 0;
@@ -515,8 +515,9 @@
 <body>
   <div class="container-principal">
     <div class="navegacao-superior">
-      <a href="?aba=perfil" class="<?php echo $aba_ativa === 'perfil' ? 'ativa' : ''; ?>">Meu Perfil</a>
-      <a href="?aba=pedidos" class="<?php echo $aba_ativa === 'pedidos' ? 'ativa' : ''; ?>">Meus Pedidos</a>
+      <a href="?aba=Meu Perfil" class="<?php echo $aba_ativa === 'Meu Perfil' ? 'ativa' : ''; ?>">Meu Perfil</a>
+      <a href="?aba=Meus Pedidos" class="<?php echo $aba_ativa === 'Meus Pedidos' ? 'ativa' : ''; ?>">Meus Pedidos</a>
+      <a href="?aba=Chats" class="<?php echo $aba_ativa === 'Chats' ? 'ativa' : ''; ?>">Chats</a>
     </div>
     
     <div class="perfil-container">
@@ -531,7 +532,7 @@
         <div class="user-role">Membro desde 2025</div>
         
         <div class="btn-container">
-          <?php if ($aba_ativa === 'perfil'): ?>
+          <?php if ($aba_ativa === 'Meu Perfil'): ?>
             <!-- Botões que aparecem apenas na aba "Meu Perfil" -->
             <a href="editar_perfil.php" class="btn-normie">
               <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
@@ -556,7 +557,7 @@
       </div>
 
       <div class="perfil-principal">
-        <?php if ($aba_ativa === 'perfil'): ?>
+        <?php if ($aba_ativa === 'Meu Perfil'): ?>
           <div class="info-container">
             <div class="info-group">
               <h3>INFORMAÇÕES PESSOAIS</h3>
@@ -614,7 +615,7 @@
               </div>
             </div>
           </div>
-        <?php else: ?>
+        <?php elseif ($aba_ativa === 'Meus Pedidos'): ?>
           <div class="compras-container">
             <h3>MEUS PEDIDOS</h3>
 

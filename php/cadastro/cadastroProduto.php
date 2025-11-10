@@ -28,224 +28,332 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   <link rel="icon" type="image/png" href="../../imgs/logotipo.png"/>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
+    :root {
+      --marrom: #5a4224;
+      --verde: #5a6b50;
+      --background: #F4F1EE;
+      --card-bg: #fff;
+      --card-border: #ddd;
+      --text-dark: #333;
+      --text-muted: #666;
+    }
 
-:root {
-  --marrom: #5a4224;
-  --verde: #5a6b50;
-  --background: #F4F1EE;
-  --card-bg: #fff;
-  --card-border: #ddd;
-  --text-dark: #333;
-  --text-muted: #666;
-  --input-bg: #F4F1EE;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Playfair Display', serif;
-}
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+      font-family: 'Playfair Display', serif;
+    }
 
     body {
       background-color: var(--background);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-left: 250px;
+      padding-left: 250px; /* espaço pro conteúdo não invadir a sidebar */
     }
 
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 250px;
-  height: 100vh;
-  background-color: var(--verde);
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-top: 20px;
-  overflow-y: auto;
-}
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 250px;
+      height: 100vh;
+      background-color: var(--verde);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding-top: 20px;
+      overflow-y: auto; /* SCROLL HABILITADO */
+      scrollbar-width: thin;
+      scrollbar-color: #ccc transparent;
+    } 
 
-.sidebar .logo {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 0 20px;
-  margin-bottom: 20px;
-}
+    .sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
 
-.sidebar .logo img {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 15px;
-}
+    .sidebar::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 4px;
+    }
 
-.sidebar .nome-usuario {
-  font-weight: bold;
-  font-size: 1rem;
-  color: #fff;
-}
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
 
-.sidebar nav ul {
-  list-style: none;
-  width: 100%;
-  padding: 0 20px;
-}
+    .sidebar .logo {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      padding: 0 20px;
+      margin-bottom: 20px;
+    }
 
-.sidebar nav ul li {
-  margin-bottom: 12px;
-}
+    .sidebar .logo img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 15px;
+    }
 
-.sidebar nav ul li a {
-  color: #fff;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  border-radius: 8px;
-  transition: background 0.3s;
-}
+    .sidebar .user-info {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
 
-.sidebar nav ul li a:hover {
-  background-color: #6f8562;
-}
+    .sidebar .user-info .nome-usuario {
+      font-weight: bold;
+      font-size: 0.95rem; 
+      color: #fff;
+    }
 
-.content-area {
-  margin-left: 250px;
-  padding: 40px 20px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex: 1;
-}
+    .sidebar .user-info .tipo-usuario {
+      font-size: 0.8rem;
+      color: #ddd;
+    }
 
-main.conteudo {
-  width: 100%;
-  max-width: 650px;
-  background-color: var(--card-bg);
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  padding: 40px 30px;
-}
+    .sidebar .logo p {
+      font-weight: bold;
+    }
 
-main.conteudo h1 {
-  text-align: center;
-  color: var(--verde);
-  margin-bottom: 25px;
-}
+    .sidebar nav {
+      width: 100%;
+      padding: 0 20px;
+    }
 
-form {
-  width: 100%;
-}
+    .sidebar nav h3 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      color: #ddd;
+    }
 
-.form-group {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 18px;
-}
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 10px 0;
+      width: 100%;
+    }
 
-.form-group label {
-  width: 180px;
-  font-weight: 600;
-  color: var(--marrom);
-  text-align: right;
-  margin-right: 15px;
-  user-select: none;
-  padding-top: 8px;
-  flex-shrink: 0;
-}
+    .sidebar nav ul li {
+      width: 100%;
+      margin-bottom: 10px;
+    }
 
-.form-group .input-container {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
+    .sidebar nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
-  width: 100%;
-  padding: 10px 12px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: var(--input-bg);
-  transition: border-color 0.3s ease;
-}
+    .sidebar nav ul li a i {
+      margin-right: 10px;
+    }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: var(--verde);
-  box-shadow: 0 0 5px var(--verde);
-}
+    .sidebar nav ul li a:hover {
+      background-color: #6f8562;
+    }
 
-textarea {
-  resize: vertical;
-  min-height: 80px;
-}
+    .topbar {
+      position: fixed;
+      top: 0; left: 250px; right: 0;
+      height: 70px;
+      background-color: var(--marrom);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      z-index: 1001;
+    }
 
-input[type="submit"] {
-  width: 100%;
-  padding: 14px;
-  background-color: var(--verde);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
+    .topbar h1 {
+      font-size: 1.5rem;
+    }
 
-input[type="submit"]:hover {
-  background-color: #48603b;
-  transform: translateY(-2px);
-}
+    .topbar input[type="text"] {
+      padding: 10px;
+      border: none;
+      border-radius: 20px;
+      width: 250px;
+    }
 
-input[type="file"] {
-  font-family: 'Playfair Display', serif;
-}
+    main {
+      padding: 30px;
+      flex: 1;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 30px;
+      text-align: left; /* garante que texto interno também fique à esquerda */
+    }
+
+    .header img {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .header-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .header h1 {
+        font-size: 26px;
+        color: var(--text-dark);
+        margin: 5px 0;
+    }
+
+    .header p {
+        color: var(--text-muted);
+        font-size: 15px;
+        margin: 0;
+    }
+
+    .content-area {
+      margin-left: 250px;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex: 1;
+    }
 
     main.conteudo {
       width: 100%;
-      max-width: 700px;
+      max-width: 650px;
       background-color: var(--card-bg);
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       padding: 40px 30px;
     }
 
-input[type="file"]::file-selector-button {
-  padding: 10px 18px;
-  border: none;
-  border-radius: 8px;
-  background-color: var(--verde);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  margin-right: 10px;
-}
+    main.conteudo h1 {
+      text-align: center;
+      color: var(--verde);
+      margin-bottom: 25px;
+    }
 
-#detalhes-usado {
-  border-left: 4px solid var(--verde);
-  padding-left: 15px;
-  margin-top: 20px;
-}
+    form {
+      width: 100%;
+    }
 
-/* ===== Responsividade ===== */
-@media (max-width: 992px) {
-  .content-area {
-    margin-left: 220px;
-  }
-}
+    .form-group {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      width: 180px;
+      font-weight: 600;
+      color: var(--marrom);
+      text-align: right;
+      margin-right: 15px;
+      user-select: none;
+      padding-top: 8px;
+      flex-shrink: 0;
+    }
+
+    .form-group .input-container {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: var(--input-bg);
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--verde);
+      box-shadow: 0 0 5px var(--verde);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      padding: 14px;
+      background-color: var(--verde);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #48603b;
+      transform: translateY(-2px);
+    }
+
+    input[type="file"] {
+      font-family: 'Playfair Display', serif;
+    }
+
+        main.conteudo {
+          width: 100%;
+          max-width: 700px;
+          background-color: var(--card-bg);
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          padding: 40px 30px;
+        }
+
+    input[type="file"]::file-selector-button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--verde);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    #detalhes-usado {
+      border-left: 4px solid var(--verde);
+      padding-left: 15px;
+      margin-top: 20px;
+    }
+
+    /* ===== Responsividade ===== */
+    @media (max-width: 992px) {
+      .content-area {
+        margin-left: 220px;
+      }
+    }
 
     .form-group {
       display: flex;
@@ -387,72 +495,69 @@ input[type="file"]::file-selector-button {
       border-left: 3px solid var(--verde);
     }
 
-@media (max-width: 768px) {
-  .sidebar {
-    width: 200px;
-  }
-  .content-area {
-    margin-left: 200px;
-    padding: 20px;
-  }
-}
-
-@media (max-width: 600px) {
-  .sidebar {
-    display: none;
-  }
-  .content-area {
-    margin: 0;
-    padding: 20px;
-  }
-  main.conteudo {
-    width: 100%;
-    max-width: 100%;
-    padding: 25px 20px;
-  }
-   
-      #detalhes-usado {
-        margin-left: 0;
-        border-left: none;
-        border-top: 4px solid var(--verde);
-        padding-left: 0;
-        padding-top: 15px;
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 200px;
+      }
+      .content-area {
+        margin-left: 200px;
+        padding: 20px;
       }
     }
 
-    @media (max-width: 576px) {
+    @media (max-width: 600px) {
       .sidebar {
         display: none;
       }
       .content-area {
-        margin-left: 0;
+        margin: 0;
+        padding: 20px;
+      }
+      main.conteudo {
         width: 100%;
+        max-width: 100%;
+        padding: 25px 20px;
+      }
+    
+        #detalhes-usado {
+          margin-left: 0;
+          border-left: none;
+          border-top: 4px solid var(--verde);
+          padding-left: 0;
+          padding-top: 15px;
+        }
       }
 
-      .form-group {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+      @media (max-width: 576px) {
+        .sidebar {
+          display: none;
+        }
+        .content-area {
+          margin-left: 0;
+          width: 100%;
+        }
 
-      .form-group label {
-        width: 100%;
-        text-align: left;
-        margin-bottom: 6px;
-        padding-top: 0;
+        .form-group {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .form-group label {
+          width: 100%;
+          text-align: left;
+          margin-bottom: 6px;
+          padding-top: 0;
+        }
+        
+        #detalhes-usado {
+          margin-left: 0;
+          border-left: none;
+          border-top: 4px solid var(--verde);
+          padding-left: 0;
+          padding-top: 15px;
+        }
       }
-      
-      #detalhes-usado {
-        margin-left: 0;
-        border-left: none;
-        border-top: 4px solid var(--verde);
-        padding-left: 0;
-        padding-top: 15px;
-      }
-    }
   </style>
-
-</style>
-
 </head>
 <body>
   <div class="sidebar">
@@ -471,17 +576,17 @@ input[type="file"]::file-selector-button {
       <ul class="menu">
         <li><a href="../painel-livreiro/painel_livreiro.php"><img src="../../imgs/inicio.png" alt="Início" style="width:20px; margin-right:10px;"> Início</a></li>
         <li><a href="../painel-livreiro/anuncios.php"><img src="../../imgs/anuncio.png" alt="Vendas" style="width:20px; margin-right:10px;"> Seus Anúncios</a></li>
-        <li><a href="rendimento.php"><img src="../../imgs/rendimento.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
-        <li><a href="chats.php"><img src="../../imgs/chaat.png" alt="Chats" style="width:20px; margin-right:10px;"> Chats</a></li>
-        <li><a href="../cadastro/cadastroProduto.php"><img src="../../imgs/anuncialivro.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Anunciar livro</a></li>
+        <li><a href="../painel-livreiro/pedidos.php"><img src="../../imgs/file.png" alt="Vendas" style="width:20px; margin-right:10px;"> Seus Pedidos</a></li>
+        <li><a href="../painel-livreiro/rendimento.php"><img src="../../imgs/rendimento.png" alt="Rendimento" style="width:20px; margin-right:10px;"> Rendimento</a></li>
+        <li><a href="../painel-livreiro/lista-chats.php"><img src="../../imgs/chaat.png" alt="Chats" style="width:20px; margin-right:10px;"> Chats</a></li>
+        <li><a href="../painel-livreiro/notificacoes.php"><img src="../../imgs/notificacao.png" alt="Chats" style="width:20px; margin-right:10px;"> Notificações</a></li>
+        <li><a href="cadastroProduto.php"><img src="../../imgs/anuncialivro.png" alt="Cadastro" style="width:20px; margin-right:10px;"> Anunciar livro</a></li>
       </ul>
 
       <h3>Conta</h3>
       <ul class="account">
-        <?php if ($nome_vendedor): ?>
-          <li><a href="../painel-livreiro/minhas_informacoes.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Editar informações</a></li>
-          <li><a href="../login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
-        <?php endif; ?>
+        <li><a href="../painel-livreiro/minhas_informacoes.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Editar informações</a></li>
+        <li><a href="../login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
       </ul>
     </nav>
   </div>
