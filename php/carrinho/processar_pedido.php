@@ -13,7 +13,7 @@ if (!isset($_SESSION['idusuario'])) {
 $idusuario = $_SESSION['idusuario'];
 
 // ===============================
-// ⚙️ VERIFICA SE O CARRINHO EXISTE E TEM ITENS
+// ⚙️ VERIFICA SE O CARRINHO EXISTE
 // ===============================
 if (!isset($_SESSION['carrinho']) || count($_SESSION['carrinho']) === 0) {
     die("Carrinho vazio. Adicione produtos antes de confirmar o pedido.");
@@ -32,7 +32,7 @@ function limparValor($valor) {
 }
 
 // ===============================
-// 💰 CALCULA VALORES GERAIS
+// 💰 CALCULA VALORES DO PEDIDO
 // ===============================
 $totalProdutos = 0.0;
 $totalFrete = 0.0;
@@ -47,9 +47,9 @@ foreach ($carrinho as $item) {
     $totalProdutos += $subtotal;
     $totalFrete += $freteItem;
 
-    $prazos[] = isset($item['frete']['prazo']) && is_numeric($item['frete']['prazo']) 
-                 ? (int)$item['frete']['prazo'] 
-                 : 0;
+    $prazos[] = isset($item['frete']['prazo']) && is_numeric($item['frete']['prazo'])
+        ? (int)$item['frete']['prazo']
+        : 0;
 }
 
 $totalGeral = floatval($totalProdutos + $totalFrete);
@@ -57,13 +57,10 @@ $prazoMedio = !empty($prazos) ? round(array_sum($prazos) / count($prazos)) : 0;
 $servicoFreteGeral = $carrinho[0]['frete']['nome'] ?? 'Frete Padrão';
 
 try {
-    // ===============================
-    // 🧾 INÍCIO DA TRANSAÇÃO
-    // ===============================
     $conn->beginTransaction();
 
     // ===============================
-    // 🛒 INSERE PEDIDO
+    // 🧾 INSERE PEDIDO GERAL
     // ===============================
     $stmtPedido = $conn->prepare("
         INSERT INTO pedido (valor_total, data_pedido, frete, idusuario, status, servico_frete, prazo_entrega)
@@ -73,21 +70,27 @@ try {
     $idPedido = $conn->lastInsertId();
 
     // ===============================
-    // 📦 INSERE ITENS DO PEDIDO E ATUALIZA STATUS
+    // 📦 INSERE ITENS DO PEDIDO
     // ===============================
     foreach ($carrinho as $item) {
-
         $quantidadeItem = $item['quantidade'] ?? 1;
         $freteItem = limparValor($item['frete']['preco'] ?? 0);
         $prazoItem = isset($item['frete']['prazo']) && is_numeric($item['frete']['prazo'])
-                     ? (int)$item['frete']['prazo']
-                     : 0;
+            ? (int)$item['frete']['prazo']
+            : 0;
         $servicoFreteItem = $item['frete']['nome'] ?? 'Não informado';
 
-        // Inserir item no pedido
+        // pega o vendedor do produto
+        $stmtVend = $conn->prepare("SELECT idvendedor FROM produto WHERE idproduto = ?");
+        $stmtVend->execute([$item['id']]);
+        $vendedor = $stmtVend->fetch(PDO::FETCH_ASSOC);
+        $idVendedor = $vendedor['idvendedor'] ?? null;
+
+        // insere o item com status e vendedor
         $stmtItem = $conn->prepare("
-            INSERT INTO item_pedido (quantidade, idproduto, idpedido, frete_item, servico_frete_item, prazo_item)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO item_pedido 
+                (quantidade, idproduto, idpedido, frete_item, servico_frete_item, prazo_item, status_envio, codigo_rastreio_item)
+            VALUES (?, ?, ?, ?, ?, ?, 'aguardando envio', NULL)
         ");
         $stmtItem->execute([
             $quantidadeItem,
@@ -98,40 +101,33 @@ try {
             $prazoItem
         ]);
 
-        // Atualiza status do produto para 'Vendido'
+        // atualiza status do produto para vendido
         $stmtUpdateStatus = $conn->prepare("
             UPDATE produto SET status = 'Vendido' WHERE idproduto = ?
         ");
         $stmtUpdateStatus->execute([$item['id']]);
 
-        // Cria notificação para o vendedor
-        $stmtVend = $conn->prepare("SELECT idvendedor FROM produto WHERE idproduto = ?");
-        $stmtVend->execute([$item['id']]);
-        $vendedor = $stmtVend->fetch(PDO::FETCH_ASSOC);
-
-        if ($vendedor) {
-            $mensagem = "Um novo pedido foi realizado contendo o produto '{$item['nome']}'.";
+        // cria notificação para o vendedor
+        if ($idVendedor) {
+            $mensagem = "Um novo pedido foi realizado com o produto '{$item['nome']}'.";
             $stmtNotif = $conn->prepare("
                 INSERT INTO notificacoes (mensagem, lida, idusuario, idvendedor, tipo)
                 VALUES (?, 0, ?, ?, 'compra')
             ");
-            $stmtNotif->execute([$mensagem, $idusuario, $vendedor['idvendedor']]);
+            $stmtNotif->execute([$mensagem, $idusuario, $idVendedor]);
         }
     }
 
     // ===============================
-    // ✅ CONFIRMA TUDO
+    // ✅ CONFIRMA E FINALIZA
     // ===============================
     $conn->commit();
-
-    // ===============================
-    // 🧹 LIMPA O CARRINHO E REDIRECIONA
-    // ===============================
     unset($_SESSION['carrinho']);
-    header("Location: sucesso.php"); // página de sucesso
+    header("Location: sucesso.php");
     exit;
 
 } catch (Exception $e) {
     $conn->rollBack();
     die("Erro ao processar pedido: " . $e->getMessage());
 }
+?>

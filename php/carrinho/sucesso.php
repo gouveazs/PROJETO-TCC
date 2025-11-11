@@ -162,12 +162,12 @@
     <div class="left-panel">
       <h2>Obrigado pela compra!</h2>
       <p>Sua compra foi processada com sucesso e já está sendo preparada.</p>
-      <button onclick="window.location.href='../perfil-usuario/ver_perfil.php?aba=pedidos'">ACOMPANHAR PEDIDO</button>
+      <button onclick="window.location.href='../perfil-usuario/ver_perfil.php?aba=Meus Pedidos'">ACOMPANHAR PEDIDO</button>
     </div>
     <div class="right-panel">
       <div class="success-icon">✅</div>
       <h2>Pedido realizado com sucesso!</h2>
-      <p class="text-muted mt-3">Obrigado por comprar conosco. Você pode acompanhar o status do seu pedido <a href="../perfil-usuario/ver_perfil.php?aba=pedidos">aqui</a>.</p>
+      <p class="text-muted mt-3">Obrigado por comprar conosco. Você pode acompanhar o status do seu pedido <a href="../perfil-usuario/ver_perfil.php?aba=Meus Pedidos">aqui</a>.</p>
       <a href="../../index.php" class="btn btn-custom mt-4">Voltar às compras</a>
     </div>
   </div>

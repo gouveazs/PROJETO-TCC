@@ -1,25 +1,29 @@
 <?php
+session_start();
 include '../conexao.php';
 
-$idpedido = $_POST['idpedido'] ?? null;
-$status_envio = $_POST['status_envio'] ?? null;
-$codigo_rastreio = $_POST['codigo_rastreio'] ?? null;
+if (!isset($_SESSION['id_vendedor'])) {
+    die("Acesso negado.");
+}
 
-if (!$idpedido || !$status_envio) {
-    die("Dados inválidos.");
+$iditem = $_POST['iditem_pedido'] ?? null;
+$status = $_POST['status_envio'] ?? 'aguardando envio';
+$rastreio = $_POST['codigo_rastreio_item'] ?? null;
+
+if (!$iditem) {
+    die("Item inválido.");
 }
 
 $stmt = $conn->prepare("
-    UPDATE pedido
-    SET status_envio = :status_envio,
-        codigo_rastreio = :codigo_rastreio
-    WHERE idpedido = :idpedido
+    UPDATE item_pedido
+    SET status_envio = :status, codigo_rastreio_item = :rastreio
+    WHERE iditem_pedido = :iditem
 ");
-$stmt->bindValue(':status_envio', $status_envio);
-$stmt->bindValue(':codigo_rastreio', $codigo_rastreio);
-$stmt->bindValue(':idpedido', $idpedido, PDO::PARAM_INT);
-$stmt->execute();
+$stmt->execute([
+    ':status' => $status,
+    ':rastreio' => $rastreio,
+    ':iditem' => $iditem
+]);
 
-header("Location: pedidos.php");
+header('Location: pedidos.php');
 exit;
-?>

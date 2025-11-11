@@ -630,9 +630,7 @@
                         p.frete,
                         p.servico_frete,
                         p.prazo_entrega,
-                        p.codigo_rastreio,
-                        p.status,
-                        p.status_envio
+                        p.status
                     FROM pedido p
                     WHERE p.idusuario = :idusuario
                     ORDER BY p.idpedido DESC
@@ -643,30 +641,17 @@
 
                 if ($pedidos) {
                     foreach ($pedidos as $pedido) {
-                        echo '<div class="compra-item">';
-                        echo '<div class="compra-header">';
-                        echo '<div class="compra-id">Pedido #' . $pedido['idpedido'] . '</div>';
-                        echo '<div class="compra-data">' . date('d/m/Y', strtotime($pedido['data_pedido'])) . '</div>';
 
-                        // Cor de status baseada no envio
-                        $status = strtolower($pedido['status_envio']);
-                        if ($status === 'entregue') {
-                            $classeStatus = 'status-entregue';
-                        } elseif ($status === 'enviado' || $status === 'aguardando envio') {
-                            $classeStatus = 'status-pendente';
-                        } elseif ($status === 'cancelado') {
-                            $classeStatus = 'status-cancelado';
-                        } else {
-                            $classeStatus = 'status-pendente';
-                        }
-
-                        echo '<div class="compra-status ' . $classeStatus . '">' . strtoupper($pedido['status_envio']) . '</div>';
-                        echo '</div>';
-
-                        // Itens do pedido
+                        // Buscar itens do pedido (com status e rastreio próprios)
                         $itensStmt = $conn->prepare("
                             SELECT 
                                 i.quantidade,
+                                i.frete_item,
+                                i.servico_frete_item,
+                                i.prazo_item,
+                                i.status_envio,
+                                i.codigo_rastreio_item,
+                                pr.idproduto,
                                 pr.nome,
                                 pr.preco,
                                 (SELECT img.imagem FROM imagens img WHERE img.idproduto = pr.idproduto LIMIT 1) AS imagem
@@ -678,34 +663,80 @@
                         $itensStmt->execute();
                         $itens = $itensStmt->fetchAll(PDO::FETCH_ASSOC);
 
+                        // 🧠 Verifica se todos os itens foram enviados ou entregues
+                        $todosConcluidos = true;
+                        foreach ($itens as $check) {
+                            $statusLower = strtolower(trim($check['status_envio']));
+                            if ($statusLower !== 'enviado' && $statusLower !== 'entregue') {
+                                $todosConcluidos = false;
+                                break;
+                            }
+                        }
+
+                        // ✅ Se todos concluídos, atualiza o status do pedido
+                        if ($todosConcluidos && strtolower(trim($pedido['status'])) !== 'concluído') {
+                            $update = $conn->prepare("UPDATE pedido SET status = 'Concluído' WHERE idpedido = :id");
+                            $update->bindValue(':id', $pedido['idpedido'], PDO::PARAM_INT);
+                            $update->execute();
+                            $pedido['status'] = 'Concluído';
+                        }
+
+                        echo '<div class="compra-item">';
+                        echo '<div class="compra-header">';
+                        echo '<div class="compra-id">Pedido #' . $pedido['idpedido'] . '</div>';
+                        echo '<div class="compra-data">' . date('d/m/Y', strtotime($pedido['data_pedido'])) . '</div>';
+                        echo '<div class="compra-status status-pendente">' . strtoupper($pedido['status']) . '</div>';
+                        echo '</div>';
+
                         foreach ($itens as $item) {
                             $imagemBase64 = $item['imagem']
                                 ? 'data:image/jpeg;base64,' . base64_encode($item['imagem'])
                                 : '../../imgs/capa.jpg';
+
+                            // define cor do status de envio
+                            $statusEnvio = strtolower($item['status_envio']);
+                            if ($statusEnvio === 'entregue') {
+                                $classeStatus = 'status-entregue';
+                            } elseif ($statusEnvio === 'enviado') {
+                                $classeStatus = 'status-enviado';
+                            } elseif ($statusEnvio === 'aguardando envio') {
+                                $classeStatus = 'status-pendente';
+                            } else {
+                                $classeStatus = 'status-pendente';
+                            }
 
                             echo '<div class="produto-item">';
                             echo '<img src="' . $imagemBase64 . '" alt="Produto" class="produto-imagem">';
                             echo '<div class="produto-info">';
                             echo '<div class="produto-nome">' . htmlspecialchars($item['nome']) . '</div>';
                             echo '<div class="produto-detalhes">Quantidade: ' . $item['quantidade'] . '</div>';
-                            echo '<div class="produto-preco">R$ ' . number_format($item['preco'], 2, ',', '.') . '</div>';
-                            echo '</div>';
-                            echo '</div>';
+                            echo '<div class="produto-preco">R$ ' . number_format($item['preco'], 2, ',', '.') . '</div>'; 
+
+                            // detalhes de frete
+                            echo '<div class="frete-detalhes">';
+                              echo '<div class="produto-status ' . $classeStatus . '">';
+                              echo 'Status de envio: ' . strtoupper($item['status_envio']);
+                              echo '</div>';
+                            echo '<p><strong>Frete:</strong> R$ ' . number_format($item['frete_item'], 2, ',', '.') . '</p>';
+                            echo '<p><strong>Serviço:</strong> ' . htmlspecialchars($item['servico_frete_item'] ?? 'N/A') . '</p>';
+                            echo '<p><strong>Prazo:</strong> ' . ($item['prazo_item'] ? $item['prazo_item'] . ' dias úteis' : 'Não informado') . '</p>';
+                            if (!empty($item['codigo_rastreio_item'])) {
+                                echo '<p><strong>Código de Rastreio:</strong> ' . htmlspecialchars($item['codigo_rastreio_item']) . '</p>';
+                            }
+
+                            // 🟢 Botão de avaliação (só aparece se status for enviado ou entregue)
+                            if ($statusEnvio === 'enviado' || $statusEnvio === 'entregue') {
+                                echo '<a href="avaliar.php?idproduto=' . $item['idproduto'] . '&idpedido=' . $pedido['idpedido'] . '" class="btn-avaliar">Fazer Avaliação</a>';
+                            }
+
+                            echo '</div>'; // frete-detalhes
+                            echo '</div>'; // produto-info
+                            echo '</div>'; // produto-item
                         }
 
-                        // Informações do frete
-                        echo '<div class="frete-detalhes">';
-                        echo '<p><strong>Frete:</strong> R$ ' . number_format($pedido['frete'], 2, ',', '.') . '</p>';
-                        echo '<p><strong>Serviço de entrega:</strong> ' . htmlspecialchars($pedido['servico_frete'] ?? 'N/A') . '</p>';
-                        echo '<p><strong>Prazo de entrega:</strong> ' . ($pedido['prazo_entrega'] ? $pedido['prazo_entrega'] . ' dias úteis' : 'Não informado') . '</p>';
-                        if (!empty($pedido['codigo_rastreio'])) {
-                            echo '<p><strong>Código de rastreio:</strong> ' . htmlspecialchars($pedido['codigo_rastreio']) . '</p>';
-                        }
-                        echo '</div>';
-
-                        // Total
+                        // total do pedido
                         echo '<div class="compra-total">Total: R$ ' . number_format($pedido['valor_total'], 2, ',', '.') . '</div>';
-                        echo '</div>';
+                        echo '</div>'; // compra-item
                     }
                 } else {
                     echo '<p>Nenhum pedido encontrado.</p>';

@@ -181,8 +181,7 @@ CREATE TABLE IF NOT EXISTS pedido (
   status ENUM('pendente', 'concluido', 'cancelado'),
   servico_frete VARCHAR(100), 
   prazo_entrega INT,         
-  codigo_rastreio VARCHAR(50),       
-  status_envio ENUM('aguardando envio', 'enviado', 'entregue') DEFAULT 'aguardando envio',
+  codigo_rastreio VARCHAR(50),
   PRIMARY KEY (idpedido),
   FOREIGN KEY (idusuario) REFERENCES usuario(idusuario)
 ) ENGINE=InnoDB;
@@ -199,6 +198,7 @@ CREATE TABLE IF NOT EXISTS item_pedido (
   servico_frete_item VARCHAR(100),   
   prazo_item INT,                   
   codigo_rastreio_item VARCHAR(50),
+  status_envio ENUM('aguardando envio', 'enviado', 'entregue') DEFAULT 'aguardando envio',
   PRIMARY KEY (iditem_pedido, idpedido),
   FOREIGN KEY (idproduto) REFERENCES produto(idproduto),
   FOREIGN KEY (idpedido) REFERENCES pedido(idpedido)

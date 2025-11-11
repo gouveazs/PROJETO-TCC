@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $_SESSION['nome_usuario'] = $novo_nome;
     $_SESSION['foto_de_perfil'] = $foto_de_perfil;
-    header("Location: ver_perfil.php");
+    header("Location: ver_perfil.php?aba=Meu Perfil");
     exit;
 }
 

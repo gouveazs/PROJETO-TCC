@@ -17,9 +17,9 @@ $result = $stmt->fetch(PDO::FETCH_ASSOC);
 $anuncios_publicadas = $result['total'];
 
 $stmt = $conn->prepare("
-    SELECT COUNT(DISTINCT p.idpedido) AS total
-    FROM pedido p
-    INNER JOIN item_pedido i ON i.idpedido = p.idpedido
+    SELECT COUNT(i.iditem_pedido) AS total
+    FROM item_pedido i
+    INNER JOIN pedido p ON p.idpedido = i.idpedido
     INNER JOIN produto pr ON pr.idproduto = i.idproduto
     WHERE pr.idvendedor = :id_vendedor
       AND p.status_envio = 'entregue'
@@ -29,7 +29,6 @@ $stmt->execute();
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 $vendas_concluidas = $result['total'];
 
-
 $stmt = $conn->prepare("SELECT reputacao FROM vendedor WHERE idvendedor = ?");
 $stmt->execute([$id_vendedor]);
 $dados_vendedor = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -37,35 +36,45 @@ $reputacao = $dados_vendedor ? $dados_vendedor['reputacao'] : 0;
 
 $stmt = $conn->prepare("
     SELECT 
-        p.idpedido,
+        i.iditem_pedido,
+        i.idpedido,
         p.data_pedido,
-        p.status_envio,
+        i.status_envio,
         i.idproduto,
         pr.nome AS produto_nome,
-        u.nome_completo AS comprador_nome
-    FROM pedido p
-    JOIN item_pedido i ON i.idpedido = p.idpedido
-    JOIN produto pr ON pr.idproduto = i.idproduto
-    JOIN usuario u ON u.idusuario = p.idusuario
+        u.nome_completo AS comprador_nome,
+        i.codigo_rastreio_item,
+        i.servico_frete_item,
+        i.prazo_item
+    FROM item_pedido i
+    INNER JOIN pedido p ON p.idpedido = i.idpedido
+    INNER JOIN produto pr ON pr.idproduto = i.idproduto
+    INNER JOIN usuario u ON u.idusuario = p.idusuario
     WHERE pr.idvendedor = :id_vendedor
-    ORDER BY p.data_pedido DESC
+    ORDER BY p.data_pedido DESC, i.iditem_pedido DESC
+    LIMIT 5
 ");
 $stmt->bindValue(':id_vendedor', $id_vendedor, PDO::PARAM_INT);
 $stmt->execute();
 $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $notificacoes = [];
-
-if ($id_vendedor) {
-  $sql = "SELECT n.idnotificacoes, n.mensagem, n.lida, n.data_envio, u.nome_completo AS usuario_nome
-          FROM notificacoes n
-          JOIN usuario u ON n.idusuario = u.idusuario
-          WHERE n.idvendedor = :id
-          ORDER BY n.data_envio DESC";
-  $stmt = $conn->prepare($sql);
-  $stmt->execute([':id' => $id_vendedor]);
-  $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+$sql = "
+    SELECT 
+        n.idnotificacoes,
+        n.mensagem,
+        n.lida,
+        n.data_envio,
+        u.nome_completo AS usuario_nome
+    FROM notificacoes n
+    JOIN usuario u ON n.idusuario = u.idusuario
+    WHERE n.idvendedor = :id
+    ORDER BY n.data_envio DESC
+    LIMIT 5
+";
+$stmt = $conn->prepare($sql);
+$stmt->execute([':id' => $id_vendedor]);
+$notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -464,36 +473,24 @@ if ($id_vendedor) {
           <th>Produto</th>
           <th>Comprador</th>
           <th>Status</th>
-          <th>Data de Envio</th>
+          <th>Data do Pedido</th>
         </tr>
 
-        <?php if ($pedidos): ?>
+        <?php if (!empty($pedidos)): ?>
             <?php $contador = 1; ?>
-            <?php foreach ($pedidos as $pedido): ?>
-                <?php
-                    $status = strtolower($pedido['status_envio']);
-                    if ($status === 'entregue') {
-                        $classeStatus = 'status-entregue';
-                    } elseif ($status === 'enviado' || $status === 'aguardando envio') {
-                        $classeStatus = 'status-pendente';
-                    } elseif ($status === 'cancelado') {
-                        $classeStatus = 'status-cancelado';
-                    } else {
-                        $classeStatus = 'status-pendente';
-                    }
-                ?>
+            <?php foreach ($pedidos as $item): ?>         
                 <tr>
                     <td><?= $contador ?></td>
-                    <td><?= htmlspecialchars($pedido['produto_nome']) ?></td>
-                    <td><?= htmlspecialchars($pedido['comprador_nome'] ?? '') ?></td>
-                    <td class="<?= $classeStatus ?>"><?= strtoupper($pedido['status_envio']) ?></td>
-                    <td><?= date('d/m/Y', strtotime($pedido['data_pedido'])) ?></td>
+                    <td><?= htmlspecialchars($item['produto_nome']) ?></td>
+                    <td><?= htmlspecialchars($item['comprador_nome'] ?? '') ?></td>
+                    <td><?= strtoupper(htmlspecialchars($item['status_envio'] ?? '')) ?></td>
+                    <td><?= date('d/m/Y', strtotime($item['data_pedido'])) ?></td>
                 </tr>
                 <?php $contador++; ?>
             <?php endforeach; ?>
         <?php else: ?>
             <tr>
-                <td colspan="5" style="text-align:center;">Nenhum pedido realizado</td>
+                <td colspan="5" style="text-align:center;">Nenhum pedido encontrado</td>
             </tr>
         <?php endif; ?>
       </table>
