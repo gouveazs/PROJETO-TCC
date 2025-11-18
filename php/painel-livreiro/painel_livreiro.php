@@ -34,6 +34,23 @@ $stmt->execute([$id_vendedor]);
 $dados_vendedor = $stmt->fetch(PDO::FETCH_ASSOC);
 $reputacao = $dados_vendedor ? $dados_vendedor['reputacao'] : 0;
 
+$frase_reputacao = "Ainda é só o começo, com boas avaliações, entregas no prazo e feedback dos clientes, sua reputação aumenta e consegue aumentar sua clientela!";
+if ($reputacao = 80) {
+    $frase_reputacao = "Sua reputação está excelente! Continue nesse ritmo para se tornar referência no marketplace.";
+} elseif ($reputacao >= 60) {
+    $frase_reputacao = "Parabéns! Sua reputação está muito boa, mantenha o atendimento e a qualidade para crescer ainda mais.";
+} elseif ($reputacao >= 35) {
+    $frase_reputacao = "Ainda é só o começo, com boas avaliações, entregas no prazo e feedback dos clientes, sua reputação aumenta e consegue aumentar sua clientela!";
+} elseif ($reputacao >= 20) {
+    $frase_reputacao = "Atenção! Sua reputação está baixa, invista em melhor atendimento e mantenha a qualidade para reconquistar clientes.";
+} else {
+    $frase_reputacao = "Sua reputação está crítica. Foque urgentemente no atendimento e qualidade, ou poderá ter restrições na plataforma.";
+} 
+
+if ($reputacao >= 100) {
+  $frase_reputacao = "Parabéns! Você é o fodão do sitema, sua reputação está em 100%. Continue assim! A plataforma Entre Linhas agradece.";
+}
+
 $stmt = $conn->prepare("
     SELECT 
         i.iditem_pedido,
@@ -88,6 +105,10 @@ $stmt->bindValue(':idvendedor', $id_vendedor, PDO::PARAM_INT);
 $stmt->execute();
 $ultimas_avaliacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$taxa_sucesso = 0;
+if ($anuncios_publicadas > 0) {
+    $taxa_sucesso = round(($vendas_concluidas / $anuncios_publicadas) * 100, 1);
+}
 ?>
 
 <!DOCTYPE html>
@@ -466,12 +487,12 @@ $ultimas_avaliacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?= $reputacao ?>%
           </div>
         </div>
-        <p class="info">Ainda é só o começo, com boas avaliações, entregas no prazo e feedback dos clientes, sua reputação aumenta e consegue aumentar sua clientela!</p>
+        <p class="info"> <?= $frase_reputacao ?></p>
       </div>
       <div class="card">
         <h2>Taxa de Vendas</h2>
         <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
-          <p><strong>Taxa de sucesso:</strong> 0%</p>
+          <p><strong>Taxa de sucesso:</strong> <?php echo $taxa_sucesso; ?>%</p>
           <p><strong>Vendas concluídas:</strong> <?php echo $vendas_concluidas; ?></p>
           <p><strong>Anúncios publicadas:</strong> <?php echo $anuncios_publicadas; ?></p>
         </div>

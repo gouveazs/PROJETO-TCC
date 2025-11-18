@@ -11,37 +11,39 @@ if (!$nome_vendedor) {
 
 include '../conexao.php';
 
-// Faturamento do mês (soma dos itens entregues deste vendedor neste mês)
+/* 1. Faturamento e vendas detalhadas do mês, subtraindo valor do frete */
 $stmt = $conn->prepare("
-    SELECT SUM(i.quantidade * pr.preco) AS faturamento
+    SELECT 
+        i.idpedido,
+        p.data_pedido,
+        pr.nome AS produto,
+        i.quantidade,
+        pr.preco AS preco_unitario,
+        (i.quantidade * pr.preco) AS total_bruto,
+        i.frete_item,
+        ((i.quantidade * pr.preco) - IFNULL(i.frete_item,0)) AS total_liquido
     FROM item_pedido i
     JOIN pedido p ON p.idpedido = i.idpedido
     JOIN produto pr ON pr.idproduto = i.idproduto
     WHERE pr.idvendedor = :id_vendedor
       AND i.status_envio = 'entregue'
       AND MONTH(p.data_pedido) = MONTH(CURDATE())
-      AND YEAR(p.data_pedido)=YEAR(CURDATE())
+      AND YEAR(p.data_pedido) = YEAR(CURDATE())
+    ORDER BY p.data_pedido DESC, i.idpedido DESC
 ");
 $stmt->bindValue(':id_vendedor', $id_vendedor, PDO::PARAM_INT);
 $stmt->execute();
-$faturamento = $stmt->fetchColumn() ?: 0.00;
+$vendas_detalhadas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Total de pedidos concluídos no mês
-$stmt = $conn->prepare("
-    SELECT COUNT(DISTINCT i.idpedido) AS total_pedidos
-    FROM item_pedido i
-    JOIN pedido p ON p.idpedido = i.idpedido
-    JOIN produto pr ON pr.idproduto = i.idproduto
-    WHERE pr.idvendedor = :id_vendedor
-      AND i.status_envio = 'entregue'
-      AND MONTH(p.data_pedido) = MONTH(CURDATE())
-      AND YEAR(p.data_pedido)=YEAR(CURDATE())
-");
-$stmt->bindValue(':id_vendedor', $id_vendedor, PDO::PARAM_INT);
-$stmt->execute();
-$total_pedidos = $stmt->fetchColumn() ?: 0;
+/* Soma total líquido do mês (subtraindo frete) */
+$total_liquido = 0;
+$total_pedidos = [];
+foreach ($vendas_detalhadas as $linha) {
+    $total_liquido += $linha['total_liquido'];
+    $total_pedidos[$linha['idpedido']] = true;
+}
 
-// Avaliação média do vendedor
+/* Avaliação média do vendedor */
 $stmt = $conn->prepare("
     SELECT AVG(nota) AS media, COUNT(*) AS total_aval
     FROM avaliacoes
@@ -50,27 +52,21 @@ $stmt = $conn->prepare("
 $stmt->bindValue(':id_vendedor', $id_vendedor, PDO::PARAM_INT);
 $stmt->execute();
 $dados_av = $stmt->fetch(PDO::FETCH_ASSOC);
-$media_avaliacao = $dados_av && $dados_av['media'] ? number_format($dados_av['media'], 2, ',', '.') : '0,00';
+$media_avaliacao = $dados_av && $dados_av['media'] ? number_format($dados_av['media'], 2, ',', '.') : '—';
 $total_avaliacoes = $dados_av['total_aval'] ?? 0;
 
-// Produtos
+/* Produtos do vendedor */
 $stmt = $conn->prepare("
-    SELECT pr.nome,
-      SUM(i.quantidade) AS vendas,
-      pr.qtd_estoque,
-      pr.status_estoque
-    FROM produto pr
-    LEFT JOIN item_pedido i ON i.idproduto = pr.idproduto
-    WHERE pr.idvendedor = :id_vendedor
-    GROUP BY pr.idproduto
-    ORDER BY vendas DESC
+    SELECT nome, quantidade, status
+    FROM produto WHERE idvendedor = :id_vendedor
+    ORDER BY idproduto DESC
     LIMIT 10
 ");
 $stmt->bindValue(':id_vendedor', $id_vendedor, PDO::PARAM_INT);
 $stmt->execute();
 $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Últimas 5 avaliações recebidas
+/* Últimas 5 avaliações recebidas */
 $stmt = $conn->prepare("
     SELECT a.nota, a.comentario, a.data_avaliacao, u.nome_completo 
     FROM avaliacoes a
@@ -82,9 +78,6 @@ $stmt = $conn->prepare("
 $stmt->bindValue(':id_vendedor', $id_vendedor, PDO::PARAM_INT);
 $stmt->execute();
 $ultimas_avaliacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Saldo (faturamento - aqui é só um exemplo, adapte se tiver fluxo real de saque)
-$saldo_saque = $faturamento;
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -123,8 +116,6 @@ $saldo_saque = $faturamento;
     .dinheiro-card {max-width:420px;}
     .dados-card {min-width:260px;}
     .grana {color:var(--dinheiro);font-size:2.2rem;letter-spacing:1px;font-weight:700;margin-bottom:10px;}
-    .saque-btn {margin-top:18px;background:var(--dinheiro);color:#fff;border:none;font-weight:600;letter-spacing:1px;border-radius:6px;padding:11px 38px;font-size:1.13rem;cursor:pointer;transition: background 0.23s;}
-    .saque-btn:hover {background:#11693a;}
     .table {width:100%;border-collapse:collapse;margin-bottom:15px;font-size:14px;margin-top:18px;background:#fff;}
     .table th, .table td {border:1px solid var(--card-border);padding:10px 7px;text-align:left;}
     .table th {background-color:#f3ede7;color:var(--text-dark);}
@@ -175,40 +166,72 @@ $saldo_saque = $faturamento;
       <?php endif; ?>
       <div class="header-text">
         <h1><?= htmlspecialchars($nome_vendedor) ?></h1>
-        <p>Veja seus resultados, saldo disponível e avaliações recebidas</p>
+        <p>Veja suas vendas detalhadas, saldo do mês e avaliações recebidas</p>
       </div>
     </div>
     <div class="cards">
       <div class="dinheiro-card">
-        <h2>Saldo disponível para saque</h2>
-        <div class="grana">R$ <?= number_format($saldo_saque, 2, ',', '.') ?></div>
-        <?= $saldo_saque > 0 ? '<form method="post" action="solicitar_saque.php"><input type="hidden" name="valor" value="'.htmlspecialchars($saldo_saque).'"><button type="submit" class="saque-btn">SOLICITAR SAQUE</button></form>' : '<div class="dinheiro-bar">Nenhum valor disponível para saque no momento.</div>'; ?>
+        <h2>Total Líquido do mês<br><small style="font-weight:normal;font-size:.98em;">(valor entregue - fretes)</small></h2>
+        <div class="grana">R$ <?= number_format($total_liquido,2,',','.') ?></div>
       </div>
       <div class="dados-card">
         <h2>Resumo do mês</h2>
-        <b>Faturamento:</b> R$ <?= number_format($faturamento, 2, ',', '.') ?><br>
-        <b>Pedidos concluídos:</b> <?= (int)$total_pedidos ?><br>
-        <b>Avaliação média:</b> <?= $total_avaliacoes > 0 ? "<span title='{$total_avaliacoes} avaliações'>⭐ $media_avaliacao</span>" : "—" ?>
+        <b>Pedidos entregues:</b> <?= count($total_pedidos) ?><br>
+        <b>Avaliação média:</b>
+          <?php if ($total_avaliacoes): ?>
+            <span title="<?= $total_avaliacoes ?> avaliações">⭐ <?= $media_avaliacao ?></span>
+          <?php else: ?>
+            —
+          <?php endif; ?>
       </div>
     </div>
+
+    <h2>Vendas Detalhadas do Mês (entregues)</h2>
+    <div style="overflow-x:auto;">
+      <table class="table">
+        <tr>
+            <th>Pedido</th>
+            <th>Data</th>
+            <th>Produto</th>
+            <th>Qtd</th>
+            <th>Valor Bruto</th>
+            <th>Frete</th>
+            <th>Valor Líquido</th>
+        </tr>
+        <?php if ($vendas_detalhadas): ?>
+          <?php foreach ($vendas_detalhadas as $v): ?>
+            <tr>
+                <td><?= (int)$v['idpedido'] ?></td>
+                <td><?= date('d/m/Y', strtotime($v['data_pedido'])) ?></td>
+                <td><?= htmlspecialchars($v['produto']) ?></td>
+                <td><?= (int)$v['quantidade'] ?></td>
+                <td>R$ <?= number_format($v['total_bruto'], 2, ',', '.') ?></td>
+                <td>R$ <?= number_format($v['frete_item'], 2, ',', '.') ?></td>
+                <td><b>R$ <?= number_format($v['total_liquido'], 2, ',', '.') ?></b></td>
+            </tr>
+          <?php endforeach; ?>
+        <?php else: ?>
+          <tr><td colspan="7" style="text-align:center;">Nenhuma venda entregue este mês</td></tr>
+        <?php endif; ?>
+      </table>
+    </div>
+    <br>
     <h2>Seus Produtos</h2>
     <div style="overflow-x:auto;">
       <table class="table">
         <tr>
-          <th>Produto</th><th>Vendas</th><th>Estoque</th><th>Status</th><th>Média vendedor</th>
+          <th>Produto</th><th>Qtd em Estoque</th><th>Status</th>
         </tr>
-        <?php if (count($produtos)): ?>
+        <?php if ($produtos): ?>
           <?php foreach ($produtos as $pr): ?>
             <tr>
                 <td><?= htmlspecialchars($pr['nome']) ?></td>
-                <td><?= (int)$pr['vendas'] ?></td>
-                <td><?= (int)($pr['qtd_estoque'] ?? 0) ?></td>
-                <td><?= htmlspecialchars($pr['status_estoque'] ?? '') ?></td>
-                <td><?= $total_avaliacoes > 0 ? "⭐ $media_avaliacao" : '—' ?></td>
+                <td><?= (int)($pr['quantidade'] ?? 0) ?></td>
+                <td><?= htmlspecialchars($pr['status'] ?? '') ?></td>
             </tr>
           <?php endforeach; ?>
         <?php else: ?>
-          <tr><td colspan="5" style="text-align:center;">Nenhum produto encontrado.</td></tr>
+          <tr><td colspan="3" style="text-align:center;">Nenhum produto encontrado.</td></tr>
         <?php endif; ?>
       </table>
     </div>
