@@ -18,9 +18,12 @@ if ($filtro_tipo === 'compra') {
 }
 
 $stmt = $conn->prepare("
-    SELECT n.*, u.nome_completo AS nome_usuario, u.foto_de_perfil AS foto_usuario
+    SELECT n.*, u.nome_completo AS nome_usuario, u.foto_de_perfil AS foto_usuario, a.comentario AS comentario_avaliacao
     FROM notificacoes n
     INNER JOIN usuario u ON u.idusuario = n.idusuario
+    LEFT JOIN avaliacoes a
+        ON a.idusuario = n.idusuario AND a.idvendedor = n.idvendedor
+        AND n.tipo = 'avaliação'
     $where
     ORDER BY n.lida ASC, n.data_envio DESC
 ");
@@ -105,7 +108,13 @@ $lidas = array_filter($notificacoes, fn($n) => $n['lida']);
                     <div class="cabecalho">
                         <strong><?= htmlspecialchars($n['nome_usuario']) ?></strong>
                     </div>
-                    <div class="mensagem"><?= htmlspecialchars($n['mensagem']) ?></div>
+                    <div class="mensagem">
+                        <?php if ($n['tipo'] === 'avaliação' || $n['tipo'] === 'avaliacao'): ?>
+                            <strong>Avaliação:</strong> <?= htmlspecialchars($n['comentario_avaliacao'] ?? 'Sem comentário') ?>
+                        <?php else: ?>
+                            <?= htmlspecialchars($n['mensagem']) ?>
+                        <?php endif; ?>
+                    </div>
                     <div class="data"><?= htmlspecialchars($n['data_envio']) ?></div>
                     <small>Tipo: <?= htmlspecialchars($n['tipo']) ?></small>
                 </div>
@@ -135,7 +144,13 @@ $lidas = array_filter($notificacoes, fn($n) => $n['lida']);
                     <div class="cabecalho">
                         <strong><?= htmlspecialchars($n['nome_usuario'] ?? '') ?></strong>
                     </div>
-                    <div class="mensagem"><?= htmlspecialchars($n['mensagem']) ?></div>
+                    <div class="mensagem">
+                        <?php if ($n['tipo'] === 'avaliação' || $n['tipo'] === 'avaliacao'): ?>
+                            <strong>Avaliação:</strong> <?= htmlspecialchars($n['comentario_avaliacao'] ?? 'Sem comentário') ?>
+                        <?php else: ?>
+                            <?= htmlspecialchars($n['mensagem']) ?>
+                        <?php endif; ?>
+                    </div>
                     <div class="data"><?= htmlspecialchars($n['data_envio']) ?></div>
                     <small>Tipo: <?= htmlspecialchars($n['tipo']) ?></small><br>
                     <a href="pedidos.php">Ver pedido relacionado</a>

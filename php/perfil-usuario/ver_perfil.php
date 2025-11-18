@@ -1,8 +1,4 @@
 <?php
-  ini_set('display_errors',1);
-  ini_set('display_startup_errors',1);
-  error_reporting(E_ALL);
-
   session_start();
 
   if (!isset($_SESSION['nome_usuario'])) {
@@ -14,6 +10,7 @@
 
   $nome = $_SESSION['nome_usuario'];
   $foto_de_perfil = isset($_SESSION['foto_de_perfil']) ? $_SESSION['foto_de_perfil'] : null;
+  $idusuario = isset($_SESSION['idusuario']) ? $_SESSION['idusuario'] : null;
 
   $stmt = $conn->prepare("SELECT * FROM usuario WHERE nome = ?");
   $stmt->execute([$nome]);
@@ -26,6 +23,19 @@
 
   // Verificar qual aba está ativa (perfil ou compras)
   $aba_ativa = isset($_GET['aba']) ? $_GET['aba'] : 'perfil';
+
+  $stmt = $conn->prepare("SELECT * FROM conversa WHERE idusuario = ?");
+  $stmt->execute([$idusuario]);
+  $conversas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $chats = [];
+  foreach ($conversas as $c) {
+      $idvendedor = $c['idvendedor'];
+      if (!isset($usuarios[$idusuario])) {
+          $stmt = $conn->prepare("SELECT nome_completo, foto_de_perfil FROM vendedor WHERE idvendedor = ?");
+          $stmt->execute([$idvendedor]);
+          $chats[$idvendedor] = $stmt->fetch(PDO::FETCH_ASSOC);
+      }
+  }
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -654,6 +664,7 @@
                                 pr.idproduto,
                                 pr.nome,
                                 pr.preco,
+                                pr.idvendedor,
                                 (SELECT img.imagem FROM imagens img WHERE img.idproduto = pr.idproduto LIMIT 1) AS imagem
                             FROM item_pedido i
                             JOIN produto pr ON i.idproduto = pr.idproduto
@@ -726,7 +737,7 @@
 
                             // 🟢 Botão de avaliação (só aparece se status for enviado ou entregue)
                             if ($statusEnvio === 'enviado' || $statusEnvio === 'entregue') {
-                                echo '<a href="avaliar.php?idproduto=' . $item['idproduto'] . '&idpedido=' . $pedido['idpedido'] . '" class="btn-avaliar">Fazer Avaliação</a>';
+                              echo '<a href="avaliar.php?idproduto=' . $item['idproduto'] . '&idpedido=' . $pedido['idpedido'] . '&idvendedor=' . $item['idvendedor'] . '" class="btn-avaliar">Fazer Avaliação</a>';
                             }
 
                             echo '</div>'; // frete-detalhes
@@ -744,6 +755,39 @@
               ?>
             </div>
           </div>
+        <?php elseif ($aba_ativa === 'Chats'): ?>
+          <div class="compras-container">
+            <h3>MEUS CHATS</h3>
+            <?php foreach ($conversas as $c): 
+              $idvendedor = $c['idvendedor'];
+              $user = $chats[$idvendedor] ?? null;
+              $nome_vendedor = $user['nome_completo'] ?? 'Usuário desconhecido';
+              $foto = $user['foto_de_perfil'] ?? null;
+            ?>
+            <div class="info" style="margin-bottom: 20px; border: 1px solid #ccc; padding: 10px; border-radius: 8px;">
+                <!-- Mostra a foto -->
+                <?php if ($foto): ?>
+                    <img src="data:image/jpeg;base64,<?= base64_encode($foto) ?>" 
+                        alt="Foto de <?= htmlspecialchars($nome_vendedor) ?>" 
+                        width="50" height="50" style="border-radius: 50%; object-fit: cover;">
+                <?php else: ?>
+                    <img src="../img/default-user.png" alt="Sem foto" width="50" height="50" style="border-radius: 50%; object-fit: cover;">
+                <?php endif; ?>
+
+                <!-- Mostra o nome -->
+                <h3><?= htmlspecialchars($nome_vendedor) ?></h3>
+
+                <!-- Infos da conversa -->
+                <p>Data de criação: <?= htmlspecialchars($c['criado_em']) ?></p>
+                <p>Status: <?= htmlspecialchars($c['status']) ?></p>
+
+                <!-- Link para o chat -->
+                <a href="../chat/chat.php?idconversa=<?= $c['idconversa'] ?>&idusuario=<?= $c['idusuario'] ?>&idvendedor=<?= $idvendedor ?>&remetente_tipo=usuario">
+                    Ir para a conversa
+                </a>
+                <hr>
+            </div>
+            <?php endforeach; ?>
         <?php endif; ?>
       </div>
     </div>

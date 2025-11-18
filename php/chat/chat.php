@@ -36,7 +36,7 @@ if (!$conversa) {
 // ==== DEFINE TÍTULO E PÁGINA DE VOLTAR ====
 if ($remetente_tipo === 'usuario') {
     $titulo_pagina = "Conversa com o vendedor: " . htmlspecialchars($vendedor['nome_completo']);
-    $pagina_voltar = "../perfil-usuario/ver_perfil.php";
+    $pagina_voltar = "../perfil-usuario/ver_perfil.php?aba=Chats";
 } else {
     $titulo_pagina = "Conversa com o usuário: " . htmlspecialchars($usuario['nome']);
     $pagina_voltar = "../painel-livreiro/lista-chats.php";

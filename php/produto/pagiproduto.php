@@ -14,7 +14,7 @@ $idproduto = (int) $_GET['id'];
 
 try {
     $stmt = $conn->prepare("
-        SELECT p.*, i.imagem, v.nome_completo, v.email, c.nome AS nome_categoria
+        SELECT p.*, i.imagem, v.nome_completo, v.email, v.idvendedor, c.nome AS nome_categoria
         FROM produto p
         LEFT JOIN imagens i ON i.idproduto = p.idproduto
         LEFT JOIN vendedor v ON v.idvendedor = p.idvendedor
@@ -33,6 +33,7 @@ try {
     $imagens = array_filter(array_column($resultados, 'imagem'));
     $nome_produto = $produto['nome'];
 
+    // Produtos relacionados
     $stmt2 = $conn->prepare("SELECT * FROM produto WHERE nome LIKE ? AND idproduto != ?");
     $stmt2->execute(['%' . $nome_produto . '%', $idproduto]);
     $ofertas = $stmt2->fetchAll(PDO::FETCH_ASSOC);
@@ -41,10 +42,11 @@ try {
     die("Erro de conexão: " . $e->getMessage());
 }
 
+$idvendedor = $produto['idvendedor'];
+
 // Buscar o CEP do vendedor
-$cep_vendedor = $produto['cep'] ?? null; // se já estiver vindo da query
+$cep_vendedor = $produto['cep'] ?? null;
 if (!$cep_vendedor) {
-    // busca caso não venha na query principal
     $stmtV = $conn->prepare("SELECT cep FROM vendedor WHERE idvendedor = :id");
     $stmtV->execute([':id' => $produto['idvendedor']]);
     $cep_vendedor = $stmtV->fetchColumn();
@@ -58,12 +60,39 @@ if (isset($_SESSION['idusuario'])) {
     $cep_usuario = $stmtU->fetchColumn();
 }
 
+// Atualizar CEP manual
 if (!empty($_POST['cep_usuario'])) {
     $_SESSION['cep_usuario'] = preg_replace('/[^0-9]/', '', $_POST['cep_usuario']);
     header("Location: " . $_SERVER['REQUEST_URI']);
     exit;
 }
+
+$stmtA = $conn->prepare("
+    SELECT 
+        a.nota,
+        a.comentario,
+        a.data_avaliacao,
+        u.nome_completo AS usuario_nome
+    FROM avaliacoes a
+    INNER JOIN usuario u ON u.idusuario = a.idusuario
+    WHERE a.idvendedor = :idvendedor
+    ORDER BY a.data_avaliacao DESC
+");
+$stmtA->bindValue(':idvendedor', $idvendedor, PDO::PARAM_INT);
+$stmtA->execute();
+$avaliacoes = $stmtA->fetchAll(PDO::FETCH_ASSOC);
+
+/* Média das notas */
+$mediaAvaliacao = 0;
+if ($avaliacoes) {
+    $soma = 0;
+    foreach ($avaliacoes as $av) {
+        $soma += $av['nota'];
+    }
+    $mediaAvaliacao = $soma / count($avaliacoes);
+}
 ?>
+
 
 <!DOCTYPE html> 
 <html lang="pt-BR"> 
@@ -758,80 +787,13 @@ if (!empty($_POST['cep_usuario'])) {
         }
 
         /* ABAS DE CONTEÚDO */
-        .product-tabs {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            margin-top: 25px;
-            border: 1px solid #ddd;
+        .product-tabs ul { display: flex; list-style: none; padding: 0; margin:0; background: #f5f5f5; border-bottom: 1px solid #ddd;}
+        .product-tabs ul li {
+            padding: 13px 25px; cursor: pointer; font-weight: bold; color: #666; border-bottom: 3px solid transparent; transition: 0.15s;
         }
-        .product-tabs ul {
-            display: flex;
-            list-style: none;
-            border-bottom: 2px solid #eee;
-            padding: 0;
-            margin: 0;
-            background: #f8f9fa;
-        }
-        .product-tabs li {
-            padding: 18px 30px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: #777;
-            transition: all 0.3s;
-            border-bottom: 3px solid transparent;
-        }
-        .product-tabs li.active {
-            color: var(--marrom);
-            border-bottom: 3px solid var(--marrom);
-            background: white;
-        }
-        .product-tabs li:hover {
-            color: var(--marrom);
-            background-color: #f8f9fa;
-        }
-        .tab-content {
-            padding: 25px;
-            min-height: 200px;
-        }
-        .tab-content div {
-            display: none;
-            line-height: 1.6;
-        }
-        .tab-content div.active {
-            display: block;
-        }
-        .tab-content h4 {
-            color: var(--marrom);
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-        .tab-content ul {
-            margin-left: 20px;
-            margin-bottom: 20px;
-        }
-        .tab-content li {
-            margin-bottom: 10px;
-            font-size: 1rem;
-            color: #555;
-            line-height: 1.5;
-        }
-        .tab-content div strong {
-            color: var(--marrom);
-            font-weight: 600;
-        }
-
-        /* ESTILOS PARA A SINOPSE - MAIS LEGÍVEL */
-        .tab-content div.active p {
-            font-size: 1.05rem;
-            line-height: 1.7;
-            color: #444;
-            text-align: justify;
-            margin-bottom: 15px;
-        }
+        .product-tabs ul li.active { color: #006633; border-bottom: 3px solid #006633; background: #fff; }
+        .tab-content > div { display: none; padding: 25px 15px 10px 5px; }
+        .tab-content > div.active { display: block; }
 
         .footer { 
             margin-left: 250px; 
@@ -958,7 +920,7 @@ if (!empty($_POST['cep_usuario'])) {
                     <li><a href="../cadastro/cadastroVendedor.php"><img src="../../imgs/querovende.png" alt="Quero Vender" style="width:20px; margin-right:10px;"> Quero vender</a></li>
                     <li><a href="../login/loginVendedor.php"><img src="../../imgs/entrarconta.png" alt="Entrar" style="width:20px; margin-right:10px;"> Painel do Livreiro</a></li>
                 <?php else: ?>
-                    <li><a href="../perfil-usuario/ver_perfil.php"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
+                    <li><a href="../perfil-usuario/ver_perfil.php?aba=Meu Perfil"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
                     <li><a href="../login/logout.php"><img src="../../imgs/sair.png" alt="Sair" style="width:20px; margin-right:10px;"> Sair</a></li>
                 <?php endif; ?>
             </ul> 
@@ -980,13 +942,30 @@ if (!empty($_POST['cep_usuario'])) {
             <div class="rating-stock">
                 <div class="rating">
                     <div class="rating-stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
+                        <?php
+                            if ($mediaAvaliacao) {
+                                $fullStars = floor($mediaAvaliacao);
+                                $halfStar = ($mediaAvaliacao - $fullStars >= 0.5);
+                                for ($i = 1; $i <= 5; $i++) {
+                                    if ($i <= $fullStars) {
+                                        echo '<i class="fas fa-star"></i>';
+                                    } elseif ($halfStar && $i == $fullStars + 1) {
+                                        echo '<i class="fas fa-star-half-alt"></i>';
+                                    } else {
+                                        echo '<i class="far fa-star"></i>';
+                                    }
+                                }
+                            } else {
+                                // Se não há avaliações
+                                for ($i = 1; $i <= 5; $i++) {
+                                    echo '<i class="far fa-star"></i>';
+                                }
+                            }
+                        ?>
                     </div>
-                    <a href="#" class="rating-count"> 4.270 avaliações </a>
+                    <span class="rating-count">
+                        <?= number_format($mediaAvaliacao, 1, ',', '') ?> (<?= count($avaliacoes) ?> avaliação<?= count($avaliacoes) != 1 ? 's' : '' ?>)
+                    </span>
                 </div>
                 <div class="in-stock">
                     <i class="fas fa-check-circle"></i> Em estoque
@@ -1056,12 +1035,12 @@ if (!empty($_POST['cep_usuario'])) {
                 
                 <!-- Abas de conteúdo -->
                 <div class="product-tabs">
-                    <ul>
-                        <li class="active" onclick="changeTab(0)">Sinopse</li>
-                        <li onclick="changeTab(1)">Detalhes</li>
-                        <li onclick="changeTab(2)">Avaliações</li>
+                    <ul id="product-tabs-list">
+                        <li class="active">Sinopse</li>
+                        <li>Detalhes</li>
+                        <li>Avaliações</li>
                     </ul>
-                    <div class="tab-content">
+                    <div class="tab-content" id="product-tab-content">
                         <div class="active">
                             <p><?= htmlspecialchars($produto['descricao']) ?></p>
                         </div>
@@ -1079,28 +1058,19 @@ if (!empty($_POST['cep_usuario'])) {
                         <div>
                             <h4>Avaliações dos clientes</h4>
                             <p><strong>4.7 de 5 estrelas</strong> (8.443 avaliações de clientes)</p>
-                            
-                            <div style="margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                                <p><strong>Maria Santos:</strong> "Uma obra fascinante que nos faz refletir sobre a condição humana. A entrega foi rápida e o livro chegou em perfeito estado."</p>
-                                <div style="color: #ffc107;">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                            </div>
-                            
-                            <div style="margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                                <p><strong>João Silva:</strong> "Leitura obrigatória para quem quer entender a literatura do século XX. A tradução é excelente e as notas explicativas ajudam muito."</p>
-                                <div style="color: #ffc107;">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                </div>
-                            </div>
+                            <?php if ($avaliacoes): ?>
+                                <?php foreach ($avaliacoes as $av): ?>
+                                    <div class="avaliacao-item">
+                                        <strong><?= htmlspecialchars($av['usuario_nome']) ?></strong><br>
+                                        Nota: <?= str_repeat("⭐", $av['nota']) ?><br>
+                                        <em><?= htmlspecialchars($av['comentario']) ?></em><br>
+                                        <small><?= date('d/m/Y H:i', strtotime($av['data_avaliacao'])) ?></small>
+                                    </div>
+                                    <hr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p>Sem avaliações ainda.</p>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -1299,16 +1269,9 @@ if (!empty($_POST['cep_usuario'])) {
                     
                     <div class="buy-options">
                         <div class="buy-option">
-                            <input type="checkbox" id="buy-later">
-                            <label for="buy-later">Adicionar à lista de desejos</label>
-                        </div>
-                        <div class="buy-option">
                             <a href="../chat/chat.php?idvendedor=<?= $produto['idvendedor'] ?>&remetente_tipo=usuario">
                                 <i class="fas fa-comments"></i> Falar com vendedor
                             </a>
-                        </div>  
-                        <div class="buy-option">
-                            <a href="#"><i class="fas fa-gift"></i> Presentear</a>
                         </div>
                         <div class="buy-option">
                             <?php
@@ -1389,6 +1352,7 @@ if (!empty($_POST['cep_usuario'])) {
     </div> 
     
     <script>
+        
         // Funções para o carrossel de imagens
         let currentSlide = 0;
         const slides = document.querySelectorAll('.carousel-item');
@@ -1438,22 +1402,19 @@ if (!empty($_POST['cep_usuario'])) {
             }, 5000);
         });
         
-        // Função para as abas
-        function changeTab(index) {
-            // Remove a classe active de todas as abas
-            const tabs = document.querySelectorAll('.product-tabs li');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            
-            // Adiciona a classe active à aba clicada
-            tabs[index].classList.add('active');
-            
-            // Remove a classe active de todos os conteúdos
-            const contents = document.querySelectorAll('.tab-content div');
-            contents.forEach(content => content.classList.remove('active'));
-            
-            // Adiciona a classe active ao conteúdo correspondente
-            contents[index].classList.add('active');
-        }
+       document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('#product-tabs-list li');
+            const contents = document.querySelectorAll('#product-tab-content > div');
+            tabs.forEach((tab, idx) => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+                    tab.classList.add('active');
+                    if (contents[idx]) contents[idx].classList.add('active');
+                });
+            });
+        });
+
     </script>
 </body> 
 </html>

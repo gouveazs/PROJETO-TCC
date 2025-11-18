@@ -56,7 +56,7 @@
       'Cem Anos de Solidão',
       'A Revolução dos Bichos',
       'O Conto da Aia',
-      'Amor e Azeitonas',
+      'Amor e azeitonas',
       'As Vantagens de Ser Invisível'
     ) AND p.status = 'Disponivel'
   ");
@@ -81,7 +81,7 @@
         LIMIT 1
       )
     WHERE p.nome IN (
-      'Daisy Jones and The Six',
+      'Daisy Jone & The Six',
       'A Menina que Roubava Livros',
       'Extraordinário',
       'Relatos de um Gato Viajante',
@@ -109,7 +109,7 @@
         LIMIT 1
       )
     WHERE p.nome IN (
-      'Divinos Reais',
+      'Divinos rivais',
       'Em rota de colisão',
       'A Biblioteca da Meia-Noite'
     ) AND p.status = 'Disponivel'

@@ -22,7 +22,7 @@ $stmt = $conn->prepare("
     INNER JOIN pedido p ON p.idpedido = i.idpedido
     INNER JOIN produto pr ON pr.idproduto = i.idproduto
     WHERE pr.idvendedor = :id_vendedor
-      AND p.status_envio = 'entregue'
+      AND i.status_envio = 'entregue'
 ");
 $stmt->bindValue(':id_vendedor', $id_vendedor, PDO::PARAM_INT);
 $stmt->execute();
@@ -75,6 +75,18 @@ $sql = "
 $stmt = $conn->prepare($sql);
 $stmt->execute([':id' => $id_vendedor]);
 $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$stmt = $conn->prepare("
+    SELECT a.nota, a.comentario, a.data_avaliacao, u.nome_completo 
+    FROM avaliacoes a
+    INNER JOIN usuario u ON u.idusuario = a.idusuario
+    WHERE a.idvendedor = :idvendedor
+    ORDER BY a.data_avaliacao DESC
+    LIMIT 5
+");
+$stmt->bindValue(':idvendedor', $id_vendedor, PDO::PARAM_INT);
+$stmt->execute();
+$ultimas_avaliacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -500,7 +512,25 @@ $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div class="card">
         <h2>Avaliações de Clientes</h2>
         <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
-        <p>Nenhuma avaliação recebida ainda.</p>
+          <?php if (!empty($ultimas_avaliacoes)): ?>
+            <?php foreach ($ultimas_avaliacoes as $av): ?>
+                <div style="margin-bottom:15px;padding-bottom:7px;border-bottom:1px solid #eee;">
+                    <strong><?= htmlspecialchars($av['nome_completo']) ?></strong>
+                    <span style="color:#ffd700">
+                        <?php
+                        for ($i=1; $i<=5; $i++) {
+                            if ($i <= $av['nota']) echo "★";
+                            else echo "☆";
+                        }
+                        ?>
+                    </span><br>
+                    <span><?= htmlspecialchars($av['comentario']) ?></span><br>
+                    <small style="color: #666;"><?= date('d/m/Y H:i', strtotime($av['data_avaliacao'])) ?></small>
+                </div>
+            <?php endforeach; ?>
+          <?php else: ?>
+              <p>Nenhuma avaliação recebida ainda.</p>
+          <?php endif; ?>
       </div>
 
       <div class="card"> 
