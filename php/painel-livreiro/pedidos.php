@@ -47,6 +47,10 @@ $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <title>Gerenciar Pedidos - Vendedor</title>
 <link rel="stylesheet" href="../../css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Importando a fonte Playfair Display do Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 <style>
     :root {
         --marrom: #5a4224;
@@ -59,7 +63,7 @@ $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     body { 
         background: var(--background); 
         padding: 20px; 
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Playfair Display', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         color: #333;
     }
     
@@ -89,6 +93,7 @@ $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         gap: 8px;
         font-weight: 500;
         transition: all 0.3s;
+        font-family: 'Playfair Display', serif;
     }
     
     .btn-voltar:hover {
@@ -101,6 +106,7 @@ $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         color: var(--marrom);
         font-weight: 600;
         margin: 0;
+        font-family: 'Playfair Display', serif;
     }
     
     .filtros {
@@ -123,6 +129,7 @@ $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         transition: all 0.3s;
         flex: 1;
         text-align: center;
+        font-family: 'Playfair Display', serif;
     }
     
     .filtros a:last-child {
@@ -161,12 +168,14 @@ $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         margin: 0;
         color: var(--marrom);
         font-weight: 600;
+        font-family: 'Playfair Display', serif;
     }
     
     .pedido-info p {
         margin: 5px 0 0;
         color: var(--cinza-escuro);
         font-size: 0.9rem;
+        font-family: 'Playfair Display', serif;
     }
     
     .badge-status {
@@ -174,6 +183,7 @@ $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         border-radius: 20px;
         font-size: 0.8rem;
         font-weight: 600;
+        font-family: 'Playfair Display', serif;
     }
     
     .badge-aguardando {
@@ -203,11 +213,13 @@ $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         color: var(--verde);
         font-weight: 600;
         font-size: 1rem;
+        font-family: 'Playfair Display', serif;
     }
     
     .info-cliente p {
         margin: 5px 0;
         color: var(--cinza-escuro);
+        font-family: 'Playfair Display', serif;
     }
     
     .produto-item {
@@ -237,17 +249,20 @@ $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     .produto-detalhes p {
         margin: 5px 0;
+        font-family: 'Playfair Display', serif;
     }
     
     .produto-nome {
         font-weight: 600;
         color: var(--marrom);
         margin-bottom: 5px;
+        font-family: 'Playfair Display', serif;
     }
     
     .produto-info {
         color: var(--cinza-escuro);
         font-size: 0.9rem;
+        font-family: 'Playfair Display', serif;
     }
     
     .form-envio {
@@ -262,12 +277,14 @@ $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         margin-top: 5px;
         color: var(--marrom);
         font-size: 0.9rem;
+        font-family: 'Playfair Display', serif;
     }
     
     .form-select, .form-control {
         border: 1px solid var(--cinza-claro);
         border-radius: 6px;
         padding: 8px 12px;
+        font-family: 'Playfair Display', serif;
     }
     
     .form-select:focus, .form-control:focus {
@@ -284,6 +301,7 @@ $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         font-weight: 500;
         transition: all 0.3s;
         margin-top: 10px;
+        font-family: 'Playfair Display', serif;
     }
     
     .btn-atualizar:hover {
@@ -295,6 +313,7 @@ $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         text-align: center;
         padding: 40px 20px;
         color: var(--cinza-escuro);
+        font-family: 'Playfair Display', serif;
     }
     
     .sem-pedidos i {

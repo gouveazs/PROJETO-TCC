@@ -40,6 +40,10 @@ $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <title>Notificações - Painel do Livreiro</title>
 <link rel="stylesheet" href="../../css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Importando a fonte Playfair Display do Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 <style>
     :root {
         --marrom: #5a4224;
@@ -50,7 +54,7 @@ $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Playfair Display', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background: var(--background);
         padding: 20px;
         color: #333;
@@ -76,6 +80,7 @@ $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         padding: 8px 16px;
         border-radius: 6px;
         transition: all 0.3s;
+        font-family: 'Playfair Display', serif;
     }
     
     a.voltar:hover {
@@ -88,6 +93,11 @@ $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         color: var(--marrom);
         margin-bottom: 20px;
         font-weight: 600;
+        font-family: 'Playfair Display', serif;
+    }
+    
+    h3 {
+        font-family: 'Playfair Display', serif;
     }
     
     .filtros {
@@ -106,6 +116,7 @@ $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         background: white;
         transition: all 0.3s;
         font-size: 14px;
+        font-family: 'Playfair Display', serif;
     }
     
     .filtros a.active {
@@ -128,6 +139,7 @@ $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         display: flex;
         align-items: center;
         gap: 10px;
+        font-family: 'Playfair Display', serif;
     }
     
     .notificacao {
@@ -176,6 +188,7 @@ $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     .nome-usuario {
         font-weight: 600;
         color: var(--marrom);
+        font-family: 'Playfair Display', serif;
     }
     
     .tipo-badge {
@@ -185,12 +198,14 @@ $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         padding: 2px 8px;
         border-radius: 12px;
         text-transform: uppercase;
+        font-family: 'Playfair Display', serif;
     }
     
     .mensagem {
         font-size: 15px;
         margin-bottom: 8px;
         line-height: 1.4;
+        font-family: 'Playfair Display', serif;
     }
     
     .data {
@@ -199,6 +214,7 @@ $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         display: flex;
         align-items: center;
         gap: 5px;
+        font-family: 'Playfair Display', serif;
     }
     
     label.check {
@@ -210,6 +226,7 @@ $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         color: var(--verde);
         font-weight: 500;
         white-space: nowrap;
+        font-family: 'Playfair Display', serif;
     }
     
     .sem-notificacoes {
@@ -217,6 +234,7 @@ $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         padding: 30px;
         color: var(--cinza-escuro);
         font-style: italic;
+        font-family: 'Playfair Display', serif;
     }
     
     .link-pedido {
@@ -226,10 +244,15 @@ $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         text-decoration: none;
         font-size: 14px;
         font-weight: 500;
+        font-family: 'Playfair Display', serif;
     }
     
     .link-pedido:hover {
         text-decoration: underline;
+    }
+    
+    p {
+        font-family: 'Playfair Display', serif;
     }
 </style>
 </head>
