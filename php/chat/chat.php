@@ -282,15 +282,7 @@ if ($remetente_tipo === 'usuario') {
             }
         }
         
-        /* Efeitos de transição para mensagens novas */
-        .mensagem {
-            animation: fadeIn 0.3s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+      
     </style>
 </head>
 <body>
