@@ -11,7 +11,11 @@ if (!$idconversa || empty($mensagem)) {
     exit('Mensagem inválida.');
 }
 
-// Define o ID correto do remetente (usuário ou vendedor)
+$palavroes = ["vai toma no cu", "buceta", "piroca", "caralho", "puta", "foder", "fodase", "merda", "porra", "cuzão", "cuzao", "cu", "xota", "xoxota", "bosta", "boceta"];
+foreach ($palavroes as $p) {
+    $mensagem = preg_replace("/\b" . preg_quote($p, '/') . "\b/iu", "###", $mensagem);
+}
+
 $remetente_id = ($remetente_tipo === 'usuario') ? $idusuario : $idvendedor;
 
 $stmt = $conn->prepare("

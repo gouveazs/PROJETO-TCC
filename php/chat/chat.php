@@ -7,11 +7,16 @@ $idvendedor = $_GET['idvendedor'] ?? $_POST['idvendedor'] ?? $_SESSION['id_vende
 $idconversa = $_GET['idconversa'] ?? $_POST['idconversa'] ?? null;
 $remetente_tipo = $_GET['remetente_tipo'] ?? $_POST['remetente_tipo'] ?? 'usuario';
 
-if (!$idusuario || !$idvendedor) {
-    die("Erro: usuário ou vendedor não identificado.");
+if (!$idusuario) {
+    header('Location: ../login/login.php');
+    exit;
 }
 
-// ==== BUSCA DADOS ====
+if (!$idvendedor) {
+    header('Location: ../login/loginVendedor.php');
+    exit;
+}
+
 $stmt = $conn->prepare("SELECT * FROM usuario WHERE idusuario = ?");
 $stmt->execute([$idusuario]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -20,7 +25,6 @@ $stmt = $conn->prepare("SELECT * FROM vendedor WHERE idvendedor = ?");
 $stmt->execute([$idvendedor]);
 $vendedor = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// ==== VERIFICA SE EXISTE CONVERSA ====
 $stmt = $conn->prepare("SELECT idconversa FROM conversa WHERE idusuario = ? AND idvendedor = ?");
 $stmt->execute([$idusuario, $idvendedor]);
 $conversa = $stmt->fetch(PDO::FETCH_ASSOC);

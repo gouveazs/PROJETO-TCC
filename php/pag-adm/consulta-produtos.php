@@ -470,7 +470,7 @@ if (isset($_GET['excluir_id'])) {
           const tbody = document.querySelector("#tabelaProdutos tbody");
 
           try {
-              const res = await fetch("http://localhost/PROJETO-TCC/php/pag-adm/apis/api-produtos.php");
+              const res = await fetch("https://projetosetim.com.br/2025/php3/php/pag-adm/apis/api-produtos.php");
               const produtos = await res.json();
 
               if (!produtos.length) {
