@@ -116,6 +116,52 @@
   ");
   $stmt->execute();
   $produtos_laterais = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  $stmt = $conn->prepare("
+    SELECT 
+      p.idproduto,
+      p.nome,
+      p.preco,
+      i.imagem
+    FROM produto p
+    LEFT JOIN imagens i 
+      ON i.idproduto = p.idproduto
+      AND i.idimagens = (
+        SELECT idimagens
+        FROM imagens
+        WHERE idproduto = p.idproduto
+        ORDER BY idimagens ASC
+        LIMIT 1
+      )
+    WHERE p.nome IN (
+      'Amor e azeitonas'
+    ) AND p.status = 'Disponivel'
+  ");
+  $stmt->execute();
+  $amor = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  $stmt = $conn->prepare("
+    SELECT 
+      p.idproduto,
+      p.nome,
+      p.preco,
+      i.imagem
+    FROM produto p
+    LEFT JOIN imagens i 
+      ON i.idproduto = p.idproduto
+      AND i.idimagens = (
+        SELECT idimagens
+        FROM imagens
+        WHERE idproduto = p.idproduto
+        ORDER BY idimagens ASC
+        LIMIT 1
+      )
+    WHERE p.nome IN (
+      'Box trilogia verão'
+    ) AND p.status = 'Disponivel'
+  ");
+  $stmt->execute();
+  $box = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -1056,13 +1102,19 @@
 <div class="promo-area">
   <div class="destaque-principal">
     <div class="destaque-livro">
-      <div>
-        <p style="color: #5a6b50; font-weight: bold; font-size: 1rem;">Livro de destaque</p>
-        <h2 style="font-size: 2rem; font-weight: bold; margin: 10px 0; color: #5a4224;">Amor & azeitonas</h2>
-        <p style="margin-bottom: 20px; color: #555;">Jenna Evans Welch</p>
-        <a href="php/produto/pagiproduto.php" style="background-color: #5a4224; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">Compre agora</a>
-      </div>
-      <img src="imgs/Amor e Azeitonas.jpg" alt="Livro Amor & Azeitonas" style="max-height: 180px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+      <?php foreach ($amor as $livro): ?>
+        <div>
+          <p style="color: #5a6b50; font-weight: bold; font-size: 1rem;">Livro de destaque</p>
+          <h2 style="font-size: 2rem; font-weight: bold; margin: 10px 0; color: #5a4224;">Amor & azeitonas</h2>
+          <p style="margin-bottom: 20px; color: #555;">Jenna Evans Welch</p>
+          <a href="php/produto/pagiproduto.php?id=<?= $livro['idproduto'] ?>&nome=<?= urlencode($livro['nome']) ?>&preco=<?= $livro['preco'] ?>" style="background-color: #5a4224; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">Clique aqui</a>
+        </div>
+        <?php if (!empty($livro['imagem'])): ?>
+          <img src="data:image/jpeg;base64,<?= base64_encode($livro['imagem']) ?>" alt="<?= htmlspecialchars($livro['nome']) ?>" style="max-height: 180px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+        <?php else: ?>
+          <img src="imgs/sem-imagem.jpg" alt="Sem imagem disponível">
+        <?php endif; ?>
+      <?php endforeach; ?>
     </div>
 
     <div class="produtos-laterais">
@@ -1244,23 +1296,39 @@
 
 <div class="mais-destaque-container">
   <div class="mais-destaque-card">
-    <div class="mais-destaque-imagem">
-      <img src="imgs/colecao-especial.jpg" alt="Coleção Especial de Verão">
-    </div>
-    <div class="mais-destaque-conteudo">
-      <h3>Coleção Especial de Verão</h3>
-      <p>Descubra nossa seleção exclusiva de livros para aproveitar a estação mais quente do ano. 
-        Romances leves, aventuras emocionantes e histórias que vão te transportar para praias paradisíacas.</p>
-      <div class="mais-destaque-preco">
-        <span class="preco-atual">A partir de R$ 29,90</span>
-        <span class="preco-antigo">R$ 49,90</span>
+    <?php foreach ($box as $livro): ?>
+      <div class="mais-destaque-imagem">
+        <img src="data:image/jpeg;base64,<?= base64_encode($livro['imagem']) ?>" alt="<?= htmlspecialchars($livro['nome']) ?>">
       </div>
-      <a href="#" class="btn-destaque">Ver Coleção Completa</a>
-    </div>
+      <div class="mais-destaque-conteudo">
+        <h3>Coleção Especial de Verão - <?= htmlspecialchars($livro['nome']) ?></h3>
+        <p>Descubra nossa seleção exclusiva de livros para aproveitar a estação mais quente do ano. 
+          Romances leves, aventuras emocionantes e histórias que vão te transportar para praias paradisíacas.</p>
+        <div class="mais-destaque-preco">
+          <span class="preco-atual">A partir de R$ <?= number_format($livro['preco'], 2, ',', '.') ?></span>
+          <span class="preco-antigo">R$ 149,90</span>
+        </div>
+        <a href="php/produto/pagiproduto.php?id=<?= $livro['idproduto'] ?>&nome=<?= urlencode($livro['nome']) ?>&preco=<?= $livro['preco'] ?>" class="btn-destaque">Ver Coleção Completa</a>
+      </div>
+    <?php endforeach; ?>
   </div>
 </div>
 
 </div>  
+
+  <?php foreach ($box as $livro): ?>
+    <div class="produto-lateral">
+      <?php if (!empty($livro['imagem'])): ?>
+        <img src="data:image/jpeg;base64,<?= base64_encode($livro['imagem']) ?>" alt="<?= htmlspecialchars($livro['nome']) ?>">
+      <?php else: ?>
+        <img src="imgs/sem-imagem.jpg" alt="Sem imagem disponível">
+      <?php endif; ?>
+      <div>
+        <p style="font-weight: bold; font-size: 0.9rem;"><?= htmlspecialchars($livro['nome']) ?></p>
+        <p style="color: #5a6b50;">R$ R$ <?= number_format($livro['preco'], 2, ',', '.') ?> <span style="color: #999; text-decoration: line-through; font-size: 0.8rem;">R$ 95,00</span></p>
+      </div>
+    </div>
+  <?php endforeach; ?>
 
 <div class="footer">
   &copy; 2025 Entre Linhas - Todos os direitos reservados.
