@@ -22,7 +22,7 @@ $stmt = $conn->prepare("
     INNER JOIN pedido p ON p.idpedido = i.idpedido
     INNER JOIN produto pr ON pr.idproduto = i.idproduto
     WHERE pr.idvendedor = :id_vendedor
-      AND p.status_envio = 'entregue'
+      AND i.status_envio = 'entregue'
 ");
 $stmt->bindValue(':id_vendedor', $id_vendedor, PDO::PARAM_INT);
 $stmt->execute();
@@ -33,6 +33,23 @@ $stmt = $conn->prepare("SELECT reputacao FROM vendedor WHERE idvendedor = ?");
 $stmt->execute([$id_vendedor]);
 $dados_vendedor = $stmt->fetch(PDO::FETCH_ASSOC);
 $reputacao = $dados_vendedor ? $dados_vendedor['reputacao'] : 0;
+
+$frase_reputacao = "Ainda é só o começo, com boas avaliações, entregas no prazo e feedback dos clientes, sua reputação aumenta e consegue aumentar sua clientela!";
+if ($reputacao = 80) {
+    $frase_reputacao = "Sua reputação está excelente! Continue nesse ritmo para se tornar referência no marketplace.";
+} elseif ($reputacao >= 60) {
+    $frase_reputacao = "Parabéns! Sua reputação está muito boa, mantenha o atendimento e a qualidade para crescer ainda mais.";
+} elseif ($reputacao >= 35) {
+    $frase_reputacao = "Ainda é só o começo, com boas avaliações, entregas no prazo e feedback dos clientes, sua reputação aumenta e consegue aumentar sua clientela!";
+} elseif ($reputacao >= 20) {
+    $frase_reputacao = "Atenção! Sua reputação está baixa, invista em melhor atendimento e mantenha a qualidade para reconquistar clientes.";
+} else {
+    $frase_reputacao = "Sua reputação está crítica. Foque urgentemente no atendimento e qualidade, ou poderá ter restrições na plataforma.";
+} 
+
+if ($reputacao >= 100) {
+  $frase_reputacao = "Parabéns! Você é o fodão do sitema, sua reputação está em 100%. Continue assim! A plataforma Entre Linhas agradece.";
+}
 
 $stmt = $conn->prepare("
     SELECT 
@@ -76,6 +93,22 @@ $stmt = $conn->prepare($sql);
 $stmt->execute([':id' => $id_vendedor]);
 $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$stmt = $conn->prepare("
+    SELECT a.nota, a.comentario, a.data_avaliacao, u.nome_completo 
+    FROM avaliacoes a
+    INNER JOIN usuario u ON u.idusuario = a.idusuario
+    WHERE a.idvendedor = :idvendedor
+    ORDER BY a.data_avaliacao DESC
+    LIMIT 5
+");
+$stmt->bindValue(':idvendedor', $id_vendedor, PDO::PARAM_INT);
+$stmt->execute();
+$ultimas_avaliacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$taxa_sucesso = 0;
+if ($anuncios_publicadas > 0) {
+    $taxa_sucesso = round(($vendas_concluidas / $anuncios_publicadas) * 100, 1);
+}
 ?>
 
 <!DOCTYPE html>
@@ -454,12 +487,12 @@ $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?= $reputacao ?>%
           </div>
         </div>
-        <p class="info">Ainda é só o começo, com boas avaliações, entregas no prazo e feedback dos clientes, sua reputação aumenta e consegue aumentar sua clientela!</p>
+        <p class="info"> <?= $frase_reputacao ?></p>
       </div>
       <div class="card">
         <h2>Taxa de Vendas</h2>
         <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
-          <p><strong>Taxa de sucesso:</strong> 0%</p>
+          <p><strong>Taxa de sucesso:</strong> <?php echo $taxa_sucesso; ?>%</p>
           <p><strong>Vendas concluídas:</strong> <?php echo $vendas_concluidas; ?></p>
           <p><strong>Anúncios publicadas:</strong> <?php echo $anuncios_publicadas; ?></p>
         </div>
@@ -500,7 +533,25 @@ $notificacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div class="card">
         <h2>Avaliações de Clientes</h2>
         <hr style="border: 0; height: 1px; background-color: #afafafff;"> <br>
-        <p>Nenhuma avaliação recebida ainda.</p>
+          <?php if (!empty($ultimas_avaliacoes)): ?>
+            <?php foreach ($ultimas_avaliacoes as $av): ?>
+                <div style="margin-bottom:15px;padding-bottom:7px;border-bottom:1px solid #eee;">
+                    <strong><?= htmlspecialchars($av['nome_completo']) ?></strong>
+                    <span style="color:#ffd700">
+                        <?php
+                        for ($i=1; $i<=5; $i++) {
+                            if ($i <= $av['nota']) echo "★";
+                            else echo "☆";
+                        }
+                        ?>
+                    </span><br>
+                    <span><?= htmlspecialchars($av['comentario']) ?></span><br>
+                    <small style="color: #666;"><?= date('d/m/Y H:i', strtotime($av['data_avaliacao'])) ?></small>
+                </div>
+            <?php endforeach; ?>
+          <?php else: ?>
+              <p>Nenhuma avaliação recebida ainda.</p>
+          <?php endif; ?>
       </div>
 
       <div class="card"> 

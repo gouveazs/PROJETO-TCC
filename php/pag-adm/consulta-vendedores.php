@@ -459,7 +459,7 @@
       const tbody = document.querySelector("#tabelaVendedores tbody");
 
       try {
-        const res = await fetch("http://localhost/PROJETO-TCC/php/pag-adm/apis/api-vendedor.php");
+        const res = await fetch("https://projetosetim.com.br/2025/php3/php/pag-adm/apis/api-vendedor.php");
         const vendedores = await res.json();
 
         if (!vendedores.length) {

@@ -319,7 +319,7 @@ include '../conexao.php';
       const tbody = document.querySelector("#tabelaUsuarios tbody");
 
       try {
-        const res = await fetch("http://localhost/PROJETO-TCC/php/pag-adm/apis/api-usuario.php");
+        const res = await fetch("https://projetosetim.com.br/2025/php3/php/pag-adm/apis/api-usuario.php");
         const usuarios = await res.json();
 
         if (!usuarios.length) {

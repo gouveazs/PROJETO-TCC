@@ -4,7 +4,8 @@ include '../conexao.php';
 
 $nome = $_SESSION['nome_usuario'] ?? null;
 if (!$nome) {
-    die("Usuário não logado.");
+  header('Location: ../login/login.php');
+  exit;
 }
 
 // Buscar o id do usuário logado

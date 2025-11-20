@@ -438,7 +438,7 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <li><a href="../cadastro/cadastroVendedor.php">Quero vender</a></li>
           <li><a href="../login/loginVendedor.php">Painel do Livreiro</a></li>
         <?php else: ?>
-          <li><a href="../../php/perfil-usuario/ver_perfil.php"><img src="../../imgs/criarconta.png" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
+          <li><a href="../perfil-usuario/ver_perfil.php?aba=Meu Perfil"><img src="../../imgs/criarconta.png" alt="Perfil" style="width:20px; margin-right:10px;"> Ver perfil</a></li>
           <li><a href="../../php/login/logout.php"><img src="../../imgs/sair.png" style="width:20px; margin-right:10px;"> Sair</a></li>
         <?php endif; ?>
       </ul>
