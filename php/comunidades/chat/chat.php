@@ -6,20 +6,20 @@ $id_usuario = $_SESSION['idusuario'] ?? null;
 $id_comunidade = $_GET['id_comunidade'] ?? null;
 if (!$id_usuario || !$id_comunidade) die("Acesso inválido.");
 
-// Pega info da comunidade
 $stmt = $conn->prepare("SELECT nome, idusuario AS id_criador, status FROM comunidades WHERE idcomunidades = :id");
 $stmt->execute([':id' => $id_comunidade]);
 $comunidade = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$comunidade) die("Comunidade não encontrada.");
 
-// Verifica se usuário participa
 $stmtVer = $conn->prepare("SELECT papel FROM membros_comunidade WHERE idcomunidades = :id AND idusuario = :usuario");
 $stmtVer->execute([':id' => $id_comunidade, ':usuario' => $id_usuario]);
 $participa = $stmtVer->fetch(PDO::FETCH_ASSOC);
 if (!$participa) die("Você não participa desta comunidade.");
 
 $usuario_papel = $participa['papel'];
-$admin = ($id_usuario == $comunidade['id_criador']);
+$admin = ($id_usuario == $comunidade['id_criador']); 
+$mod = ($usuario_papel === 'admin'); 
+$admSistema = $admin || $mod;
 $comunidadeAtiva = ($comunidade['status'] === 'ativa');
 ?>
 <!DOCTYPE html>
@@ -27,161 +27,270 @@ $comunidadeAtiva = ($comunidade['status'] === 'ativa');
 <head>
 <meta charset="UTF-8">
 <title>Chat - <?= htmlspecialchars($comunidade['nome']) ?></title>
-    <style>
-        #chat-box { 
-            width: 100%; 
-            height: 400px; 
-            border: 1px solid #ccc; 
-            overflow-y: auto; 
-            padding: 10px; 
-            margin-bottom: 10px; 
-            background: #f9f9f9; 
-        }
-        .mensagem { 
-            display: flex; 
-            align-items: flex-start; 
-            margin-bottom: 10px; 
-            border-bottom: 1px solid #ddd; 
-            padding-bottom: 5px; 
-        }
-        .mensagem img { 
-            width: 40px; 
-            height: 40px; 
-            border-radius: 50%; 
-            margin-right: 10px; 
-        }
-        .mensagem .conteudo { 
-            max-width: 90%; 
-        }
-    </style>
+
+<style>
+    * {
+    font-family: Arial, sans-serif !important;
+    }
+
+    body {
+        background: #f8f6f2;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+    }
+
+    .container {
+        width: 85%;
+        max-width: 900px;
+        background: #ffffff;
+        margin-top: 40px;
+        padding: 0;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    .chat-header {
+        background: #4d5f3a;
+        color: white;
+        padding: 18px 25px;
+        font-size: 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .admin-menu-btn {
+        background: transparent;
+        border: 1px solid #fff;
+        padding: 6px 14px;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+    }
+
+    .admin-menu {
+        display: none;
+        position: absolute;
+        right: 60px;
+        top: 60px;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        width: 180px;
+        z-index: 20;
+    }
+    .admin-menu a, .admin-menu div {
+        padding: 12px;
+        font-size: 14px;
+        cursor: pointer;
+        display: block;
+        text-decoration: none;
+        color: #333;
+    }
+    .admin-menu a:hover, .admin-menu div:hover {
+        background: #f0f0f0;
+    }
+
+    #chat-box {
+        height: 480px;
+        overflow-y: auto;
+        background: #fcfbf9;
+        padding: 25px;
+    }
+
+    .mensagem {
+        display: flex;
+        margin-bottom: 20px;
+        width: 100%;
+        align-items: flex-start;
+        position: relative;
+    }
+
+    .eu { justify-content: flex-end; }
+
+    .bubble {
+        background: #f1f1f1;
+        padding: 12px 15px;
+        border-radius: 12px;
+        max-width: 65%;
+        position: relative;
+        border: 1px solid #e8e8e8;
+        font-size: 14px;
+    }
+
+    .eu .bubble {
+        background: #4d5f3a;
+        color: white;
+        border: none;
+    }
+
+    .delete-btn {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #c0392b;
+        color: white;
+        border: none;
+        padding: 3px 6px;
+        font-size: 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        display: none;
+    }
+
+    .mensagem:hover .delete-btn {
+        display: block;
+    }
+
+    .timestamp {
+        font-size: 11px;
+        opacity: 0.6;
+        display: block;
+        margin-top: 5px;
+    }
+
+    .avatar-esq, .avatar-dir {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .avatar-esq { margin-right: 12px; }
+    .avatar-dir { margin-left: 12px; }
+
+    .input-area {
+        padding: 15px 20px;
+        background: #f0eee9;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    textarea {
+        width: 100%;
+        resize: none;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #bbbbbb;
+        background: white;
+        font-size: 14px;
+    }
+    button {
+        background: #4d5f3a;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+</style>
 </head>
 <body>
 
-<h2>Chat da Comunidade: <?= htmlspecialchars($comunidade['nome']) ?></h2>
-<a href="../comunidade.php">Voltar</a>
-<?php if($admin): ?>
-    <a href="membros/ver_membros.php?id_comunidade=<?= $id_comunidade ?>">Ver membros</a>
-    <a href="../editar_comunidade.php?id_comunidade=<?= $id_comunidade ?>">Editar Comunidade</a>
-<?php endif; ?>
+<div class="container">
 
-<?php if(!$comunidadeAtiva): ?>
-    <p style="color:red; font-weight:bold;">⚠ Esta comunidade está desativada. Não é possível enviar mensagens.</p>
-<?php endif; ?>
+    <div class="chat-header">
+        <span>Chat da Comunidade: <?= htmlspecialchars($comunidade['nome']) ?></span>
 
-<div id="chat-box"></div>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <?php if($admSistema): ?>
+            <button class="admin-menu-btn" onclick="toggleAdminMenu()">Gerenciar</button>
+            <?php endif; ?>
 
-<?php if($comunidadeAtiva): ?>
-<form id="chat-form">
-    <textarea name="mensagem" id="mensagem" rows="3" placeholder="Digite sua mensagem..." required></textarea><br>
-    <label>
-        <input type="checkbox" id="spoiler" name="spoiler"> Mensagem contém spoiler
-    </label><br>
-    <button type="submit">Enviar</button>
-    <p id="msg-erro" style="color:red; font-weight:bold;"></p>
-</form>
-<?php endif; ?>
+            <a href="../comunidade.php" style="color:white; border:1px solid #fff; padding:6px 14px; border-radius:6px; text-decoration:none;">
+                ← Voltar
+            </a>
+        </div>
+    </div>
 
-<script>
-    const papelUsuario = "<?= $usuario_papel ?>"; // 'membro', 'moderador' ou 'dono'
+    <!-- MENU ADM -->
+    <div class="admin-menu" id="adminMenu">
+        <a href="membros.php?id_comunidade=<?= $id_comunidade ?>">👥 Ver membros</a>
+        <a href="editar.php?id_comunidade=<?= $id_comunidade ?>">⚙ Editar comunidade</a>
 
-    async function carregarMensagens() {
-        let resp = await fetch("buscar_mensagens.php?id_comunidade=<?= $id_comunidade ?>");
-        if (!resp.ok) return;
-        let mensagens = await resp.json();
+        <?php if($admin): ?>
+        <div onclick="excluirComunidade()">🗑 Excluir comunidade</div>
+        <?php endif; ?>
+    </div>
 
-        let chatBox = document.getElementById("chat-box");
-        chatBox.innerHTML = "";
-
-        mensagens.forEach(msg => {
-            let conteudo = msg.mensagem ?? "";
-
-            // Detecta spoiler
-            if (conteudo.includes("[spoiler]")) {
-                conteudo = conteudo.replace("[spoiler]", "").replace("[/spoiler]", "");
-                conteudo = `
-                    <div class="spoiler">
-                        <button onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">
-                            Mostrar Spoiler
-                        </button>
-                        <div style="display:none; margin-top:5px; background:#eee; padding:5px; border-radius:5px;">
-                            ${conteudo}
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Botão de excluir
-            let botaoExcluir = "";
-            if ((papelUsuario === "moderador" || papelUsuario === "dono") && msg.idmensagens_chat) {
-                botaoExcluir = `<br><button onclick="excluirMensagem('${msg.idmensagens_chat}')">Excluir</button>`;
-            }
-
-            chatBox.innerHTML += `
-                <div class="mensagem">
-                    <img src="data:image/jpeg;base64,${msg.foto_de_perfil || ''}" alt="Perfil">
-                    <div class="conteudo">
-                        <strong>${msg.nome || 'Usuário'} (${msg.papel || 'membro'}):</strong><br>
-                        ${conteudo}${botaoExcluir}<br>
-                        <small>${msg.enviada_em || ''}</small>
-                    </div>
-                </div>
-            `;
-        });
-
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    setInterval(carregarMensagens, 2000);
-    carregarMensagens();
+    <div id="chat-box"></div>
 
     <?php if($comunidadeAtiva): ?>
-    document.getElementById("chat-form").addEventListener("submit", async function(e) {
-        e.preventDefault();
-        let formData = new FormData(this);
-        formData.append("id_comunidade", <?= $id_comunidade ?>);
-        formData.append("spoiler", document.getElementById("spoiler").checked ? 1 : 0);
-
-        let resp = await fetch("enviar_mensagem.php", { method: "POST", body: formData });
-        let result = await resp.json();
-        let msgErro = document.getElementById("msg-erro");
-
-        if(resp.ok && !result.erro) {
-            document.getElementById("mensagem").value = "";
-            document.getElementById("spoiler").checked = false;
-            msgErro.innerText = "";
-            carregarMensagens();
-        } else {
-            msgErro.innerText = result.erro || "Erro ao enviar mensagem.";
-        }
-    });
+    <form id="chat-form" class="input-area">
+        <textarea name="mensagem" id="mensagem" rows="2" placeholder="Digite sua mensagem..." required></textarea>
+        <label style="font-size: 12px;">
+            <input type="checkbox" id="spoiler" name="spoiler"> Spoiler
+        </label>
+        <button type="submit">Enviar</button>
+    </form>
     <?php endif; ?>
 
-    async function excluirMensagem(id_mensagem) {
-        if (!id_mensagem) {
-            alert("ID da mensagem inválido.");
-            return;
-        }
-        const idNum = parseInt(id_mensagem, 10);
-        if (!Number.isInteger(idNum) || idNum <= 0) {
-            alert("ID da mensagem inválido.");
-            return;
-        }
+</div>
 
-        if(!confirm("Deseja realmente apagar esta mensagem?")) return;
+<script>
+const idUsuario = <?= $id_usuario ?>;
+const adm = <?= $admSistema ? "true" : "false" ?>;
 
-        let formData = new FormData();
-        formData.append('id_comunidade', <?= $id_comunidade ?>);
-        formData.append('id_mensagem', idNum);
+function toggleAdminMenu() {
+    let menu = document.getElementById("adminMenu");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
 
-        let resp = await fetch("excluir_mensagem.php", { method: "POST", body: formData });
-        let result = await resp.json();
-
-        if(result.sucesso){
-            carregarMensagens();
-        } else {
-            alert(result.mensagem || "Erro ao excluir mensagem.");
-        }
+function excluirComunidade() {
+    if (confirm("Tem certeza que deseja excluir esta comunidade?")) {
+        window.location.href = "excluir.php?id_comunidade=<?= $id_comunidade ?>";
     }
+}
+
+async function carregarMensagens() {
+    let resp = await fetch("buscar_mensagens.php?id_comunidade=<?= $id_comunidade ?>");
+    if (!resp.ok) return;
+
+    let mensagens = await resp.json();
+    let chatBox = document.getElementById("chat-box");
+    chatBox.innerHTML = "";
+
+    mensagens.forEach(msg => {
+        let eu = msg.idusuario == idUsuario;
+
+        let podeExcluir = adm || eu;
+
+        let conteudo = msg.mensagem || "";
+
+        chatBox.innerHTML += `
+            <div class="mensagem ${eu ? 'eu' : ''}">
+                ${!eu ? `<img class="avatar-esq" src="data:image/jpeg;base64,${msg.foto_de_perfil}">` : ""}
+                
+                <div class="bubble">
+                    <strong>${msg.nome}</strong><br>
+                    ${conteudo}
+                    <span class="timestamp">${msg.enviada_em}</span>
+
+                    ${podeExcluir ? `
+                        <button class="delete-btn" onclick="excluirMsg(${msg.idmensagem})">X</button>
+                    ` : ""}
+                </div>
+
+                ${eu ? `<img class="avatar-dir" src="data:image/jpeg;base64,${msg.foto_de_perfil}">` : ""}
+            </div>
+        `;
+    });
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+async function excluirMsg(id) {
+    if (!confirm("Excluir mensagem?")) return;
+
+    let resp = await fetch("excluir_mensagem.php?id=" + id);
+    carregarMensagens();
+}
+
+setInterval(carregarMensagens, 2000);
+carregarMensagens();
 </script>
 
 </body>
