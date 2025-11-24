@@ -6,20 +6,23 @@ $id_usuario = $_SESSION['idusuario'] ?? null;
 $id_comunidade = $_GET['id_comunidade'] ?? null;
 if (!$id_usuario || !$id_comunidade) die("Acesso inválido.");
 
+// Pega info da comunidade
 $stmt = $conn->prepare("SELECT nome, idusuario AS id_criador, status FROM comunidades WHERE idcomunidades = :id");
 $stmt->execute([':id' => $id_comunidade]);
 $comunidade = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$comunidade) die("Comunidade não encontrada.");
 
+// Verifica se usuário participa
 $stmtVer = $conn->prepare("SELECT papel FROM membros_comunidade WHERE idcomunidades = :id AND idusuario = :usuario");
 $stmtVer->execute([':id' => $id_comunidade, ':usuario' => $id_usuario]);
 $participa = $stmtVer->fetch(PDO::FETCH_ASSOC);
 if (!$participa) die("Você não participa desta comunidade.");
 
 $usuario_papel = $participa['papel'];
-$admin = ($id_usuario == $comunidade['id_criador']); 
-$mod = ($usuario_papel === 'admin'); 
-$admSistema = $admin || $mod;
+
+// Administrador da comunidade = criador
+$admin = ($id_usuario == $comunidade['id_criador']);
+
 $comunidadeAtiva = ($comunidade['status'] === 'ativa');
 ?>
 <!DOCTYPE html>
@@ -29,10 +32,7 @@ $comunidadeAtiva = ($comunidade['status'] === 'ativa');
 <title>Chat - <?= htmlspecialchars($comunidade['nome']) ?></title>
 
 <style>
-    * {
-    font-family: Arial, sans-serif !important;
-    }
-
+    * { font-family: Arial, sans-serif !important; }
     body {
         background: #f8f6f2;
         margin: 0;
@@ -40,7 +40,6 @@ $comunidadeAtiva = ($comunidade['status'] === 'ativa');
         display: flex;
         justify-content: center;
     }
-
     .container {
         width: 85%;
         max-width: 900px;
@@ -51,7 +50,6 @@ $comunidadeAtiva = ($comunidade['status'] === 'ativa');
         box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         overflow: hidden;
     }
-
     .chat-header {
         background: #4d5f3a;
         color: white;
@@ -61,7 +59,6 @@ $comunidadeAtiva = ($comunidade['status'] === 'ativa');
         justify-content: space-between;
         align-items: center;
     }
-
     .admin-menu-btn {
         background: transparent;
         border: 1px solid #fff;
@@ -70,7 +67,6 @@ $comunidadeAtiva = ($comunidade['status'] === 'ativa');
         color: white;
         cursor: pointer;
     }
-
     .admin-menu {
         display: none;
         position: absolute;
@@ -94,14 +90,12 @@ $comunidadeAtiva = ($comunidade['status'] === 'ativa');
     .admin-menu a:hover, .admin-menu div:hover {
         background: #f0f0f0;
     }
-
     #chat-box {
         height: 480px;
         overflow-y: auto;
         background: #fcfbf9;
         padding: 25px;
     }
-
     .mensagem {
         display: flex;
         margin-bottom: 20px;
@@ -109,9 +103,7 @@ $comunidadeAtiva = ($comunidade['status'] === 'ativa');
         align-items: flex-start;
         position: relative;
     }
-
     .eu { justify-content: flex-end; }
-
     .bubble {
         background: #f1f1f1;
         padding: 12px 15px;
@@ -121,13 +113,11 @@ $comunidadeAtiva = ($comunidade['status'] === 'ativa');
         border: 1px solid #e8e8e8;
         font-size: 14px;
     }
-
     .eu .bubble {
         background: #4d5f3a;
         color: white;
         border: none;
     }
-
     .delete-btn {
         position: absolute;
         top: -5px;
@@ -141,18 +131,15 @@ $comunidadeAtiva = ($comunidade['status'] === 'ativa');
         cursor: pointer;
         display: none;
     }
-
     .mensagem:hover .delete-btn {
         display: block;
     }
-
     .timestamp {
         font-size: 11px;
         opacity: 0.6;
         display: block;
         margin-top: 5px;
     }
-
     .avatar-esq, .avatar-dir {
         width: 45px;
         height: 45px;
@@ -161,7 +148,6 @@ $comunidadeAtiva = ($comunidade['status'] === 'ativa');
     }
     .avatar-esq { margin-right: 12px; }
     .avatar-dir { margin-left: 12px; }
-
     .input-area {
         padding: 15px 20px;
         background: #f0eee9;
@@ -196,7 +182,7 @@ $comunidadeAtiva = ($comunidade['status'] === 'ativa');
         <span>Chat da Comunidade: <?= htmlspecialchars($comunidade['nome']) ?></span>
 
         <div style="display:flex; gap:10px; align-items:center;">
-            <?php if($admSistema): ?>
+            <?php if($admin): ?>
             <button class="admin-menu-btn" onclick="toggleAdminMenu()">Gerenciar</button>
             <?php endif; ?>
 
@@ -232,7 +218,7 @@ $comunidadeAtiva = ($comunidade['status'] === 'ativa');
 
 <script>
 const idUsuario = <?= $id_usuario ?>;
-const adm = <?= $admSistema ? "true" : "false" ?>;
+const admin = <?= $admin ? "true" : "false" ?>;
 
 function toggleAdminMenu() {
     let menu = document.getElementById("adminMenu");
@@ -255,15 +241,13 @@ async function carregarMensagens() {
 
     mensagens.forEach(msg => {
         let eu = msg.idusuario == idUsuario;
-
-        let podeExcluir = adm || eu;
-
+        let podeExcluir = admin || eu;
         let conteudo = msg.mensagem || "";
 
         chatBox.innerHTML += `
             <div class="mensagem ${eu ? 'eu' : ''}">
                 ${!eu ? `<img class="avatar-esq" src="data:image/jpeg;base64,${msg.foto_de_perfil}">` : ""}
-                
+
                 <div class="bubble">
                     <strong>${msg.nome}</strong><br>
                     ${conteudo}
@@ -284,8 +268,7 @@ async function carregarMensagens() {
 
 async function excluirMsg(id) {
     if (!confirm("Excluir mensagem?")) return;
-
-    let resp = await fetch("excluir_mensagem.php?id=" + id);
+    await fetch("excluir_mensagem.php?id=" + id);
     carregarMensagens();
 }
 

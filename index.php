@@ -6,24 +6,24 @@
   include 'php/conexao.php';
 
   $stmt = $conn->prepare("
-    SELECT 
-      p.idproduto,
-      p.nome,
-      p.preco,
-      i.imagem
-    FROM produto p
-    LEFT JOIN imagens i 
-      ON i.idproduto = p.idproduto
-    
-      AND i.idimagens = (
-          SELECT idimagens
-          FROM imagens
-          WHERE idproduto = p.idproduto
-          ORDER BY idimagens ASC
-          LIMIT 1
-      )
-    ORDER BY p.idproduto DESC
-    LIMIT 6
+      SELECT 
+        p.idproduto,
+        p.nome,
+        p.preco,
+        i.imagem
+      FROM produto p
+      LEFT JOIN imagens i 
+        ON i.idproduto = p.idproduto
+        AND i.idimagens = (
+            SELECT idimagens
+            FROM imagens
+            WHERE idproduto = p.idproduto
+            ORDER BY idimagens ASC
+            LIMIT 1
+        )
+      WHERE p.status = 'Disponivel' 
+      ORDER BY p.idproduto DESC
+      LIMIT 6
   ");
   $stmt->execute();
   $recem_adicionados = $stmt->fetchAll(PDO::FETCH_ASSOC);
