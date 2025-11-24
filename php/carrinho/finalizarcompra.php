@@ -788,41 +788,6 @@ if (isset($_POST['finalizar'])) {
             <p><strong>Vencimento:</strong> 30 minutos</p>
           </div>
         </div>
-
-
-        <!-- Informações do Cartão -->
-        <div id="cartao-info" class="payment-info">
-          <div class="form-group">
-            <label for="numero-cartao">Número do Cartão *</label>
-            <input type="text" id="numero-cartao" placeholder="0000 0000 0000 0000" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="nome-cartao">Nome no Cartão *</label>
-            <input type="text" id="nome-cartao" placeholder="Como aparece no cartão" required>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label for="validade">Validade *</label>
-              <input type="text" id="validade" placeholder="MM/AA" required>
-            </div>
-            <div class="form-group">
-              <label for="cvv">CVV *</label>
-              <input type="text" id="cvv" placeholder="000" required>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Informações do Boleto -->
-        <div id="boleto-info" class="payment-info" style="display: none;">
-          <div class="boleto-info">
-            <p>Clique no botão abaixo para gerar seu boleto bancário</p>
-            <button class="boleto-btn" onclick="gerarBoleto()">Gerar Boleto</button>
-            <p><strong>Vencimento:</strong> <span id="vencimento-boleto">DD/MM/AAAA</span></p>
-          </div>
-        </div>
-
       </div>
     </div>
 
@@ -927,6 +892,35 @@ if (isset($_POST['finalizar'])) {
           });
       }
   });
+</script>
+<script>
+document.querySelector('.confirm-btn').addEventListener('click', function (event) {
+    let camposObrigatorios = [
+        'nome_completo',
+        'telefone',
+        'email',
+        'cep',
+        'estado',
+        'cidade',
+        'bairro',
+        'rua',
+        'numero'
+    ];
+
+    let faltando = [];
+
+    camposObrigatorios.forEach(campo => {
+        let input = document.querySelector(`[name="${campo}"]`);
+        if (!input || input.value.trim() === '') {
+            faltando.push(campo);
+        }
+    });
+
+    if (faltando.length > 0) {
+        event.preventDefault(); // Impede enviar o formulário
+        alert("Preencha todos os campos obrigatórios antes de finalizar o pedido!");
+    }
+});
 </script>
 </body>
 </html>
